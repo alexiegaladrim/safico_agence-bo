@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAFICO — Prototypes</title>
+<!--
+  Porte d'entrée du déploiement Vercel : renvoie vers les deux prototypes.
+  index.html reste le prototype agence (voir CLAUDE.md) ; vercel.json redirige « / » ici.
+  Jetons et marque recopiés d'index.html.
+-->
+<style>
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-400-normal.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-600-normal.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-700-normal.woff2') format('woff2');font-weight:700;font-display:swap}
+:root{
+  --fond-page:#F0F4F7; --fond-surface:#FFFFFF;
+  --trait-leger:#E1E7EC; --accent-trait:#C3E0FE;
+  --texte-principal:#151F2B; --texte-secondaire:#556270; --texte-inverse:#FFFFFF;
+  --accent:#005CC7; --accent-fond:#F1F8FF;
+  --marque:#0B3D91; --marque-vif:#2E9AFE; --marque-turquoise:#14B8A6; --marque-tete:#07766E;
+  --ombre:0 1px 2px rgba(11,61,145,.06),0 1px 3px rgba(21,31,43,.06);
+  --ombre-haute:0 6px 16px rgba(11,61,145,.10),0 2px 4px rgba(21,31,43,.06);
+  --rayon:16px; --rayon-petit:10px;
+  --police:"Plus Jakarta Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--fond-page);color:var(--texte-principal);font:400 14px/20px var(--police);
+     display:flex;align-items:center;justify-content:center;padding:24px 16px}
+main{width:100%;max-width:760px}
+.marque{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.marque svg{width:40px;height:40px;flex:none}
+.marque b{display:block;font:700 18px/24px var(--police)}
+.marque span{color:var(--texte-secondaire);font-size:13px}
+h1{font:700 26px/32px var(--police);margin:0 0 6px}
+.chapo{color:var(--texte-secondaire);margin:0 0 24px}
+.choix{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tuile{display:flex;flex-direction:column;gap:10px;padding:22px;border-radius:var(--rayon);
+       background:var(--fond-surface);border:1px solid var(--trait-leger);box-shadow:var(--ombre);
+       color:inherit;text-decoration:none;transition:box-shadow .15s,border-color .15s,transform .15s}
+.tuile:hover{box-shadow:var(--ombre-haute);border-color:var(--accent-trait);transform:translateY(-1px)}
+.tuile:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
+.tuile .ico{width:40px;height:40px;border-radius:var(--rayon-petit);background:var(--accent-fond);color:var(--accent);
+            display:flex;align-items:center;justify-content:center}
+.tuile .ico svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tuile h2{font:600 17px/24px var(--police);margin:4px 0 0}
+.tuile p{margin:0;color:var(--texte-secondaire)}
+.tuile .ouvrir{margin-top:auto;padding-top:8px;color:var(--accent);font-weight:600}
+.pied{margin-top:24px;color:var(--texte-secondaire);font-size:12px;line-height:18px}
+@media (max-width:640px){.choix{grid-template-columns:1fr}h1{font-size:22px;line-height:28px}}
+</style>
+</head>
+<body>
+<main>
+  <div class="marque">
+    <svg viewBox="0 0 100 100" aria-hidden="true"><line x1="35" y1="43" x2="66" y2="22" stroke="var(--marque-vif)" stroke-width="21" stroke-linecap="round"/><line x1="65" y1="57" x2="34" y2="78" stroke="var(--marque-turquoise)" stroke-width="21" stroke-linecap="round"/><circle cx="18" cy="23" r="9.5" fill="var(--marque)"/><circle cx="82" cy="77" r="9.5" fill="var(--marque-tete)"/></svg>
+    <div><b>Safico</b><span>SAU × Galadrim</span></div>
+  </div>
+
+  <h1>Prototypes</h1>
+  <p class="chapo">Choisissez l'application à parcourir.</p>
+
+  <div class="choix">
+    <a class="tuile" href="index.html">
+      <span class="ico"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 4l9 6.5"/><path d="M5 9.5V20h14V9.5"/><path d="M10 20v-5h4v5"/></svg></span>
+      <h2>Application agence</h2>
+      <p>Guichetier et chef d'agence : envoyer, payer un retrait, tenir la journée, corriger et superviser, mode dégradé.</p>
+      <span class="ouvrir">Ouvrir →</span>
+    </a>
+    <a class="tuile" href="proto-backoffice.html">
+      <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/><path d="M3 21h18"/></svg></span>
+      <h2>Back-office</h2>
+      <p>Les parcours du siège.</p>
+      <span class="ouvrir">Ouvrir →</span>
+    </a>
+  </div>
+
+  <p class="pied">Prototypes de travail : rien n'est connecté, toutes les données sont figées.</p>
+</main>
+</body>
+</html>
