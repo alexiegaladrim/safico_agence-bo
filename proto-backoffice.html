@@ -207,6 +207,8 @@ ol.liste{counter-reset:rang}
 ol.liste li{counter-increment:rang;padding-left:22px}
 ol.liste li::before{content:counter(rang) " ·";left:0}
 .carte>.bandeau{margin-top:14px}
+.carte>.bandeau+.segmente{margin-top:14px}
+.carte>.segmente~.tableau{margin-top:12px}
 .carte>.bandeau+.champs{margin-top:14px}
 .carte>.carte-tete+.bandeau,.carte>h2+.bandeau{margin-top:0}
 .actions.a-droite{justify-content:flex-end}
@@ -392,6 +394,10 @@ th .etiquette.trancher,td .etiquette.trancher,.bloc>span .etiquette.trancher,.ch
 .filtre .champ>label{font:500 11px/14px var(--police);color:var(--texte-secondaire)}
 .filtre .champ>select,.filtre .champ>input{width:auto;min-width:150px;padding:7px 10px;font:400 13px/18px var(--police)}
 .filtre .compte{margin-left:auto;padding-bottom:8px}
+/* Filtres qui se partagent toute la ligne (BO13) : chaque champ s'étire, le bouton garde sa taille. */
+.filtre.etire .champ{flex:1 1 120px;min-width:0}
+.filtre.etire .champ>select,.filtre.etire .champ>input{width:100%;min-width:0}
+.filtre.etire>.bouton{flex:none}
 .carte-tete:has(>.filtre){align-items:flex-end}
 .segmente .nb{margin-left:6px;font-weight:400;color:inherit;opacity:.7}
 
@@ -455,6 +461,7 @@ a.compteur:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
              background:var(--fond-surface);box-shadow:var(--ombre-pied)}
 .tiroir-pied .bouton.discret:first-child{margin-right:auto}
 .tiroir-pied .bouton.primaire{min-width:200px}
+.tiroir-pied .actions{margin-top:0}
 .icone-bouton{width:36px;height:36px;flex:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
               border-radius:var(--rayon-petit);border:1px solid var(--trait-leger);background:var(--fond-surface);color:var(--texte-secondaire)}
 .icone-bouton:hover{background:var(--fond-sourd);color:var(--texte-principal)}
@@ -1359,67 +1366,23 @@ a.acces:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
               <strong>Liste de démonstration.</strong>
               <span>La liste officielle sera transmise par SAFICO après vérification auprès de la BCRG.</span>
             </div>
-            <div class="ligne align-haut" style="margin-top:14px">
-              <div>
-                <h3 class="sous-bloc">Liste noire GAFI</h3>
-                <table class="tableau dense sans-coupure">
-                  <thead><tr><th>Pays</th><th>Ajouté le</th><th></th></tr></thead>
-                  <tbody data-pays="noire"></tbody>
-                </table>
-              </div>
-              <div>
-                <h3 class="sous-bloc">Liste grise GAFI</h3>
-                <table class="tableau dense sans-coupure">
-                  <thead><tr><th>Pays</th><th>Ajouté le</th><th></th></tr></thead>
-                  <tbody data-pays="grise"></tbody>
-                </table>
-              </div>
+            <div class="segmente" data-choix="liste" role="tablist" aria-label="Listes GAFI">
+              <button class="actif" data-valeur="noire" role="tab">Liste noire GAFI<span class="nb" data-pays-nb="noire"></span></button>
+              <button data-valeur="grise" role="tab">Liste grise GAFI<span class="nb" data-pays-nb="grise"></span></button>
             </div>
+            <table class="tableau dense sans-coupure" data-si-liste="noire">
+              <thead><tr><th>Pays</th><th>Ajouté le</th><th></th></tr></thead>
+              <tbody data-pays="noire"></tbody>
+            </table>
+            <table class="tableau dense sans-coupure" data-si-liste="grise">
+              <thead><tr><th>Pays</th><th>Ajouté le</th><th></th></tr></thead>
+              <tbody data-pays="grise"></tbody>
+            </table>
             <p class="pied">Un transfert vers un pays de ces listes est bloqué en attente de vérification par la conformité.</p>
           </section>
         </div>
 
         <div class="colonne" style="--part:440">
-          <!-- Le formulaire dessine le défaut de la décision 1 (Q3) : la Conformité propose,
-               la Direction générale valide. Champs déduits. -->
-          <section class="carte" data-decision-carte>
-            <h2>Modifier un paramètre</h2>
-            <div class="champs">
-              <div class="champ">
-                <label for="bo23-param">Paramètre</label>
-                <select id="bo23-param">
-                  <option value="">Choisir un paramètre</option>
-                  <option>Plafond par client et par jour</option>
-                  <option>Fractionnement · 24 h</option>
-                  <option>Fractionnement · 7 jours</option>
-                  <option>Fractionnement · 30 jours</option>
-                  <option>Seuil d'alerte en montant</option>
-                  <option>Seuil de justificatif · client occasionnel</option>
-                  <option>Seuil de déclaration · cumul</option>
-                </select>
-              </div>
-              <div class="champ">
-                <label for="bo23-valeur">Nouvelle valeur</label>
-                <input id="bo23-valeur" type="text">
-                <span class="aide" data-valeur-actuelle>Choisissez un paramètre, ou « Modifier » sur sa ligne.</span>
-              </div>
-              <div class="champ">
-                <label for="bo23-motif">Justification</label>
-                <textarea id="bo23-motif" placeholder="Raison de la modification"></textarea>
-                <span class="aide">Obligatoire · historisée avec la modification</span>
-              </div>
-            </div>
-            <div class="reauth" data-si-issue="aucune"></div>
-            <p class="mention">Toute modification est soumise à la validation de la Direction générale. <span class="etiquette trancher" data-decision="1" title="Q3 — Le 17 septembre, les seuils devaient être paramétrables par les Opérations ou la Conformité : lequel propose une modification, lequel la valide ? Par défaut : la Conformité propose, la Direction générale valide (liste maker-checker)."></span></p>
-            <div class="bandeau attention" data-si-issue="oui">
-              <strong>Modification soumise</strong>
-              <span>En attente de la validation de la Direction générale.</span>
-            </div>
-            <div class="actions">
-              <button class="bouton primaire" data-enregistrer data-issue="oui" data-fait-libelle="Modification soumise" data-exige="#bo23-param #bo23-valeur #bo23-motif [data-code-perso]" disabled>Soumettre à la Direction générale</button>
-            </div>
-          </section>
-
           <section class="carte">
             <h2>Historique</h2>
             <ul class="journal">
@@ -1429,6 +1392,39 @@ a.acces:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
             </ul>
           </section>
         </div>
+      </div>
+
+      <!-- Modifier un paramètre (retour client 29/09 : une modale au clic sur « Modifier »).
+           Le formulaire dessine le défaut de la décision 1 (Q3) : la Conformité propose,
+           la Direction générale valide. Champs déduits. -->
+      <div class="tiroir-voile" data-tiroir="seuil" hidden>
+        <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-seuil">
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-seuil">Modifier un paramètre</h2><p>Soumis à la validation de la Direction générale</p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
+            <div>
+              <div class="info"><span>Paramètre</span><span data-seuil="param"></span></div>
+              <div class="info"><span>Valeur actuelle</span><span data-seuil="valeur"></span></div>
+            </div>
+            <div class="champ">
+              <label for="bo23-valeur">Nouvelle valeur</label>
+              <input id="bo23-valeur" type="text">
+            </div>
+            <div class="champ">
+              <label for="bo23-motif">Justification</label>
+              <textarea id="bo23-motif" placeholder="Raison de la modification"></textarea>
+              <span class="aide">Obligatoire · historisée avec la modification</span>
+            </div>
+            <div class="reauth"></div>
+            <p class="mention">Toute modification est soumise à la validation de la Direction générale. <span class="etiquette trancher" data-decision="1" title="Q3 — Le 17 septembre, les seuils devaient être paramétrables par les Opérations ou la Conformité : lequel propose une modification, lequel la valide ? Par défaut : la Conformité propose, la Direction générale valide (liste maker-checker)."></span></p>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
+            <button class="bouton primaire" type="button" data-soumettre="seuil" data-exige="#bo23-valeur #bo23-motif [data-code-perso]" disabled>Soumettre à la Direction générale</button>
+          </footer>
+        </aside>
       </div>
 
       <!-- Pays à risque (point 13 de la revue du 29/09) : ajout ou retrait en panneau latéral,
@@ -1649,29 +1645,32 @@ a.acces:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
         <strong>Récupérable : le siège contacte le client, le chef d'agence soumet la relance, validée au siège.</strong>
         <span>Non récupérable : annulation, remboursement, appel du client.</span>
       </div>
-      <div class="ligne align-haut">
-        <section class="carte" style="--part:760">
-          <h2>Rejets</h2>
-          <div class="defilant">
-            <table class="tableau dense sans-coupure">
-              <thead><tr><th>Référence</th><th>Partenaire</th><th>Motif du partenaire</th><th>Nature</th><th>Suite</th></tr></thead>
-              <tbody>
-                <tr class="choisie" data-relance><td>SFC-6D40-5528</td><td>Orange Money</td><td>Numéro inconnu</td><td><span class="statut attention">Récupérable</span></td><td>Relance soumise par K. Bah</td></tr>
-                <tr class="ouvrable" tabindex="0" data-cible="bo25" data-choisir="remb:6d41" data-traite-par="op:SFC-6D41-0017"><td>SFC-6D41-0017</td><td>Ecobank</td><td>RIB invalide</td><td><span class="statut blocage">Non récupérable</span></td><td>À annuler et rembourser</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="pied">Un rejet non récupérable s'ouvre sur la décision d'annuler ou de rembourser.</p>
-        </section>
+      <section class="carte">
+        <h2>Rejets</h2>
+        <div class="defilant">
+          <table class="tableau dense sans-coupure">
+            <thead><tr><th>Référence</th><th>Partenaire</th><th>Motif du partenaire</th><th>Nature</th><th>Suite</th></tr></thead>
+            <tbody>
+              <tr class="ouvrable" tabindex="0" data-ouvrir-tiroir="relance" data-relance><td>SFC-6D40-5528</td><td>Orange Money</td><td>Numéro inconnu</td><td><span class="statut attention">Récupérable</span></td><td>Relance soumise par K. Bah</td></tr>
+              <tr class="ouvrable" tabindex="0" data-cible="bo25" data-choisir="remb:6d41" data-traite-par="op:SFC-6D41-0017"><td>SFC-6D41-0017</td><td>Ecobank</td><td>RIB invalide</td><td><span class="statut blocage">Non récupérable</span></td><td>À annuler et rembourser</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="pied">Un rejet récupérable s'ouvre sur sa relance ; un rejet non récupérable, sur la décision d'annuler ou de rembourser.</p>
+      </section>
 
-        <div class="colonne collante" style="--part:500">
-          <section class="carte" data-decision-carte>
-            <h2>Relance · SFC-6D40-5528</h2>
+      <!-- Relance d'un rejet récupérable (retour client 29/09 : une modale au clic sur la ligne). -->
+      <div class="tiroir-voile" data-tiroir="relance" hidden>
+        <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-relance" data-decision-carte>
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-relance">Relance · SFC-6D40-5528 <span class="etiquette trancher" data-decision="q" title="Q10 — La relance est-elle validée par les Opérations ou par la finance ? Le compte rendu du 17 cite les deux."></span></h2><p>Orange Money · numéro inconnu · soumise par K. Bah</p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
             <div class="avant-apres">
               <span></span><span class="entete">Numéro saisi</span><span class="entete">Numéro corrigé</span>
               <span class="libelle">Wallet</span><span class="manque">+224 620 00 11 2</span><b>+224 620 00 11 22</b>
             </div>
-            <div class="separateur"></div>
             <label class="case"><input type="checkbox" id="bo26-joint">Client joint</label>
             <div class="reauth" data-si-issue="aucune"></div>
             <div class="bandeau valide" data-si-issue="valider">
@@ -1682,13 +1681,13 @@ a.acces:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
               <strong>Relance refusée</strong>
               <span>La décision est conservée au journal d'audit.</span>
             </div>
-            <div class="actions">
-              <button class="bouton primaire" data-enregistrer data-issue="valider" data-fait-libelle="Relance validée" data-exige="#bo26-joint [data-code-perso]" disabled>Valider la relance</button>
-              <button class="bouton secondaire" data-enregistrer data-issue="refuser" data-fait-libelle="Refusée" data-exige="[data-code-perso]" disabled>Refuser</button>
-              <span class="etiquette trancher" data-decision="q" title="Q10 — La relance est-elle validée par les Opérations ou par la finance ? Le compte rendu du 17 cite les deux."></span>
-            </div>
-          </section>
-        </div>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Fermer</button>
+            <button class="bouton secondaire" data-enregistrer data-issue="refuser" data-fait-libelle="Refusée" data-exige="[data-code-perso]" disabled>Refuser</button>
+            <button class="bouton primaire" data-enregistrer data-issue="valider" data-fait-libelle="Relance validée" data-exige="#bo26-joint [data-code-perso]" disabled>Valider la relance</button>
+          </footer>
+        </aside>
       </div>
     </section>
 
@@ -1971,7 +1970,7 @@ a.acces:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
             <!-- Une ligne se déplie en place sur ses caisses (déduit) ; le détail par caisse
                  est de démonstration, ses totaux sont ceux de l'agence. -->
             <tbody>
-              <tr class="ouvrable" tabindex="0" data-ligne data-deplier="kaloum" aria-expanded="false" data-devise="GNF" data-agence="kaloum"><td>Kaloum</td><td class="nombre">3</td><td class="nombre">182 400 000</td><td class="nombre">96 300 000</td><td class="nombre">18 000 000</td><td class="nombre">86 100 000</td><td class="nombre"><a class="ecart" href="#bo9" data-choisir="ecart:0">−15 000</a></td></tr>
+              <tr class="ouvrable" tabindex="0" data-ligne data-deplier="kaloum" aria-expanded="false" data-devise="GNF" data-agence="kaloum"><td>Kaloum</td><td class="nombre">3</td><td class="nombre">182 400 000</td><td class="nombre">96 300 000</td><td class="nombre">18 000 000</td><td class="nombre">86 100 000</td><td class="nombre"><a class="ecart" href="#bo9" data-choisir="ecart:0;tiroir:ecart">−15 000</a></td></tr>
               <tr class="enfant" data-parent="kaloum"><td>Caisse 1</td><td class="nombre"></td><td class="nombre">72 400 000</td><td class="nombre">40 100 000</td><td class="nombre">8 000 000</td><td class="nombre">32 300 000</td><td class="nombre">—</td></tr>
               <tr class="enfant" data-parent="kaloum"><td>Caisse 2</td><td class="nombre"></td><td class="nombre">48 000 000</td><td class="nombre">26 200 000</td><td class="nombre">4 000 000</td><td class="nombre">21 800 000</td><td class="nombre">—</td></tr>
               <tr class="enfant" data-parent="kaloum"><td>Caisse 3</td><td class="nombre"></td><td class="nombre">62 000 000</td><td class="nombre">30 000 000</td><td class="nombre">6 000 000</td><td class="nombre">32 000 000</td><td class="nombre ecart">−15 000</td></tr>
@@ -1999,45 +1998,51 @@ a.acces:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
         <strong>Justification obligatoire avant clôture.</strong>
         <span>Régularisation soumise par le chef d'agence, validée par la Finance.</span>
       </div>
-      <div class="ligne align-haut">
-        <section class="carte" style="--part:820">
-          <h2>Écarts</h2>
-          <div class="defilant">
-            <table class="tableau dense">
-              <thead><tr><th>Date</th><th>Agence</th><th>Caisse</th><th>Caissier</th><th class="nombre">Écart</th>
-                <th>Justification <span class="etiquette trancher" data-decision="q" title="Q14 — Sous quel délai un écart doit-il être justifié, et qui le constate au siège ?"></span></th><th>État</th></tr></thead>
-              <tbody data-ecarts></tbody>
-            </table>
-          </div>
-          <p class="pied">−15 000 GNF : manque · +2 000 GNF : excédent. Une ligne ouvre son écart à droite.</p>
-        </section>
-        <!-- Un dossier par écart (ECARTS du JS) : la ligne cliquée s'ouvre à droite. Comptages de
-             démonstration (déduit). -->
-        <div class="colonne collante" style="--part:460">
-          <section class="carte" data-decision-carte>
-            <h2 data-e="titre"></h2>
+      <section class="carte">
+        <h2>Écarts</h2>
+        <div class="defilant">
+          <table class="tableau dense">
+            <thead><tr><th>Date</th><th>Agence</th><th>Caisse</th><th>Caissier</th><th class="nombre">Écart</th>
+              <th>Justification <span class="etiquette trancher" data-decision="q" title="Q14 — Sous quel délai un écart doit-il être justifié, et qui le constate au siège ?"></span></th><th>État</th></tr></thead>
+            <tbody data-ecarts></tbody>
+          </table>
+        </div>
+        <p class="pied">−15 000 GNF : manque · +2 000 GNF : excédent. Une ligne ouvre le détail de son écart.</p>
+      </section>
+
+      <!-- Un dossier par écart (ECARTS du JS), ouvert en panneau au clic sur sa ligne (retour
+           client 29/09 : une modale). Comptages de démonstration (déduit). -->
+      <div class="tiroir-voile" data-tiroir="ecart" hidden>
+        <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-ecart" data-decision-carte>
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-ecart" data-e="titre"></h2><p data-e="sous-titre"></p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
             <div data-e="infos"></div>
-            <div class="separateur"></div>
             <div class="bloc"><span>Justification du chef d'agence</span><p data-e="justification"></p></div>
             <div class="info"><span>Soumis par</span><span data-e="soumis"></span></div>
             <div data-e="lecture"></div>
             <div data-e="decision">
-            <div class="reauth" data-si-issue="aucune"></div>
-            <div class="bandeau valide" data-si-issue="valider">
-              <strong>Régularisation validée</strong>
-              <span>L'écart est régularisé.</span>
+              <div class="reauth" data-si-issue="aucune"></div>
+              <div class="bandeau valide" data-si-issue="valider">
+                <strong>Régularisation validée</strong>
+                <span>L'écart est régularisé.</span>
+              </div>
+              <div class="bandeau attention" data-si-issue="refuser">
+                <strong>Régularisation refusée</strong>
+                <span>L'écart reste à la charge du caissier.</span>
+              </div>
             </div>
-            <div class="bandeau attention" data-si-issue="refuser">
-              <strong>Régularisation refusée</strong>
-              <span>L'écart reste à la charge du caissier.</span>
-            </div>
-            <div class="actions">
-              <button class="bouton primaire" data-enregistrer data-issue="valider" data-fait-libelle="Régularisation validée" data-exige="[data-code-perso]" disabled>Valider la régularisation</button>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Fermer</button>
+            <div class="actions" data-e="actions">
               <button class="bouton secondaire" data-enregistrer data-issue="refuser" data-fait-libelle="Refusée" data-exige="[data-code-perso]" disabled>Refuser</button>
+              <button class="bouton primaire" data-enregistrer data-issue="valider" data-fait-libelle="Régularisation validée" data-exige="[data-code-perso]" disabled>Valider la régularisation</button>
             </div>
-            </div>
-          </section>
-        </div>
+          </footer>
+        </aside>
       </div>
     </section>
 
@@ -2148,17 +2153,16 @@ a.acces:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
       </section>
       <section class="carte">
         <h2>Recherche <span class="etiquette trancher" data-decision="q" title="Q18 — Sur quels critères cherchez-vous une opération en pratique ?"></span></h2>
-        <div class="paire">
+        <!-- Filtres sur une seule ligne (retour client 29/09). -->
+        <div class="filtre etire">
           <div class="champ"><label for="bo13-ref">Référence</label><input id="bo13-ref" type="text" placeholder="SFC-…"></div>
           <div class="champ"><label for="bo13-tel">Téléphone du client</label><input id="bo13-tel" type="text" placeholder="+224 …"></div>
           <div class="champ"><label for="bo13-agence">Agence</label><select id="bo13-agence"><option>Toutes</option><option>Kaloum · Conakry</option><option>Matam · Conakry</option><option>Kindia</option><option>Labé</option><option>Adjamé · Abidjan</option></select></div>
-        </div>
-        <div class="paire" style="margin-top:14px">
           <div class="champ"><label for="bo13-du">Du</label><input id="bo13-du" type="text" value="01/10/2026"></div>
           <div class="champ"><label for="bo13-au">Au</label><input id="bo13-au" type="text" value="01/10/2026"></div>
           <div class="champ"><label for="bo13-statut">Statut</label><select id="bo13-statut"><option>Tous</option><option>En attente de retrait</option><option>Payée</option><option>En vérification</option><option>Déclinée</option><option>Rejetée</option><option>Annulée</option><option>Remboursée</option><option>Expirée</option></select></div>
+          <button class="bouton primaire" type="button">Rechercher</button>
         </div>
-        <div class="actions a-droite"><button class="bouton primaire" type="button">Rechercher</button></div>
       </section>
       <!-- La Finance voit le statut d'une opération bloquée, pas son motif (décision 2). -->
       <section class="carte">
@@ -3043,6 +3047,7 @@ const CLES = {
   cumul: 'non',              // BO14 : Caissier et Chef d'agence cochés ensemble
   genre: 'toutes',           // BO33 : toutes · agence · distributeur
   onglet: 'infos',           // BO34 : infos · equipe · transactions · caisses · activite
+  liste: 'noire',            // BO23 : onglet des pays à risque · noire · grise
   acces: 'aucune',           // BO38 : suspendre · reactiver · desactiver
   profil: 'conformite',      // profil courant (BO33, BO34 : administration · operations)
 };
@@ -3531,7 +3536,8 @@ function ajouterMembre() {
 
 // Sélection courante : posée par data-choisir="clé:valeur;clé:valeur" sur la ligne ou le lien cliqué.
 const SEL = { match: 'bah', fract: 'soumah', remb: '7c88', operation: 'SFC-9A03-5518', demande: 'activation-kankan', ecart: '0',
-  utilisateur: 'A. Diallo|Caissier|Kaloum|Activé|01/10 · 07:58', compte: 'a-diallo', caisse: 'kaloum:2' };
+  utilisateur: 'A. Diallo|Caissier|Kaloum|Activé|01/10 · 07:58', compte: 'a-diallo', caisse: 'kaloum:2',
+  tiroir: '' }; // tiroir : panneau à ouvrir à l'arrivée, consommé par afficher()
 // Écrans dont la liste d'origine varie (data-origine-variable) : la liste d'où l'on vient.
 const origines = {};
 
@@ -3756,15 +3762,16 @@ function rendreEcarts() {
   const hote = contenu.querySelector('[data-ecarts]');
   if (!hote) return;
   const i = Number(SEL.ecart);
-  hote.innerHTML = ECARTS.map((e, n) => `<tr class="ouvrable${n === i ? ' choisie' : ''}" tabindex="0" data-selection-ecart="${n}"><td>${e.date}</td><td>${e.agence}</td><td>${e.caisse}</td><td>${e.caissier}</td>`
+  hote.innerHTML = ECARTS.map((e, n) => `<tr class="ouvrable" tabindex="0" data-selection-ecart="${n}"><td>${e.date}</td><td>${e.agence}</td><td>${e.caisse}</td><td>${e.caissier}</td>`
     + `<td class="nombre${e.manque ? ' manque' : ''}">${e.ecart}</td><td>${e.justification}</td><td>${pastille(...ETATS_ECART[e.etat])}</td></tr>`).join('');
   const e = ECARTS[i];
   const q = (cle) => contenu.querySelector(`[data-e="${cle}"]`);
   q('titre').textContent = `${e.agence} · ${e.caisse.toLowerCase()} · ${e.date}`;
+  q('sous-titre').textContent = `${e.caissier} · ${ETATS_ECART[e.etat][1]}`;
   q('infos').innerHTML = infosHtml([['Solde attendu', e.attendu], ['Compté', e.compte], ['Écart', e.ecart, e.manque ? 'manque' : '']]);
   q('justification').textContent = e.justification;
   q('soumis').textContent = e.soumis;
-  q('decision').hidden = e.etat !== 'attente';
+  q('decision').hidden = q('actions').hidden = e.etat !== 'attente';
   q('lecture').hidden = e.etat === 'attente';
   q('lecture').innerHTML = e.decision ? bandeauHtml([ETATS_ECART[e.etat][0], ETATS_ECART[e.etat][1], e.decision]) : '';
 }
@@ -3815,7 +3822,7 @@ const OPERATIONS = {
     statut: ['blocage', 'Déclinée'], blocage: { type: 'declinee', motif: 'Taux défavorable après coupure · 1 XOF = 14,35 → 14,62 GNF', remb: '7c88' }, echeance: '30/10',
     j: [['30/09 · 16:40', 'Envoi encaissé hors ligne', 'S. Barry · Caissier · Labé'], ['01/10 · 08:05', 'Envoi rejoué · taux défavorable', 'Système'], ['01/10 · 08:05', 'Envoi décliné', 'Système'], ['01/10 · 10:12', 'SMS d\'invitation envoyé à l\'expéditeur', 'Système']] },
   'SFC-6D40-5528': { date: '01/10 · 09:12', agence: 'Kaloum', caissier: '—', exp: 'CAMARA Oumou', benef: 'Orange Money · +224 620 00 11 2', dest: 'Guinée', mode: 'Wallet', montant: '1 200 000 GNF', frais: '—',
-    statut: ['attention', 'Rejetée'], blocage: { type: 'rejet', motif: 'Orange Money : numéro inconnu · récupérable', cible: 'bo26' }, echeance: '—',
+    statut: ['attention', 'Rejetée'], blocage: { type: 'rejet', motif: 'Orange Money : numéro inconnu · récupérable', cible: 'bo26', tiroir: 'relance' }, echeance: '—',
     j: [['01/10 · 09:12', 'Envoi saisi', 'Agence Kaloum'], ['01/10 · 09:14', 'Rejet du partenaire · numéro inconnu', 'Orange Money'], ['01/10 · 10:04', 'Relance soumise', 'K. Bah · Chef d\'agence']] },
   'SFC-6D41-0017': { date: '01/10 · 08:55', agence: 'Matam', caissier: '—', exp: 'DIALLO Aïcha', benef: 'SANGARÉ Mohamed · compte Ecobank', dest: 'Guinée', mode: 'Virement bancaire', montant: '8 000 000 GNF', frais: '160 000 GNF',
     statut: ['attention', 'Rejetée'], blocage: { type: 'rejet', motif: 'Ecobank : RIB invalide · non récupérable', remb: '6d41' }, echeance: '—',
@@ -3854,7 +3861,7 @@ function rendreOperation() {
     if (alerte) suite = '<button class="bouton primaire" type="button" disabled>Annuler ou rembourser</button><p class="pied">Possible une fois l\'alerte close par la conformité.</p>';
     else if (o.blocage.type === 'suite-ops') suite = `<p class="secondaire" style="margin-bottom:10px">Alerte close : à vous de décider.</p><a class="bouton primaire" href="#bo25" data-choisir="remb:${ref}">Annuler ou rembourser</a>`;
     else if (o.blocage.remb) suite = `<a class="bouton primaire" href="#bo25" data-choisir="remb:${o.blocage.remb}">Annuler ou rembourser</a>`;
-    else if (o.blocage.cible) suite = `<a class="bouton primaire" href="#${o.blocage.cible}">Traiter le rejet</a>`;
+    else if (o.blocage.cible) suite = `<a class="bouton primaire" href="#${o.blocage.cible}"${o.blocage.tiroir ? ` data-choisir="tiroir:${o.blocage.tiroir}"` : ''}>Traiter le rejet</a>`;
   } else if (p === 'conformite' && o.blocage?.match && alerte) suite = `<a class="bouton primaire" href="#bo2" data-choisir="match:${o.blocage.match}">Ouvrir l'alerte</a>`;
   else if (p === 'conformite' && o.blocage?.ecran && alerte) suite = `<a class="bouton primaire" href="#${o.blocage.ecran}">Ouvrir l'alerte</a>`;
   else if (p === 'operations') suite = '<p class="secondaire">Aucune action : l\'opération n\'est pas bloquée.</p>';
@@ -3864,7 +3871,7 @@ function rendreOperation() {
 /* ---------- BO6 et BO37 · validations (maker-checker) ---------- */
 const VALIDEURS = { operations: 'Opérations', conformite: 'second habilité de la conformité', direction: 'Direction générale', finance: 'Finance', habilite: 'responsable habilité' };
 const DEMANDES = [
-  { id: 'relance-6d40', type: 'Relance d\'un paiement wallet', demandeur: 'K. Bah · Chef d\'agence', agence: 'Kaloum', pour: 'SFC-6D40-5528', depuis: '38 min', valideur: 'operations', cible: 'bo26', traite: 'bo26', etat: 'attente' },
+  { id: 'relance-6d40', type: 'Relance d\'un paiement wallet', demandeur: 'K. Bah · Chef d\'agence', agence: 'Kaloum', pour: 'SFC-6D40-5528', depuis: '38 min', valideur: 'operations', cible: 'bo26', tiroir: 'relance', traite: 'bo26', etat: 'attente' },
   { id: 'activation-kankan', type: 'Activation d\'une agence', demandeur: 'L. Condé · IT', auteur: 'administration', agence: '—', pour: 'Agence Kankan', depuis: '1 j 2 h', relance: true, valideur: 'operations', effet: ['agence', 'kankan'], etat: 'attente',
     details: [['Agence', 'Kankan Centre'], ['Type', 'Agence SAFICO'], ['Ville · zone', 'Kankan · Haute-Guinée'], ['Caisses', '2 · GNF'], ['Plage horaire', '08:00–18:00 · lun.–sam.']] },
   { id: 'ecart-kaloum', type: 'Régularisation d\'un écart de caisse', demandeur: 'K. Bah · Chef d\'agence', agence: 'Kaloum', pour: 'Caisse 3 · −15 000 GNF', depuis: '2 h', valideur: 'finance', etat: 'attente',
@@ -3895,7 +3902,7 @@ function rendreValidations() {
   hote.innerHTML = liste.length ? liste.map((d) => {
     const cible = d.cible && p === 'operations' ? d.cible : 'bo37';
     const note = d.valideur !== p ? `Valideur : ${VALIDEURS[d.valideur]}` : d.auteur === p ? 'Votre demande · un autre habilité valide' : '';
-    return `<tr class="ouvrable" tabindex="0" data-cible="${cible}" data-choisir="demande:${d.id}"><td>${d.type}${note ? `<br><span class="micro secondaire">${note}</span>` : ''}</td>`
+    return `<tr class="ouvrable" tabindex="0" data-cible="${cible}" data-choisir="demande:${d.id}${d.tiroir && cible !== 'bo37' ? `;tiroir:${d.tiroir}` : ''}"><td>${d.type}${note ? `<br><span class="micro secondaire">${note}</span>` : ''}</td>`
       + `<td>${d.demandeur}</td><td>${d.agence}</td><td>${d.pour}</td><td>${d.depuis}</td><td>${d.relance ? pastille('attention', 'Relancé') : '—'}</td></tr>`;
   }).join('') : '<tr class="aucune"><td colspan="6">Aucune demande en attente.</td></tr>';
 }
@@ -4287,6 +4294,7 @@ function rendrePays() {
     contenu.querySelector(`[data-pays="${liste}"]`).innerHTML = PAYS_RISQUE[liste].map(([nom, le], i) => `<tr><td>${echapper(nom)}</td><td>${le}</td><td class="nombre">`
       + (retraits.includes(nom) ? pastille('attention', 'Retrait en attente') : `<button class="bouton discret petit" type="button" data-pays-retirer="${liste}:${i}">Retirer</button>`) + '</td></tr>').join('')
       + ajouts.map((nom) => `<tr><td>${echapper(nom)}</td><td>—</td><td class="nombre">${pastille('attention', 'Ajout en attente')}</td></tr>`).join('');
+    contenu.querySelector(`[data-pays-nb="${liste}"]`).textContent = PAYS_RISQUE[liste].length;
   }
   // Seuils : une modification soumise et non validée se signale sur sa ligne.
   for (const d of enAttente('seuil')) {
@@ -4294,21 +4302,16 @@ function rendrePays() {
     if (ligne && !ligne.querySelector('.micro')) ligne.cells[1].insertAdjacentHTML('beforeend', `<br><span class="micro secondaire">${echapper(d.effet[2])} en attente de validation</span>`);
   }
 }
-function valeurActuelle() {
-  const aide = contenu.querySelector('[data-valeur-actuelle]');
-  const param = contenu.querySelector('#bo23-param')?.value;
-  if (!aide) return;
-  const ligne = [...contenu.querySelectorAll('tr')].find((t) => t.cells[0]?.textContent.trim() === param);
-  aide.textContent = ligne ? `Valeur actuelle : ${ligne.cells[1].childNodes[0].textContent.trim()}` : 'Choisissez un paramètre, ou « Modifier » sur sa ligne.';
-}
+// « Modifier » ouvre le panneau du paramètre de sa ligne (retour client 29/09 : une modale).
+let seuilCourant = '';
 function modifierSeuil(bouton) {
   const ligne = bouton.closest('tr');
-  const choix = contenu.querySelector('#bo23-param');
-  choix.value = ligne.cells[0].textContent.trim();
-  for (const t of ligne.parentElement.querySelectorAll('tr')) t.classList.toggle('choisie', t === ligne);
-  valeurActuelle();
-  rafraichir();
-  contenu.querySelector('#bo23-valeur').focus();
+  const voile = contenu.querySelector('[data-tiroir="seuil"]');
+  viderTiroir(voile);
+  seuilCourant = ligne.cells[0].textContent.trim();
+  voile.querySelector('[data-seuil="param"]').textContent = seuilCourant;
+  voile.querySelector('[data-seuil="valeur"]').textContent = ligne.cells[1].childNodes[0].textContent.trim();
+  ouvrirTiroir('seuil');
 }
 function ouvrirPays(action, liste, rang) {
   paysAction = [action, liste, rang];
@@ -4321,6 +4324,7 @@ function ouvrirPays(action, liste, rang) {
     ? 'Tout transfert vers ce pays est bloqué en attente de vérification par la conformité.'
     : 'Les transferts vers ce pays ne sont plus bloqués pour ce motif.';
   choixListe.disabled = nom.readOnly = action === 'retirer';
+  choixListe.value = etats.liste;
   if (action === 'retirer') {
     choixListe.value = liste;
     nom.value = PAYS_RISQUE[liste][rang][0];
@@ -4376,6 +4380,7 @@ function apresDecision(ecranId, issue) {
       o.blocage = null;
       TRAITES.add('op:SFC-6D40-5528');
     }
+    relance();
   }
   if (ecranId === 'bo39') {
     const o = OPERATIONS['KIN-P2-0043'];
@@ -4406,17 +4411,13 @@ function apresDecision(ecranId, issue) {
     e.decision = `${issue === 'valider' ? 'Régularisé' : 'Refusé'} le 01/10 · F. Camara · Finance`;
     const dem = DEMANDES.find((x) => x.id === 'ecart-kaloum');
     if (dem && e.agence === 'Kaloum' && e.date === '01/10') dem.etat = issue === 'valider' ? 'validee' : 'refusee';
+    rendreEcarts();
   }
   if (ecranId === 'bo5') {
     CLIENTS_BLOQUES[clientCourant].etat = 'Déblocage en attente';
     const c = CLIENTS_BLOQUES[clientCourant];
     nouvelleDemande({ type: 'Déblocage d\'un client', demandeur: 'A. Kourouma · Conformité', auteur: 'conformite', pour: c.nom, valideur: 'conformite', effet: ['deblocage', clientCourant],
       details: [['Client', c.nom], ['Bloqué depuis', c.le], ['Motif du blocage', c.motif], ['Motif du déblocage', contenu.querySelector('#bo5-motif')?.value.trim() || '—']] });
-  }
-  if (ecranId === 'bo23') {
-    const lire = (id) => contenu.querySelector(id)?.value.trim() || '—';
-    nouvelleDemande({ type: 'Modification d\'un seuil', demandeur: 'A. Kourouma · Conformité', auteur: 'conformite', pour: lire('#bo23-param'), valideur: 'direction', effet: ['seuil', lire('#bo23-param'), lire('#bo23-valeur')],
-      details: [['Paramètre', lire('#bo23-param')], ['Nouvelle valeur', lire('#bo23-valeur')], ['Justification', lire('#bo23-motif')]] });
   }
   if (ecranId === 'bo37') {
     const d = DEMANDES.find((x) => x.id === SEL.demande);
@@ -4611,6 +4612,13 @@ const SOUMISSIONS = {
     listeUtilisateurs();
     return ['Création soumise à validation', `${nom} · le compte reste inactif jusqu'à la validation d'un second habilité.`];
   },
+  seuil() {
+    const valeur = lireChamp('#bo23-valeur');
+    nouvelleDemande({ type: 'Modification d\'un seuil', demandeur: 'A. Kourouma · Conformité', auteur: 'conformite', pour: seuilCourant, valideur: 'direction', effet: ['seuil', seuilCourant, valeur],
+      details: [['Paramètre', seuilCourant], ['Valeur actuelle', contenu.querySelector('[data-seuil="valeur"]').textContent], ['Nouvelle valeur', echapper(valeur)], ['Justification', echapper(lireChamp('#bo23-motif'))]] });
+    rendrePays();
+    return ['Modification soumise à la Direction générale', `${seuilCourant} · ${valeur} · appliquée après sa validation.`];
+  },
   pays() {
     const [action, listeRetrait] = paysAction;
     const liste = action === 'retirer' ? listeRetrait : lireChamp('#bo23-pays-liste');
@@ -4758,12 +4766,15 @@ function afficher(code = location.hash.replace('#', '')) {
   journeeFinanciere();
   rendreAffectation();
   rendrePays();
-  valeurActuelle();
   lectureAudit(ecran);
   rafraichir();
 
   contenu.scrollTop = 0;
   if (demande !== ecran) ouvrirTiroir(demande.id);
+  // Un panneau demandé par le lien d'arrivée (data-choisir="tiroir:<clé>") : relance (BO26), écart (BO9).
+  const panneau = SEL.tiroir;
+  SEL.tiroir = '';
+  if (panneau) ouvrirTiroir(panneau);
 }
 
 function appliquer() {
@@ -4990,7 +5001,7 @@ contenu.addEventListener('click', (e) => {
   if (porteur?.dataset.clientCle) clientCourant = porteur.dataset.clientCle;
   if (porteur?.dataset.agenceCle) agenceCourante = porteur.dataset.agenceCle;
   const ecart = e.target.closest('[data-selection-ecart]');
-  if (ecart) { SEL.ecart = ecart.dataset.selectionEcart; return afficher(ecranCourant.id); }
+  if (ecart) { SEL.ecart = ecart.dataset.selectionEcart; SEL.tiroir = 'ecart'; return afficher(ecranCourant.id); }
   const segment = e.target.closest('[data-choix] [data-valeur]');
   if (segment && !segment.disabled) return choisirSegment(segment);
   const bouton = e.target.closest('[data-enregistrer]');
@@ -5041,8 +5052,9 @@ contenu.addEventListener('click', (e) => {
 contenu.addEventListener('keydown', (e) => {
   if (e.key !== 'Enter' || !e.target.matches('tr')) return;
   choisir(e.target);
-  if (e.target.matches('[data-selection-ecart]')) { SEL.ecart = e.target.dataset.selectionEcart; return afficher(ecranCourant.id); }
+  if (e.target.matches('[data-selection-ecart]')) { SEL.ecart = e.target.dataset.selectionEcart; SEL.tiroir = 'ecart'; return afficher(ecranCourant.id); }
   if (e.target.matches('[data-deplier]')) return deplier(e.target);
+  if (e.target.matches('[data-ouvrir-tiroir]')) return ouvrirTiroir(e.target.dataset.ouvrirTiroir);
   if (e.target.matches('[data-cible]')) {
     if (e.target.dataset.agenceCle) agenceCourante = e.target.dataset.agenceCle;
     if (e.target.dataset.clientCle) clientCourant = e.target.dataset.clientCle;
@@ -5068,7 +5080,6 @@ contenu.addEventListener('input', (e) => {
 });
 
 contenu.addEventListener('change', (e) => {
-  if (e.target.matches('#bo23-param')) valeurActuelle();
   rafraichir();
 });
 // Un écran ouvert depuis le menu n'a pas de liste d'origine (BO21 : ouvert aussi depuis BO27).
