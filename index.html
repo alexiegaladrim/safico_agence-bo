@@ -4,33 +4,41 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SAFICO — Application agence · prototype lot 1</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /*
   Jetons. Les noms viennent de la page « 01 · Fondations » du fichier Figma
   « SAFICO — Wireframes Agence » (fileKey B4x22rwoRCyKlgec6qIUj4) ; les valeurs ont été
-  passées en haute fidélité le 18/09, à la demande de Galadrim. **Palette proposée** :
-  aucune charte SAFICO n'a été fournie, l'accent bleu est à remplacer par la sienne.
+  passées en haute fidélité le 18/09, puis remplacées le 29/09 par la charte Safico
+  (piste Connexion Afrique, design system « Safico »).
   Le violet « à trancher » reste réservé aux bandeaux repris du Figma.
   Aucune couleur ni taille de texte en dehors de cette liste.
 */
+/* Polices de la charte Safico (29/09), servies depuis polices/ : aucune dépendance réseau au guichet. */
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-400-normal.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-500-normal.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-600-normal.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-700-normal.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Montserrat Alternates';src:url('polices/montserrat-alternates-latin-600-normal.woff2') format('woff2');font-weight:600;font-display:swap}
 :root{
-  --fond-page:#f4f6fa; --fond-surface:#ffffff; --fond-sourd:#eef1f6; --fond-inverse:#0f1b2d;
-  --trait-leger:#e2e7ef; --trait-net:#c4ccd8; --trait-focus:#475467; --trait-actif:#1d4ed8;
-  --texte-principal:#101828; --texte-secondaire:#5b6879; --texte-inverse:#ffffff;
-  --accent:#1d4ed8; --accent-fort:#1e3fae; --accent-fond:#eaf0fd; --accent-trait:#c3d3fa;
-  --attention:#935b00; --attention-fond:#fff5de;
-  --blocage:#b42318;  --blocage-fond:#fdeceb;
-  --valide:#067647;   --valide-fond:#e6f5ec;
-  --trancher:#5b4b8a; --trancher-fond:#efecf8;
-  --ombre:0 1px 2px rgba(16,24,40,.04),0 1px 3px rgba(16,24,40,.06);
-  --ombre-haute:0 4px 12px rgba(16,24,40,.08),0 1px 3px rgba(16,24,40,.06);
+  /* Charte Safico du 29/09 (design system « Safico », piste Connexion Afrique). Les noms
+     restent ceux de la page Fondations ; les valeurs pointent vers les jetons de la charte. */
+  --fond-page:#F0F4F7; --fond-surface:#FFFFFF; --fond-sourd:#F8FAFC; --fond-inverse:#0B3D91;
+  --trait-leger:#E1E7EC; --trait-net:#828E99; --trait-focus:#005CC7; --trait-actif:#005CC7;
+  --texte-principal:#151F2B; --texte-secondaire:#556270; --texte-inverse:#FFFFFF;
+  --accent:#005CC7; --accent-fort:#014BAE; --accent-fond:#F1F8FF; --accent-trait:#C3E0FE;
+  --marque:#0B3D91; --marque-vif:#2E9AFE; --marque-turquoise:#14B8A6; --marque-tete:#07766E;
+  --information:#0B3D91; --information-fond:#F1F8FF;
+  --attention:#935B00; --attention-fond:#FFF5DE;
+  --blocage:#B42318;  --blocage-fond:#FDECEB;
+  --valide:#27762F;   --valide-fond:#E4F6E4;
+  --trancher:#5B4B8A; --trancher-fond:#EFECF8;
+  --ombre:0 1px 2px rgba(11,61,145,.06),0 1px 3px rgba(21,31,43,.06);
+  --ombre-haute:0 6px 16px rgba(11,61,145,.10),0 2px 4px rgba(21,31,43,.06);
   --anneau:0 0 0 3px var(--accent-fond);
-  --ombre-pied:0 -4px 12px rgba(16,24,40,.06);
-  --rayon:12px; --rayon-petit:8px;
-  --police:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --ombre-pied:0 -4px 12px rgba(21,31,43,.06);
+  --rayon:16px; --rayon-petit:10px; --rayon-capsule:999px;
+  --police:"Plus Jakarta Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --police-marque:"Montserrat Alternates","Plus Jakarta Sans",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 /* `hidden` doit gagner sur les display:flex des blocs ci-dessous. */
@@ -271,6 +279,8 @@ button.pastille .chevron{width:14px;height:14px;margin:0 -3px 0 -2px}
 .segmente button:hover{color:var(--texte-principal)}
 .segmente button.actif{background:var(--fond-surface);color:var(--accent);box-shadow:var(--ombre)}
 .segmente+.champs{margin-top:14px}
+/* Panneau ouvert par le choix du canal d'un reçu (numéro WhatsApp) : même écart. */
+.segmente+[data-si-canal]{margin-top:14px}
 /* Choix segmenté tenant lieu de champ : il prend la largeur du champ, options égales. */
 .champ>.segmente{display:flex}
 .champ>.segmente button{flex:1 1 0;min-width:0}
@@ -418,6 +428,12 @@ ol.liste li::before{content:counter(rang) " ·";left:0}
 .bandeau.valide strong{color:var(--valide)}
 .bandeau.trancher{background:var(--trancher-fond);border-color:var(--trancher)}
 .bandeau.trancher strong{color:var(--trancher)}
+/* Information du jour en tête des accueils (retour client 29/09) : un message du réseau,
+   pas une alerte — ni la couleur d'attention ni celle de blocage. Fixe, sur une ligne quand
+   la place le permet : un texte qui défile se lit mal sur un poste d'entrée de gamme. */
+.bandeau.information{flex-direction:row;align-items:baseline;flex-wrap:wrap;gap:2px 10px;
+                     background:var(--accent-fond);border-color:var(--accent)}
+.bandeau.information strong{color:var(--accent);flex:none}
 
 .defilant{overflow-x:auto}
 .tableau{width:100%;border-collapse:collapse}
@@ -627,6 +643,47 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
   .avant-apres>span:first-child{display:none}
   .avant-apres>.libelle{grid-column:1/-1;margin-top:8px}
 }
+
+/* ---------- Charte Safico (29/09) ----------
+   Ajustements de forme de la charte, posés après les composants pour les surcharger sans
+   réécrire chaque règle. Capsule = signature du symbole : boutons, pastilles, pas-à-pas,
+   compteurs. Chiffres tabulaires partout où un montant, un code ou une heure s'affiche.
+   Corps de texte à 14 px au guichet ; les tableaux restent à 13 px. */
+body{font:400 14px/20px var(--police)}
+.corps{font:400 14px/20px var(--police)}
+.corps-fort{font:600 14px/20px var(--police)}
+.titre-section{font:700 16px/22px var(--police)}
+.montant{font:700 28px/34px var(--police);letter-spacing:-.01em}
+.montant-petit{font:700 18px/24px var(--police)}
+.marque .logo{width:32px;height:32px;border-radius:0;background:none}
+.marque b{font:600 18px/22px var(--police-marque);color:var(--marque);letter-spacing:-.01em}
+.bouton{border-radius:var(--rayon-capsule);padding:10px 20px}
+.bouton.secondaire{color:var(--accent)}
+.bouton.secondaire:hover{background:var(--accent-fond)}
+.bouton.discret{color:var(--accent)}
+.bouton.discret:hover{color:var(--accent-fort);background:var(--accent-fond)}
+.bouton.primaire,.bouton.secondaire{box-shadow:none}
+.retour-guichet{border-radius:var(--rayon-capsule);padding:8px 14px 8px 10px}
+.rail .item{border-radius:var(--rayon-capsule)}
+.rail .item .compte{font-variant-numeric:tabular-nums}
+.pas-a-pas{border-radius:var(--rayon-capsule)}
+.pas-a-pas .etape.actif .num{width:auto;min-width:24px;padding:0 9px;border-radius:var(--rayon-capsule)}
+.pas-a-pas .etape.actif{color:var(--texte-principal);font-weight:700}
+.bandeau{border-width:1px;border-left-width:1px;border-radius:var(--rayon-petit)}
+.bandeau strong,.bandeau span{font-size:14px;line-height:20px}
+.bandeau.trancher{border-style:dashed}
+.bandeau.information{background:var(--information-fond);border-color:var(--accent-trait)}
+.bandeau.information strong{color:var(--information)}
+.info,.rappel,.journal span,.entete-ecran p,.pas-a-pas .etape{font-size:14px;line-height:20px}
+.entete-ecran h1{font:700 22px/28px var(--police)}
+.carte h2{font:700 16px/22px var(--police)}
+.tableau td,.journal b,.valeurs,.rappel,.champ>input{font-variant-numeric:tabular-nums}
+/* « En attente » est neutre : ni succès ni alerte, et jamais la couleur de la marque. */
+.statut.attente{background:#F0F4F7;color:#3D4A59}
+.tuile.primaire{background:var(--marque);border-color:var(--marque)}
+.tuile.primaire:hover{background:#09255D;border-color:#09255D}
+.tuile.primaire .pictogramme{background:var(--marque-turquoise);color:#09255D;border-radius:var(--rayon-capsule)}
+.tuile .pictogramme{border-radius:var(--rayon-capsule)}
 </style>
 </head>
 <body>
@@ -658,8 +715,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
 <div class="app" id="app">
   <nav class="rail" id="rail">
     <a class="marque" id="marque" href="#b1">
-      <span class="logo" aria-hidden="true">S</span>
-      <span class="nom"><b>SAFICO</b><span>Agence Kaloum · Conakry</span></span>
+      <svg class="logo" viewBox="0 0 100 100" aria-hidden="true"><line x1="35" y1="43" x2="66" y2="22" stroke="var(--marque-vif)" stroke-width="21" stroke-linecap="round"/><line x1="65" y1="57" x2="34" y2="78" stroke="var(--marque-turquoise)" stroke-width="21" stroke-linecap="round"/><circle cx="18" cy="23" r="9.5" fill="var(--marque)"/><circle cx="82" cy="77" r="9.5" fill="var(--marque-tete)"/></svg>
+      <span class="nom"><b>Safico</b><span>Agence Kaloum · Conakry</span></span>
     </a>
     <div class="menu" id="menu"></div>
     <!-- Rempli par afficher() selon data-profil / data-agent de l'écran. -->
@@ -725,8 +782,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
     <section class="ecran" id="a1" data-nom="Connexion" data-node="(hors Figma)" data-gabarit="nu" data-rail="" data-titre="Connexion" data-contexte="" data-heure="08:05" data-caisse="fermee" data-trancher="Forme du second facteur (SMS, application, clé) — attendue du document sécurité d'Alhassane Sow. — Durée d'inactivité avant déconnexion automatique. — Le code est-il demandé à chaque connexion ou une fois par poste et par jour ? — Quand le code part-il ? La fiche pose les trois champs sur un même écran, donc un code envoyé d'avance. S'il n'est envoyé qu'après vérification de l'identifiant et du mot de passe, la connexion se fait en deux temps et il faut un second écran." data-fait="oui">
       <section class="carte connexion">
         <div class="marque">
-          <span class="logo" aria-hidden="true">S</span>
-          <span class="nom"><b>SAFICO</b><span>Agence Kaloum · Conakry</span></span>
+          <svg class="logo" viewBox="0 0 100 100" aria-hidden="true"><line x1="35" y1="43" x2="66" y2="22" stroke="var(--marque-vif)" stroke-width="21" stroke-linecap="round"/><line x1="65" y1="57" x2="34" y2="78" stroke="var(--marque-turquoise)" stroke-width="21" stroke-linecap="round"/><circle cx="18" cy="23" r="9.5" fill="var(--marque)"/><circle cx="82" cy="77" r="9.5" fill="var(--marque-tete)"/></svg>
+          <span class="nom"><b>Safico</b><span>Agence Kaloum · Conakry</span></span>
         </div>
         <div class="champs">
           <div class="champ">
@@ -755,7 +812,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
 
     <!-- Même guichet que B1, caisse fermée : rien ne s'encaisse ni ne se décaisse avant
          le comptage d'ouverture. La consultation reste ouverte (déduit, à trancher). -->
-    <section class="ecran" id="a2" data-nom="Guichet — caisse fermée" data-node="(hors Figma)" data-rail="Guichet" data-titre="Guichet" data-contexte="Caisse 3 fermée · ouvrez-la pour commencer" data-heure="08:06" data-caisse="fermee" data-trancher="La consultation (recherche, historique) est-elle ouverte caisse fermée ?" data-ajout="carte « Taux du jour », reprise de B1" data-fait="oui">
+    <section class="ecran" id="a2" data-nom="Guichet — caisse fermée" data-node="(hors Figma)" data-rail="Guichet" data-titre="Guichet" data-contexte="Caisse 3 fermée · ouvrez-la pour commencer" data-heure="08:06" data-caisse="fermee" data-trancher="La consultation (recherche, historique) est-elle ouverte caisse fermée ? — Bandeau d'information du jour : combien de messages à la fois ? (Réponse client du 29/09 : les Opérations publient, avec un ciblage par destinataire — caissiers, chefs d'agence —, pas par zone ; durée d'affichage non déterminée.) — (déduit) Le message « Nouvelle destination : Mali… » est une valeur de démonstration." data-ajout="carte « Taux du jour », reprise de B1" data-fait="oui">
       <!-- Retour client du 22/09 : rien n'est possible caisse fermée, le bandeau porte donc
            l'ouverture. Une modale bloquante a été essayée le même jour, puis retirée : elle
            fermait aussi la consultation du taux, qu'ouvre la décision du 17/09. Voir
@@ -772,6 +829,12 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
            et caisse dessous. La tuile de caisse porte l'action de l'écran. -->
       <div class="ligne align-haut">
         <div class="colonne" style="--part:900">
+          <!-- Information du jour (retour client du 29/09), comme en B1. Le bandeau
+               « Caisse fermée » reste le premier élément de l'écran (retour du 22/09). -->
+          <div class="bandeau information" role="status">
+            <strong>Information du jour</strong>
+            <span>Nouvelle destination : Mali, retraits disponibles dans toutes les agences partenaires de Bamako dès aujourd'hui.</span>
+          </div>
           <div class="ligne">
             <a class="tuile primaire" aria-disabled="true">
               <span class="pictogramme"><svg class="ico"><use href="#i-envoyer"/></svg></span>
@@ -795,9 +858,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
             </a>
             <section class="carte">
               <h2>À traiter</h2>
-              <div class="info"><span>Transferts en attente de retrait</span><span>14</span></div>
+              <!-- Retour client du 29/09 : ni les transferts en attente de retrait ni ceux
+                   arrivant à expiration ne sont montrés au caissier. -->
               <div class="info"><span>Demandes en attente de validation</span><span>2</span></div>
-              <div class="info"><span>Transferts arrivant à expiration</span><span>3 · sous 5 jours</span></div>
             </section>
           </div>
         </div>
@@ -1117,7 +1180,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
             <div class="champs">
               <div class="champ">
                 <label for="a10-montant">Montant remboursé</label>
-                <input id="a10-montant" value="50 000 GNF" data-compte="cloture" data-champ="rembourse">
+                <input id="a10-montant" inputmode="numeric" data-montant="GNF" value="50 000 GNF" data-compte="cloture" data-champ="rembourse">
               </div>
               <label class="case">
                 <input type="checkbox" id="a10-recompte">
@@ -1210,7 +1273,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
           <div class="champs">
             <div class="champ">
               <label for="a12-montant">Montant demandé</label>
-              <input id="a12-montant" value="5 000 000 GNF" data-montant-demande>
+              <input id="a12-montant" inputmode="numeric" data-montant="GNF" value="5 000 000 GNF" data-montant-demande>
             </div>
           </div>
           <div class="separateur"></div>
@@ -1438,7 +1501,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
           <div class="champs">
             <div class="champ focus">
               <label for="d5-remis">Montant effectivement remis</label>
-              <input id="d5-remis" value="5 045 000 GNF">
+              <input id="d5-remis" inputmode="numeric" data-montant="GNF" value="5 045 000 GNF">
               <span class="aide">Saisi par le caissier, comparé au montant dû</span>
             </div>
           </div>
@@ -1489,31 +1552,16 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
     <section class="ecran" id="d6" data-nom="Reçu de remboursement" data-node="(hors Figma)" data-profil="caissier" data-rail="Transactions" data-titre="Reçu de remboursement" data-contexte="Prévisualisation · 2 exemplaires signés" data-heure="16:26" data-caisse="ouverte" data-trancher="La fiche des mentions obligatoires d'Issiaga couvre-t-elle le reçu de remboursement ?" data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
-          <section class="carte" data-si-canal="imprimer">
-            <h2>Format d'impression</h2>
-            <div class="segmente" data-choix="format">
-              <button class="actif" data-valeur="58" data-imprimante="Comptoir 3 · thermique 58 mm">Ticket 58 mm</button>
-              <button data-valeur="80" data-imprimante="Comptoir 3 · thermique 80 mm">Ticket 80 mm</button>
-              <button data-valeur="a4" data-imprimante="Comptoir 3 · A4">A4</button>
-            </div>
-            <div class="champs">
-              <div class="champ">
-                <label for="d6-imprimante">Imprimante</label>
-                <input id="d6-imprimante" value="Comptoir 3 · thermique 58 mm" data-champ-imprimante>
-              </div>
-            </div>
-            <div class="info" data-si-format="58 80"><span>Exemplaires</span><span>1 · réimpression libre</span></div>
-            <div class="info" data-si-format="a4"><span>Exemplaires</span><span>2 sur la feuille · expéditeur et agence, à couper</span></div>
-            <div class="info"><span>Réimpression</span><span>Possible sans restriction</span></div>
-          </section>
-
+          <!-- Retour client du 29/09, comme en B11 : la transmission se choisit en premier,
+               et l'envoi par WhatsApp n'exclut plus l'impression (« Les deux »). -->
           <section class="carte">
             <h2>Transmission</h2>
             <div class="segmente" data-choix="canal">
               <button class="actif" data-valeur="imprimer">Imprimer</button>
               <button data-valeur="whatsapp">Envoyer par WhatsApp</button>
+              <button data-valeur="les-deux">Les deux</button>
             </div>
-            <div data-si-canal="whatsapp" hidden>
+            <div data-si-canal="whatsapp les-deux" hidden>
               <div class="champs">
                 <div class="champ focus">
                   <label for="d6-numero">Numéro WhatsApp</label>
@@ -1527,6 +1575,21 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
                 <span>L'expéditeur accepte de recevoir son reçu sous forme numérique</span>
               </label>
             </div>
+          </section>
+
+          <section class="carte" data-si-canal="imprimer les-deux">
+            <h2>Format d'impression</h2>
+            <div class="segmente" data-choix="format">
+              <button class="actif" data-valeur="a4" data-imprimante="Comptoir 3 · A4">A4</button>
+              <button data-valeur="58" data-imprimante="Comptoir 3 · thermique 58 mm">Ticket 58 mm</button>
+              <button data-valeur="80" data-imprimante="Comptoir 3 · thermique 80 mm">Ticket 80 mm</button>
+            </div>
+            <!-- Retour client du 29/09 : l'imprimante est une information, pas un champ à
+                 remplir. Elle suit le format choisi. -->
+            <div class="info"><span>Imprimante</span><span data-champ-imprimante>Comptoir 3 · A4</span></div>
+            <div class="info" data-si-format="58 80"><span>Exemplaires</span><span>1 · réimpression libre</span></div>
+            <div class="info" data-si-format="a4"><span>Exemplaires</span><span>2 sur la feuille · expéditeur et agence, à couper</span></div>
+            <div class="info"><span>Réimpression</span><span>Possible sans restriction</span></div>
           </section>
         </div>
 
@@ -1547,7 +1610,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
               <div class="l"><span>Statut</span><span>Remboursée</span></div>
             </div>
             <div class="bloc-recu">
-              <div class="l"><span>Expéditeur</span><span>BALDÉ Fatoumata</span></div>
+              <div class="l"><span>Nom de l'expéditeur</span><span>BALDÉ</span></div>
+              <div class="l"><span>Prénom(s) de l'expéditeur</span><span>Fatoumata</span></div>
               <div class="l"><span>Motif</span><span>Demande de l'expéditeur</span></div>
             </div>
             <div class="bloc-recu">
@@ -1576,7 +1640,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
     </section>
 
     <!-- Profil chef (atelier 3) : c'est lui qui tente l'annulation. -->
-    <section class="ecran" id="d7" data-nom="Opération non annulable" data-node="(hors Figma)" data-profil="chef" data-rail="Transactions" data-titre="Annuler l'opération" data-contexte="SFC-7C10-4482 · payée le 03/09 à 15:04" data-heure="16:11" data-trancher="(déduit) Le lien vers les transferts arrivant à expiration mène à un écran du guichetier (D9) : le chef d'agence y a-t-il accès ?" data-fait="oui">
+    <section class="ecran" id="d7" data-nom="Opération non annulable" data-node="(hors Figma)" data-profil="chef" data-rail="Transactions" data-titre="Annuler l'opération" data-contexte="SFC-7C10-4482 · payée le 03/09 à 15:04" data-heure="16:11" data-fait="oui">
       <div class="bandeau blocage">
         <strong>L'annulation n'est plus possible</strong>
         <span>Les fonds ont été retirés : l'opération est close.</span>
@@ -1684,7 +1748,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
     </section>
 
     <!-- Références, noms et montants inventés pour la démonstration (fiche de cadrage). -->
-    <section class="ecran" id="d9" data-nom="Transferts arrivant à expiration" data-node="(hors Figma)" data-profil="caissier" data-rail="Transactions" data-titre="Transferts arrivant à expiration" data-contexte="3 opérations · sous 5 jours" data-heure="14:32" data-trancher="Qui contacte l'expéditeur pour le remboursement d'office, et comment ? — Le remboursement d'office passe-t-il par la validation (« Remboursement — Chef / Finance → Finance ») ? — Où l'expéditeur est-il remboursé : agence d'envoi ou n'importe quelle agence ? — Ces transferts concernent-ils le guichetier ou seulement le chef d'agence ? — Les références, noms et montants de ce tableau sont inventés pour la démonstration." data-fait="oui">
+    <!-- Retour client du 29/09 : écran du seul chef d'agence (ouvert depuis D11 et D7). Le
+         caissier n'y accède plus, la liste étant jugée sensible (risque de fraude). -->
+    <section class="ecran" id="d9" data-nom="Transferts arrivant à expiration" data-node="(hors Figma)" data-profil="chef" data-rail="Agence" data-titre="Transferts arrivant à expiration" data-contexte="3 opérations · sous 5 jours" data-heure="14:32" data-trancher="Qui contacte l'expéditeur pour le remboursement d'office, et comment ? — Le remboursement d'office passe-t-il par la validation (« Remboursement — Chef / Finance → Finance ») ? — Où l'expéditeur est-il remboursé : agence d'envoi ou n'importe quelle agence ? — (retour client 29/09) Tranché : ces transferts ne concernent que le chef d'agence, le caissier ne les voit plus. — Les références, noms et montants de ce tableau sont inventés pour la démonstration." data-fait="oui">
       <section class="carte">
         <h2>À surveiller</h2>
         <div class="defilant">
@@ -1743,7 +1809,13 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
     </section>
 
     <!-- ===== Chef d'agence ===== -->
-    <section class="ecran" id="d11" data-nom="Mon agence" data-node="(hors Figma)" data-profil="chef" data-rail="Agence" data-titre="Agence Kaloum" data-contexte="Jeudi 03/09/2026 · 3 caisses" data-heure="16:16" data-trancher="Le chef d'agence « souvent lui-même au guichet » tient-il une caisse ? Si oui, il ne peut pas valider les demandes de sa propre caisse (cumul interdit) : qui les valide ? — Quels indicateurs d'activité de l'agence veut-il voir (reporting par profil, décision 10, sans réponse) ?" data-fait="oui">
+    <section class="ecran" id="d11" data-nom="Mon agence" data-node="(hors Figma)" data-profil="chef" data-rail="Agence" data-titre="Agence Kaloum" data-contexte="Jeudi 03/09/2026 · 3 caisses" data-heure="16:16" data-trancher="Le chef d'agence « souvent lui-même au guichet » tient-il une caisse ? Si oui, il ne peut pas valider les demandes de sa propre caisse (cumul interdit) : qui les valide ? — Quels indicateurs d'activité de l'agence veut-il voir (reporting par profil, décision 10, sans réponse) ? — Bandeau d'information du jour : combien de messages à la fois ? (Réponse client du 29/09 : les Opérations publient, avec un ciblage par destinataire — caissiers, chefs d'agence —, pas par zone ; durée d'affichage non déterminée.) — (déduit) Le message « Nouvelle destination : Mali… » est une valeur de démonstration." data-fait="oui">
+      <!-- Retour client du 29/09 : l'information du jour, comme sur l'accueil du caissier. -->
+      <div class="bandeau information" role="status">
+        <strong>Information du jour</strong>
+        <span>Nouvelle destination : Mali, retraits disponibles dans toutes les agences partenaires de Bamako dès aujourd'hui.</span>
+      </div>
+
       <!-- Refonte du 18/09 : ce qui demande une action du chef (la file) passe en tête,
            au-dessus de l'état des caisses. -->
       <div class="ligne">
@@ -2228,7 +2300,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
           <div class="champs">
             <div class="champ focus">
               <label for="d21-remis">Montant effectivement remis</label>
-              <input id="d21-remis" value="460 000 GNF">
+              <input id="d21-remis" inputmode="numeric" data-montant="GNF" value="460 000 GNF">
               <span class="aide">Saisi par le caissier, comparé au montant dû</span>
             </div>
           </div>
@@ -2278,30 +2350,16 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
     <section class="ecran" id="d22" data-nom="Reçu de remboursement d'office" data-node="(hors Figma)" data-profil="caissier" data-rail="Transactions" data-titre="Reçu de remboursement" data-contexte="Prévisualisation · 2 exemplaires signés" data-heure="16:39" data-caisse="ouverte" data-ajout="parcours du remboursement d'office : la fiche de cadrage n'en donne aucun écran" data-trancher="La fiche des mentions obligatoires d'Issiaga couvre-t-elle le reçu de remboursement, et distingue-t-elle l'annulation de l'expiration ? — La date d'expiration manque : le reçu porte « À charger » là où il devrait porter une date. — (déduit) Le numéro WhatsApp pré-rempli est celui de CONDÉ Sékou en B4." data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
-          <section class="carte" data-si-canal="imprimer">
-            <h2>Format d'impression</h2>
-            <div class="segmente" data-choix="format">
-              <button class="actif" data-valeur="58" data-imprimante="Comptoir 3 · thermique 58 mm">Ticket 58 mm</button>
-              <button data-valeur="80" data-imprimante="Comptoir 3 · thermique 80 mm">Ticket 80 mm</button>
-              <button data-valeur="a4" data-imprimante="Comptoir 3 · A4">A4</button>
-            </div>
-            <div class="champs">
-              <div class="champ">
-                <label for="d22-imprimante">Imprimante</label>
-                <input id="d22-imprimante" value="Comptoir 3 · thermique 58 mm" data-champ-imprimante>
-              </div>
-            </div>
-            <div class="info" data-si-format="58 80"><span>Exemplaires</span><span>1 · réimpression libre</span></div>
-            <div class="info" data-si-format="a4"><span>Exemplaires</span><span>2 sur la feuille · expéditeur et agence, à couper</span></div>
-            <div class="info"><span>Réimpression</span><span>Possible sans restriction</span></div>
-          </section>
+          <!-- Retour client du 29/09, comme en B11 : la transmission se choisit en premier,
+               et l'envoi par WhatsApp n'exclut plus l'impression (« Les deux »). -->
           <section class="carte">
             <h2>Transmission</h2>
             <div class="segmente" data-choix="canal">
               <button class="actif" data-valeur="imprimer">Imprimer</button>
               <button data-valeur="whatsapp">Envoyer par WhatsApp</button>
+              <button data-valeur="les-deux">Les deux</button>
             </div>
-            <div data-si-canal="whatsapp" hidden>
+            <div data-si-canal="whatsapp les-deux" hidden>
               <div class="champs">
                 <div class="champ focus">
                   <label for="d22-numero">Numéro WhatsApp</label>
@@ -2315,6 +2373,21 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
                 <span>L'expéditeur accepte de recevoir son reçu sous forme numérique</span>
               </label>
             </div>
+          </section>
+
+          <section class="carte" data-si-canal="imprimer les-deux">
+            <h2>Format d'impression</h2>
+            <div class="segmente" data-choix="format">
+              <button class="actif" data-valeur="a4" data-imprimante="Comptoir 3 · A4">A4</button>
+              <button data-valeur="58" data-imprimante="Comptoir 3 · thermique 58 mm">Ticket 58 mm</button>
+              <button data-valeur="80" data-imprimante="Comptoir 3 · thermique 80 mm">Ticket 80 mm</button>
+            </div>
+            <!-- Retour client du 29/09 : l'imprimante est une information, pas un champ à
+                 remplir. Elle suit le format choisi. -->
+            <div class="info"><span>Imprimante</span><span data-champ-imprimante>Comptoir 3 · A4</span></div>
+            <div class="info" data-si-format="58 80"><span>Exemplaires</span><span>1 · réimpression libre</span></div>
+            <div class="info" data-si-format="a4"><span>Exemplaires</span><span>2 sur la feuille · expéditeur et agence, à couper</span></div>
+            <div class="info"><span>Réimpression</span><span>Possible sans restriction</span></div>
           </section>
         </div>
         <div class="colonne" style="--part:476">
@@ -2334,7 +2407,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
               <div class="l"><span>Statut</span><span>Remboursée</span></div>
             </div>
             <div class="bloc-recu">
-              <div class="l"><span>Expéditeur</span><span>CONDÉ Sékou</span></div>
+              <div class="l"><span>Nom de l'expéditeur</span><span>CONDÉ</span></div>
+              <div class="l"><span>Prénom(s) de l'expéditeur</span><span>Sékou</span></div>
               <div class="l"><span>Cause</span><span>30 jours sans retrait</span></div>
             </div>
             <div class="bloc-recu">
@@ -2763,6 +2837,22 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
 
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
+          <!-- 29/09 : le format des reçus B11, C9, D6, D22 (A4 par défaut, imprimante en
+               lecture seule). Hors-ligne, le reçu ne fait que s'imprimer : pas de carte
+               Transmission, pas de WhatsApp (décision Galadrim du 29/09). -->
+          <section class="carte">
+            <h2>Format d'impression</h2>
+            <div class="segmente" data-choix="format">
+              <button class="actif" data-valeur="a4" data-imprimante="Comptoir 3 · A4">A4</button>
+              <button data-valeur="58" data-imprimante="Comptoir 3 · thermique 58 mm">Ticket 58 mm</button>
+              <button data-valeur="80" data-imprimante="Comptoir 3 · thermique 80 mm">Ticket 80 mm</button>
+            </div>
+            <div class="info"><span>Imprimante</span><span data-champ-imprimante>Comptoir 3 · A4</span></div>
+            <div class="info" data-si-format="58 80"><span>Exemplaires</span><span>1 · réimpression libre</span></div>
+            <div class="info" data-si-format="a4"><span>Exemplaires</span><span>2 sur la feuille · client et agence, à couper</span></div>
+            <p class="pied">Hors-ligne, le reçu s'imprime seulement : l'envoi par WhatsApp revient avec la connexion.</p>
+          </section>
+
           <div class="bandeau trancher">
             <strong>Quelle mention sur le reçu ?</strong>
             <span>Elle doit dire à l'agence que l'opération attend sa validation, sans alarmer le client. Le client n'étant pas prévenu du mode dégradé, c'est elle qui porte toute l'information.</span>
@@ -2782,9 +2872,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
 
         <div class="colonne" style="--part:476">
         <section class="carte">
-          <h2>Aperçu · ticket 80 mm</h2>
-          <div class="recu">
+          <h2>Aperçu</h2>
+          <!-- Un seul exemplaire écrit ici : en A4, le second est cloné par le JS. -->
+          <div class="recu" data-recu data-copies="Exemplaire client|Exemplaire agence">
             <div class="exemplaire">
+            <p class="copie"></p>
             <div class="entete">
               <b>SAFICO</b>
               <span>Agence Kaloum · Conakry</span>
@@ -2797,9 +2889,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
               <div class="l"><span>Guichetier</span><span>M. Camara</span></div>
             </div>
             <div class="bloc-recu">
-              <div class="l"><span>Expéditeur</span><span>BALDÉ Fatoumata</span></div>
+              <div class="l"><span>Nom de l'expéditeur</span><span>BALDÉ</span></div>
+              <div class="l"><span>Prénom(s) de l'expéditeur</span><span>Fatoumata</span></div>
               <div class="l"><span>Origine des fonds</span><span>Salaire</span></div>
-              <div class="l"><span>Bénéficiaire</span><span>DIALLO Alpha</span></div>
+              <div class="l"><span>Nom du bénéficiaire</span><span>DIALLO</span></div>
+              <div class="l"><span>Prénom(s) du bénéficiaire</span><span>Alpha</span></div>
               <div class="l"><span>Destination</span><span>Kankan · Guinée</span></div>
               <div class="l"><span>Réception</span><span>Espèces en agence</span></div>
             </div>
@@ -3059,12 +3153,21 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
 
     <!-- fin du bloc E -->
 
-    <section class="ecran" id="b1" data-nom="Accueil guichet" data-node="6:2" data-rail="Guichet" data-titre="Guichet" data-contexte="Poste ouvert depuis 08:12 · 37 opérations aujourd'hui" data-fait="oui" data-ajout="carte « Taux du jour »" data-trancher="Refonte du 22/09 (retour client) : Envoyer et Payer en haut à gauche, le taux du jour en haut à droite, les dernières opérations et la caisse dessous. La tuile « Mes opérations du jour » disparaît : C14 s'ouvre par « Tout voir » — faut-il lui rendre un accès propre ? — Refonte du 18/09 (retour client) : encaissements et décaissements du jour quittent l'accueil pour « Mes opérations du jour » (C14) et « Ma caisse » (A6). Le caissier doit-il les voir dès l'accueil ? — Le taux affiché au guichet est-il le taux de la Banque centrale ou un taux SAFICO avec marge de change, et qui fixe cette marge ? — Si le taux change pendant une simulation, lequel s'applique ? — (déduit) « Mis à jour à 08:00 » est une valeur de démonstration.">
+    <section class="ecran" id="b1" data-nom="Accueil guichet" data-node="6:2" data-rail="Guichet" data-titre="Guichet" data-contexte="Poste ouvert depuis 08:12" data-fait="oui" data-ajout="carte « Taux du jour »" data-trancher="Bandeau d'information du jour : combien de messages à la fois ? (Réponse client du 29/09 : les Opérations publient, avec un ciblage par destinataire — caissiers, chefs d'agence —, pas par zone ; durée d'affichage non déterminée.) — (déduit) Le message « Nouvelle destination : Mali… » est une valeur de démonstration. — Refonte du 22/09 (retour client) : Envoyer et Payer en haut à gauche, le taux du jour en haut à droite, les dernières opérations et la caisse dessous. La tuile « Mes opérations du jour » disparaît : C14 s'ouvre par « Tout voir » — faut-il lui rendre un accès propre ? — Refonte du 18/09 (retour client) : encaissements et décaissements du jour quittent l'accueil pour « Mes opérations du jour » (C14) et « Ma caisse » (A6). Le caissier doit-il les voir dès l'accueil ? — Le taux affiché au guichet est-il le taux de la Banque centrale ou un taux SAFICO avec marge de change, et qui fixe cette marge ? — Si le taux change pendant une simulation, lequel s'applique ? — (déduit) « Mis à jour à 08:00 » est une valeur de démonstration.">
       <!-- Retour client du 22/09 : en haut, les deux actions du guichet et, à leur droite,
            le taux du jour — la première chose que le client demande en arrivant. Les
            dernières opérations et la caisse passent dessous. -->
       <div class="ligne align-haut">
         <div class="colonne" style="--part:900">
+          <!-- Retour client du 29/09 : une « bande » d'information du jour en tête de
+               l'accueil de chaque profil (B1, A2, D11). En tête de la colonne des actions et
+               non sur toute la largeur : la carte du taux, plus haute que les deux rangées,
+               lui laisse la place, et l'accueil tient toujours sans défilement à 1440 × 800.
+               Message de démonstration. -->
+          <div class="bandeau information" role="status">
+            <strong>Information du jour</strong>
+            <span>Nouvelle destination : Mali, retraits disponibles dans toutes les agences partenaires de Bamako dès aujourd'hui.</span>
+          </div>
           <div class="ligne">
             <a class="tuile primaire" href="#b2">
               <span class="pictogramme"><svg class="ico"><use href="#i-envoyer"/></svg></span>
@@ -3090,9 +3193,10 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
             </a>
             <section class="carte">
               <h2>À traiter</h2>
-              <div class="info"><span>Transferts en attente de retrait</span><span>14</span></div>
+              <!-- Retour client du 29/09 : « Transferts en attente de retrait » et « Transferts
+                   arrivant à expiration » ne sont plus montrés au caissier (information
+                   sensible, porte ouverte à la fraude). Le chef d'agence les garde (D11, D9). -->
               <div class="info ouvrable" tabindex="0" data-cible="d10"><span>Demandes en attente de validation</span><span>2</span></div>
-              <div class="info ouvrable" tabindex="0" data-cible="d9"><span>Transferts arrivant à expiration</span><span>3 · sous 5 jours</span></div>
             </section>
           </div>
         </div>
@@ -3177,7 +3281,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
             </div>
             <div class="champ focus">
               <label for="b2-montant">Montant à envoyer</label>
-              <input id="b2-montant" value="5 000 000 GNF">
+              <input id="b2-montant" inputmode="numeric" data-montant="GNF" value="5 000 000 GNF">
               <span class="aide">Le client peut aussi partir du montant à recevoir</span>
             </div>
             <!-- Remplace le champ « Canal de retrait » du Figma (retour client 10/09) :
@@ -3217,8 +3321,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
         </div>
       </div>
 
+      <!-- Retour client du 29/09 : la simulation ne s'imprime plus, pour des raisons de
+           sécurité. -->
       <div class="actions a-droite">
-        <button class="bouton secondaire">Imprimer la simulation</button>
         <a class="bouton primaire" href="#b5">Démarrer l'envoi</a>
       </div>
     </section>
@@ -3236,7 +3341,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
       </section>
     </section>
 
-    <section class="ecran" id="b4" data-nom="Envoi — étape 2 · Plafond dépassé" data-node="8:257" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="2" data-contexte="Étape 2 sur 5 · opération impossible en l'état" data-fait="oui">
+    <section class="ecran" id="b4" data-nom="Envoi — étape 2 · Plafond dépassé" data-node="8:257" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="2" data-contexte="Étape 2 sur 5 · opération impossible en l'état" data-trancher="(retour client 29/09) L'historique du client (date d'enregistrement, nombre d'opérations) est retiré de l'écran du caissier. Le cumul du jour par agence (Kaloum 09:14, Matam 11:02) reste affiché, parce que le blocage ne se comprend pas sans lui : relève-t-il aussi de l'historique à masquer ? Si oui, le caissier ne verrait que « plafond dépassé » et le montant maximum possible." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>Identifier l'expéditeur</h2>
@@ -3253,7 +3358,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
           </div>
           <div class="bandeau valide">
             <strong>Client retrouvé</strong>
-            <span>SOUMAH Alpha · client depuis janvier 2025 · 9 opérations.</span>
+            <!-- Retour client du 29/09 : ni date d'enregistrement ni nombre d'opérations sur
+                 l'interface du caissier (étaient : « client depuis janvier 2025 · 9 opérations »). -->
+            <span>SOUMAH Alpha</span>
           </div>
           <div class="champs">
             <div class="paire">
@@ -3335,7 +3442,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
           </div>
           <div class="bandeau valide">
             <strong>Client retrouvé</strong>
-            <span>Fatoumata Baldé · cliente depuis mars 2025 · 14 opérations.</span>
+            <!-- Retour client du 29/09 : ni date d'enregistrement ni nombre d'opérations sur
+                 l'interface du caissier (étaient : « cliente depuis mars 2025 · 14 opérations »). -->
+            <span>Fatoumata Baldé</span>
           </div>
           <div class="champs">
             <div class="paire">
@@ -3753,11 +3862,15 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
       </div>
     </section>
 
-    <section class="ecran" id="b8" data-nom="Envoi — étape 4 · Récapitulatif" data-node="11:595" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="4" data-contexte="Étape 4 sur 5 · dernier point de renoncement pour le client" data-trancher="Paiement direct (wallet, banque) : le versement part-il à la validation de l'encaissement ? Que se passe-t-il s'il échoue — nouvel essai, bascule en retrait espèces, remboursement de l'expéditeur ? Peut-on annuler un versement direct ?" data-fait="oui">
+    <section class="ecran" id="b8" data-nom="Envoi — étape 4 · Récapitulatif" data-node="11:595" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="4" data-contexte="Étape 4 sur 5 · dernier point de renoncement pour le client" data-trancher="Paiement direct (wallet, banque) : le versement part-il à la validation de l'encaissement ? Que se passe-t-il s'il échoue — nouvel essai, bascule en retrait espèces, remboursement de l'expéditeur ? Peut-on annuler un versement direct ? — La mention du taux bloqué est retirée du récapitulatif (retour client 29/09). Doit-elle aussi disparaître du reçu (B11) et de l'écran de retrait (C3) ? — (retour client 29/09) Nom et prénom(s) sont dissociés, mais le titulaire d'un compte bancaire reste un champ unique, comme il est saisi en B7 : faut-il aussi le saisir et l'afficher en nom et prénom(s) ?" data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte">
           <h2>Expéditeur</h2>
-          <div class="info"><span>Nom</span><span>BALDÉ Fatoumata</span></div>
+          <!-- Retour client du 29/09 : nom et prénom(s) sur deux lignes. Une inversion peut
+               faire refuser le paiement : « Touré Mariam » et « Mariam Touré » sont deux
+               personnes différentes dans certains pays. -->
+          <div class="info"><span>Nom</span><span>BALDÉ</span></div>
+          <div class="info"><span>Prénom(s)</span><span>Fatoumata</span></div>
           <div class="info"><span>Téléphone</span><span>+224 62 44 18 07</span></div>
           <div class="info"><span>Pièce</span><span>CNI · GN-4471029</span></div>
           <div class="info"><span>Statut</span><span>Cliente connue</span></div>
@@ -3767,7 +3880,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
         <section class="carte">
           <h2>Bénéficiaire</h2>
           <div class="info"><span>Réception</span><span data-si-mode="especes">Retrait en espèces en agence</span><span data-si-mode="wallet">Wallet · versement direct</span><span data-si-mode="banque">Compte bancaire · virement direct</span></div>
-          <div class="info" data-si-mode="especes wallet"><span>Nom</span><span>TOURÉ Mariam</span></div>
+          <div class="info" data-si-mode="especes wallet"><span>Nom</span><span>TOURÉ</span></div>
+          <div class="info" data-si-mode="especes wallet"><span>Prénom(s)</span><span>Mariam</span></div>
           <div class="info" data-si-mode="especes"><span>Téléphone</span><span>+225 07 88 41 20</span></div>
           <div class="info" data-si-mode="wallet"><span>Opérateur</span><span>Orange Money</span></div>
           <div class="info" data-si-mode="wallet"><span>Numéro de wallet</span><span>+225 07 88 41 20</span></div>
@@ -3782,7 +3896,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
           <div class="info"><span>Montant envoyé</span><span>5 000 000 GNF</span></div>
           <div class="info"><span>Frais</span><span>45 000 GNF</span></div>
           <div class="info"><span>Taux</span><span>1 XOF = 18,32 GNF</span></div>
-          <div class="info"><span>Taux bloqué</span><span data-si-mode="especes">Jusqu'au retrait</span><span data-si-mode="wallet banque">Jusqu'au versement</span></div>
+          <!-- Retour client du 29/09 : la ligne « Taux bloqué · Jusqu'au retrait » est retirée,
+               elle semait la confusion. Elle reste sur le reçu B11 et sur C3 (à trancher). -->
           <div class="info"><span>Reçu par le bénéficiaire</span><span>272 926 XOF</span></div>
         </section>
       </div>
@@ -3817,6 +3932,13 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
     </section>
 
     <section class="ecran" id="b9" data-nom="Envoi — étape 5 · Encaissement espèces" data-node="11:752" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="5" data-contexte="Étape 5 sur 5 · la caisse est mise à jour avant le reçu" data-fait="oui">
+      <!-- Retour client du 29/09 : un rappel, en tête de l'écran, qu'à ce stade le guichetier
+           doit encaisser l'argent. Attention, pas blocage : rien n'est encore refusé. -->
+      <div class="bandeau attention">
+        <strong>Rappel</strong>
+        <span>Encaissez les espèces du client avant de valider.</span>
+      </div>
+
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>Encaissement</h2>
@@ -3824,7 +3946,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
           <div class="champs">
             <div class="champ focus">
               <label for="b9-recu">Montant reçu du client</label>
-              <input id="b9-recu" value="6 000 000 GNF">
+              <input id="b9-recu" inputmode="numeric" data-montant="GNF" value="6 000 000 GNF">
               <span class="aide">Saisir ce que le client remet réellement</span>
             </div>
           </div>
@@ -3882,33 +4004,16 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
     <section class="ecran" id="b11" data-nom="Envoi — reçu, impression ou envoi" data-node="12:602 + 12:761" data-rail="Envoyer" data-titre="Reçu de l'envoi" data-contexte="Prévisualisation · impression ou envoi au client" data-trancher="Sans impression, il n'y a pas de signature manuscrite. La signature électronique proposée par SAFICO est hors du chiffrage actuel, et ce qui fait foi devant la BCRG reste à confirmer. — Paiement direct (wallet, banque) : reçu supposé sans code ni validité de 30 jours. Doit-il porter la preuve du versement (identifiant de transaction du partenaire), et peut-il être remis avant que le partenaire ait confirmé ? — En ticket, l'exemplaire agence s'obtient-il par une seconde impression automatique ou à la demande ?" data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
-          <!-- Format vivant (retour client 10/09) : en A4, deux exemplaires sur la même
-               feuille, que le caissier coupe en deux ; en ticket, un seul exemplaire. -->
-          <section class="carte" data-si-canal="imprimer">
-            <h2>Format d'impression</h2>
-            <div class="segmente" data-choix="format">
-              <button class="actif" data-valeur="58" data-imprimante="Comptoir 3 · thermique 58 mm">Ticket 58 mm</button>
-              <button data-valeur="80" data-imprimante="Comptoir 3 · thermique 80 mm">Ticket 80 mm</button>
-              <button data-valeur="a4" data-imprimante="Comptoir 3 · A4">A4</button>
-            </div>
-            <p class="pied">La mise en page s'adapte automatiquement au format détecté.</p>
-            <div class="champs">
-              <div class="champ">
-                <label for="b11-imprimante">Imprimante</label>
-                <input id="b11-imprimante" value="Comptoir 3 · thermique 58 mm" data-champ-imprimante>
-              </div>
-            </div>
-            <div class="info" data-si-format="58 80"><span>Exemplaires</span><span>1 · réimpression libre</span></div>
-            <div class="info" data-si-format="a4"><span>Exemplaires</span><span>2 sur la feuille · client et agence, à couper</span></div>
-          </section>
-
+          <!-- Retour client du 29/09 : la transmission se choisit en premier, et l'envoi par
+               WhatsApp n'exclut plus l'impression (« Les deux »). -->
           <section class="carte">
             <h2>Transmission</h2>
             <div class="segmente" data-choix="canal">
               <button class="actif" data-valeur="imprimer">Imprimer</button>
               <button data-valeur="whatsapp">Envoyer par WhatsApp</button>
+              <button data-valeur="les-deux">Les deux</button>
             </div>
-            <div data-si-canal="whatsapp" hidden>
+            <div data-si-canal="whatsapp les-deux" hidden>
               <div class="champs">
                 <div class="champ focus">
                   <label for="b11-numero">Numéro WhatsApp</label>
@@ -3923,6 +4028,23 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
               </label>
               <p class="pied">Le SMS ne peut porter que la référence et le montant : 160 caractères, facturés à l'unité.</p>
             </div>
+          </section>
+
+          <!-- Format vivant (retour client 10/09) : en A4, deux exemplaires sur la même
+               feuille, que le caissier coupe en deux ; en ticket, un seul exemplaire. -->
+          <section class="carte" data-si-canal="imprimer les-deux">
+            <h2>Format d'impression</h2>
+            <div class="segmente" data-choix="format">
+              <button class="actif" data-valeur="a4" data-imprimante="Comptoir 3 · A4">A4</button>
+              <button data-valeur="58" data-imprimante="Comptoir 3 · thermique 58 mm">Ticket 58 mm</button>
+              <button data-valeur="80" data-imprimante="Comptoir 3 · thermique 80 mm">Ticket 80 mm</button>
+            </div>
+            <p class="pied">La mise en page s'adapte automatiquement au format détecté.</p>
+            <!-- Retour client du 29/09 : l'imprimante est une information, pas un champ à
+                 remplir. Elle suit le format choisi. -->
+            <div class="info"><span>Imprimante</span><span data-champ-imprimante>Comptoir 3 · A4</span></div>
+            <div class="info" data-si-format="58 80"><span>Exemplaires</span><span>1 · réimpression libre</span></div>
+            <div class="info" data-si-format="a4"><span>Exemplaires</span><span>2 sur la feuille · client et agence, à couper</span></div>
           </section>
 
           <section class="carte">
@@ -3955,9 +4077,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
               <div class="l"><span>Guichetier</span><span>M. Camara</span></div>
             </div>
             <div class="bloc-recu">
-              <div class="l"><span>Expéditeur</span><span>BALDÉ Fatoumata</span></div>
+              <div class="l"><span>Nom de l'expéditeur</span><span>BALDÉ</span></div>
+              <div class="l"><span>Prénom(s) de l'expéditeur</span><span>Fatoumata</span></div>
               <div class="l"><span>Origine des fonds</span><span data-origine-lu>Salaire</span></div>
-              <div class="l"><span>Bénéficiaire</span><span>TOURÉ Mariam</span></div>
+              <div class="l"><span>Nom du bénéficiaire</span><span>TOURÉ</span></div>
+              <div class="l"><span>Prénom(s) du bénéficiaire</span><span>Mariam</span></div>
               <div class="l"><span>Destination</span><span>Côte d'Ivoire</span></div>
               <div class="l"><span>Réception</span><span data-si-mode="especes">Espèces en agence</span><span data-si-mode="wallet">Wallet · Orange Money</span><span data-si-mode="banque">Compte bancaire</span></div>
               <div class="l" data-si-mode="wallet"><span>N° de wallet</span><span>+225 07 88 41 20</span></div>
@@ -4153,7 +4277,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
           <h2>L'opération</h2>
           <div class="info"><span>Référence</span><span>SFC-7C10-4482</span></div>
           <div class="info"><span>Émise le</span><span>01/09/2026 à 10:18 · Agence Adjamé, Abidjan</span></div>
-          <div class="info"><span>Expéditeur</span><span>DIOMANDÉ Salif</span></div>
+          <!-- Retour client du 29/09 : nom et prénom(s) sur deux lignes, ici comme sur les reçus. -->
+          <div class="info"><span>Nom de l'expéditeur</span><span>DIOMANDÉ</span></div>
+          <div class="info"><span>Prénom(s) de l'expéditeur</span><span>Salif</span></div>
           <div class="info"><span>Statut</span><span>En attente de retrait</span></div>
           <div class="info"><span>Expire le</span><span>01/10/2026 · dans 27 jours</span></div>
         </section>
@@ -4172,7 +4298,10 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>Le bénéficiaire attendu</h2>
-          <div class="info"><span>Nom</span><span>CAMARA Aïssata</span></div>
+          <!-- Retour client du 29/09 : nom et prénom(s) séparés, pour comparer à la pièce champ
+               à champ (une inversion peut faire refuser le paiement). -->
+          <div class="info"><span>Nom</span><span>CAMARA</span></div>
+          <div class="info"><span>Prénom(s)</span><span>Aïssata</span></div>
           <div class="info"><span>Téléphone</span><span>+224 66 12 40 88</span></div>
           <div class="bandeau attention">
             <strong>Ne pas annoncer le nom à voix haute</strong>
@@ -4373,7 +4502,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
           <div class="champs">
             <div class="champ focus">
               <label for="c7-remis">Montant effectivement remis</label>
-              <input id="c7-remis" value="5 000 000 GNF">
+              <input id="c7-remis" inputmode="numeric" data-montant="GNF" value="5 000 000 GNF">
               <span class="aide">Saisi par le caissier, comparé au montant dû</span>
             </div>
           </div>
@@ -4457,34 +4586,16 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
     <section class="ecran" id="c9" data-nom="Retrait — reçu de retrait" data-node="15:523" data-rail="Payer" data-titre="Reçu de retrait" data-contexte="Prévisualisation · 2 exemplaires signés" data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
-          <!-- Choix du format ajouté (retour client 10/09) : même logique qu'en B11,
-               deux exemplaires sur la feuille en A4, un seul en ticket. -->
-          <section class="carte" data-si-canal="imprimer">
-            <h2>Format d'impression</h2>
-            <div class="segmente" data-choix="format">
-              <button class="actif" data-valeur="58" data-imprimante="Comptoir 3 · thermique 58 mm">Ticket 58 mm</button>
-              <button data-valeur="80" data-imprimante="Comptoir 3 · thermique 80 mm">Ticket 80 mm</button>
-              <button data-valeur="a4" data-imprimante="Comptoir 3 · A4">A4</button>
-            </div>
-            <div class="champs">
-              <div class="champ">
-                <label for="c9-imprimante">Imprimante</label>
-                <input id="c9-imprimante" value="Comptoir 3 · thermique 58 mm" data-champ-imprimante>
-              </div>
-            </div>
-            <div class="info" data-si-format="58 80"><span>Exemplaires</span><span>1 · réimpression libre</span></div>
-            <div class="info" data-si-format="a4"><span>Exemplaires</span><span>2 sur la feuille · bénéficiaire et agence, à couper</span></div>
-            <div class="info"><span>Réimpression</span><span>Possible sans restriction</span></div>
-            <p class="pied">Le reçu de retrait est le document que le bénéficiaire emporte. Il vaut preuve de remise des espèces.</p>
-          </section>
-
+          <!-- Retour client du 29/09, comme en B11 : la transmission se choisit en premier,
+               et l'envoi par WhatsApp n'exclut plus l'impression (« Les deux »). -->
           <section class="carte">
             <h2>Transmission</h2>
             <div class="segmente" data-choix="canal">
               <button class="actif" data-valeur="imprimer">Imprimer</button>
               <button data-valeur="whatsapp">Envoyer par WhatsApp</button>
+              <button data-valeur="les-deux">Les deux</button>
             </div>
-            <div data-si-canal="whatsapp" hidden>
+            <div data-si-canal="whatsapp les-deux" hidden>
               <div class="champs">
                 <div class="champ focus">
                   <label for="c9-numero">Numéro WhatsApp</label>
@@ -4499,6 +4610,24 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
               </label>
               <p class="pied">Envoi par WhatsApp, e-mail ou SMS, comme pour le reçu d'envoi.</p>
             </div>
+          </section>
+
+          <!-- Choix du format ajouté (retour client 10/09) : même logique qu'en B11,
+               deux exemplaires sur la feuille en A4, un seul en ticket. -->
+          <section class="carte" data-si-canal="imprimer les-deux">
+            <h2>Format d'impression</h2>
+            <div class="segmente" data-choix="format">
+              <button class="actif" data-valeur="a4" data-imprimante="Comptoir 3 · A4">A4</button>
+              <button data-valeur="58" data-imprimante="Comptoir 3 · thermique 58 mm">Ticket 58 mm</button>
+              <button data-valeur="80" data-imprimante="Comptoir 3 · thermique 80 mm">Ticket 80 mm</button>
+            </div>
+            <!-- Retour client du 29/09 : l'imprimante est une information, pas un champ à
+                 remplir. Elle suit le format choisi. -->
+            <div class="info"><span>Imprimante</span><span data-champ-imprimante>Comptoir 3 · A4</span></div>
+            <div class="info" data-si-format="58 80"><span>Exemplaires</span><span>1 · réimpression libre</span></div>
+            <div class="info" data-si-format="a4"><span>Exemplaires</span><span>2 sur la feuille · bénéficiaire et agence, à couper</span></div>
+            <div class="info"><span>Réimpression</span><span>Possible sans restriction</span></div>
+            <p class="pied">Le reçu de retrait est le document que le bénéficiaire emporte. Il vaut preuve de remise des espèces.</p>
           </section>
         </div>
 
@@ -4520,9 +4649,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
               <div class="l"><span>Guichetier</span><span>M. Camara</span></div>
             </div>
             <div class="bloc-recu">
-              <div class="l"><span>Bénéficiaire</span><span>CAMARA Aïssata</span></div>
+              <div class="l"><span>Nom du bénéficiaire</span><span>CAMARA</span></div>
+              <div class="l"><span>Prénom(s) du bénéficiaire</span><span>Aïssata</span></div>
               <div class="l"><span>Pièce</span><span>CNI · GN-5518203</span></div>
-              <div class="l"><span>Expéditeur</span><span>DIOMANDÉ Salif</span></div>
+              <div class="l"><span>Nom de l'expéditeur</span><span>DIOMANDÉ</span></div>
+              <div class="l"><span>Prénom(s) de l'expéditeur</span><span>Salif</span></div>
               <div class="l"><span>Origine</span><span>Abidjan · Côte d'Ivoire</span></div>
             </div>
             <div class="bloc-recu">
@@ -4622,7 +4753,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
             </div>
             <div class="champ">
               <label for="c10-montant">Montant</label>
-              <input id="c10-montant" placeholder="Indifférent">
+              <input id="c10-montant" placeholder="Indifférent" inputmode="numeric" data-montant="">
             </div>
           </div>
         </form>
@@ -4783,7 +4914,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
          les rapports financiers sont au back-office, pour le comptable. Aucun chiffre
          n'est inventé : les lignes viennent de B1 et de C10, les totaux du jour de la
          carte « Ma caisse » de B1 ; ceux de la semaine n'existent nulle part. -->
-    <section class="ecran" id="c14" data-nom="Mes opérations du jour" data-node="(hors Figma)" data-rail="Transactions" data-titre="Mes opérations du jour" data-contexte="Jeudi 03/09/2026 · caisse 3 · seulement mes opérations" data-fait="oui">
+    <section class="ecran" id="c14" data-nom="Mes opérations du jour" data-node="(hors Figma)" data-rail="Transactions" data-titre="Mes opérations du jour" data-contexte="Jeudi 03/09/2026 · caisse 3 · seulement mes opérations" data-trancher="(retour client 29/09) La balance est la différence entre encaissé et décaissé, hors fonds d'ouverture (20 000 000 GNF) : elle ne dit pas ce qu'il y a dans le tiroir. Est-ce bien le chiffre attendu, ou le solde théorique d'A6 (ouverture comprise) ? — Que porte la liste imprimée : en-tête (agence, caisse, caissier, date), totaux, signature ? Sur quelle imprimante et dans quel format ?" data-fait="oui">
       <!-- Retour client du 18/09 : une vision simple, sur la journée seulement. Le filtre
            jour / semaine du 10/09 est retiré, avec sa question sur la semaine. -->
       <div class="ligne">
@@ -4793,8 +4924,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
         <section class="carte">
           <div class="bloc"><span>J'ai décaissé</span><b class="montant">84 900 000 GNF</b></div>
         </section>
+        <!-- Retour client du 29/09 : le nombre d'opérations (37) ne donnait aucune information
+             utile ; la balance de la caisse le remplace. 112 400 000 − 84 900 000 GNF, les
+             mêmes chiffres qu'A6, dont le solde théorique ajoute l'ouverture (20 000 000). -->
         <section class="carte">
-          <div class="bloc"><span>Opérations</span><b class="montant">37</b></div>
+          <div class="bloc"><span>Balance (encaissé − décaissé)</span><b class="montant">27 500 000 GNF</b></div>
         </section>
       </div>
 
@@ -4803,6 +4937,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
           <h2>Mes opérations</h2>
           <div class="actions">
             <a class="bouton secondaire" href="#c10"><svg class="ico"><use href="#i-recherche"/></svg>Rechercher une opération</a>
+            <!-- Retour client du 29/09 : la liste s'imprime. Sans enchaînement. -->
+            <button class="bouton secondaire">Imprimer la liste</button>
           </div>
         </div>
         <div class="defilant">
@@ -5426,6 +5562,7 @@ function afficher() {
   for (const encadre of contenu.querySelectorAll('.reauth')) construireReauth(encadre);
   for (const encadre of contenu.querySelectorAll('.clavier')) construireClavier(encadre);
   reporterComptes();
+  for (const saisie of contenu.querySelectorAll('[data-montant]')) formaterMontant(saisie);
   relireDeclaration();
   origineFonds();
   exigences();
@@ -5435,6 +5572,52 @@ function afficher() {
 }
 
 // Le pays est le seul champ vivant du prototype : il met à jour taux et montant reçu.
+/*
+  Séparateur de milliers à la frappe (retour client 29/09). En Guinée les montants sont
+  grands : sans séparateur, 100 000 et 1 000 000 se confondent. Un champ data-montant
+  groupe ses chiffres par trois, espace insécable, pendant la saisie ; la valeur de
+  l'attribut est l'unité écrite après les chiffres (« GNF », vide pour un nombre de
+  billets). Le curseur reste derrière le même chiffre. Les lecteurs ne gardent que les
+  chiffres (replace(/\D/g, '')) : ils n'ont pas à changer.
+*/
+const grouper = (chiffres) => chiffres.replace(/^0+(?=\d)/, '').replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
+
+function formaterMontant(saisie) {
+  const avant = saisie.value;
+  const chiffres = avant.replace(/\D/g, '');
+  const unite = saisie.dataset.montant;
+  const apres = chiffres ? grouper(chiffres) + (unite ? '\u00a0' + unite : '') : '';
+  if (apres === avant) return;
+  const actif = document.activeElement === saisie;
+  // Nombre de chiffres avant le curseur, retrouvé dans la valeur regroupée.
+  const rang = actif ? avant.slice(0, saisie.selectionStart).replace(/\D/g, '').length : 0;
+  saisie.value = apres;
+  if (!actif) return;
+  let position = 0;
+  for (let vus = 0; position < apres.length && vus < rang; position++) {
+    if (/\d/.test(apres[position])) vus++;
+  }
+  // Chiffres de tête retirés (« 0 » remplacé) : le curseur ne dépasse pas les chiffres.
+  const fin = grouper(chiffres).length;
+  saisie.setSelectionRange(Math.min(position, fin), Math.min(position, fin));
+}
+
+contenu.addEventListener('input', (e) => {
+  if (e.target.matches('[data-montant]')) formaterMontant(e.target);
+}, true);
+
+// Effacer contre un séparateur efface le chiffre voisin, pas l'espace que la frappe remettrait.
+contenu.addEventListener('keydown', (e) => {
+  const saisie = e.target;
+  if (!saisie.matches('[data-montant]') || saisie.selectionStart !== saisie.selectionEnd) return;
+  const position = saisie.selectionStart;
+  if (e.key === 'Backspace' && /\s/.test(saisie.value[position - 1] || '')) {
+    saisie.setSelectionRange(position - 1, position - 1);
+  } else if (e.key === 'Delete' && /\s/.test(saisie.value[position] || '')) {
+    saisie.setSelectionRange(position + 1, position + 1);
+  }
+});
+
 /*
   Encaissement de B9 : le rendu monnaie et la barre de couverture suivent le montant
   saisi. Le total dû (5 045 000 GNF) est la seule donnée figée ici.
@@ -5479,7 +5662,7 @@ function construireComptage(conteneur) {
     const id = `comptage-${++rangComptage}`;
     return `<tr><td><label for="${id}">${enGNF(coupure)}</label></td>`
       + `<td><input id="${id}" inputmode="numeric" autocomplete="off" data-coupure="${coupure}"`
-      + ` value="${Number(nombres[i]) || 0}"></td><td data-sous-total></td><td></td></tr>`;
+      + ` data-montant="" value="${grouper(String(Number(nombres[i]) || 0))}"></td><td data-sous-total></td><td></td></tr>`;
   }).join('');
   conteneur.innerHTML = `<table class="tableau"><thead><tr>`
     + `<th style="width:160px">Coupure</th><th style="width:160px">Nombre</th>`
@@ -5778,7 +5961,8 @@ function montrer(cle, valeur) {
 let modeReception = 'especes';
 
 // Choix du canal sur le reçu : imprimer, ou envoyer au client.
-const LIBELLE_CANAL = { imprimer: 'Imprimer', whatsapp: 'Envoyer le reçu' };
+// « Les deux » (B11, retour client 29/09) : envoyé par WhatsApp et imprimé au besoin.
+const LIBELLE_CANAL = { imprimer: 'Imprimer', whatsapp: 'Envoyer le reçu', 'les-deux': 'Imprimer et envoyer' };
 
 /*
   Choix segmentés : un groupe [data-choix="<clé>"], des boutons [data-valeur].
@@ -5817,8 +6001,9 @@ const CHOIX = {
     montrer('issue', motifAlerte === 'sanctions' ? valeur : 'rembourser');
   },
   format(valeur, bouton) {
+    // Information en lecture seule depuis le 29/09 (c'était un champ éditable).
     const imprimante = contenu.querySelector('[data-champ-imprimante]');
-    if (imprimante) imprimante.value = bouton.dataset.imprimante;
+    if (imprimante) imprimante.textContent = bouton.dataset.imprimante;
     montrer('format', valeur);
     apercuRecu();
   },
