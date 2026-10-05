@@ -437,8 +437,11 @@ ol.liste li::before{content:counter(rang) " ·";left:0}
 .bandeau.information{flex-direction:row;align-items:baseline;flex-wrap:wrap;gap:2px 10px;
                      background:var(--accent-fond);border-color:var(--accent)}
 .bandeau.information strong{color:var(--accent);flex:none}
-.bandeau.information .message{flex:1 1 240px;animation:message-entre .35s ease}
-.bandeau.information .compteur{flex:none;margin-left:auto;font:500 12px/16px var(--police);
+/* Titre au-dessus du message, tous deux alignés à gauche ; le compteur à droite du titre. */
+.bandeau.information[data-information]{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:3px 10px}
+.bandeau.information[data-information] strong{grid-column:1;grid-row:1}
+.bandeau.information .message{grid-column:1/-1;grid-row:2;animation:message-entre .35s ease}
+.bandeau.information .compteur{grid-column:2;grid-row:1;font:500 12px/16px var(--police);
                                color:var(--texte-secondaire);font-variant-numeric:tabular-nums}
 @keyframes message-entre{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.bandeau.information .message{animation:none}}
@@ -752,7 +755,11 @@ body{font:400 14px/20px var(--police)}
   <div class="zone">
     <header class="barre">
       <!-- Le titre de l'écran n'est plus dans la barre : voir enteteEcran(). -->
-      <div class="gauche" id="barre-gauche"></div>
+      <div class="gauche" id="barre-gauche">
+        <!-- Retour au guichet (05/10) : sur tout écran du caissier hors accueil, il prend la
+             place de la marque dans la barre, pour gagner de la hauteur. Piloté par afficher(). -->
+        <a class="retour-guichet" id="retour-guichet" href="#b1" hidden><svg class="ico" aria-hidden="true"><use href="#i-retour"/></svg>Guichet</a>
+      </div>
       <div class="droite" id="barre-droite">
         <div class="indicateurs">
           <!-- État de connexion (bloc E) : il suit data-connexion de l'écran. La pastille ouvre
@@ -5952,13 +5959,6 @@ function enteteEcran(ecran, profil) {
   const d = ecran.dataset;
   const entete = document.createElement('header');
   entete.className = 'entete-ecran';
-  if (profil.sansRail && d.rail !== 'Guichet') {
-    const retour = document.createElement('a');
-    retour.className = 'retour-guichet';
-    retour.href = '#' + (d.guichet || profil.accueil);
-    retour.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-retour"/></svg>Guichet';
-    entete.append(retour);
-  }
   const textes = document.createElement('div');
   textes.innerHTML = '<h1 id="titre-ecran"></h1><p id="contexte-ecran"></p>';
   // Parcours de retrait en mode remboursement (atelier 5, 01/10) : C1 à C13 ont leur titre.
@@ -6066,6 +6066,12 @@ function afficher() {
     rail.prepend(marque);
     rail.append(agent);
   }
+  // Caissier hors accueil (05/10) : « Guichet » remplace la marque dans la barre.
+  const retourGuichet = document.getElementById('retour-guichet');
+  const horsAccueil = profil.sansRail && d.rail !== 'Guichet' && d.gabarit !== 'nu';
+  retourGuichet.hidden = !horsAccueil;
+  retourGuichet.href = '#' + (d.guichet || profil.accueil);
+  marque.hidden = horsAccueil;
   document.getElementById('agent-fonction').textContent = agentFonction;
   vuesAgent();
   document.getElementById('agent-deconnexion').hidden = !profil.deconnexion;
