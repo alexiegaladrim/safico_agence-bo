@@ -357,6 +357,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
                     cursor:help;white-space:nowrap;vertical-align:1px}
 .etiquette.trancher::before{content:"à trancher · " attr(data-decision)}
 .etiquette.trancher[data-decision="q"]::before{content:"question ouverte"}
+/* Hypothèse Galadrim (atelier 6, 12/10) : une question du registre restée sans réponse, dessinée
+   selon l'hypothèse annoncée. Même violet, filet au lieu du fond : ce n'est plus un point à
+   trancher, mais une proposition qui vaut accord tant qu'elle n'est pas corrigée. */
+.etiquette.trancher[data-decision="h"]{background:transparent;box-shadow:inset 0 0 0 1px var(--trancher)}
+.etiquette.trancher[data-decision="h"]::before{content:"hypothèse Galadrim"}
 th .etiquette.trancher,td .etiquette.trancher,.bloc>span .etiquette.trancher,.champ>label .etiquette.trancher{
   margin-left:6px;padding:0 7px;text-transform:none;letter-spacing:normal}
 .info .etiquette.trancher,.liste .etiquette.trancher,.pied .etiquette.trancher,.actions .etiquette.trancher,
@@ -420,6 +425,7 @@ a.compteur{color:inherit;text-decoration:none}
 a.compteur:hover{box-shadow:var(--ombre-haute);border-color:var(--accent-trait)}
 a.compteur:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
 .compteur.attention .montant{color:var(--attention)}
+.compteur.blocage .montant{color:var(--blocage)}
 
 .concorde{color:var(--valide)}
 
@@ -604,6 +610,60 @@ body{font:400 14px/20px var(--police)}
 .tableau td,.journal b,.valeurs,.rappel,.champ>input{font-variant-numeric:tabular-nums}
 /* « En attente » est neutre : ni succès ni alerte, et jamais la couleur de la marque. */
 .statut.attente{background:#F0F4F7;color:#3D4A59}
+
+/* ---------- Atelier 6 (12/10) ---------- */
+/* Tableau de bord par profil (lot 5) : « À traiter », cartes entièrement cliquables triées par
+   urgence ; « Indicateurs du jour », chiffres seuls. Compteur à zéro en ton neutre ; Attention et
+   Blocage réservés aux files en retard ou critiques. */
+.tdb-titre{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px 16px;margin:4px 0 -4px}
+.tdb-titre h2{margin:0;font:700 16px/22px var(--police)}
+.tdb-grille{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.tdb-grille>.carte{margin:0}
+.compteur .tdb-libelle{font:600 14px/20px var(--police);color:var(--texte-principal)}
+.compteur .tdb-depuis{font:400 12px/16px var(--police);color:var(--texte-secondaire);font-variant-numeric:tabular-nums}
+.compteur .tdb-ouvrir{margin-top:auto;font:500 12px/16px var(--police);color:var(--accent)}
+.compteur.zero .montant{color:var(--texte-secondaire)}
+a.compteur.blocage{border-color:var(--blocage-fond);box-shadow:inset 3px 0 0 var(--blocage),var(--ombre)}
+a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0 var(--attention),var(--ombre)}
+/* Sélecteur d'état de l'écran : outil de revue, discret, à droite de la ligne de titre. */
+.revue-etat{display:flex;align-items:center;gap:8px;font:500 11px/14px var(--police);color:var(--texte-secondaire)}
+.revue-etat .segmente button{padding:4px 10px;font:500 12px/16px var(--police)}
+/* Chargement : squelettes à la place des chiffres. */
+.squelette{display:block;border-radius:var(--rayon-petit);background:var(--fond-page);height:14px}
+.squelette.chiffre{height:30px;width:56%}
+.squelette.court{width:40%}
+@media (prefers-reduced-motion:no-preference){
+  .squelette{animation:squelette 1.2s ease-in-out infinite alternate}
+}
+@keyframes squelette{from{opacity:1}to{opacity:.45}}
+.vide{display:flex;flex-direction:column;align-items:center;gap:4px;padding:28px 12px;text-align:center}
+.vide b{font:600 15px/20px var(--police)}
+/* Restrictions géographiques (BO49) : carte schématique en SVG, sans tuile distante. */
+.carte-geo{width:100%;height:auto;display:block;border-radius:var(--rayon-petit);background:var(--fond-page)}
+.carte-geo .pays{fill:var(--fond-surface);stroke:var(--trait-net);stroke-width:1.2}
+.carte-geo .pays.autorise{fill:var(--valide-fond);stroke:var(--valide)}
+.carte-geo .pays.restreint{fill:var(--blocage-fond);stroke:var(--blocage)}
+.carte-geo .ville{fill:var(--texte-principal)}
+.carte-geo .perimetre{fill:none;stroke:var(--attention);stroke-width:1.5;stroke-dasharray:4 3}
+.carte-geo text{font:500 10px/12px var(--police);fill:var(--texte-secondaire)}
+.carte-geo text.fort{font-weight:700;fill:var(--texte-principal)}
+.legende-geo{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font:400 12px/16px var(--police);color:var(--texte-secondaire)}
+.legende-geo i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-2px;border:1px solid var(--trait-net);background:var(--fond-surface)}
+.legende-geo i.autorise{background:var(--valide-fond);border-color:var(--valide)}
+.legende-geo i.restreint{background:var(--blocage-fond);border-color:var(--blocage)}
+.legende-geo i.perimetre{border:1.5px dashed var(--attention);background:transparent}
+/* Seconde validation (BO50) : un interrupteur par opération, regroupées par domaine. */
+.interrupteurs{display:flex;flex-direction:column}
+.interrupteurs .case{justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--trait-leger)}
+.interrupteurs .case:last-child{border-bottom:0}
+.case input.interrupteur{appearance:none;-webkit-appearance:none;width:36px;height:20px;border-radius:var(--rayon-capsule);
+  background:var(--trait-net);position:relative;cursor:pointer;transition:background .15s}
+.case input.interrupteur::before{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;
+  background:var(--fond-surface);box-shadow:var(--ombre);transition:transform .15s}
+.case input.interrupteur:checked{background:var(--accent)}
+.case input.interrupteur:checked::before{transform:translateX(16px)}
+.case input.interrupteur:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
+.case input.interrupteur:disabled{cursor:default;opacity:.6}
 </style>
 </head>
 <body>
@@ -646,7 +706,7 @@ body{font:400 14px/20px var(--police)}
      Conformité (BO1), profil par défaut. -->
 <div class="app" id="app">
   <nav class="rail">
-    <a class="marque" id="marque" href="#bo1">
+    <a class="marque" id="marque" href="#bo51">
       <svg class="logo" viewBox="0 0 100 100" aria-hidden="true"><line x1="35" y1="43" x2="66" y2="22" stroke="var(--marque-vif)" stroke-width="21" stroke-linecap="round"/><line x1="65" y1="57" x2="34" y2="78" stroke="var(--marque-turquoise)" stroke-width="21" stroke-linecap="round"/><circle cx="18" cy="23" r="9.5" fill="var(--marque)"/><circle cx="82" cy="77" r="9.5" fill="var(--marque-tete)"/></svg>
       <span class="nom"><b>Safico</b><span>Back-office · Siège, Conakry</span></span>
     </a>
@@ -697,6 +757,13 @@ body{font:400 14px/20px var(--police)}
 
 
     <!-- ================= CONFORMITÉ ================= -->
+
+    <!-- BO51 · Tableau de bord · Conformité (atelier 6, 12/10, lot 5) : alertes par priorité, sanctions et PEP, CENTIF ; liste grise et reporting BCRG. Rendu par rendreTableauDeBord()
+         depuis TABLEAUX ; les compteurs viennent des tables du prototype. -->
+    <section class="ecran" id="bo51" data-code="BO51" data-nom="Tableau de bord · Conformité" data-espace="conformite" data-menu="Tableau de bord" data-titre="Tableau de bord" data-contexte="Conformité" data-fait="oui">
+      <span class="etiquette trancher" data-entete data-decision="q" title="Contenu proposé par Galadrim, à valider avec SAFICO"></span>
+      <div class="colonne" data-tableau-de-bord></div>
+    </section>
 
     <section class="ecran" id="bo1" data-badge="12" data-profils="audit operations" data-code="BO1" data-nom="File d'alertes" data-espace="conformite" data-menu="File d'alertes" data-titre="File d'alertes" data-contexte="Conformité · toutes agences · triée par priorité, puis ancienneté" data-fait="oui">
       <div class="ligne compteurs">
@@ -1007,7 +1074,7 @@ body{font:400 14px/20px var(--police)}
             <div class="info"><span>Règle</span><span>Déclaration CENTIF · virement entrant ou sortant ≥ 150 000 000 GNF</span></div>
             <div class="info"><span>Nature</span><span>Déclaration, ni plafond d'envoi ni cumul</span></div>
             <div class="info"><span>Opération</span><span>SFC-9A04-0008 · 150 000 000 GNF · 01/10 · 09:05</span></div>
-            <p class="mention">Origine des fonds et motif du transfert à examiner avant la décision. <span class="etiquette trancher" data-decision="q" title="Une opération de 150 000 000 GNF ou plus est-elle déclarée à la CENTIF dans tous les cas, ou seulement après l'examen de l'origine des fonds ?"></span></p>
+            <p class="mention">Origine des fonds et motif du transfert à examiner avant la décision. <span class="etiquette trancher" data-decision="h" title="Hypothèse Galadrim : déclarée à la CENTIF dans tous les cas, sur proposition de la plateforme et validation de la conformité. (Registre B1 · une opération de 150 000 000 GNF ou plus est-elle déclarée dans tous les cas, ou après examen de l'origine des fonds ?)"></span></p>
           </section>
           <!-- Les deux listes du guichet (déduit, à confirmer) : motif du transfert (atelier 3)
                et origine des fonds (commentaire SAFICO sur le résumé de l'atelier 3). Les deux
@@ -1265,7 +1332,7 @@ body{font:400 14px/20px var(--police)}
             <div data-fc="blocage"></div>
           </section>
           <section class="carte">
-            <h2>Seuils pour ce client <span class="etiquette trancher" data-decision="q" title="Circuit proposé par la conformité le 01/10, en attente de l'avis des Opérations."></span></h2>
+            <h2>Seuils pour ce client <span class="etiquette trancher" data-decision="h" title="Hypothèse Galadrim : le circuit proposé par la conformité le 1er octobre. (Registre B2 · avis des Opérations sur ce circuit.)"></span></h2>
             <div data-fc="seuils"></div>
             <p class="mention">Double validation : les Opérations initient, avec une justification ; la conformité valide ou refuse au regard du profil KYC, du risque et des règles LBC/FT.</p>
           </section>
@@ -1532,7 +1599,7 @@ body{font:400 14px/20px var(--police)}
                Tranches et plafonds rendus depuis TRANCHES du JS (BO40 les lit aussi). -->
           <section class="carte interne">
             <div class="carte-tete">
-              <h2>Plafonds internes (profil KYC) <span class="etiquette trancher" data-decision="q" title="Les tranches proposées sont un exemple, à revoir par la Direction générale et les Opérations."></span></h2>
+              <h2>Plafonds internes (profil KYC) <span class="etiquette trancher" data-decision="h" title="Hypothèse Galadrim : les tranches du prototype. (Registre B3 · plafonds internes KYC : les tranches, et le plafond au-delà de 50 M GNF.)"></span></h2>
               <span class="statut attente">Limite interne · version 1 du 01/10/2026</span>
             </div>
             <p class="sous-titre">Limites propres à SAFICO, distinctes des règles réglementaires : paramétrables, datées et versionnées.</p>
@@ -1554,7 +1621,7 @@ body{font:400 14px/20px var(--police)}
                 </tbody>
               </table>
             </div>
-            <p class="mention">Exemple : tranche 8 à 15 M GNF → plafond journalier de 10 000 000 GNF, plafond mensuel de 300 000 000 GNF. Un dépassement déclenche une « Alerte profil » (justificatif ou revue). <span class="etiquette trancher" data-decision="q" title="Tranche au-delà de 50 M GNF : sans borne haute, quel plafond interne s'applique ?"></span></p>
+            <p class="mention">Exemple : tranche 8 à 15 M GNF → plafond journalier de 10 000 000 GNF, plafond mensuel de 300 000 000 GNF. Un dépassement déclenche une « Alerte profil » (justificatif ou revue). <span class="etiquette trancher" data-decision="h" title="Hypothèse Galadrim : au-delà de 50 M GNF, seul s'applique le plafond réglementaire de 5 000 USD par jour. (Registre B3 · tranche au-delà de 50 M GNF, sans borne haute : quel plafond interne ?)"></span></p>
           </section>
 
           <section class="carte">
@@ -1750,7 +1817,7 @@ body{font:400 14px/20px var(--police)}
       </section>
 
       <section class="carte">
-        <h2>Relevés bancaires consolidés des comptes en devises <span class="etiquette trancher" data-decision="q" title="Les relevés bancaires consolidés des comptes en devises sont-ils produits par la plateforme ou par la finance, à partir d'Odoo ?"></span></h2>
+        <h2>Relevés bancaires consolidés des comptes en devises <span class="etiquette trancher" data-decision="h" title="Hypothèse Galadrim : produits par la finance, depuis Odoo, hors de la plateforme. (Registre B4 · relevés bancaires consolidés des comptes en devises : plateforme ou finance depuis Odoo ?)"></span></h2>
         <p class="secondaire">Non produits ici tant que la question n'est pas tranchée.</p>
       </section>
 
@@ -1763,12 +1830,19 @@ body{font:400 14px/20px var(--police)}
 
     <!-- ================= OPÉRATIONS ================= -->
 
-    <section class="ecran" id="bo24" data-badge="7" data-profils="audit" data-code="BO24" data-nom="Opérations bloquées" data-espace="operations" data-menu="Opérations bloquées" data-titre="Opérations bloquées" data-contexte="Toutes agences · en vérification, déclinées ou rejetées" data-fait="oui">
+    <!-- BO52 · Tableau de bord · Opérations (atelier 6, 12/10, lot 5) : opérations bloquées, secondes validations, agences hors ligne (sur 2 h), versements échoués, annulations et remboursements ; volume et transactions du jour. Rendu par rendreTableauDeBord()
+         depuis TABLEAUX ; les compteurs viennent des tables du prototype. -->
+    <section class="ecran" id="bo52" data-code="BO52" data-nom="Tableau de bord · Opérations" data-espace="operations" data-menu="Tableau de bord" data-titre="Tableau de bord" data-contexte="Opérations" data-fait="oui">
+      <span class="etiquette trancher" data-entete data-decision="q" title="Contenu proposé par Galadrim, à valider avec SAFICO"></span>
+      <div class="colonne" data-tableau-de-bord></div>
+    </section>
+
+    <section class="ecran" id="bo24" data-badge="7" data-profils="audit" data-code="BO24" data-nom="Opérations bloquées" data-espace="operations" data-menu="Opérations bloquées" data-titre="Opérations bloquées" data-contexte="Toutes agences · en vérification, déclinées ou échouées" data-fait="oui">
       <div class="ligne compteurs">
         <section class="carte compteur"><span class="secondaire">En vérification</span><b class="montant" data-nb-bo24="verif"></b></section>
         <section class="carte compteur attention"><span class="secondaire">À décider par les Opérations</span><b class="montant" data-nb-bo24="decider"></b></section>
         <section class="carte compteur"><span class="secondaire">Déclinées</span><b class="montant" data-nb-bo24="declinee"></b></section>
-        <section class="carte compteur"><span class="secondaire">Rejetées par un partenaire</span><b class="montant" data-nb-bo24="rejet"></b></section>
+        <section class="carte compteur"><span class="secondaire">Échoués · rejet d'un partenaire</span><b class="montant" data-nb-bo24="rejet"></b></section>
         <section class="carte compteur attention"><span class="secondaire">Échéance des 30 jours sous 7 jours</span><b class="montant">1</b></section>
       </div>
       <!-- La colonne Motif illustre la grille de visibilité revue le 01/10 (décision 2) : les
@@ -1800,8 +1874,8 @@ body{font:400 14px/20px var(--police)}
               <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-5E02-7710" data-traite-par="op:SFC-5E02-7710"><td>SFC-5E02-7710</td><td>Matam</td><td>SYLLA Fanta</td><td class="nombre">22 500 000 GNF</td><td><span class="statut attente">En vérification</span></td><td class="motif-reserve">Réservé à la conformité</td><td>04/09</td><td class="ecart"><b>04/10 · sous 3 jours</b></td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:KIN-P2-0043" data-traite-par="op:KIN-P2-0043"><td>KIN-P2-0043</td><td>Kindia</td><td>SOW Hawa</td><td class="nombre">12 000 000 GNF</td><td><span class="statut attente">En vérification</span></td><td class="motif-reserve">Réservé à la conformité</td><td>01/10</td><td>31/10</td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-7C88-3301" data-traite-par="op:SFC-7C88-3301"><td>SFC-7C88-3301</td><td>Labé</td><td>BALDÉ Fatou</td><td class="nombre">3 200 000 GNF</td><td><span class="statut blocage">Déclinée</span></td><td>Taux défavorable après coupure</td><td>30/09</td><td>30/10</td></tr>
-              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D40-5528" data-traite-par="op:SFC-6D40-5528"><td>SFC-6D40-5528</td><td>Kaloum</td><td>CAMARA Oumou</td><td class="nombre">1 200 000 GNF</td><td><span class="statut attention">Rejetée</span></td><td>Orange Money : numéro inconnu</td><td>01/10</td><td>—</td></tr>
-              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D41-0017" data-traite-par="op:SFC-6D41-0017"><td>SFC-6D41-0017</td><td>Matam</td><td>DIALLO Aïcha</td><td class="nombre">8 000 000 GNF</td><td><span class="statut attention">Rejetée</span></td><td>Ecobank : RIB invalide</td><td>01/10</td><td>—</td></tr>
+              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D40-5528" data-traite-par="op:SFC-6D40-5528"><td>SFC-6D40-5528</td><td>Kaloum</td><td>CAMARA Oumou</td><td class="nombre">1 200 000 GNF</td><td><span class="statut blocage">Échoué</span></td><td>Orange Money : numéro inconnu</td><td>01/10</td><td>—</td></tr>
+              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D41-0017" data-traite-par="op:SFC-6D41-0017"><td>SFC-6D41-0017</td><td>Matam</td><td>DIALLO Aïcha</td><td class="nombre">8 000 000 GNF</td><td><span class="statut blocage">Échoué</span></td><td>Ecobank : RIB invalide</td><td>01/10</td><td>—</td></tr>
             </tbody>
           </table>
         </div>
@@ -1906,22 +1980,28 @@ body{font:400 14px/20px var(--police)}
     </section>
 
     <section class="ecran" id="bo26" data-badge="2" data-code="BO26" data-nom="Rejets des partenaires wallet et banque" data-espace="operations" data-menu="Rejets partenaires" data-titre="Rejets des partenaires" data-contexte="Retour API avec motif · 2 rejets aujourd'hui" data-fait="oui">
+      <!-- Atelier 6 (12/10, lot 1) : un versement wallet ou banque refusé par le partenaire prend le
+           statut « Échoué » (jetons Blocage). Toute opération échouée peut être annulée par les
+           Opérations (ou le chef d'agence, côté agence), avec le code personnel : « Annuler » mène à
+           la décision d'annuler ou de rembourser (BO25), qui exige la réauthentification. -->
       <div class="bandeau neutre">
         <strong>Récupérable : les Opérations relancent, après consultation de l'historique de la transaction et de l'interface du payeur.</strong>
-        <span>Non récupérable : annulation, remboursement, appel du client.</span>
+        <span>Non récupérable : annulation, remboursement, appel du client. Tout versement échoué peut être annulé par les Opérations, avec le code personnel.</span>
       </div>
       <section class="carte">
-        <h2>Rejets</h2>
+        <h2>Versements échoués</h2>
         <div class="defilant">
           <table class="tableau dense sans-coupure">
-            <thead><tr><th>Référence</th><th>Partenaire</th><th>Motif du partenaire</th><th>Nature</th><th>Suite</th></tr></thead>
+            <thead><tr><th>Référence</th><th>Statut</th><th>Partenaire</th><th>Motif du partenaire</th><th>Nature</th><th>Suite</th><th></th></tr></thead>
             <tbody>
-              <tr class="ouvrable" tabindex="0" data-ouvrir-tiroir="relance" data-relance><td>SFC-6D40-5528</td><td>Orange Money</td><td>Numéro inconnu</td><td><span class="statut attention">Récupérable</span></td><td>Relance soumise par K. Bah</td></tr>
-              <tr class="ouvrable" tabindex="0" data-cible="bo25" data-choisir="remb:6d41" data-traite-par="op:SFC-6D41-0017"><td>SFC-6D41-0017</td><td>Ecobank</td><td>RIB invalide</td><td><span class="statut blocage">Non récupérable</span></td><td>À annuler et rembourser</td></tr>
+              <tr class="ouvrable" tabindex="0" data-ouvrir-tiroir="relance" data-relance data-traite-par="op:SFC-6D40-5528"><td>SFC-6D40-5528</td><td><span class="statut blocage">Échoué</span></td><td>Orange Money</td><td>Numéro inconnu</td><td><span class="statut attention">Récupérable</span></td><td>Relance soumise par K. Bah</td>
+                <td class="nombre"><a class="bouton discret petit" href="#bo25" data-choisir="remb:SFC-6D40-5528">Annuler</a></td></tr>
+              <tr class="ouvrable" tabindex="0" data-cible="bo25" data-choisir="remb:6d41" data-traite-par="op:SFC-6D41-0017"><td>SFC-6D41-0017</td><td><span class="statut blocage">Échoué</span></td><td>Ecobank</td><td>RIB invalide</td><td><span class="statut blocage">Non récupérable</span></td><td>À annuler et rembourser</td>
+                <td class="nombre"><a class="bouton discret petit" href="#bo25" data-choisir="remb:6d41">Annuler</a></td></tr>
             </tbody>
           </table>
         </div>
-        <p class="pied">Un rejet récupérable s'ouvre sur sa relance ; un rejet non récupérable, sur la décision d'annuler ou de rembourser.</p>
+        <p class="pied">Un rejet récupérable s'ouvre sur sa relance ; un rejet non récupérable, sur la décision d'annuler ou de rembourser. « Annuler » est réservé aux Opérations et au chef d'agence ; le code personnel est exigé.</p>
       </section>
 
       <!-- Relance d'un rejet récupérable (retour client 29/09 : une modale au clic sur la ligne). -->
@@ -2086,55 +2166,65 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="bo29" data-code="BO29" data-nom="Messages du jour" data-espace="operations" data-menu="Messages du jour" data-titre="Messages du jour" data-contexte="Bandeau d'information des accueils agence · publié par les Opérations" data-fait="oui">
-      <!-- Réponse client du 29/09 : les Opérations publient ; on cible par destinataire
-           (caissiers, chefs d'agence), pas par zone ; objet : nouvelles destinations et
-           destinations en difficulté ; durée d'affichage non déterminée. Le nouveau message
-           se saisit dans un panneau latéral. -->
+    <section class="ecran" id="bo29" data-code="BO29" data-nom="Bandeau d'information" data-espace="operations" data-menu="Bandeau d'information" data-titre="Bandeau d'information" data-contexte="Messages des accueils agence · publiés par les Opérations" data-fait="oui">
+      <!-- Réponse client du 29/09 : les Opérations publient ; ciblage par destinataire (caissiers,
+           chefs d'agence) ; durée d'affichage non déterminée. Atelier 6 (12/10, retour 4.10) :
+           liste des messages avec leur cible (réseau, zone ou agence), dates de début et de fin,
+           état actif ou non ; créer, modifier, désactiver, en panneau latéral. La spec demandait un
+           nouvel écran : c'est BO29, qui fait évoluer l'ancien « Messages du jour ». Rendu depuis
+           MESSAGES du JS. -->
+      <span class="etiquette trancher" data-entete data-decision="q" title="Qui publie, ciblage agence ou zone, durée d'affichage ?"></span>
       <section class="carte">
         <div class="carte-tete">
-          <h2>En ligne</h2>
-          <button class="bouton primaire petit" type="button" data-ouvrir-tiroir="message">Nouveau message</button>
+          <h2>Messages</h2>
+          <button class="bouton primaire petit" type="button" data-message-ouvrir="">Nouveau message</button>
         </div>
         <div class="defilant">
           <table class="tableau dense">
-            <thead><tr><th>Message</th><th>Destinataires</th><th>Du</th><th>Au</th><th>Publié par</th><th></th></tr></thead>
-            <tbody data-messages>
-              <tr><td>Nouvelle destination : Mali, retraits disponibles dans toutes les agences partenaires de Bamako dès aujourd'hui.</td><td>Caissiers · Chefs d'agence</td><td>01/10</td><td>07/10</td><td>M. Sow</td><td class="nombre"><button class="bouton discret petit" type="button" data-retirer>Retirer</button></td></tr>
-              <tr><td>Chers partenaires, nous vous informons que les transactions vers le Cameroun sont désormais disponibles. Veuillez contacter le service client pour toute demande d'assistance. SAFICO vous remercie.</td><td>Caissiers · Chefs d'agence</td><td>01/10</td><td>—</td><td>M. Sow</td><td class="nombre"><button class="bouton discret petit" type="button" data-retirer>Retirer</button></td></tr>
-            </tbody>
+            <thead><tr><th>Message</th><th>Cible</th><th>Destinataires</th><th>Début</th><th>Fin</th><th>État</th><th></th></tr></thead>
+            <tbody data-messages></tbody>
           </table>
         </div>
-        <p class="pied">Plusieurs messages peuvent être en ligne : ils défilent en boucle sur l'accueil. Un message sans date de fin reste affiché jusqu'à son retrait.</p>
+        <p class="pied">Les messages actifs défilent en boucle sur l'accueil de leurs destinataires. Un message sans date de fin reste affiché jusqu'à sa désactivation.</p>
       </section>
       <div class="tiroir-voile" data-tiroir="message" hidden>
         <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-message">
           <header class="tiroir-tete">
-            <div><h2 id="tiroir-message">Nouveau message</h2><p>Bandeau d'information des accueils agence</p></div>
+            <div><h2 id="tiroir-message" data-message-titre>Nouveau message</h2><p>Bandeau d'information des accueils agence</p></div>
             <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
           </header>
           <div class="tiroir-corps">
             <div class="champ">
               <label for="bo29-message">Message</label>
               <textarea id="bo29-message" maxlength="250" data-apercu-source placeholder="Nouvelle destination, ou destination où le service est perturbé…"></textarea>
-              <span class="aide">250 caractères au plus · les messages en ligne défilent en boucle</span>
+              <span class="aide">250 caractères au plus · les messages actifs défilent en boucle</span>
             </div>
+            <div class="champ">
+              <span class="libelle" id="bo29-cible">Cible</span>
+              <div class="segmente" data-choix="cible-message" role="group" aria-labelledby="bo29-cible">
+                <button class="actif" data-valeur="reseau">Tout le réseau</button>
+                <button data-valeur="zone">Une zone</button>
+                <button data-valeur="agence">Une agence</button>
+              </div>
+            </div>
+            <div class="champ" data-si-cible-message="zone"><label for="bo29-zone">Zone</label><select id="bo29-zone" data-message-zones></select></div>
+            <div class="champ" data-si-cible-message="agence"><label for="bo29-agence">Agence ou distributeur</label><select id="bo29-agence" data-message-agences></select></div>
             <div class="champ">
               <span class="libelle">Destinataires</span>
               <div class="cases">
                 <label class="case"><input type="checkbox" data-destinataire="Caissiers" checked>Caissiers</label>
                 <label class="case"><input type="checkbox" data-destinataire="Chefs d'agence" checked>Chefs d'agence</label>
               </div>
-              <span class="aide">Le message s'affiche sur l'accueil des profils cochés, dans toutes les agences.</span>
             </div>
             <div class="paire">
-              <div class="champ"><label for="bo29-du">Du</label><input id="bo29-du" type="text" placeholder="jj/mm"></div>
+              <div class="champ"><label for="bo29-du">Début</label><input id="bo29-du" type="text" placeholder="jj/mm"></div>
               <div class="champ">
-                <label for="bo29-au">Au</label>
+                <label for="bo29-au">Fin</label>
                 <input id="bo29-au" type="text" placeholder="jj/mm">
-                <span class="aide">Facultatif</span>
+                <span class="aide">Facultative</span>
               </div>
             </div>
+            <label class="case"><input type="checkbox" class="interrupteur" id="bo29-actif" checked>Actif : affiché dès sa date de début</label>
             <div class="apercu">
               <span class="legende">Aperçu · <span data-apercu-destinataires>accueil des caissiers et des chefs d'agence</span></span>
               <div class="bandeau information" role="status">
@@ -2145,7 +2235,7 @@ body{font:400 14px/20px var(--police)}
           </div>
           <footer class="tiroir-pied">
             <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
-            <button class="bouton primaire" type="button" data-soumettre="message" data-exige="#bo29-message #bo29-du @destinataire" disabled>Publier</button>
+            <button class="bouton primaire" type="button" data-soumettre="message" data-exige="#bo29-message #bo29-du @destinataire" data-message-bouton disabled>Publier</button>
           </footer>
         </aside>
       </div>
@@ -2256,6 +2346,13 @@ body{font:400 14px/20px var(--police)}
     </section>
 
     <!-- ================= FINANCE ================= -->
+
+    <!-- BO53 · Tableau de bord · Finance (atelier 6, 12/10, lot 5) : partagé par le responsable financier et le RAF (qui voit en plus le taux du jour à publier) : approvisionnements, écarts, rejets Odoo ; ruptures et taux. Rendu par rendreTableauDeBord()
+         depuis TABLEAUX ; les compteurs viennent des tables du prototype. -->
+    <section class="ecran" id="bo53" data-code="BO53" data-nom="Tableau de bord · Finance" data-espace="finance" data-menu="Tableau de bord" data-titre="Tableau de bord" data-contexte="Finance" data-fait="oui">
+      <span class="etiquette trancher" data-entete data-decision="q" title="Contenu proposé par Galadrim, à valider avec SAFICO"></span>
+      <div class="colonne" data-tableau-de-bord></div>
+    </section>
 
     <section class="ecran" id="bo8" data-code="BO8" data-nom="Journée financière" data-espace="finance" data-menu="Journée financière" data-titre="Journée financière" data-contexte="Jeudi 01/10/2026 · par agence, par caisse et par devise" data-fait="oui">
       <section class="carte">
@@ -2487,7 +2584,7 @@ body{font:400 14px/20px var(--police)}
 
     <section class="ecran" id="bo30" data-code="BO30" data-nom="Relevé des distributeurs" data-espace="finance" data-menu="Relevé des distributeurs" data-titre="Relevé des distributeurs" data-contexte="Solde virtuel, découvert, mouvements et commissions · jeudi 01/10/2026" data-fait="oui">
       <section class="carte">
-        <h2>Distributeurs <span class="etiquette trancher" data-decision="q" title="La commission d'un distributeur est-elle toujours un pourcentage des frais (compte rendu du 01/10), ou aussi une grille par paliers (réponse écrite S5) ? Les deux modèles sont prévus."></span></h2>
+        <h2>Distributeurs <span class="etiquette trancher" data-decision="h" title="Hypothèse Galadrim : les deux modèles, pourcentage des frais ou grille par paliers, au choix pour chaque distributeur. (Registre B5 · commission des distributeurs : pourcentage des frais, ou grille par paliers ?)"></span></h2>
         <div class="defilant">
           <table class="tableau dense">
             <thead><tr><th>Distributeur</th><th>Modèle de commission</th><th class="nombre">Solde virtuel</th><th class="nombre">Découvert accordé</th><th class="nombre">Commission du jour</th><th class="nombre">du mois</th><th></th></tr></thead>
@@ -2626,52 +2723,116 @@ body{font:400 14px/20px var(--police)}
       </section>
     </section>
 
-    <section class="ecran" id="bo11" data-code="BO11" data-nom="Synchronisation Odoo" data-espace="finance" data-menu="Synchronisation Odoo" data-titre="Synchronisation Odoo" data-contexte="Odoo 19 · journaux de trésorerie · écritures en temps réel" data-fait="oui">
+    <!-- BO11 · Synchronisation Odoo (atelier 6, 12/10, retour 4.8) : proposition technique de
+         Galadrim, visible de l'administrateur et de la finance seulement. Quatre onglets (clé
+         onglet-odoo) : échanges, ventilation comptable, journaux d'export, rejets (« Relancer »).
+         Comptes du plan SYSCOHADA, références et volumes : démonstration (déduit). Rejets rendus
+         depuis REJETS_ODOO (deux opérations de distributeurs déjà connues de BO30). -->
+    <section class="ecran" id="bo11" data-profils="administration" data-code="BO11" data-nom="Synchronisation Odoo" data-espace="finance" data-menu="Synchronisation Odoo" data-titre="Synchronisation Odoo" data-contexte="Odoo 19 · journaux de trésorerie · écritures en temps réel · administrateur et finance" data-fait="oui">
       <div class="bandeau trancher">
-        <strong>Écran au stade de la structure. <span class="etiquette trancher" data-decision="7" title="Proposition technique Galadrim à venir (ventilation comptable, export rejeté)."></span></strong>
-        <span>La ventilation comptable et le traitement d'un export rejeté attendent la réponse de la finance.</span>
+        <strong>Proposition technique Galadrim <span class="etiquette trancher" data-decision="7" title="Proposition technique Galadrim, à valider avec Alhassane Sow"></span></strong>
+        <span>Échanges, ventilation comptable, journaux d'export et traitement des rejets : à valider avec la finance et l'administrateur.</span>
       </div>
-      <div class="ligne align-haut">
-        <div class="colonne" style="--part:820">
-          <section class="carte">
-            <h2>État de la synchronisation</h2>
-            <div class="info"><span>Dernière écriture</span><span>10:41:52</span></div>
-            <div class="info"><span>Transactions synchronisées aujourd'hui</span><span>1 284</span></div>
-            <div class="info"><span>En attente</span><span class="ecart">3 · agence Labé hors ligne</span></div>
-            <div class="info"><span>Doublons évités après coupure</span><span>0</span></div>
-          </section>
-          <!-- Écritures de démonstration (déduit). -->
-          <section class="carte">
-            <h2>Dernières écritures</h2>
-            <div class="defilant">
-              <table class="tableau dense sans-coupure">
-                <thead><tr><th>Heure</th><th>Référence</th><th>Journal</th><th>Devise</th><th class="nombre">Montant</th><th>Taux appliqué</th><th>État</th></tr></thead>
-                <tbody>
-                  <tr><td>10:41:52</td><td>SFC-9A04-0112</td><td>Trésorerie · Kaloum</td><td>GNF</td><td class="nombre">2 500 000</td><td>1 XOF = 14,35 GNF</td><td><span class="statut valide">Synchronisée</span></td></tr>
-                  <tr><td>10:41:10</td><td>SFC-9A04-0108</td><td>Trésorerie · Adjamé</td><td>XOF</td><td class="nombre">150 000</td><td>1 XOF = 14,35 GNF</td><td><span class="statut valide">Synchronisée</span></td></tr>
-                  <tr><td>10:40:37</td><td>SFC-9A04-0101</td><td>Trésorerie · Matam</td><td>GNF</td><td class="nombre">800 000</td><td>—</td><td><span class="statut valide">Synchronisée</span></td></tr>
-                  <tr><td>10:39:58</td><td>SFC-9A03-5520</td><td>Trésorerie · Kindia</td><td>GNF</td><td class="nombre">1 100 000</td><td>1 LRD = 44,20 GNF</td><td><span class="statut valide">Synchronisée</span></td></tr>
-                  <tr><td>10:39:12</td><td>SFC-9A03-5517</td><td>Trésorerie · Kaloum</td><td>GNF</td><td class="nombre">650 000</td><td>1 USD = 8 650 GNF</td><td><span class="statut valide">Synchronisée</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-        </div>
-        <div class="colonne" style="--part:440">
-          <section class="carte">
-            <h2>Ventilation d'une transaction</h2>
-            <div class="info"><span>Principal</span><span class="secondaire">À définir</span></div>
-            <div class="info"><span>Frais</span><span class="secondaire">À définir</span></div>
-            <div class="info"><span>Commission</span><span class="secondaire">À définir</span></div>
-            <div class="info"><span>Taxe</span><span class="secondaire">À définir</span></div>
-            <div class="info"><span>Marge de change</span><span class="secondaire">À définir</span></div>
-          </section>
-          <section class="carte">
-            <h2>Exports rejetés</h2>
-            <p class="secondaire">Traitement à définir</p>
-          </section>
-        </div>
+      <div class="ligne compteurs">
+        <section class="carte compteur"><span class="secondaire">Dernier échange</span><b class="montant-petit">10:41:52</b><span class="secondaire">Écritures en temps réel</span></section>
+        <section class="carte compteur"><span class="secondaire">Synchronisées aujourd'hui</span><b class="montant-petit">1 284</b><span class="secondaire">écritures</span></section>
+        <section class="carte compteur"><span class="secondaire">En attente</span><b class="montant-petit">3</b><span class="secondaire">agence Labé hors ligne</span></section>
+        <section class="carte compteur"><span class="secondaire">Rejets à traiter</span><b class="montant-petit" data-odoo-rejets></b><span class="secondaire">relance possible</span></section>
       </div>
+      <div class="segmente" data-choix="onglet-odoo" role="tablist" aria-label="Synchronisation Odoo">
+        <button class="actif" data-valeur="echanges" role="tab">Échanges</button>
+        <button data-valeur="ventilation" role="tab">Ventilation comptable</button>
+        <button data-valeur="journaux" role="tab">Journaux d'export</button>
+        <button data-valeur="rejets" role="tab">Rejets<span class="nb" data-odoo-rejets></span></button>
+      </div>
+
+      <!-- Échanges : dernières synchronisations, statut, volume. -->
+      <div class="ligne align-haut" data-si-onglet-odoo="echanges">
+        <section class="carte" style="--part:560">
+          <h2>Dernières synchronisations</h2>
+          <div class="defilant">
+            <table class="tableau dense sans-coupure">
+              <thead><tr><th>Heure</th><th>Échange</th><th>Statut</th><th class="nombre">Volume</th></tr></thead>
+              <tbody>
+                <tr><td>10:41:52</td><td>Écritures en temps réel</td><td><span class="statut valide">Synchronisé</span></td><td class="nombre">1 284</td></tr>
+                <tr><td>10:30</td><td>Journal de trésorerie · Kaloum</td><td><span class="statut valide">Importé</span></td><td class="nombre">412</td></tr>
+                <tr><td>10:30</td><td>Journal de trésorerie · Matam</td><td><span class="statut valide">Importé</span></td><td class="nombre">296</td></tr>
+                <tr><td>10:30</td><td>Journal des distributeurs</td><td><span class="statut attention">Importé avec rejets</span></td><td class="nombre">14 · 2 rejets</td></tr>
+                <tr><td>09:02</td><td>Journal de trésorerie · Labé</td><td><span class="statut attente">En attente · hors ligne</span></td><td class="nombre">3</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="carte" style="--part:700">
+          <h2>Dernières écritures</h2>
+          <div class="defilant">
+            <table class="tableau dense sans-coupure">
+              <thead><tr><th>Heure</th><th>Référence</th><th>Journal</th><th>Devise</th><th class="nombre">Montant</th><th>Taux appliqué</th><th>État</th></tr></thead>
+              <tbody>
+                <tr><td>10:41:52</td><td>SFC-9A04-0112</td><td>Trésorerie · Kaloum</td><td>GNF</td><td class="nombre">2 500 000</td><td>1 XOF = 14,35 GNF</td><td><span class="statut valide">Synchronisée</span></td></tr>
+                <tr><td>10:41:10</td><td>SFC-9A04-0108</td><td>Trésorerie · Adjamé</td><td>XOF</td><td class="nombre">150 000</td><td>1 XOF = 14,35 GNF</td><td><span class="statut valide">Synchronisée</span></td></tr>
+                <tr><td>10:40:37</td><td>SFC-9A04-0101</td><td>Trésorerie · Matam</td><td>GNF</td><td class="nombre">800 000</td><td>—</td><td><span class="statut valide">Synchronisée</span></td></tr>
+                <tr><td>10:39:58</td><td>SFC-9A03-5520</td><td>Trésorerie · Kindia</td><td>GNF</td><td class="nombre">1 100 000</td><td>1 LRD = 44,20 GNF</td><td><span class="statut valide">Synchronisée</span></td></tr>
+                <tr><td>10:39:12</td><td>SFC-9A03-5517</td><td>Trésorerie · Kaloum</td><td>GNF</td><td class="nombre">650 000</td><td>1 USD = 8 650 GNF</td><td><span class="statut valide">Synchronisée</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="pied">Chaque transaction est écrite dans Odoo au moment de son encaissement ; un envoi hors ligne l'est à la reconnexion, sans doublon.</p>
+        </section>
+      </div>
+
+      <!-- Ventilation comptable : correspondance type d'opération → comptes (proposition). -->
+      <section class="carte" data-si-onglet-odoo="ventilation">
+        <h2>Correspondance type d'opération → compte</h2>
+        <div class="defilant">
+          <table class="tableau dense">
+            <thead><tr><th>Type d'opération</th><th>Débit</th><th>Crédit</th><th>Journal Odoo</th></tr></thead>
+            <tbody>
+              <tr><td>Envoi · principal encaissé</td><td>571 · Caisse de l'agence</td><td>467 · Fonds clients à transférer</td><td>Trésorerie de l'agence</td></tr>
+              <tr><td>Envoi · frais</td><td>571 · Caisse de l'agence</td><td>706 · Commissions de transfert</td><td>Trésorerie de l'agence</td></tr>
+              <tr><td>Retrait payé</td><td>467 · Fonds clients à transférer</td><td>571 · Caisse de l'agence</td><td>Trésorerie de l'agence</td></tr>
+              <tr><td>Versement wallet ou banque</td><td>467 · Fonds clients à transférer</td><td>521 · Banque · compte du partenaire</td><td>Banque</td></tr>
+              <tr><td>Commission d'un distributeur</td><td>622 · Rémunérations d'intermédiaires</td><td>401 · Distributeur</td><td>Distributeurs</td></tr>
+              <tr><td>Marge de change</td><td>467 · Fonds clients à transférer</td><td>776 · Gains de change</td><td>Opérations diverses</td></tr>
+              <tr><td>Approvisionnement du solde virtuel</td><td>467 · Solde virtuel du point</td><td>521 · Banque</td><td>Banque</td></tr>
+              <tr><td>Annulation · principal et frais restitués</td><td>467 · Fonds clients · 706 · Commissions</td><td>571 · Caisse de l'agence d'origine</td><td>Trésorerie de l'agence</td></tr>
+              <tr><td>Écart de caisse régularisé</td><td>658 · Charges diverses</td><td>571 · Caisse de l'agence</td><td>Opérations diverses</td></tr>
+              <tr><td>Taxe</td><td class="secondaire">À définir</td><td class="secondaire">À définir</td><td class="secondaire">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="pied">Plan comptable SYSCOHADA. Une écriture par transaction, dans la devise de la caisse ; le taux appliqué figure dans l'écriture.</p>
+      </section>
+
+      <!-- Journaux d'export. -->
+      <section class="carte" data-si-onglet-odoo="journaux">
+        <h2>Journaux d'export</h2>
+        <div class="defilant">
+          <table class="tableau dense sans-coupure">
+            <thead><tr><th>Journal</th><th>Période</th><th class="nombre">Écritures</th><th>Généré le</th><th>État</th></tr></thead>
+            <tbody>
+              <tr><td>Trésorerie · Kaloum</td><td>30/09/2026</td><td class="nombre">3 980</td><td>01/10 · 00:15</td><td><span class="statut valide">Importé</span></td></tr>
+              <tr><td>Trésorerie · Matam</td><td>30/09/2026</td><td class="nombre">3 120</td><td>01/10 · 00:15</td><td><span class="statut valide">Importé</span></td></tr>
+              <tr><td>Trésorerie · Adjamé (XOF)</td><td>30/09/2026</td><td class="nombre">1 812</td><td>01/10 · 00:15</td><td><span class="statut valide">Importé</span></td></tr>
+              <tr><td>Distributeurs</td><td>01/10/2026</td><td class="nombre">14</td><td>01/10 · 10:30</td><td><span class="statut attention">Importé avec rejets</span></td></tr>
+              <tr><td>Trésorerie · Labé</td><td>01/10/2026</td><td class="nombre">3</td><td>—</td><td><span class="statut attente">En attente · hors ligne</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="pied">Un journal par point et par jour ; les écritures du jour partent en temps réel, le journal clôt la journée.</p>
+      </section>
+
+      <!-- Rejets : liste, motif, « Relancer ». -->
+      <section class="carte" data-si-onglet-odoo="rejets">
+        <h2>Rejets</h2>
+        <div class="defilant">
+          <table class="tableau dense sans-coupure">
+            <thead><tr><th>Heure</th><th>Référence</th><th>Journal</th><th>Motif d'Odoo</th><th>État</th><th></th></tr></thead>
+            <tbody data-rejets-odoo></tbody>
+          </table>
+        </div>
+        <p class="pied">Une relance renvoie l'écriture telle quelle, après correction de la correspondance dans Odoo. Chaque relance est tracée au journal d'audit.</p>
+      </section>
     </section>
 
     <section class="ecran" id="bo12" data-profils="administration" data-consultable="bo46" data-code="BO12" data-nom="Taux du jour" data-espace="finance" data-menu="Taux du jour" data-titre="Taux du jour" data-contexte="Saisie par le RAF · jeudi 01/10/2026" data-fait="oui">
@@ -2722,7 +2883,8 @@ body{font:400 14px/20px var(--police)}
       <section class="carte">
         <div class="carte-tete">
           <h2>Rapport du jour</h2>
-          <button class="bouton secondaire petit" type="button">Exporter</button>
+          <!-- Atelier 6 (12/10, vérification 4.14) : export des transactions en Excel et en PDF. -->
+          <div class="actions"><button class="bouton secondaire petit" type="button">Exporter en Excel</button><button class="bouton secondaire petit" type="button">Exporter en PDF</button></div>
         </div>
         <div class="ligne">
           <div class="bloc"><span>Envois</span><b class="montant-petit">412 · 486 300 000 GNF</b></div>
@@ -2732,27 +2894,31 @@ body{font:400 14px/20px var(--police)}
       </section>
       <!-- Le Contrôleur n'a pas de recherche nominative (atelier 5, 01/10) : il exporte le rapport. -->
       <section class="carte" data-si-profil="finance raf">
-        <h2>Recherche <span class="etiquette trancher" data-decision="q" title="Q18 — Sur quels critères cherchez-vous une opération en pratique ?"></span> <span class="etiquette trancher" data-decision="q" title="La recherche par téléphone reste à la conformité, à l'audit et aux Opérations : la Finance la perd-elle dans le rapport d'activité ?"></span></h2>
+        <h2>Recherche <span class="etiquette trancher" data-decision="h" title="Hypothèse Galadrim : recherche par référence, date, agence, montant et statut ; la recherche par téléphone est réservée à la conformité, à l'audit et aux Opérations, la Finance ne l'a pas. (Registre B6 · Q18 : sur quels critères cherchez-vous une opération ? La finance perd-elle la recherche par téléphone ?)"></span></h2>
         <!-- Filtres sur une seule ligne (retour client 29/09). -->
         <div class="filtre etire">
           <div class="champ"><label for="bo13-ref">Référence</label><input id="bo13-ref" type="text" placeholder="SFC-…"></div>
           <div class="champ"><label for="bo13-agence">Agence</label><select id="bo13-agence"><option>Toutes</option><option>Kaloum · Conakry</option><option>Matam · Conakry</option><option>Kindia</option><option>Labé</option><option>Adjamé · Abidjan</option></select></div>
           <div class="champ"><label for="bo13-du">Du</label><input id="bo13-du" type="text" value="01/10/2026"></div>
           <div class="champ"><label for="bo13-au">Au</label><input id="bo13-au" type="text" value="01/10/2026"></div>
-          <div class="champ"><label for="bo13-statut">Statut</label><select id="bo13-statut"><option>Tous</option><option>En attente de retrait</option><option>Payée</option><option>En vérification</option><option>Déclinée</option><option>Rejetée</option><option>Annulée</option><option>Remboursée</option><option>Expirée</option></select></div>
+          <div class="champ"><label for="bo13-montant">Montant</label><input id="bo13-montant" type="text" inputmode="numeric" data-montant="GNF" placeholder="0 GNF"></div>
+          <div class="champ"><label for="bo13-statut">Statut</label><select id="bo13-statut"><option>Tous</option><option>En attente de retrait</option><option>Payée</option><option>En vérification</option><option>Déclinée</option><option>Échoué</option><option>Annulée</option><option>Remboursée</option><option>Expirée</option></select></div>
           <button class="bouton primaire" type="button">Rechercher</button>
         </div>
       </section>
       <!-- La Finance voit le statut d'une opération bloquée, pas son motif (décision 2). -->
       <section class="carte" data-si-profil="finance raf">
-        <h2>Résultats</h2>
+        <div class="carte-tete">
+          <h2>Résultats</h2>
+          <div class="actions"><button class="bouton secondaire petit" type="button">Exporter en Excel</button><button class="bouton secondaire petit" type="button">Exporter en PDF</button></div>
+        </div>
         <div class="defilant">
           <table class="tableau dense">
             <thead><tr><th>Référence</th><th>Date</th><th>Agence</th><th class="nombre">Montant</th><th>Statut</th><th>Motif</th></tr></thead>
             <tbody>
               <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-9A04-0112"><td>SFC-9A04-0112</td><td>01/10 · 10:41</td><td>Kaloum</td><td class="nombre">2 500 000 GNF</td><td><span class="statut attente">En attente de retrait</span></td><td>—</td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-9A03-5518"><td>SFC-9A03-5518</td><td>01/10 · 10:34</td><td>Kaloum</td><td class="nombre">45 000 000 GNF</td><td><span class="statut attente">En vérification</span></td><td>—</td></tr>
-              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D40-5528"><td>SFC-6D40-5528</td><td>01/10 · 09:12</td><td>Kaloum</td><td class="nombre">1 200 000 GNF</td><td><span class="statut attention">Rejetée</span></td><td>—</td></tr>
+              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D40-5528"><td>SFC-6D40-5528</td><td>01/10 · 09:12</td><td>Kaloum</td><td class="nombre">1 200 000 GNF</td><td><span class="statut blocage">Échoué</span></td><td>—</td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-7C88-3301"><td>SFC-7C88-3301</td><td>30/09 · 16:40</td><td>Labé</td><td class="nombre">3 200 000 GNF</td><td><span class="statut blocage">Déclinée</span></td><td>—</td></tr>
             </tbody>
           </table>
@@ -2762,6 +2928,13 @@ body{font:400 14px/20px var(--police)}
     </section>
 
     <!-- ================= ADMINISTRATION ================= -->
+
+    <!-- BO54 · Tableau de bord · Administration (atelier 6, 12/10, lot 5) : rôles sensibles, agences et caisses à activer, incidents ; comptes suspendus, sauvegarde, tentatives anormales. Rendu par rendreTableauDeBord()
+         depuis TABLEAUX ; les compteurs viennent des tables du prototype. -->
+    <section class="ecran" id="bo54" data-code="BO54" data-nom="Tableau de bord · Administration" data-espace="administration" data-menu="Tableau de bord" data-titre="Tableau de bord" data-contexte="Administration" data-fait="oui">
+      <span class="etiquette trancher" data-entete data-decision="q" title="Contenu proposé par Galadrim, à valider avec SAFICO"></span>
+      <div class="colonne" data-tableau-de-bord></div>
+    </section>
 
     <section class="ecran" id="bo14" data-code="BO14" data-nom="Utilisateurs et rôles" data-espace="administration" data-menu="Utilisateurs et rôles" data-titre="Utilisateurs et rôles" data-contexte="46 utilisateurs · 7 agences · création soumise au maker-checker" data-fait="oui">
       <section class="carte">
@@ -2815,13 +2988,34 @@ body{font:400 14px/20px var(--police)}
         <p class="pied secondaire" data-compte></p>
       </section>
 
+      <!-- Rôles sensibles (atelier 6, 12/10, retour 4.4) : leur affectation à un utilisateur passe
+           par une demande motivée, validée par un second habilité ; la ligne d'audit montre le
+           demandeur, le valideur, l'utilisateur, la date et l'heure. La liste est une proposition
+           (déduit) : l'étiquette pose la question. Rendu depuis ROLES_SENSIBLES et AUDIT_ROLES. -->
+      <section class="carte">
+        <div class="carte-tete">
+          <h2>Rôles sensibles <span class="etiquette trancher" data-decision="q" title="Quels rôles sont sensibles ? Le prototype propose : Administrateur, Opérations, Conformité (RCC), Responsable financier, RAF, Chef d'agence, et tout rôle sur mesure qui porte un droit Administration."></span></h2>
+        </div>
+        <div class="ligne align-haut">
+          <div style="--part:520">
+            <p class="secondaire" style="margin-bottom:10px">Leur affectation passe par une demande motivée, validée par un second habilité. Les autres rôles s'appliquent aussitôt, tracés au journal d'audit.</p>
+            <div class="cases" data-roles-sensibles></div>
+          </div>
+          <div style="--part:700">
+            <h3 class="sous-bloc">Journal des rôles</h3>
+            <ul class="journal" data-journal-roles></ul>
+          </div>
+        </div>
+      </section>
+
       <!-- Créer un rôle sur mesure (atelier 5, 01/10) : matrice fonctionnalité × niveau d'accès ;
-           les fonctionnalités sont les entrées de menu des cinq espaces. Maker-checker dessiné,
-           comme la création d'un utilisateur ; l'étiquette pose la question. -->
+           les fonctionnalités sont les entrées de menu des cinq espaces. Atelier 6 (12/10, retour
+           4.3) : la création s'applique sans seconde validation, tracée au journal d'audit. Un rôle
+           qui porte un droit Administration rejoint les rôles sensibles (déduit). -->
       <div class="tiroir-voile" data-tiroir="role" hidden>
         <aside class="tiroir large" role="dialog" aria-modal="true" aria-labelledby="tiroir-role">
           <header class="tiroir-tete">
-            <div><h2 id="tiroir-role">Créer un rôle <span class="etiquette trancher" data-decision="q" title="La création d'un rôle sur mesure passe-t-elle par le maker-checker, comme la création d'un utilisateur ?"></span></h2><p>Rôle sur mesure · soumis à validation</p></div>
+            <div><h2 id="tiroir-role">Créer un rôle</h2><p>Rôle sur mesure · effet immédiat, tracé au journal d'audit</p></div>
             <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
           </header>
           <div class="tiroir-corps">
@@ -2834,11 +3028,11 @@ body{font:400 14px/20px var(--police)}
               </table>
             </div>
             <div class="reauth"></div>
-            <p class="mention">Un second habilité valide la création (maker-checker). Le rôle s'ajoute ensuite à la liste des rôles attribuables.</p>
+            <p class="mention">Sans seconde validation : le rôle s'ajoute aussitôt à la liste des rôles attribuables. Un rôle qui porte un droit Administration devient un rôle sensible : son affectation à un utilisateur passe par une seconde validation.</p>
           </div>
           <footer class="tiroir-pied">
             <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
-            <button class="bouton primaire" type="button" data-soumettre="role" data-exige="#bo14-role-nom @droit [data-code-perso]" disabled>Soumettre à validation</button>
+            <button class="bouton primaire" type="button" data-soumettre="role" data-exige="#bo14-role-nom @droit [data-code-perso]" disabled>Créer le rôle</button>
           </footer>
         </aside>
       </div>
@@ -2908,7 +3102,7 @@ body{font:400 14px/20px var(--police)}
             <div data-compte="infos"></div>
           </section>
           <section class="carte" data-exige-portee>
-            <h2>Rôles <span class="etiquette trancher" data-decision="q" title="Modifier les rôles d'un utilisateur : soumis à la validation d'un second habilité, comme la création ? La matrice du 14/09 demande seulement une modification horodatée et justifiée."></span></h2>
+            <h2>Rôles <span class="etiquette trancher" data-decision="q" title="Un rôle non sensible s'affecte-t-il sans seconde validation ? Le prototype l'applique aussitôt, tracé au journal d'audit ; un rôle sensible passe par une demande motivée et la validation d'un second habilité (atelier 6)."></span></h2>
             <div data-compte="roles-lecture"></div>
             <div data-compte="roles-formulaire">
               <div class="champs">
@@ -2929,7 +3123,7 @@ body{font:400 14px/20px var(--police)}
               <div class="actions">
                 <button class="bouton primaire" type="button" data-roles-soumettre data-exige="@role @sans-cumul @roles-changes #bo38-justification [data-code-perso]" disabled>Soumettre la modification</button>
               </div>
-              <p class="mention">Un second habilité valide la modification (maker-checker), comme la création.</p>
+              <p class="mention">Rôle sensible : demande motivée, validée par un second habilité ; les rôles actuels restent en vigueur d'ici là. Autre rôle : effet immédiat, tracé au journal d'audit.</p>
             </div>
           </section>
           <section class="carte">
@@ -3061,7 +3255,7 @@ body{font:400 14px/20px var(--police)}
       <!-- Transactions : lecture seule, statut sans motif (règle IAM 4 : aucun pouvoir sur une
            transaction ; grille de visibilité). -->
       <section class="carte" data-si-onglet="transactions">
-        <h2>Transactions <span class="etiquette trancher" data-si-profil="administration" data-decision="q" title="Que voit l'administrateur des transactions d'une agence ? La grille revue le 1er octobre ne prévoit pas son profil : on dessine les opérations et leur statut, sans le motif d'un blocage, en lecture seule."></span></h2>
+        <h2>Transactions <span class="etiquette trancher" data-si-profil="administration" data-decision="h" title="Hypothèse Galadrim : les opérations et leur statut, en lecture seule, sans le motif d'un blocage. (Registre B9 · que voit l'administrateur des transactions d'une agence ?)"></span></h2>
         <div class="defilant">
           <table class="tableau dense sans-coupure">
             <thead><tr><th>Référence</th><th>Date</th><th>Expéditeur</th><th class="nombre">Montant</th><th>Statut</th><th data-si-profil="operations">Motif</th></tr></thead>
@@ -3124,11 +3318,14 @@ body{font:400 14px/20px var(--police)}
               <div class="champ"><label for="bo34-caisse-devise">Devise</label><select id="bo34-caisse-devise" data-fiche="devise-caisse"><option>GNF</option><option>XOF</option></select></div>
               <div class="champ"><label for="bo34-caisse-caissier">Caissier affecté</label><select id="bo34-caisse-caissier" data-fiche="caissier-caisse"></select></div>
             </div>
-            <p class="mention">La caisse est créée fermée ; le caissier l'ouvre avec un comptage.</p>
+            <!-- Atelier 6 (12/10, retour 4.5) : la caisse est créée « En attente d'activation » ; le
+                 chef d'agence l'active avec son code personnel, depuis l'application agence. Tant
+                 qu'elle n'est pas activée, elle ne peut ni ouvrir ni opérer. -->
+            <div class="bandeau neutre"><strong>Créée « En attente d'activation »</strong><span>Le chef d'agence l'active avec son code personnel, depuis l'application agence. D'ici là, la caisse ne peut ni ouvrir ni opérer.</span></div>
           </div>
           <footer class="tiroir-pied">
             <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
-            <button class="bouton primaire" type="button" data-soumettre="caisse" data-exige="#bo34-caisse-nom">Ajouter la caisse <span class="etiquette trancher" data-decision="q" title="L'ajout d'une caisse à une agence ouverte est-il soumis au maker-checker, comme l'ouverture d'une agence ?"></span></button>
+            <button class="bouton primaire" type="button" data-soumettre="caisse" data-exige="#bo34-caisse-nom">Ajouter la caisse</button>
           </footer>
         </aside>
       </div>
@@ -3407,7 +3604,7 @@ body{font:400 14px/20px var(--police)}
               <div class="info"><span>Demandée par</span><span data-ouverture="demandeur">Responsable de zone</span></div>
               <div class="info"><span>Validée sur le fond par</span><span>Opérations</span></div>
               <div class="info"><span>Mise en œuvre par</span><span>L. Condé · Administrateur</span></div>
-              <div class="info"><span>Activation finale</span><span>Maker-checker · Opérations <span class="etiquette trancher" data-decision="q" title="Activation finale d'une agence (maker-checker) : le second habilité est-il les Opérations, ou un second administrateur ?"></span></span></div>
+              <div class="info"><span>Activation finale</span><span>Maker-checker · seconde validation par les Opérations</span></div>
             </div>
             <div data-si-type-agence="distributeur">
               <div class="info"><span>Saisi et activé par</span><span>L. Condé · Administrateur</span></div>
@@ -3431,24 +3628,44 @@ body{font:400 14px/20px var(--police)}
          « Finance valide les frais et commissions ») ; l'étiquette pose la question. Valeurs :
          2 % des corridors connus, celles du prototype (BO25 : 64 000 GNF pour 3 200 000 GNF) ;
          nouvelles destinations à paramétrer (déduit). -->
-    <section class="ecran" id="bo44" data-profils="finance raf" data-code="BO44" data-nom="Frais et commissions" data-espace="administration" data-menu="Frais et commissions" data-titre="Frais et commissions" data-contexte="Grille par type de transaction et par pays de destination · saisie par l'administrateur, validée par la finance" data-fait="oui">
+    <section class="ecran" id="bo44" data-profils="finance raf" data-code="BO44" data-nom="Frais et commissions" data-espace="administration" data-menu="Frais et commissions" data-titre="Frais et commissions" data-contexte="Grille par partenaire, puis par corridor · saisie par l'administrateur, validée par la finance" data-fait="oui">
+      <!-- Atelier 6 (12/10, retour 4.2) : les frais dépendent du partenaire (wallet ou banque) ; le
+           taux de change est unique pour tout le réseau et sort de la grille (BO12). On choisit le
+           mode de versement, puis le partenaire, puis on lit les corridors. Partenaires MTN MoMo et
+           Orabank : démonstration (déduit), frais à paramétrer. -->
       <div class="ligne align-haut">
         <div class="colonne" style="--part:820">
           <section class="carte">
-            <h2>Frais d'envoi <span class="etiquette trancher" data-decision="q" title="La finance valide-t-elle chaque modification de la grille dans l'outil, ou la validation se fait-elle en amont, par une fiche signée, comme pour la création d'un distributeur ?"></span></h2>
+            <h2>Frais d'envoi <span class="etiquette trancher" data-decision="h" title="Hypothèse Galadrim : la finance valide chaque modification de la grille dans l'outil, en seconde validation, comme le montre le prototype. (Registre B8 · la finance valide-t-elle dans l'outil, ou en amont par une fiche signée ?)"></span></h2>
+            <div class="filtre">
+              <div class="champ">
+                <span class="libelle" id="bo44-type">Mode de versement</span>
+                <div class="segmente" data-choix="type-frais" role="tablist" aria-labelledby="bo44-type">
+                  <button data-valeur="especes" role="tab">Espèces · réseau</button>
+                  <button class="actif" data-valeur="wallet" role="tab">Wallet</button>
+                  <button data-valeur="banque" role="tab">Banque</button>
+                </div>
+              </div>
+              <div class="champ">
+                <span class="libelle" id="bo44-partenaire">Partenaire</span>
+                <div class="segmente" data-choix="partenaire" role="group" aria-labelledby="bo44-partenaire" data-frais-partenaires></div>
+              </div>
+            </div>
+            <div class="separateur"></div>
             <div class="defilant">
               <table class="tableau dense sans-coupure">
-                <thead><tr><th>Pays de destination</th><th>Espèces</th><th>Wallet</th><th>Compte bancaire</th></tr></thead>
+                <thead><tr><th>Corridor</th><th>Frais</th><th>Dernière modification</th></tr></thead>
                 <tbody data-frais></tbody>
               </table>
             </div>
-            <p class="pied" data-si-profil="administration">Une cellule s'ouvre sur sa modification. Chaque modification est validée par la finance avant de s'appliquer, et historisée.</p>
+            <p class="pied" data-si-profil="administration">Une ligne s'ouvre sur sa modification. Chaque modification est validée par la finance avant de s'appliquer, et historisée.</p>
+            <p class="mention">Le taux de change n'entre pas dans cette grille : il est unique pour tout le réseau, publié chaque jour par le RAF (Taux du jour). Quand le mode de réception change, seuls les frais se recalculent.</p>
           </section>
           <section class="carte">
             <h2>Commissions</h2>
             <div class="info"><span>Distributeur, sur ses envois</span><span>Selon sa fiche de conditions : pourcentage des frais ou paliers · <span class="secondaire">paramétrée à sa création</span></span></div>
             <div class="info"><span>Partage des frais d'un remboursement</span><span>Les frais consommés entrent dans le partage des commissions</span></div>
-            <p class="pied">La ventilation comptable des frais et des commissions attend la proposition technique de Galadrim (Odoo).</p>
+            <p class="pied">La ventilation comptable des frais et des commissions suit la proposition technique de Galadrim (Synchronisation Odoo).</p>
           </section>
         </div>
         <div class="colonne" style="--part:440">
@@ -3467,7 +3684,10 @@ body{font:400 14px/20px var(--police)}
           </header>
           <div class="tiroir-corps">
             <div data-fr="actuel"></div>
-            <div class="champ"><label for="bo44-valeur">Nouveaux frais</label><input id="bo44-valeur" type="text" placeholder="2 % · minimum 5 000 GNF"></div>
+            <div class="paire">
+              <div class="champ"><label for="bo44-valeur">Pourcentage du montant</label><input id="bo44-valeur" type="text" inputmode="decimal" placeholder="2 %"></div>
+              <div class="champ"><label for="bo44-minimum">Minimum</label><input id="bo44-minimum" type="text" inputmode="numeric" data-montant="GNF" placeholder="0 GNF"><span class="aide">Facultatif</span></div>
+            </div>
             <div class="champ"><label for="bo44-motif">Justification</label><textarea id="bo44-motif" placeholder="Raison de la modification"></textarea><span class="aide">Obligatoire · historisée avec la modification</span></div>
             <div class="reauth"></div>
             <p class="mention">Saisie par l'administrateur, validée par la finance (maker-checker) : les frais en vigueur restent jusqu'à sa validation.</p>
@@ -3544,10 +3764,12 @@ body{font:400 14px/20px var(--police)}
                spécifique ; session fermée après 15 minutes d'inactivité par défaut, réglable de 5
                à 15 minutes par profil. Valeurs par profil : démonstration (déduit). -->
           <section class="carte">
-            <h2>Par profil</h2>
+            <!-- Atelier 6 (12/10, retour 4.11) : durée d'inactivité paramétrable par profil, de 5 à
+                 15 min, 15 min par défaut — déjà dessiné depuis l'atelier 5 ; la spec demande l'étiquette. -->
+            <h2>Par profil <span class="etiquette trancher" data-decision="q" title="15 min fixe ou paramétrable ?"></span></h2>
             <div class="defilant">
               <table class="tableau dense">
-                <thead><tr><th>Profil</th><th>Plage horaire</th><th>Hors plage</th><th class="nombre">Fermeture de session</th><th></th></tr></thead>
+                <thead><tr><th>Profil</th><th>Plage horaire</th><th>Hors plage</th><th class="nombre">Déconnexion après inactivité</th><th></th></tr></thead>
                 <tbody data-profils-session></tbody>
               </table>
             </div>
@@ -3646,6 +3868,56 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
+    <!-- BO50 · Opérations soumises à seconde validation (atelier 6, 12/10, retour 4.7) : par
+         domaine, un interrupteur par opération ; réglage global du valideur. Les interrupteurs se
+         basculent sur place ; « Enregistrer » ouvre un panneau qui récapitule les changements et
+         demande une justification et le code personnel. Rendu depuis SECONDE_VALIDATION. Écran à
+         part plutôt qu'une section : BO31 porte les plages et les sessions, BO46 est en lecture. -->
+    <section class="ecran" id="bo50" data-code="BO50" data-nom="Opérations soumises à seconde validation" data-espace="administration" data-menu="Seconde validation" data-titre="Opérations soumises à seconde validation" data-contexte="Par domaine · chaque modification exige le code personnel et reste historisée" data-fait="oui">
+      <div class="ligne align-haut">
+        <div class="colonne" style="--part:820" data-seconde-validation></div>
+        <div class="colonne collante" style="--part:440">
+          <section class="carte">
+            <h2>Valideur</h2>
+            <div class="champ">
+              <span class="libelle" id="bo50-valideur">Quand l'auteur d'une demande est aussi habilité à la valider</span>
+              <div class="segmente empile" data-choix="valideur" role="group" aria-labelledby="bo50-valideur">
+                <button class="actif" data-valeur="distinct">Valideur distinct obligatoire</button>
+                <button data-valeur="tolere">Même personne tolérée (tracée)</button>
+              </div>
+            </div>
+            <p class="mention" data-si-valideur="distinct" style="margin-top:12px">Le maker n'est jamais son propre checker : un autre habilité de même niveau valide.</p>
+            <div class="bandeau attention" data-si-valideur="tolere" style="margin-top:12px"><strong>Exception tracée</strong><span>Chaque demande validée par son auteur est inscrite au journal d'audit et signalée à l'audit interne.</span></div>
+          </section>
+          <section class="carte">
+            <h2>Historique</h2>
+            <ul class="journal" data-historique-seconde></ul>
+          </section>
+        </div>
+      </div>
+      <div class="actions a-droite">
+        <span class="secondaire" data-second-resume></span>
+        <button class="bouton primaire" type="button" data-ouvrir-tiroir="seconde-validation" data-exige="@second-modifie" disabled>Enregistrer les modifications</button>
+      </div>
+      <div class="tiroir-voile" data-tiroir="seconde-validation" hidden>
+        <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-seconde">
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-seconde">Enregistrer les modifications</h2><p>Paramètre système · réauthentification</p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
+            <ul class="liste" data-second-changements></ul>
+            <div class="champ"><label for="bo50-motif">Justification</label><textarea id="bo50-motif" placeholder="Raison de la modification"></textarea><span class="aide">Obligatoire · historisée</span></div>
+            <div class="reauth"></div>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
+            <button class="bouton primaire" type="button" data-soumettre="seconde-validation" data-exige="#bo50-motif [data-code-perso]" disabled>Enregistrer</button>
+          </footer>
+        </aside>
+      </div>
+    </section>
+
     <!-- ======== Écrans proposés par l'administration (atelier 5, 01/10), au stade de la structure
          quand rien n'est décidé, comme BO11. ======== -->
 
@@ -3653,7 +3925,7 @@ body{font:400 14px/20px var(--police)}
          tables du JS), avec leur responsable métier, leur valeur, leur dernière modification et un
          lien vers leur écran ; l'historique est consolidé. -->
     <section class="ecran" id="bo46" data-code="BO46" data-nom="Paramètres" data-espace="administration" data-menu="Paramètres" data-titre="Paramètres" data-contexte="Vue consolidée, en lecture · chaque paramètre se modifie dans l'espace de son responsable" data-fait="oui">
-      <span class="etiquette trancher" data-entete data-decision="q" title="Cette vue répond-elle à la demande de supervision centralisée des paramètres par l'Administrateur ?"></span>
+      <span class="etiquette trancher" data-entete data-decision="h" title="Hypothèse Galadrim : oui, la vue répond à la demande de supervision centralisée, telle que dessinée. (Registre B11 · la vue « Paramètres » répond-elle à la demande de supervision centralisée ?)"></span>
       <div class="ligne align-haut">
         <section class="carte" style="--part:860">
           <h2>Tous les paramètres</h2>
@@ -3787,6 +4059,84 @@ body{font:400 14px/20px var(--police)}
           </ul>
         </section>
       </div>
+      <!-- Restrictions géographiques (atelier 6, 12/10, retour 4.9) : d'où l'on peut se connecter.
+           Carte schématique en SVG inline, sans tuile distante (tracés simplifiés, déduits) ; un
+           pays cliqué ouvre une nouvelle règle à son nom. Règles : démonstration (déduit), rendues
+           depuis RESTRICTIONS_GEO. -->
+      <div class="ligne align-haut">
+        <section class="carte" style="--part:620">
+          <div class="carte-tete">
+            <h2>Restrictions géographiques</h2>
+            <button class="bouton primaire petit" type="button" data-regle-geo="">Nouvelle règle</button>
+          </div>
+          <svg class="carte-geo" viewBox="0 0 400 290" role="img" aria-label="Carte schématique de l'Afrique de l'Ouest : pays autorisés et restreints">
+              <path class="pays" data-pays-geo="Sénégal" d="M9,51 L27,9 L54,7 L81,20 L104,48 L104,97 L77,97 L23,101 L22,75Z"><title>Sénégal</title></path>
+              <path class="pays" data-pays-geo="Guinée-Bissau" d="M23,101 L77,97 L79,119 L54,134 L29,123Z"><title>Guinée-Bissau</title></path>
+              <path class="pays" data-pays-geo="Mali" d="M104,48 L104,97 L119,101 L133,112 L157,101 L171,125 L182,147 L212,145 L227,145 L225,123 L245,110 L254,79 L288,59 L328,46 L347,37 L387,35 L400,2 L225,2 L225,33 L117,33Z"><title>Mali</title></path>
+              <path class="pays" data-pays-geo="Guinée" d="M54,134 L79,119 L77,97 L104,97 L119,101 L133,112 L157,101 L171,125 L182,147 L176,169 L185,189 L171,207 L157,211 L153,187 L139,187 L131,169 L122,154 L101,156 L86,169 L70,152Z"><title>Guinée</title></path>
+              <path class="pays" data-pays-geo="Sierra Leone" d="M86,169 L101,156 L122,154 L131,169 L139,187 L119,220 L99,213 L85,189Z"><title>Sierra Leone</title></path>
+              <path class="pays" data-pays-geo="Liberia" d="M119,220 L139,187 L153,187 L157,211 L171,207 L176,233 L189,251 L187,277 L162,266 L135,240Z"><title>Liberia</title></path>
+              <path class="pays" data-pays-geo="Côte d&#39;Ivoire" d="M187,277 L189,251 L176,233 L171,207 L185,189 L176,169 L182,147 L212,145 L227,145 L239,161 L265,156 L275,167 L268,220 L274,262 L241,260 L216,266Z"><title>Côte d&#39;Ivoire</title></path>
+            <circle class="perimetre" data-perimetre-geo cx="77" cy="165" r="16"/>
+            <circle class="ville" cx="77" cy="165" r="3"/><text class="fort" x="40" y="182">Conakry</text>
+            <circle class="ville" cx="103" cy="125" r="2.5"/><text x="108" y="128">Labé</text>
+            <circle class="ville" cx="92" cy="153" r="2.5"/><text x="96" y="150">Kindia</text>
+            <circle class="ville" cx="157" cy="145" r="2.5"/><text x="140" y="140">Kankan</text>
+            <circle class="ville" cx="252" cy="256" r="3"/><text class="fort" x="226" y="250">Abidjan</text>
+          </svg>
+          <div class="legende-geo"><span><i class="autorise"></i>Autorisé</span><span><i class="restreint"></i>Restreint</span><span><i class="perimetre"></i>Périmètre dessiné</span><span><i></i>Sans règle</span></div>
+          <p class="pied">Un pays se clique pour lui appliquer une règle. Les règles valent pour la connexion au back-office et à l'application agence.</p>
+        </section>
+        <section class="carte" style="--part:640">
+          <h2>Règles actives</h2>
+          <div class="defilant">
+            <table class="tableau dense">
+              <thead><tr><th>Portée</th><th>Zone</th><th>Effet</th><th>Profils</th></tr></thead>
+              <tbody data-regles-geo></tbody>
+            </table>
+          </div>
+          <p class="pied">Une connexion hors des zones autorisées est refusée et signalée à l'administrateur. Chaque règle est historisée.</p>
+        </section>
+      </div>
+      <div class="tiroir-voile" data-tiroir="regle-geo" hidden>
+        <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-regle-geo">
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-regle-geo">Nouvelle règle géographique</h2><p>Paramètre de sécurité · réauthentification</p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
+            <div class="champ">
+              <span class="libelle" id="bo49-portee">Portée</span>
+              <div class="segmente" data-choix="portee" role="group" aria-labelledby="bo49-portee">
+                <button class="actif" data-valeur="pays">Pays</button>
+                <button data-valeur="region">Région</button>
+                <button data-valeur="ville">Ville</button>
+                <button data-valeur="perimetre">Périmètre</button>
+              </div>
+            </div>
+            <div class="champ" data-si-portee="pays"><label for="bo49-pays">Pays</label><select id="bo49-pays" data-geo-pays></select></div>
+            <div class="champ" data-si-portee="region ville"><label for="bo49-lieu">Région ou ville</label><input id="bo49-lieu" type="text" placeholder="Moyenne-Guinée, Labé…"></div>
+            <div class="paire" data-si-portee="perimetre">
+              <div class="champ"><label for="bo49-centre">Centre</label><select id="bo49-centre"><option>Siège · Conakry</option><option>Agence Kaloum · Conakry</option><option>Agence Labé</option><option>Agence Kindia</option><option>Agence Adjamé · Abidjan</option></select></div>
+              <div class="champ"><label for="bo49-rayon">Rayon</label><input id="bo49-rayon" type="text" inputmode="numeric" placeholder="15 km"></div>
+            </div>
+            <div class="champ">
+              <span class="libelle" id="bo49-effet">Effet</span>
+              <div class="segmente" data-choix="effet-geo" role="group" aria-labelledby="bo49-effet">
+                <button class="actif" data-valeur="autoriser">Autoriser</button>
+                <button data-valeur="restreindre">Restreindre</button>
+              </div>
+            </div>
+            <div class="champ"><label for="bo49-profils">Profils</label><select id="bo49-profils"><option>Tous les profils</option><option>Profils du siège</option><option>Administrateur</option><option>Finance</option><option>Agences et distributeurs</option></select></div>
+            <div class="champ"><label for="bo49-geo-motif">Justification</label><textarea id="bo49-geo-motif" placeholder="Raison de la règle"></textarea><span class="aide">Obligatoire · historisée</span></div>
+            <div class="reauth"></div>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
+            <button class="bouton primaire" type="button" data-soumettre="regle-geo" data-exige="#bo49-geo-motif [data-code-perso]" disabled>Enregistrer la règle</button>
+          </footer>
+        </aside>
+      </div>
       <div class="tiroir-voile" data-tiroir="securite" hidden>
         <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-securite">
           <header class="tiroir-tete">
@@ -3809,6 +4159,20 @@ body{font:400 14px/20px var(--police)}
 
     <!-- ================= CONSULTATION ================= -->
 
+    <!-- BO55 · Tableau de bord · Audit (atelier 6, 12/10, lot 5) : actions sensibles, hors plage, affectations de rôles ; accès direct au journal et au retraçage d'un utilisateur. Rendu par rendreTableauDeBord()
+         depuis TABLEAUX ; les compteurs viennent des tables du prototype. -->
+    <section class="ecran" id="bo55" data-code="BO55" data-nom="Tableau de bord · Audit" data-espace="consultation" data-menu="Tableau de bord" data-titre="Tableau de bord" data-contexte="Audit interne" data-fait="oui">
+      <span class="etiquette trancher" data-entete data-decision="q" title="Contenu proposé par Galadrim, à valider avec SAFICO"></span>
+      <div class="colonne" data-tableau-de-bord></div>
+    </section>
+
+    <!-- BO56 · Tableau de bord · Responsable de zone (atelier 6, 12/10, lot 5) : le même gabarit sur la zone : points hors ligne, demandes d'ouverture, soldes ; agrégé, jamais une opération. Rendu par rendreTableauDeBord()
+         depuis TABLEAUX ; les compteurs viennent des tables du prototype. -->
+    <section class="ecran" id="bo56" data-code="BO56" data-nom="Tableau de bord · Responsable de zone" data-espace="consultation" data-menu="Tableau de bord" data-titre="Tableau de bord" data-contexte="Responsable de zone" data-fait="oui">
+      <span class="etiquette trancher" data-entete data-decision="q" title="Contenu proposé par Galadrim, à valider avec SAFICO"></span>
+      <div class="colonne" data-tableau-de-bord></div>
+    </section>
+
     <section class="ecran" id="bo18" data-profils="administration" data-code="BO18·19" data-nom="Recherche avancée et journal d'audit" data-espace="consultation" data-menu="Journal d'audit" data-titre="Journal d'audit" data-contexte="Qui a fait quoi, où, quand, pourquoi · conservation dix ans" data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:880">
@@ -3821,7 +4185,7 @@ body{font:400 14px/20px var(--police)}
                 <button class="actif" data-valeur="recherche" role="tab">Recherche</button>
                 <button data-valeur="utilisateur" role="tab">Actions d'un utilisateur</button>
               </div>
-              <div class="actions"><span class="secondaire">Export journalisé</span><button class="bouton secondaire petit" type="button">Exporter</button></div>
+              <div class="actions"><span class="secondaire">Export journalisé</span><button class="bouton secondaire petit" type="button">Exporter en Excel</button><button class="bouton secondaire petit" type="button">Exporter en PDF</button></div>
             </div>
             <div data-si-journal="recherche">
               <div class="paire">
@@ -3867,20 +4231,21 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="bo20" data-profils="direction controleur" data-code="BO20" data-nom="Indicateurs de direction" data-espace="consultation" data-menu="Indicateurs" data-titre="Indicateurs de direction" data-titre-controleur="Tableau de bord" data-contexte="Septembre 2026 · tout le réseau" data-fait="oui">
-      <span class="etiquette trancher" data-entete data-decision="q" title="Q21 — Quels sont les cinq indicateurs regardés en premier, et sur quel support aujourd'hui ?"></span>
-      <!-- Contrôleur (atelier 5, 01/10) : le même tableau de bord, en lecture ; il voit les
-           volumes, le nombre de transactions et les indicateurs. Ce qu'il voit des alertes et
-           des opérations bloquées n'est pas dit : l'étiquette pose la question. -->
-      <p class="mention" data-si-profil="controleur">Volumes, nombre de transactions et indicateurs du réseau, en lecture seule, avec leur export. <span class="etiquette trancher" data-decision="q" title="Le Contrôleur voit-il, comme la Direction, le nombre d'alertes ouvertes, d'opérations bloquées et d'écarts de caisse ? La grille de visibilité ne prévoit pas son profil."></span></p>
+    <!-- BO20 · Tableau de bord de la Direction et du Contrôleur (atelier 6, 12/10, lot 5) : plutôt
+         qu'un doublon, BO20 prend le gabarit des tableaux de bord. Les cinq indicateurs du jour
+         (hypothèse B12) en tête, compteurs seuls et non cliquables pour les deux profils (hypothèse
+         B13 : le Contrôleur les voit en nombre, sans accès au détail) ; le mois en cours dessous. -->
+    <section class="ecran" id="bo20" data-profils="direction controleur" data-code="BO20" data-nom="Tableau de bord · Direction et Contrôleur" data-espace="consultation" data-menu="Tableau de bord" data-titre="Tableau de bord" data-contexte="Tout le réseau · lecture seule" data-fait="oui">
+      <span class="etiquette trancher" data-entete data-decision="q" title="Contenu proposé par Galadrim, à valider avec SAFICO"></span>
+      <span class="etiquette trancher" data-entete data-decision="h" title="Hypothèse Galadrim : volume du jour, nombre de transactions, alertes ouvertes, opérations bloquées, écarts de caisse. (Registre B12 · Q21 : quels sont les cinq indicateurs que la Direction regarde en premier ?)"></span>
+      <div class="colonne" data-tableau-de-bord></div>
+      <p class="mention" data-si-profil="controleur">Comme la Direction, en nombre seulement, sans accès au détail ; volumes et indicateurs du réseau en lecture seule, avec leur export. <span class="etiquette trancher" data-decision="h" title="Hypothèse Galadrim : oui, le Contrôleur voit le nombre d'alertes, d'opérations bloquées et d'écarts, en nombre seulement, sans accès au détail. (Registre B13 · le Contrôleur voit-il, comme la Direction, ces nombres ?)"></span></p>
+      <div class="tdb-titre"><h2>Mois en cours · septembre 2026</h2></div>
       <!-- Agrégé seulement (décision 2) : des compteurs et des totaux, jamais une ligne
            d'opération. Frais perçus et ventilations : valeurs de démonstration (déduit). -->
       <div class="ligne compteurs">
         <section class="carte compteur"><span class="secondaire">Volume envoyé</span><b class="montant-petit">11 842 opérations</b><span class="secondaire">14,2 Md GNF</span></section>
         <section class="carte compteur"><span class="secondaire">Frais perçus</span><b class="montant-petit">284 M GNF</b><span class="secondaire">&nbsp;</span></section>
-        <section class="carte compteur"><span class="secondaire">Alertes ouvertes</span><b class="montant-petit">9</b><span class="secondaire">dont 2 critiques</span></section>
-        <section class="carte compteur"><span class="secondaire">Opérations bloquées</span><b class="montant-petit">7</b><span class="secondaire">&nbsp;</span></section>
-        <section class="carte compteur"><span class="secondaire">Écarts de caisse</span><b class="montant-petit">3</b><span class="secondaire">−57 000 GNF</span></section>
       </div>
       <div class="ligne align-haut">
         <section class="carte">
@@ -3914,7 +4279,8 @@ body{font:400 14px/20px var(--police)}
         </section>
       </div>
       <div class="actions a-droite">
-        <button class="bouton secondaire" type="button">Exporter</button>
+        <button class="bouton secondaire" type="button">Exporter en Excel</button>
+        <button class="bouton secondaire" type="button">Exporter en PDF</button>
       </div>
     </section>
 
@@ -4013,6 +4379,7 @@ const ESPACES = [
 */
 const PROFILS = [
   { cle: 'conformite', espace: 'conformite', agent: 'Aïssatou Kourouma|Responsable conformité · Siège', menu: [
+    ['Accueil', [['bo51', 'i-sommaire']]],
     ['Surveillance', [['bo1', 'i-alerte'], ['bo21', 'i-hors-ligne'], ['bo6', 'i-valider']]],
     ['Clients', [['bo35', 'i-client']]],
     ['Réseau', [['bo27', 'i-hors-ligne']]],
@@ -4020,18 +4387,21 @@ const PROFILS = [
     ['Rapports', [['bo7', 'i-document']]],
   ] },
   { cle: 'operations', espace: 'operations', agent: 'Mamadou Sow|Opérations · Siège', menu: [
+    ['Accueil', [['bo52', 'i-sommaire']]],
     ['Suivi des opérations', [['bo24', 'i-pause'], ['bo26', 'i-rejet'], ['bo6', 'i-valider'], ['bo9', 'i-balance']]],
     ['Solde virtuel', [['bo41', 'i-finance'], ['bo43', 'i-balance']]],
     ['Conformité', [['bo1', 'i-alerte', 'Alertes conformité'], ['bo23', 'i-reglages']]],
     ['Réseau', [['bo33', 'i-agence'], ['bo27', 'i-hors-ligne'], ['bo29', 'i-message']]],
   ] },
   { cle: 'finance', espace: 'finance', agent: 'Fatoumata Camara|Responsable financier · Siège', menu: [
+    ['Accueil', [['bo53', 'i-sommaire']]],
     ['Journée', [['bo8', 'i-journee'], ['bo9', 'i-balance']]],
     ['Solde virtuel', [['bo41', 'i-finance'], ['bo30', 'i-document'], ['bo42', 'i-caisse'], ['bo43', 'i-balance']]],
     ['Comptabilité', [['bo11', 'i-synchro'], ['bo13', 'i-graphique']]],
     ['Contrôle', [['bo6', 'i-valider'], ['bo44', 'i-taux']]],
   ] },
   { cle: 'raf', espace: 'finance', agent: 'Ousmane Baldé|RAF · Siège', menu: [
+    ['Accueil', [['bo53', 'i-sommaire']]],
     ['Taux', [['bo12', 'i-taux']]],
     ['Journée', [['bo8', 'i-journee'], ['bo9', 'i-balance']]],
     ['Solde virtuel', [['bo41', 'i-finance'], ['bo30', 'i-document'], ['bo42', 'i-caisse'], ['bo43', 'i-balance']]],
@@ -4039,29 +4409,34 @@ const PROFILS = [
     ['Contrôle', [['bo44', 'i-taux']]],
   ] },
   { cle: 'administration', espace: 'administration', agent: 'Lansana Condé|Administrateur · Siège', menu: [
+    ['Accueil', [['bo54', 'i-sommaire']]],
     ['Accès', [['bo14', 'i-utilisateurs']]],
     ['Réseau', [['bo33', 'i-agence'], ['bo45', 'i-carte'], ['bo27', 'i-hors-ligne']]],
-    ['Paramétrage', [['bo44', 'i-taux'], ['bo31', 'i-horloge'], ['bo46', 'i-reglages']]],
+    ['Paramétrage', [['bo44', 'i-taux'], ['bo31', 'i-horloge'], ['bo50', 'i-valider'], ['bo46', 'i-reglages']]],
     ['Sécurité', [['bo49', 'i-conformite'], ['bo47', 'i-alerte'], ['bo48', 'i-synchro'], ['bo18', 'i-document']]],
+    ['Comptabilité', [['bo11', 'i-synchro']]],
   ] },
   { cle: 'audit', espace: 'consultation', agent: 'Mariama Diallo|Audit interne', menu: [
+    ['Accueil', [['bo55', 'i-sommaire']]],
     ['Audit', [['bo18', 'i-document']]],
     ['Conformité', [['bo1', 'i-alerte'], ['bo21', 'i-hors-ligne'], ['bo35', 'i-client']]],
     ['Opérations', [['bo24', 'i-pause'], ['bo27', 'i-hors-ligne']]],
     ['Finance', [['bo9', 'i-balance']]],
   ] },
   { cle: 'direction', espace: 'consultation', agent: 'Alpha Barry|Direction générale', menu: [
-    ['Pilotage', [['bo20', 'i-graphique']]],
+    ['Accueil', [['bo20', 'i-sommaire', 'Tableau de bord']]],
     ['Décisions', [['bo6', 'i-valider']]],
   ] },
   { cle: 'zone', espace: 'consultation', agent: 'Ibrahima Touré|Responsable de zone · Basse-Guinée', menu: [
+    ['Accueil', [['bo56', 'i-sommaire']]],
     ['Ma zone', [['bo32', 'i-carte'], ['bo32', 'i-agence', 'Demander l\'ouverture d\'une agence', 'ouverture']]],
   ] },
   // Contrôleur (atelier 5, 01/10) : consultation sans aucune action, distinct de l'Audit.
   // Tableau de bord (BO20), exports de reporting (BO13 sans recherche nominative), agences
   // hors ligne (BO27, lecture seule). Agent de démonstration (déduit).
   { cle: 'controleur', espace: 'consultation', agent: 'Fanta Doumbouya|Contrôleur · Siège', menu: [
-    ['Pilotage', [['bo20', 'i-graphique', 'Tableau de bord'], ['bo13', 'i-document', 'Exports de reporting']]],
+    ['Accueil', [['bo20', 'i-sommaire', 'Tableau de bord']]],
+    ['Pilotage', [['bo13', 'i-document', 'Exports de reporting']]],
     ['Réseau', [['bo27', 'i-hors-ligne']]],
   ] },
 ];
@@ -4093,7 +4468,7 @@ const DECISIONS = {
   6: { titre: 'Délai avant qu\'une agence soit marquée hors ligne (Q11)', qui: 'Opérations · Sécurité', defaut: 'Un délai paramétrable, fixé à 15 minutes, alerte aux Opérations',
     etat: 'tranchee', retenue: '15 minutes sans signal, délai paramétrable, alerte aux Opérations' },
   7: { titre: 'Ventilation comptable et export Odoo rejeté (Q15, Q16)', qui: 'Finance', defaut: 'Aucune proposition : l\'écran Odoo reste au stade de la structure',
-    etat: 'galadrim', retenue: 'Passe chez Galadrim : proposition technique Odoo à venir ; l\'écran reste au stade de la structure' },
+    etat: 'galadrim', retenue: 'Proposition technique de Galadrim dessinée le 12 octobre (échanges, ventilation comptable, journaux d\'export, rejets) ; à valider' },
   8: { titre: 'Seconde validation d\'une modification de taux (Q17)', qui: 'Finance', defaut: 'Pas de seconde validation ; historique et rappel à la connexion',
     etat: 'tranchee', retenue: 'Pas de seconde validation d\'un taux. Historique, rappel à la connexion, réauthentification à la saisie' },
   9: { titre: 'Initiateur et valideur de l\'ouverture d\'une agence (Q19)', qui: 'Opérations · Conformité', defaut: 'L\'IT initie, les Opérations valident',
@@ -4105,6 +4480,9 @@ const DECISIONS = {
   12: { titre: 'Place du solde virtuel dans le lot 1 (S1–S6)', qui: 'Finance · Opérations', defaut: 'Pas de solde virtuel dans les maquettes du lot 1',
     etat: 'tranchee', retenue: 'Le solde virtuel entre dans le lot 1 : la finance seule approvisionne les agences et les distributeurs' },
   q: { titre: 'Questions ouvertes', qui: null, defaut: null },
+  // Atelier 6 (12/10, lot 6.1) : questions du registre (section 4.5) restées sans réponse. Leur
+  // étiquette dit l'hypothèse dessinée ; elles ne comptent plus parmi les points à trancher.
+  h: { titre: 'Hypothèses Galadrim (registre de l\'atelier 6)', qui: null, defaut: null, etat: 'hypothese' },
 };
 
 /*
@@ -4118,7 +4496,7 @@ const NIVEAUX = { complet: 'Complet', lecture: 'Complet, lecture seule', etat: '
 const GRILLE = [
   ['Alerte conformité sur une opération', 'complet bo2', 'lecture bo1', 'etat bo13', 'complet bo18', 'agrege bo20', 'aucun'],
   ['Déclaration de soupçon CENTIF', 'complet bo22', 'complet bo22', 'aucun', 'complet', 'complet', 'aucun'],
-  ['Opération bloquée, déclinée ou rejetée', 'complet bo21', 'complet bo24', 'etat bo13', 'complet bo18', 'agrege bo20', 'agrege bo32'],
+  ['Opération bloquée, déclinée ou échouée', 'complet bo21', 'complet bo24', 'etat bo13', 'complet bo18', 'agrege bo20', 'agrege bo32'],
   ['Fiche client et pièces d\'identité', 'complet bo5', 'complet', 'aucun', 'complet', 'aucun', 'aucun'],
   ['Écart de caisse', 'aucun', 'complet bo6', 'complet bo9', 'complet', 'agrege bo20', 'agrege'],
   ['Mouvements comptables et Odoo', 'aucun', 'aucun', 'complet bo11', 'complet', 'agrege', 'aucun'],
@@ -4142,6 +4520,14 @@ const CLES = {
   'agence-caisses': 'kaloum', // BO15 : kaloum · labe
   'type-agence': 'agence',   // BO17 : agence · distributeur
   commission: 'pourcentage', // BO17 (distributeur, atelier 5) : pourcentage · paliers
+  'type-frais': 'wallet',    // BO44 (atelier 6) : especes · wallet · banque
+  valideur: 'distinct',      // BO50 (atelier 6) : distinct · tolere
+  'onglet-odoo': 'echanges', // BO11 (atelier 6) : echanges · ventilation · journaux · rejets
+  'cible-message': 'reseau', // BO29 (atelier 6) : reseau · zone · agence
+  'etat-tdb': 'donnees',     // tableaux de bord (atelier 6, lot 5) : donnees · vide · chargement · erreur (outil de revue)
+  portee: 'pays',            // BO49 (atelier 6) : portée d'une règle géographique · pays · region · ville · perimetre
+  'effet-geo': 'autoriser',  // BO49 (atelier 6) : autoriser · restreindre
+  partenaire: 'Orange Money', // BO44 (atelier 6) : partenaire du mode de versement choisi
   distributeur: 'dubreka',   // BO30 : distributeur dont on lit les mouvements
   decouvert: 'modifier',     // BO30 : modifier · retirer (panneau du découvert)
   caissier: 'non',           // BO14 : rôle Caissier coché (champ Caisse)
@@ -4158,7 +4544,7 @@ const CLES = {
 };
 
 const HORODATAGE = '01/10/2026 à 10:42';
-const ACCUEIL = 'bo1';
+const ACCUEIL = 'bo51'; // tableau de bord de la Conformité, profil par défaut (atelier 6, lot 5)
 let profil = PROFILS[0];
 const ecrans = [...document.querySelectorAll('#ecrans .ecran')];
 const nonDessines = [...document.querySelectorAll('#ecrans .non-dessine')];
@@ -4188,7 +4574,7 @@ function sommaire() {
     const siens = reels.filter((e) => e.dataset.espace === esp.cle).map((e) =>
       `<tr class="ouvrable" tabindex="0" data-cible="${e.id}"><td></td><td>${e.dataset.code}</td><td>${e.dataset.nom}</td>`
       + `<td>${e.dataset.fait === 'oui' ? '<span class="statut valide">Construit</span>' : '<span class="statut">À construire</span>'}</td>`
-      + `<td class="nombre">${questions(e).length || '—'}</td></tr>`);
+      + `<td class="nombre">${questions(e).filter((q) => q.decision !== 'h').length || '—'}</td></tr>`);
     const absents = nonDessines.filter((n) => n.dataset.espace === esp.cle).map((n) =>
       `<tr><td></td><td>${n.dataset.code}</td><td>${n.dataset.nom}${n.innerHTML.trim()}</td>`
       + `<td class="secondaire">${n.dataset.etat}</td><td class="nombre">${questions(n).length}</td></tr>`);
@@ -4216,7 +4602,7 @@ function sommaire() {
       else liste.push({ texte: q.texte, ecrans: [e] });
     }
   }
-  const total = [...parDecision.values()].reduce((n, l) => n + l.length, 0);
+  const total = [...parDecision].filter(([cle]) => cle !== 'h').reduce((n, [, l]) => n + l.length, 0);
   const bloc = ([cle, liste]) => {
     const d = DECISIONS[cle];
     const items = liste.map((q) => {
@@ -4227,6 +4613,10 @@ function sommaire() {
     }).join('');
     const titre = cle === 'q' ? d.titre : `Décision ${cle} · ${d.titre}`;
     const nb = `${liste.length} point${liste.length > 1 ? 's' : ''}`;
+    // Hypothèse Galadrim (atelier 6) : l'étiquette dit ce qui est dessiné.
+    if (d.etat === 'hypothese') return `<div class="decision"><h3>${d.titre}<span class="nb-points">${liste.length} hypothèse${liste.length > 1 ? 's' : ''}</span></h3>`
+      + '<p class="defaut"><b>Sans réponse au registre, Galadrim dessine :</b> l\'hypothèse annoncée. Elle vaut accord tant qu\'elle n\'est pas corrigée.</p>'
+      + `<ul class="liste">${items}</ul></div>`;
     // Tranchée : la décision retenue, sans point à l'écran (l'étiquette a été retirée).
     if (d.etat === 'tranchee') return `<div class="decision tranchee"><h3>${titre}<span class="nb-points">Tranchée</span></h3>`
       + `<p class="defaut"><b>Retenu le 1er octobre :</b> ${d.retenue}.</p>${items ? `<ul class="liste">${items}</ul>` : ''}</div>`;
@@ -4238,7 +4628,8 @@ function sommaire() {
     return `<div class="decision"><h3>${titre}<span class="nb-points">${nb}</span></h3>${tete}<ul class="liste">${items}</ul></div>`;
   };
   const decisions = [...parDecision];
-  const ouvertes = decisions.filter(([cle]) => DECISIONS[cle].etat !== 'tranchee').map(bloc).join('');
+  const ouvertes = decisions.filter(([cle]) => !['tranchee', 'hypothese'].includes(DECISIONS[cle].etat)).map(bloc).join('');
+  const hypotheses = decisions.filter(([cle]) => DECISIONS[cle].etat === 'hypothese').map(bloc).join('');
   const tranchees = decisions.filter(([cle]) => DECISIONS[cle].etat === 'tranchee').map(bloc).join('');
   const nbTranchees = decisions.filter(([cle]) => DECISIONS[cle].etat === 'tranchee').length;
 
@@ -4271,9 +4662,14 @@ function sommaire() {
         </div>
     </section>
     <section class="carte">
-      <h2>Reste à trancher après l'atelier 5</h2>
+      <h2>Reste à trancher après l'atelier 6</h2>
       <p class="sous-titre">Chaque point est marqué à l'écran par l'étiquette <span class="etiquette trancher" data-decision="n"></span> ; la question et le défaut s'affichent au survol. Sans réponse, le défaut est dessiné.</p>
       <div class="decisions">${ouvertes}</div>
+    </section>
+    <section class="carte">
+      <h2>Hypothèses Galadrim</h2>
+      <p class="sous-titre">Questions du registre de l'atelier 6 restées sans réponse : l'étiquette <span class="etiquette trancher" data-decision="h"></span> dit l'hypothèse dessinée. Elles ne comptent pas parmi les points à trancher.</p>
+      <div class="decisions">${hypotheses}</div>
     </section>
     <section class="carte">
       <h2>Tranché le 1er octobre</h2>
@@ -4308,7 +4704,7 @@ const BADGES = {
   bo35: () => Object.keys(CLIENTS_BLOQUES).length,
   bo9: () => ECARTS.filter((e) => e.etat === 'attente').length,
   bo24: () => refsBo24().length,
-  bo26: () => (DEMANDES.find((x) => x.id === 'relance-6d40').etat === 'attente' ? 1 : 0) + (TRAITES.has('op:SFC-6D41-0017') ? 0 : 1),
+  bo26: () => (DEMANDES.find((x) => x.id === 'relance-6d40').etat === 'attente' && !TRAITES.has('op:SFC-6D40-5528') ? 1 : 0) + (TRAITES.has('op:SFC-6D41-0017') ? 0 : 1),
   bo41: () => APPROS.filter((x) => x.etat === 'attente').length,
   bo42: () => RETRAITS.filter((x) => x.etat === 'attente').length,
 };
@@ -4366,7 +4762,7 @@ function profils() {
   document.querySelector('[data-profils]').innerHTML = PROFILS.map((p) => {
     const [nom, fonction] = p.agent.split('|');
     const courant = p === profil;
-    return `<a href="#${entrees(p)[0]}" role="menuitemradio" aria-checked="${courant}">`
+    return `<a href="#${entrees(p)[0]}" data-profil="${p.cle}" role="menuitemradio" aria-checked="${courant}">`
       + `<span class="avatar" aria-hidden="true">${initiales(nom)}</span>`
       + `<span class="qui"><b>${nom}</b><span>${fonction}</span></span>`
       + (courant ? '<svg class="ico coche" aria-hidden="true"><use href="#i-coche"/></svg>' : '') + '</a>';
@@ -4386,7 +4782,16 @@ boutonAgent.addEventListener('click', (e) => {
 });
 // Le menu se ferme au choix, au clic ailleurs et à Échap.
 document.addEventListener('click', (e) => { if (!e.target.closest('#agent-menu')) ouvrirProfils(false); });
-menuAgent.addEventListener('click', () => ouvrirProfils(false));
+// Atelier 6 (lot 5) : le profil choisi s'impose, même quand deux profils partagent leur tableau de
+// bord (Finance et RAF ; Direction et Contrôleur).
+let profilDemande = null;
+menuAgent.addEventListener('click', (e) => {
+  ouvrirProfils(false);
+  const lien = e.target.closest('a[data-profil]');
+  if (!lien) return;
+  profilDemande = lien.dataset.profil;
+  if (location.hash === lien.getAttribute('href')) { e.preventDefault(); afficher(); }
+});
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
   if (!menuAgent.hidden) { ouvrirProfils(false); boutonAgent.focus(); return; }
@@ -4412,7 +4817,7 @@ const AGENCES = {
     transactions: [
       ['SFC-9A04-0112', '01/10 · 10:41', '—', '2 500 000 GNF', 'En attente de retrait', 'attente', '—'],
       ['SFC-9A03-5518', '01/10 · 10:34', 'BAH Thierno Ousmane', '45 000 000 GNF', 'En vérification', 'attente', null, 'bo25'],
-      ['SFC-6D40-5528', '01/10 · 09:12', 'CAMARA Oumou', '1 200 000 GNF', 'Rejetée', 'attention', 'Orange Money : numéro inconnu', 'bo26'],
+      ['SFC-6D40-5528', '01/10 · 09:12', 'CAMARA Oumou', '1 200 000 GNF', 'Échoué', 'blocage', 'Orange Money : numéro inconnu', 'bo26'],
     ],
     caisses: [
       ['Caisse 1', 'A. Diallo', 'Ouverte', '72 400 000', '40 100 000', '32 300 000', '—'],
@@ -4427,7 +4832,7 @@ const AGENCES = {
       { nom: 'M. Keïta', role: 'Caissier', caisse: '—', facteur: 'Non activé', connexion: '—', etat: 'En attente de validation' },
     ],
     transactions: [
-      ['SFC-6D41-0017', '01/10', 'DIALLO Aïcha', '8 000 000 GNF', 'Rejetée', 'attention', 'Ecobank : RIB invalide', 'bo26'],
+      ['SFC-6D41-0017', '01/10', 'DIALLO Aïcha', '8 000 000 GNF', 'Échoué', 'blocage', 'Ecobank : RIB invalide', 'bo26'],
       ['SFC-5E02-7710', '04/09', 'SYLLA Fanta', '22 500 000 GNF', 'En vérification', 'attente', null, 'bo25'],
     ],
     caisses: [
@@ -4611,11 +5016,12 @@ function ficheAgence() {
   champ('nb-caisses').textContent = a.caisses.length || '';
   champ('caisses').innerHTML = a.caisses.length
     ? a.caisses.map(([nom, caissier, etat, enc, dec, solde, ecart]) => {
-      const v = etat === 'Ouverte' ? 'valide' : etat === 'Hors ligne' ? 'attention' : '';
+      const v = etat === 'Ouverte' ? 'valide' : etat === 'Hors ligne' ? 'attention' : etat === 'En attente d\'activation' ? 'attente' : '';
       const virtuel = SOLDES_AGENCES[agenceCourante] && caissesVirtuelles(agenceCourante).find((c) => c.nom === nom);
       return `<tr><td>${nom}</td><td>${caissier}</td><td>${pastille(v, etat)}</td><td class="nombre">${enc}</td><td class="nombre">${dec}</td>`
         + `<td class="nombre">${solde}</td><td class="nombre">${virtuel ? grouper(String(virtuel.fin)) : '—'}</td><td class="nombre${ecart !== '—' ? ' manque' : ''}">${ecart}</td>`
-        + `<td class="nombre">${a.reaffecter && !ops && etat !== 'Hors ligne' ? `<a class="bouton secondaire petit" href="#bo15" data-choisir="caisse:${agenceCourante}:${a.caisses.findIndex((c) => c[0] === nom)}">Réaffecter</a>` : ''}</td></tr>`;
+        + `<td class="nombre">${etat === 'En attente d\'activation' ? '<span class="micro secondaire">Activée par le chef d\'agence</span>'
+          : a.reaffecter && !ops && etat !== 'Hors ligne' ? `<a class="bouton secondaire petit" href="#bo15" data-choisir="caisse:${agenceCourante}:${a.caisses.findIndex((c) => c[0] === nom)}">Réaffecter</a>` : ''}</td></tr>`;
     }).join('')
     : `<tr class="aucune"><td colspan="9">${a.genre === 'distributeur' ? 'Un distributeur n\'a pas de caisse : il n\'a qu\'un solde virtuel, ci-dessous.' : 'Aucune caisse.'}</td></tr>`;
   // Solde virtuel (atelier 5) : celui du distributeur ; pour une agence, le total et le crédit à ventiler.
@@ -4875,7 +5281,7 @@ const DOSSIERS_REMBOURSEMENT = {
     telephone: '+224 622 41 08 77', sms: 'Envoyé à 10:12',
     annuler: 'Transaction supprimée, à l\'agence d\'origine (Labé) · principal et totalité des frais restitués : 3 264 000 GNF · statut Annulée', rembourser: 'Comme un paiement à l\'expéditeur, dans toute agence ou chez un distributeur · principal seul : 3 200 000 GNF · les 64 000 GNF de frais entrent dans le partage des commissions',
     annule: '3 264 000 GNF à restituer à l\'agence Labé.', rembourse: '3 200 000 GNF, dans toute agence ou chez un distributeur.' },
-  '6d41': { ref: 'SFC-6D41-0017', titre: 'SFC-6D41-0017 · DIALLO Aïcha', contexte: 'Virement bancaire rejeté · Ecobank : RIB invalide · non récupérable · agence Matam', defaut: null, etiquetteQ8: false,
+  '6d41': { ref: 'SFC-6D41-0017', titre: 'SFC-6D41-0017 · DIALLO Aïcha', contexte: 'Virement bancaire échoué · rejet Ecobank : RIB invalide · non récupérable · agence Matam', defaut: null, etiquetteQ8: false,
     infos: [['Expéditeur', 'DIALLO Aïcha'], ['Bénéficiaire', 'SANGARÉ Mohamed · compte Ecobank'], ['Montant', '8 000 000 GNF'], ['Frais', '160 000 GNF'], ['Mode de réception', 'Virement bancaire'], ['Rejet du partenaire', 'Ecobank · RIB invalide · 01/10', 'manque'], ['Code de retrait', 'Sans objet (versement direct)']],
     telephone: '+224 624 19 83 50', sms: 'Envoyé à 09:40',
     annuler: 'Transaction supprimée, à l\'agence d\'origine (Matam) · principal et totalité des frais restitués : 8 160 000 GNF · statut Annulée', rembourser: 'Comme un paiement à l\'expéditeur, dans toute agence ou chez un distributeur · principal seul : 8 000 000 GNF · les 160 000 GNF de frais entrent dans le partage des commissions',
@@ -4889,7 +5295,8 @@ function dossierRemb(cle) {
   const o = OPERATIONS[cle];
   if (!o) return DOSSIERS_REMBOURSEMENT['7c88'];
   const client = o.exp === 'SOW Hawa' ? { tel: '+224 626 71 30 45' } : clientsConnus().find(([, c]) => c.nom === o.exp)?.[1];
-  return { ref: cle, titre: `${cle} · ${o.exp}`, contexte: `${o.blocage?.origine || 'Alerte close par la conformité'} · agence ${o.agence}`, defaut: null, etiquetteQ8: false,
+  const contexte = o.blocage?.type === 'rejet' ? `Versement échoué · ${o.blocage.motif}` : o.blocage?.origine || 'Alerte close par la conformité';
+  return { ref: cle, titre: `${cle} · ${o.exp}`, contexte: `${contexte} · agence ${o.agence}`, defaut: null, etiquetteQ8: false,
     infos: [['Expéditeur', o.exp], ['Bénéficiaire', o.benef], ['Destination', o.dest], ['Montant', o.montant], ['Frais', o.frais], ['Mode de réception', o.mode], ['Statut au guichet', o.statut[1] === 'À décider' ? 'En vérification' : o.statut[1]]],
     telephone: client?.tel || '—', sms: 'Non envoyé',
     annuler: `Transaction supprimée, à l'agence d'origine (${o.agence}) · principal et totalité des frais restitués · statut Annulée`, rembourser: `Comme un paiement à l'expéditeur, dans toute agence ou chez un distributeur · principal seul : ${o.montant} · les frais entrent dans le partage des commissions`,
@@ -4991,10 +5398,10 @@ const OPERATIONS = {
     statut: ['blocage', 'Déclinée'], blocage: { type: 'declinee', motif: 'Taux défavorable après coupure · 1 XOF = 14,35 → 14,62 GNF', remb: '7c88' }, echeance: '30/10',
     j: [['30/09 · 16:40', 'Envoi encaissé hors ligne', 'S. Barry · Caissier · Labé'], ['01/10 · 08:05', 'Envoi rejoué · taux défavorable', 'Système'], ['01/10 · 08:05', 'Envoi décliné', 'Système'], ['01/10 · 10:12', 'SMS d\'invitation envoyé à l\'expéditeur', 'Système']] },
   'SFC-6D40-5528': { date: '01/10 · 09:12', agence: 'Kaloum', caissier: '—', exp: 'CAMARA Oumou', benef: 'Orange Money · +224 620 00 11 2', dest: 'Guinée', mode: 'Wallet', montant: '1 200 000 GNF', frais: '—',
-    statut: ['attention', 'Rejetée'], blocage: { type: 'rejet', motif: 'Orange Money : numéro inconnu · récupérable', cible: 'bo26', tiroir: 'relance' }, echeance: '—',
+    statut: ['blocage', 'Échoué'], blocage: { type: 'rejet', motif: 'Orange Money : numéro inconnu · récupérable', cible: 'bo26', tiroir: 'relance' }, echeance: '—',
     j: [['01/10 · 09:12', 'Envoi saisi', 'Agence Kaloum'], ['01/10 · 09:14', 'Rejet du partenaire · numéro inconnu', 'Orange Money'], ['01/10 · 10:04', 'Relance soumise', 'K. Bah · Chef d\'agence']] },
   'SFC-6D41-0017': { date: '01/10 · 08:55', agence: 'Matam', caissier: '—', exp: 'DIALLO Aïcha', benef: 'SANGARÉ Mohamed · compte Ecobank', dest: 'Guinée', mode: 'Virement bancaire', montant: '8 000 000 GNF', frais: '160 000 GNF',
-    statut: ['attention', 'Rejetée'], blocage: { type: 'rejet', motif: 'Ecobank : RIB invalide · non récupérable', remb: '6d41' }, echeance: '—',
+    statut: ['blocage', 'Échoué'], blocage: { type: 'rejet', motif: 'Ecobank : RIB invalide · non récupérable', remb: '6d41' }, echeance: '—',
     j: [['01/10 · 08:55', 'Envoi saisi', 'Agence Matam'], ['01/10 · 09:20', 'Rejet du partenaire · RIB invalide', 'Ecobank'], ['01/10 · 09:40', 'SMS à l\'expéditeur', 'Système']] },
   'SFC-9A04-0112': { date: '01/10 · 10:41', agence: 'Kaloum', caissier: '—', exp: '—', benef: '—', dest: '—', mode: '—', montant: '2 500 000 GNF', frais: '—',
     statut: ['attente', 'En attente de retrait'], blocage: null, echeance: '—', j: [['01/10 · 10:41', 'Envoi saisi', 'Agence Kaloum'], ['01/10 · 10:41:52', 'Écriture synchronisée avec Odoo', 'Système']] },
@@ -5034,7 +5441,9 @@ function rendreOperation() {
     if (alerte) suite = '<button class="bouton primaire" type="button" disabled>Annuler ou rembourser</button><p class="pied">Possible une fois l\'alerte close par la conformité.</p>';
     else if (o.blocage.type === 'suite-ops') suite = `<p class="secondaire" style="margin-bottom:10px">Alerte close : à vous de décider.</p><a class="bouton primaire" href="#bo25" data-choisir="remb:${ref}">Annuler ou rembourser</a>`;
     else if (o.blocage.remb) suite = `<a class="bouton primaire" href="#bo25" data-choisir="remb:${o.blocage.remb}">Annuler ou rembourser</a>`;
-    else if (o.blocage.cible) suite = `<a class="bouton primaire" href="#${o.blocage.cible}"${o.blocage.tiroir ? ` data-choisir="tiroir:${o.blocage.tiroir}"` : ''}>Traiter le rejet</a>`;
+    // Versement échoué (atelier 6, lot 1) : relancer, ou annuler avec le code personnel (BO25).
+    else if (o.blocage.cible) suite = `<div class="actions"><a class="bouton primaire" href="#${o.blocage.cible}"${o.blocage.tiroir ? ` data-choisir="tiroir:${o.blocage.tiroir}"` : ''}>Traiter le rejet</a>`
+      + (o.blocage.type === 'rejet' ? `<a class="bouton secondaire" href="#bo25" data-choisir="remb:${ref}">Annuler l'opération</a>` : '') + '</div>';
   } else if (p === 'conformite' && o.blocage?.match && (alerte || surveillance)) suite = `<a class="bouton primaire" href="#bo2" data-choisir="match:${o.blocage.match}">Ouvrir l'alerte</a>`;
   else if (p === 'conformite' && o.blocage?.ecran && alerte) suite = `<a class="bouton primaire" href="#${o.blocage.ecran}">Ouvrir l'alerte</a>`;
   else if (p === 'operations') suite = '<p class="secondaire">Aucune action : l\'opération n\'est pas bloquée.</p>';
@@ -5156,6 +5565,10 @@ const DEMANDES = [
   { id: 'ecart-kaloum', type: 'Régularisation d\'un écart de caisse', demandeur: 'K. Bah · Chef d\'agence', agence: 'Kaloum', pour: 'Caisse 3 · −15 000 GNF', depuis: '2 h', valideur: 'finance', etat: 'attente',
     cible: 'bo9', cibleProfil: 'finance', choisir: 'ecart:0;tiroir:ecart',
     details: [['Caisse', 'Kaloum · caisse 3 · 01/10'], ['Écart', '−15 000 GNF'], ['Justification', 'Billet de 5 000 déchiré, deux erreurs de rendu']] },
+  // Atelier 6 (retour 4.4, démonstration) : Matam n'a pas de chef d'agence ; S. Sylla y est proposé.
+  { id: 'roles-sylla', type: 'Affectation d\'un rôle sensible', demandeur: 'L. Condé · Administrateur', auteur: 'administration', agence: 'Matam', pour: 'S. Sylla · Matam', depuis: '1 h 15', valideur: 'operations', sensible: true,
+    effet: ['roles', 's-sylla', ['Chef d\'agence']], etat: 'attente',
+    details: [['Utilisateur', 'S. Sylla'], ['Rôles actuels', 'Caissier'], ['Nouveaux rôles', 'Chef d\'agence'], ['Rôle sensible', 'Chef d\'agence'], ['Motif', 'Agence Matam sans chef d\'agence ; S. Sylla y est caissier depuis février (démonstration)']] },
   { id: 'utilisateur-keita', type: 'Création d\'un utilisateur', demandeur: 'L. Condé · Administrateur', auteur: 'administration', agence: 'Matam', pour: 'M. Keïta · Caissier · Matam', depuis: '3 h', valideur: 'operations', effet: ['utilisateur', 'M. Keïta'], etat: 'attente',
     details: [['Nom', 'M. Keïta'], ['Rôle', 'Caissier'], ['Agence', 'Matam'], ['Second facteur', 'Non activé']] },
   { id: 'deblocage-kone', type: 'Déblocage d\'un client', demandeur: 'A. Kourouma · Conformité', auteur: 'conformite', agence: '—', pour: 'KONÉ Adama', depuis: '20 min', valideur: 'conformite', effet: ['deblocage', 'kone'], etat: 'attente',
@@ -5263,12 +5676,28 @@ function preparerBlocage() {
 // Les huit comptes de BO14, partagés avec l'équipe de la fiche agence (BO34). Téléphones et
 // dates de création : démonstration (déduit).
 const ROLES = ['Caissier', 'Chef d\'agence', 'Opérations', 'Conformité (RCC)', 'Responsable financier', 'Comptable', 'RAF', 'Administrateur', 'Audit interne', 'Direction générale', 'Responsable de zone', 'Contrôleur'];
+// Rôles sensibles (atelier 6, 12/10, retour 4.4) : proposition (déduit), question posée en BO14.
+// Leur affectation passe par une demande motivée et la validation d'un second habilité.
+const ROLES_SENSIBLES = ['Administrateur', 'Opérations', 'Conformité (RCC)', 'Responsable financier', 'RAF', 'Chef d\'agence'];
+// Journal des rôles (BO14) : [quand, quoi, demandeur · valideur]. Créations de rôles sur mesure et
+// affectations, décidées pendant la séance.
+const AUDIT_ROLES = [];
+const touchesSensibles = (avant, apres) => [...avant.filter((r) => !apres.includes(r)), ...apres.filter((r) => !avant.includes(r))].filter((r) => ROLES_SENSIBLES.includes(r));
+function rolesSensibles() {
+  const hote = contenu.querySelector('[data-roles-sensibles]');
+  if (!hote) return;
+  hote.innerHTML = ROLES_SENSIBLES.map((r) => `<span><span class="statut">${echapper(r)}</span></span>`).join('');
+  const attente = DEMANDES.filter((d) => d.etat === 'attente' && d.sensible).map((d) => [d.depuis === 'à l\'instant' ? '01/10/2026 · 10:42' : `En attente depuis ${d.depuis}`,
+    `Affectation demandée · ${echapper(d.effet[2].join(' · '))} → ${echapper(d.pour)}`, `Demandé par ${d.demandeur} · à valider par un second habilité (${VALIDEURS[d.valideur]})`]);
+  const lignes = [...attente, ...AUDIT_ROLES];
+  contenu.querySelector('[data-journal-roles]').innerHTML = lignes.length ? journalHtml(lignes) : '<li><span class="secondaire">Aucune création ni affectation de rôle aujourd\'hui.</span></li>';
+}
 const UTILISATEURS = [
   { id: 'a-diallo', nom: 'A. Diallo', roles: ['Caissier'], agence: 'Kaloum', caisse: 'Caisse 1', tel: '+224 620 18 44 07', facteur: 'Activé', connexion: '01/10 · 07:58', etat: 'Actif', cree: '12/01/2026' },
   { id: 'm-camara', nom: 'M. Camara', roles: ['Caissier'], agence: 'Kaloum', caisse: 'Caisse 3', tel: '+224 622 51 09 36', facteur: 'Activé', connexion: '01/10 · 08:10', etat: 'Actif', cree: '12/01/2026' },
   { id: 's-keita', nom: 'S. Keita', roles: ['Caissier'], agence: 'Kaloum', caisse: '—', tel: '+224 657 30 21 84', facteur: 'Activé', connexion: '30/09 · 18:05', etat: 'Actif', cree: '03/03/2026' },
   { id: 'k-bah', nom: 'K. Bah', roles: ['Chef d\'agence'], agence: 'Kaloum', caisse: '—', tel: '+224 628 44 17 90', facteur: 'Activé', connexion: '01/10 · 07:45', etat: 'Actif', cree: '12/01/2026' },
-  { id: 's-sylla', nom: 'S. Sylla', roles: ['Caissier'], agence: 'Matam', caisse: 'Caisse 2', tel: '+224 664 12 70 58', facteur: 'Activé', connexion: '01/10 · 08:02', etat: 'Actif', cree: '20/02/2026' },
+  { id: 's-sylla', nom: 'S. Sylla', roles: ['Caissier'], agence: 'Matam', caisse: 'Caisse 2', tel: '+224 664 12 70 58', facteur: 'Activé', connexion: '01/10 · 08:02', etat: 'Actif', cree: '20/02/2026', demande: ['Chef d\'agence'] },
   { id: 'm-keita', nom: 'M. Keïta', roles: ['Caissier'], agence: 'Matam', caisse: '—', tel: '+224 621 08 93 42', facteur: 'Non activé', connexion: '—', etat: 'En attente de validation', cree: '01/10/2026' },
   { id: 's-barry', nom: 'S. Barry', roles: ['Caissier'], agence: 'Labé', caisse: 'Caisse 1', tel: '+224 669 55 32 10', facteur: 'Activé', connexion: '01/10 · 07:55', etat: 'Actif', cree: '05/05/2026' },
   { id: 'm-sow', nom: 'M. Sow', roles: ['Opérations', 'Chef d\'agence de secours'], agence: 'Siège', caisse: '—', tel: '+224 620 99 04 12', facteur: 'Activé', connexion: '01/10 · 08:15', etat: 'Actif', cree: '12/01/2026' },
@@ -5350,7 +5779,7 @@ function rendreCompte() {
     ? bandeauHtml(['attention', 'Modification soumise', `${echapper(u.demande.join(' · '))} · en attente de la validation d'un second habilité. Les rôles actuels restent en vigueur.`])
     : modifiable ? '' : `<p class="secondaire">${echapper(u.roles.join(' · '))} · ${u.etat === 'En attente de validation' ? 'modifiables une fois la création validée' : `compte ${u.etat.toLowerCase()}`}.</p>`;
   q('cases').innerHTML = [...ROLES, ...u.roles.filter((r) => !ROLES.includes(r))].map((r) =>
-    `<label class="case"><input type="checkbox" value="${echapper(r)}" data-role-choix="${r === 'Caissier' ? 'caissier' : r === 'Chef d\'agence' ? 'chef' : ''}"${u.roles.includes(r) ? ' checked' : ''}>${echapper(r)}</label>`).join('');
+    `<label class="case"><input type="checkbox" value="${echapper(r)}" data-role-choix="${r === 'Caissier' ? 'caissier' : r === 'Chef d\'agence' ? 'chef' : ''}"${u.roles.includes(r) ? ' checked' : ''}>${echapper(r)}${ROLES_SENSIBLES.includes(r) ? ' <span class="micro secondaire">sensible</span>' : ''}</label>`).join('');
   roles();
 
   // Accès.
@@ -5378,12 +5807,24 @@ function soumettreRoles() {
   const u = compte();
   const nouveaux = [...contenu.querySelectorAll('[data-compte="cases"] input:checked')].map((c) => c.value);
   const justification = lireChamp('#bo38-justification');
+  const sensibles = touchesSensibles(u.roles, nouveaux);
+  // Atelier 6 (retour 4.4) : sans rôle sensible en jeu, la modification s'applique aussitôt, tracée.
+  if (!sensibles.length) {
+    const avant = u.roles.join(' · ');
+    u.roles = nouveaux;
+    for (const a of Object.values(AGENCES)) for (const m of a.equipe) if (m.nom === u.nom) m.role = nouveaux.join(' · ');
+    u.journal.unshift(['01/10 · 10:42', `Rôles modifiés · ${echapper(avant)} → ${echapper(nouveaux.join(' · '))} · ${echapper(justification)}`, 'L. Condé · Administrateur · effet immédiat']);
+    AUDIT_ROLES.unshift(['01/10/2026 · 10:42', `Rôles modifiés · ${echapper(nouveaux.join(' · '))} → ${echapper(u.nom)}`, 'L. Condé · Administrateur · effet immédiat, sans rôle sensible']);
+    afficher('bo38');
+    notifier('Rôles modifiés', `${u.nom} · effet immédiat · tracé au journal d'audit.`);
+    return;
+  }
   u.demande = nouveaux;
-  u.journal.unshift(['01/10 · 10:42', `Modification des rôles soumise · ${echapper(nouveaux.join(' · '))} · ${echapper(justification)}`, 'L. Condé · Administrateur']);
-  nouvelleDemande({ type: 'Modification des rôles', demandeur: 'L. Condé · Administrateur', auteur: 'administration', agence: u.agence, pour: `${u.nom} · ${u.agence}`, valideur: 'operations', effet: ['roles', u.id, nouveaux],
-    details: [['Utilisateur', u.nom], ['Rôles actuels', u.roles.join(' · ')], ['Nouveaux rôles', echapper(nouveaux.join(' · '))], ['Justification', echapper(justification)]] });
+  u.journal.unshift(['01/10 · 10:42', `Affectation d'un rôle sensible demandée · ${echapper(sensibles.join(' · '))} · ${echapper(justification)}`, 'L. Condé · Administrateur']);
+  nouvelleDemande({ type: 'Affectation d\'un rôle sensible', demandeur: 'L. Condé · Administrateur', auteur: 'administration', agence: u.agence, pour: `${u.nom} · ${u.agence}`, valideur: 'operations', sensible: true, effet: ['roles', u.id, nouveaux],
+    details: [['Utilisateur', u.nom], ['Rôles actuels', u.roles.join(' · ')], ['Nouveaux rôles', echapper(nouveaux.join(' · '))], ['Rôle sensible', echapper(sensibles.join(' · '))], ['Motif', echapper(justification)]] });
   afficher('bo38');
-  notifier('Modification soumise à validation', `${u.nom} · les rôles actuels restent en vigueur jusqu'à la validation d'un second habilité.`);
+  notifier('Demande soumise à un second habilité', `${u.nom} · rôle sensible (${sensibles.join(' · ')}) · les rôles actuels restent en vigueur jusqu'à sa validation.`);
 }
 
 /* ---------- Suite d'une alerte close : passage aux Opérations (point 8 de la revue du 29/09) ---------- */
@@ -5402,7 +5843,7 @@ function passerAuxOperations(ref, origine, qui = 'A. Kourouma · Conformité') {
 }
 const refsBo24 = () => [...ecranPar('bo24').querySelectorAll('tr[data-choisir]')].map((t) => t.dataset.choisir.split(':')[1])
   .concat(Object.keys(OPERATIONS).filter((r) => OPERATIONS[r].ajoutBo24)).filter((r) => !TRAITES.has(`op:${r}`));
-const GENRES_BO24 = { 'En vérification': 'verif', 'À décider': 'decider', Déclinée: 'declinee', Rejetée: 'rejet' };
+const GENRES_BO24 = { 'En vérification': 'verif', 'À décider': 'decider', Déclinée: 'declinee', Échoué: 'rejet' };
 function operationsBloquees() {
   const hote = contenu.querySelector('[data-bo24]');
   if (!hote) return;
@@ -5707,6 +6148,10 @@ function modifierSeuil(bouton) {
   seuilCourant = ligne.cells[0].textContent.trim();
   voile.querySelector('[data-seuil="param"]').textContent = seuilCourant;
   voile.querySelector('[data-seuil="valeur"]').textContent = ligne.cells[1].childNodes[0].textContent.trim();
+  // Séparateur de milliers à la frappe (atelier 6, 3.6) quand le paramètre est un montant en GNF.
+  const champ = voile.querySelector('#bo23-valeur');
+  if (/GNF/.test(ligne.cells[1].textContent) || /en montant/.test(seuilCourant)) champ.dataset.montant = 'GNF';
+  else delete champ.dataset.montant;
   ouvrirTiroir('seuil');
 }
 function ouvrirPays(action, liste, rang) {
@@ -5748,7 +6193,7 @@ function rendreParametres() {
   if (!hote) return;
   const seuil = (nom, defaut) => SEUILS_MODIFIES[nom] || defaut;
   const lignes = [
-    ['Frais d\'envoi · grille par type et par pays', 'Administrateur · validés par la finance', '2 % des corridors connus · Mali et Cameroun à paramétrer', HISTORIQUE_FRAIS[0][0], 'bo44'],
+    ['Frais d\'envoi · grille par partenaire et par corridor', 'Administrateur · validés par la finance', '2 % des corridors connus (réseau SAFICO, Orange Money, Ecobank) · autres partenaires à paramétrer', HISTORIQUE_FRAIS[0][0], 'bo44'],
     ['Plafond réglementaire · par client et par jour', 'Conformité · proposé par les Opérations', 'Équiv. 5 000 USD', '17/09/2026', 'bo23'],
     ['Déclaration CENTIF · virement entrant ou sortant', 'Conformité · proposé par les Opérations', '≥ 150 000 000 GNF', '—', 'bo23'],
     ['Fractionnement', 'Conformité · proposé par les Opérations', `${seuil('Fractionnement · 24 h', '3 opérations')} en 24 h · ${seuil('Fractionnement · 7 jours', '5 opérations')} en 7 jours`, '17/09/2026', 'bo23'],
@@ -5757,6 +6202,7 @@ function rendreParametres() {
     ['Plages d\'activité des points', 'Administrateur', `${Object.values(AGENCES).filter((a) => lirePlage(a.plage)).length} points paramétrés`, HISTORIQUE_PLAGES.length ? '01/10/2026 · 10:42' : '—', 'bo31'],
     ['Plage de saisie des taux', 'Administrateur', `${PLAGE_TAUX[0]}–${PLAGE_TAUX[1]}`, '—', 'bo31'],
     ['Session et réauthentification', 'Administrateur', '15 min par défaut · de 5 à 15 min par profil', '01/10/2026', 'bo31'],
+    ['Opérations soumises à seconde validation', 'Administrateur', `${nbSecondes()} sur ${nbOperationsSeconde()} · ${VALIDEURS_SECONDE[SECONDE_VALIDATION.valideur].toLowerCase()}`, HISTORIQUE_SECONDE[0][0], 'bo50'],
     ['Taux du jour', 'RAF', 'USD · XOF · LRD', `01/10/2026 · ${HISTORIQUE_TAUX[0][0]}`, 'bo12'],
     ['Délai avant « hors ligne »', 'Opérations', '15 min sans signal', '01/10/2026', 'bo27'],
     ['Seuil minimum du solde virtuel', 'Finance', `${montantDe(SEUILS_MINIMUM.GNF)} · ${montantDe(SEUILS_MINIMUM.XOF, 'XOF')}`, '—', 'bo41'],
@@ -5788,7 +6234,7 @@ const SECURITE = [
   ['Mots de passe · réutilisation interdite', 'À définir'],
   ['MFA', 'Opérations à risque élevé (décision 10) · profils concernés à définir'],
   ['Restrictions IP', 'À définir'],
-  ['Restrictions géographiques', 'À définir'],
+  ['Restrictions géographiques', 'Par pays, région, ville ou périmètre · voir la carte ci-dessous'],
   ['Équipements autorisés', 'À définir'],
 ];
 let regleCourante = 0;
@@ -5807,6 +6253,50 @@ function ouvrirRegle(i) {
   voile.querySelector('[data-sc="titre"]').textContent = SECURITE[i][0];
   voile.querySelector('[data-sc="actuel"]').innerHTML = infosHtml([['Valeur actuelle', echapper(SECURITE[i][1])]]);
   ouvrirTiroir('securite');
+}
+
+/* ---------- BO49 · restrictions géographiques (atelier 6, 12/10, retour 4.9) ---------- */
+// D'où l'on peut se connecter. Règles de démonstration (déduit) ; la plus récente l'emporte.
+// « Tout autre pays » colore en restreint les pays sans règle propre.
+const RESTRICTIONS_GEO = [
+  { portee: 'Pays', zone: 'Guinée', effet: 'autoriser', profils: 'Tous les profils' },
+  { portee: 'Pays', zone: 'Côte d\'Ivoire', effet: 'autoriser', profils: 'Agences et distributeurs' },
+  { portee: 'Périmètre', zone: 'Siège · Conakry · 15 km', effet: 'autoriser', profils: 'Administrateur', centre: 'Siège · Conakry' },
+  { portee: 'Pays', zone: 'Tout autre pays', effet: 'restreindre', profils: 'Tous les profils' },
+];
+const CENTRES_GEO = { 'Siège · Conakry': [77, 165], 'Agence Kaloum · Conakry': [77, 165], 'Agence Labé': [103, 125], 'Agence Kindia': [92, 153], 'Agence Adjamé · Abidjan': [252, 256] };
+const PAYS_GEO = ['Guinée', 'Côte d\'Ivoire', 'Sénégal', 'Liberia', 'Sierra Leone', 'Guinée-Bissau', 'Mali', 'Tout autre pays'];
+function effetPaysGeo(nom) {
+  const propre = RESTRICTIONS_GEO.find((r) => r.portee === 'Pays' && r.zone === nom);
+  if (propre) return propre.effet;
+  return RESTRICTIONS_GEO.find((r) => r.portee === 'Pays' && r.zone === 'Tout autre pays')?.effet || '';
+}
+function rendreRestrictions() {
+  const hote = contenu.querySelector('[data-regles-geo]');
+  if (!hote) return;
+  hote.innerHTML = RESTRICTIONS_GEO.map((r) => `<tr><td>${r.portee}</td><td>${echapper(r.zone)}</td>`
+    + `<td>${r.effet === 'autoriser' ? pastille('valide', 'Autorisé') : pastille('blocage', 'Restreint')}</td><td>${echapper(r.profils)}</td></tr>`).join('');
+  for (const chemin of contenu.querySelectorAll('[data-pays-geo]')) {
+    const effet = effetPaysGeo(chemin.dataset.paysGeo);
+    chemin.classList.toggle('autorise', effet === 'autoriser');
+    chemin.classList.toggle('restreint', effet === 'restreindre');
+  }
+  const svg = contenu.querySelector('.carte-geo');
+  for (const c of svg.querySelectorAll('[data-perimetre-geo]')) c.remove();
+  for (const r of RESTRICTIONS_GEO.filter((x) => x.centre)) {
+    const [cx, cy] = CENTRES_GEO[r.centre] || CENTRES_GEO['Siège · Conakry'];
+    svg.querySelector('.ville').insertAdjacentHTML('beforebegin', `<circle class="perimetre" data-perimetre-geo cx="${cx}" cy="${cy}" r="16"><title>${echapper(r.zone)}</title></circle>`);
+  }
+  contenu.querySelector('[data-geo-pays]').innerHTML = PAYS_GEO.map((n) => `<option>${n}</option>`).join('');
+}
+function ouvrirRegleGeo(pays) {
+  const voile = contenu.querySelector('[data-tiroir="regle-geo"]');
+  viderTiroir(voile);
+  for (const b of voile.querySelectorAll('[data-choix] [data-valeur]')) b.classList.toggle('actif', ['pays', 'autoriser'].includes(b.dataset.valeur));
+  etats.portee = 'pays';
+  etats['effet-geo'] = 'autoriser';
+  if (pays) voile.querySelector('#bo49-pays').value = pays;
+  ouvrirTiroir('regle-geo');
 }
 
 /* ---------- BO14 · rôle sur mesure (atelier 5, 01/10) ---------- */
@@ -5886,38 +6376,159 @@ function ouvrirZone(nom) {
   ouvrirTiroir('zone');
 }
 
-/* ---------- BO44 · frais et commissions (atelier 5, 01/10) ---------- */
-const TYPES_TRANSACTION = ['Espèces', 'Wallet', 'Compte bancaire'];
+/* ---------- BO44 · frais et commissions (atelier 5, 01/10 ; par partenaire, atelier 6, 12/10) ---------- */
+// Atelier 6 (retour 4.2) : les frais dépendent du partenaire ; le taux de change sort de la grille.
+// Mode de versement → partenaire → corridor. Valeurs : 2 % des corridors connus, celles du
+// prototype (BO25 : 64 000 GNF pour 3 200 000 GNF ; SFC-6D41-0017 : 160 000 GNF pour 8 000 000 GNF) ;
+// MTN MoMo et Orabank, nouvelles destinations : à paramétrer (déduit).
+const TYPES_FRAIS = { especes: 'Espèces · réseau', wallet: 'Wallet', banque: 'Banque' };
+const CORRIDORS = ['Guinée (national)', 'Côte d\'Ivoire', 'Sénégal', 'Liberia', 'Mali', 'Cameroun'];
+const grilleFrais = (connus) => Object.fromEntries(CORRIDORS.map((c, i) => [c, connus && i < 4 ? '2 %' : 'À paramétrer']));
 const FRAIS = {
-  'Guinée (national)': ['2 %', '2 %', '2 %'],
-  'Côte d\'Ivoire': ['2 %', '2 %', '2 %'],
-  'Sénégal': ['2 %', '2 %', '2 %'],
-  'Liberia': ['2 %', '2 %', '2 %'],
-  'Mali': ['À paramétrer', 'À paramétrer', 'À paramétrer'],
-  'Cameroun': ['À paramétrer', 'À paramétrer', 'À paramétrer'],
+  especes: { 'Réseau SAFICO': grilleFrais(true) },
+  wallet: { 'Orange Money': grilleFrais(true), 'MTN MoMo': grilleFrais(false) },
+  banque: { Ecobank: grilleFrais(true), Orabank: grilleFrais(false) },
 };
-const HISTORIQUE_FRAIS = [['17/09/2026 · 17:10', 'Grille initiale · 2 % des corridors Guinée, Côte d\'Ivoire, Sénégal, Liberia', 'L. Condé · validé par F. Camara · Finance']];
-let fraisCourant = ['Côte d\'Ivoire', 0];
+const HISTORIQUE_FRAIS = [['17/09/2026 · 17:10', 'Grille initiale · réseau SAFICO, Orange Money et Ecobank · 2 % des corridors Guinée, Côte d\'Ivoire, Sénégal, Liberia', 'L. Condé · validé par F. Camara · Finance']];
+let fraisCourant = ['wallet', 'Orange Money', 'Côte d\'Ivoire'];
 function rendreFrais() {
   const hote = contenu.querySelector('[data-frais]');
   if (!hote) return;
   const admin = profil.cle === 'administration';
+  const type = FRAIS[etats['type-frais']] ? etats['type-frais'] : 'wallet';
+  if (!FRAIS[type][etats.partenaire]) etats.partenaire = Object.keys(FRAIS[type])[0];
+  contenu.querySelector('[data-frais-partenaires]').innerHTML = Object.keys(FRAIS[type])
+    .map((nom) => `<button data-valeur="${echapper(nom)}"${nom === etats.partenaire ? ' class="actif"' : ''}>${nom}</button>`).join('');
   const attentes = DEMANDES.filter((d) => d.etat === 'attente' && d.effet?.[0] === 'frais');
-  hote.innerHTML = Object.entries(FRAIS).map(([pays, valeurs]) => `<tr><td>${pays}</td>` + valeurs.map((v, i) => {
-    const attente = attentes.find((d) => d.effet[1] === pays && d.effet[2] === i);
-    const texte = `${v === 'À paramétrer' ? `<span class="secondaire">${v}</span>` : v}${attente ? `<br><span class="micro secondaire">${echapper(attente.effet[3])} en attente de la finance</span>` : ''}`;
-    return `<td>${admin && !attente ? `<button class="bouton discret petit" type="button" data-frais-cellule="${echapper(pays)}|${i}">${v}</button>` : texte}</td>`;
-  }).join('') + '</tr>').join('');
+  const modifie = (corridor) => HISTORIQUE_FRAIS.find(([, quoi]) => quoi.startsWith(`${TYPES_FRAIS[type]} · ${etats.partenaire} · ${corridor} ·`))?.[0] || '17/09/2026';
+  hote.innerHTML = Object.entries(FRAIS[type][etats.partenaire]).map(([corridor, v]) => {
+    const attente = attentes.find((d) => d.effet[1] === type && d.effet[2] === etats.partenaire && d.effet[3] === corridor);
+    const texte = `${v === 'À paramétrer' ? `<span class="secondaire">${v}</span>` : v}${attente ? `<br><span class="micro secondaire">${echapper(attente.effet[4])} en attente de la finance</span>` : ''}`;
+    const cellule = admin && !attente ? `<button class="bouton discret petit" type="button" data-frais-cellule="${type}|${echapper(etats.partenaire)}|${echapper(corridor)}">${v}</button>` : texte;
+    return `<tr><td>${corridor}</td><td>${cellule}</td><td>${v === 'À paramétrer' ? '—' : modifie(corridor)}</td></tr>`;
+  }).join('');
   contenu.querySelector('[data-historique-frais]').innerHTML = journalHtml(HISTORIQUE_FRAIS);
 }
 function ouvrirFrais(cle) {
-  const [pays, rang] = cle.split('|');
-  fraisCourant = [pays, Number(rang)];
+  const [type, partenaire, corridor] = cle.split('|');
+  fraisCourant = [type, partenaire, corridor];
   const voile = contenu.querySelector('[data-tiroir="frais"]');
   viderTiroir(voile);
-  voile.querySelector('[data-fr="objet"]').textContent = `${pays} · ${TYPES_TRANSACTION[rang]}`;
-  voile.querySelector('[data-fr="actuel"]').innerHTML = infosHtml([['Frais en vigueur', FRAIS[pays][rang]]]);
+  voile.querySelector('[data-fr="objet"]').textContent = `${TYPES_FRAIS[type]} · ${partenaire} · ${corridor}`;
+  voile.querySelector('[data-fr="actuel"]').innerHTML = infosHtml([['Frais en vigueur', FRAIS[type][partenaire][corridor]]]);
   ouvrirTiroir('frais');
+}
+
+/* ---------- BO29 · bandeau d'information (atelier 6, 12/10, retour 4.10) ---------- */
+// Les deux messages du 01/10 (Mali, Cameroun), plus un message ciblé sur une agence et désactivé
+// (démonstration, déduit) pour montrer la cible et l'état.
+const CIBLES_MESSAGE = { reseau: 'Tout le réseau', zone: 'Zone', agence: 'Agence' };
+const MESSAGES = [
+  { texte: 'Nouvelle destination : Mali, retraits disponibles dans toutes les agences partenaires de Bamako dès aujourd\'hui.', cible: 'reseau', lieu: '', destinataires: ['Caissiers', 'Chefs d\'agence'], du: '01/10', au: '07/10', actif: true, par: 'M. Sow' },
+  { texte: 'Chers partenaires, nous vous informons que les transactions vers le Cameroun sont désormais disponibles. Veuillez contacter le service client pour toute demande d\'assistance. SAFICO vous remercie.', cible: 'reseau', lieu: '', destinataires: ['Caissiers', 'Chefs d\'agence'], du: '01/10', au: '', actif: true, par: 'M. Sow' },
+  { texte: 'Labé : coupures de réseau annoncées cet après-midi. Pensez au mode hors ligne.', cible: 'agence', lieu: 'Labé', destinataires: ['Chefs d\'agence'], du: '30/09', au: '30/09', actif: false, par: 'M. Sow' },
+];
+let messageCourant = null;
+function rendreMessages() {
+  const hote = contenu.querySelector('[data-messages]');
+  if (!hote) return;
+  hote.innerHTML = MESSAGES.map((m, i) => `<tr><td>${echapper(m.texte)}</td><td>${CIBLES_MESSAGE[m.cible]}${m.lieu ? ` · ${echapper(m.lieu)}` : ''}</td>`
+    + `<td>${m.destinataires.join(' · ')}</td><td>${echapper(m.du)}</td><td>${m.au ? echapper(m.au) : '—'}</td>`
+    + `<td>${m.actif ? pastille('valide', 'Actif') : pastille('', 'Désactivé')}</td>`
+    + `<td class="nombre"><button class="bouton discret petit" type="button" data-message-ouvrir="${i}">Modifier</button>`
+    + `<button class="bouton discret petit" type="button" data-message-actif="${i}">${m.actif ? 'Désactiver' : 'Réactiver'}</button></td></tr>`).join('');
+  contenu.querySelector('[data-message-zones]').innerHTML = ZONES_NOMS().map((z) => `<option>${z}</option>`).join('');
+  contenu.querySelector('[data-message-agences]').innerHTML = Object.values(AGENCES).map((a) => `<option>${a.nom}</option>`).join('');
+}
+function ouvrirMessage(rang) {
+  const voile = contenu.querySelector('[data-tiroir="message"]');
+  viderTiroir(voile);
+  messageCourant = rang === '' ? null : Number(rang);
+  const m = MESSAGES[messageCourant];
+  const cible = m?.cible || 'reseau';
+  for (const b of voile.querySelectorAll('[data-choix="cible-message"] [data-valeur]')) b.classList.toggle('actif', b.dataset.valeur === cible);
+  etats['cible-message'] = cible;
+  voile.querySelector('[data-message-titre]').textContent = m ? 'Modifier le message' : 'Nouveau message';
+  voile.querySelector('[data-message-bouton]').textContent = m ? 'Enregistrer' : 'Publier';
+  if (m) {
+    voile.querySelector('#bo29-message').value = m.texte;
+    voile.querySelector('#bo29-du').value = m.du;
+    voile.querySelector('#bo29-au').value = m.au;
+    voile.querySelector('#bo29-actif').checked = m.actif;
+    if (m.cible === 'zone') voile.querySelector('#bo29-zone').value = m.lieu;
+    if (m.cible === 'agence') voile.querySelector('#bo29-agence').value = m.lieu;
+    for (const c of voile.querySelectorAll('[data-destinataire]')) c.checked = m.destinataires.includes(c.dataset.destinataire);
+    voile.querySelector('[data-apercu]').textContent = m.texte;
+  }
+  ouvrirTiroir('message');
+}
+
+/* ---------- BO11 · rejets d'export Odoo (atelier 6, 12/10, retour 4.8) ---------- */
+// Deux écritures de distributeurs (mouvements de BO30) rejetées par Odoo : démonstration (déduit).
+const REJETS_ODOO = [
+  { id: 'r-4410', heure: '10:30', ref: 'SFC-9A03-4410', journal: 'Distributeurs · Boutique Barry & Fils', motif: 'Compte de tiers inconnu : distributeur sans compte 401', etat: 'rejet' },
+  { id: 'r-0072', heure: '10:30', ref: 'SFC-9A04-0072', journal: 'Distributeurs · Kiosque Matoto', motif: 'Journal du distributeur absent dans Odoo', etat: 'rejet' },
+];
+const rejetsOdoo = () => REJETS_ODOO.filter((r) => r.etat === 'rejet').length;
+function rendreRejetsOdoo() {
+  for (const el of contenu.querySelectorAll('[data-odoo-rejets]')) el.textContent = rejetsOdoo();
+  const hote = contenu.querySelector('[data-rejets-odoo]');
+  if (!hote) return;
+  hote.innerHTML = REJETS_ODOO.map((r) => `<tr><td>${r.heure}</td><td>${r.ref}</td><td>${r.journal}</td><td>${r.motif}</td>`
+    + `<td>${r.etat === 'rejet' ? pastille('blocage', 'Rejeté') : pastille('attente', `Relancé à 10:42 · ${r.par}`)}</td>`
+    + `<td class="nombre">${r.etat === 'rejet' ? `<button class="bouton secondaire petit" type="button" data-relancer-odoo="${r.id}">Relancer</button>` : ''}</td></tr>`).join('');
+}
+
+/* ---------- BO50 · opérations soumises à seconde validation (atelier 6, 12/10, retour 4.7) ---------- */
+// Liste du retour 4.7, par domaine. État de départ : ce que le prototype dessine déjà — toutes en
+// seconde validation, sauf le taux de change (décision 8 du 01/10 : historique, rappel à la connexion
+// et code personnel, sans seconde validation). [libellé, active, précision].
+const SECONDE_VALIDATION = {
+  valideur: 'distinct',
+  domaines: [
+    ['KYC', [['Création ou modification d\'un client', true], ['Modification d\'identité', true], ['Client à risque élevé', true], ['Dérogation KYC', true], ['Client sous surveillance', true]]],
+    ['Utilisateurs', [['Création ou suppression d\'un utilisateur', true], ['Rôle Administrateur', true], ['Modification des droits', true, 'Rôles sensibles (Utilisateurs et rôles)'], ['Réinitialisation du mot de passe', true], ['Désactivation d\'un contrôle de sécurité', true]]],
+    ['Paramétrage', [['Plafonds', true], ['Seuils de validation', true], ['Contrôles de conformité', true], ['Frais et commissions', true], ['Taux de change', false, 'Décision du 1er octobre : historique, rappel à la connexion et code personnel'], ['Agences et caisses', true]]],
+    ['Comptabilité et trésorerie', [['Ouverture et clôture de caisse', true], ['Ajustement manuel', true], ['Régularisation', true], ['Validation d\'écart', true], ['Modification d\'écriture', true], ['Rapprochement exceptionnel', true]]],
+    ['LBC/FT', [['Levée d\'alerte', true], ['Validation d\'une opération suspecte', true], ['Déblocage', true], ['Dérogation', true]]],
+  ],
+};
+const VALIDEURS_SECONDE = { distinct: 'Valideur distinct obligatoire', tolere: 'Même personne tolérée (tracée)' };
+const HISTORIQUE_SECONDE = [['17/09/2026 · 17:10', 'Liste initiale · liste maker-checker du 14/09', 'L. Condé · Administrateur']];
+const nbSecondes = () => SECONDE_VALIDATION.domaines.reduce((n, [, ops]) => n + ops.filter((o) => o[1]).length, 0);
+const nbOperationsSeconde = () => SECONDE_VALIDATION.domaines.reduce((n, [, ops]) => n + ops.length, 0);
+// Changements en cours sur l'écran : [libellé, avant, après].
+function changementsSeconde() {
+  const liste = [];
+  for (const caseOp of contenu.querySelectorAll('[data-second]')) {
+    const [i, j] = caseOp.dataset.second.split(':').map(Number);
+    const [libelle, actif] = SECONDE_VALIDATION.domaines[i][1][j];
+    if (caseOp.checked !== actif) liste.push(`${SECONDE_VALIDATION.domaines[i][0]} · ${libelle} : ${caseOp.checked ? 'soumise à seconde validation' : 'sans seconde validation'}`);
+  }
+  if (etats.valideur && etats.valideur !== SECONDE_VALIDATION.valideur) liste.push(`Valideur : ${VALIDEURS_SECONDE[etats.valideur]}`);
+  return liste;
+}
+function rendreSecondeValidation() {
+  const hote = contenu.querySelector('[data-seconde-validation]');
+  if (!hote) return;
+  hote.innerHTML = SECONDE_VALIDATION.domaines.map(([domaine, ops], i) => `<section class="carte"><div class="carte-tete"><h2>${domaine}</h2>`
+    + `<span class="secondaire" data-second-compte="${i}"></span></div><div class="interrupteurs">`
+    + ops.map(([libelle, actif, precision], j) => `<label class="case"><span>${libelle}${precision ? `<br><span class="micro secondaire">${precision}</span>` : ''}</span>`
+      + `<input type="checkbox" class="interrupteur" data-second="${i}:${j}"${actif ? ' checked' : ''} aria-label="${echapper(`${domaine} · ${libelle}`)}"></label>`).join('')
+    + '</div></section>').join('');
+  etats.valideur = SECONDE_VALIDATION.valideur;
+  for (const b of contenu.querySelectorAll('[data-choix="valideur"] [data-valeur]')) b.classList.toggle('actif', b.dataset.valeur === etats.valideur);
+  contenu.querySelector('[data-historique-seconde]').innerHTML = journalHtml(HISTORIQUE_SECONDE);
+  compterSecondes();
+}
+function compterSecondes() {
+  if (!contenu.querySelector('[data-second-compte]')) return;
+  SECONDE_VALIDATION.domaines.forEach(([, ops], i) => {
+    const n = contenu.querySelectorAll(`[data-second^="${i}:"]:checked`).length;
+    contenu.querySelector(`[data-second-compte="${i}"]`).textContent = `${n} sur ${ops.length}`;
+  });
+  const n = changementsSeconde().length;
+  contenu.querySelector('[data-second-resume]').textContent = n ? `${n} modification${n > 1 ? 's' : ''} non enregistrée${n > 1 ? 's' : ''}` : '';
 }
 
 /* ---------- Solde virtuel (atelier 5, 01/10, décision 12) ---------- */
@@ -6220,6 +6831,221 @@ function agencesHorsLigne() {
   if (choix) choix.innerHTML = HORS_LIGNE.map((h) => `<option value="${h.cle}">${AGENCES[h.cle].nom}</option>`).join('');
 }
 
+/* ---------- Tableaux de bord par profil (atelier 6, 12/10, lot 5) ---------- */
+// Un écran par profil (BO51 à BO56 ; Direction et Contrôleur sur BO20). Gabarit commun : en-tête
+// (profil, nom, date), « À traiter » (cartes cliquables vers l'écran existant, triées par urgence,
+// avec l'élément le plus ancien), « Indicateurs du jour », états vide / chargement / erreur choisis
+// par un sélecteur de revue. Tous les compteurs viennent des tables du prototype ; ce qui n'y figure
+// pas est signalé sur la carte. Contenu proposé par Galadrim : étiquette sur chaque écran.
+const MAINTENANT = Date.UTC(2026, 9, 1, 10, 42); // prototype figé au jeudi 01/10/2026 à 10:42
+function minutesDepuis(q) {
+  const m = /(\d\d)\/(\d\d)(?:\/(\d{4}))?(?: · (\d\d):(\d\d))?/.exec(q || '');
+  if (!m) return 0;
+  const t = Date.UTC(Number(m[3] || 2026), Number(m[2]) - 1, Number(m[1]), Number(m[4] || 8), Number(m[5] || 0));
+  return Math.max(0, Math.round((MAINTENANT - t) / 60000));
+}
+function minutesDuree(t = '') {
+  const j = /(\d+)\s*j/.exec(t);
+  const h = /(\d+)\s*h(?:\s*(\d+))?/.exec(t);
+  const mi = /(\d+)\s*min/.exec(t);
+  return (j ? Number(j[1]) * 1440 : 0) + (h ? Number(h[1]) * 60 + Number(h[2] || 0) : mi ? Number(mi[1]) : 0);
+}
+const depuisTexte = (m) => (m < 1 ? 'à l\'instant' : m < 1440 ? `depuis ${enHeures(m)}`
+  : `depuis ${Math.floor(m / 1440)} j${m < 7 * 1440 && Math.floor(m % 1440 / 60) ? ` ${Math.floor(m % 1440 / 60)} h` : ''}`);
+const plusAncien = (liste) => (liste.length ? Math.max(...liste) : 0);
+const pluriel = (n, un, plusieurs) => `${n} ${n > 1 ? plusieurs : un}`;
+const lignesAlertes = () => [...ecranPar('bo1').querySelectorAll('tr[data-priorite]')].filter((l) => !TRAITES.has(l.dataset.traitePar));
+const parGenreBo24 = (genres) => refsBo24().filter((r) => genres.includes(GENRES_BO24[OPERATIONS[r]?.statut[1]]));
+const restantHorsLigne = (h) => 120 + h.prolongations.reduce((n, x) => n + x.minutes, 0) - h.depuis;
+const tonHorsLigne = (liste) => (liste.some((h) => restantHorsLigne(h) <= 0) ? 'blocage' : liste.some((h) => restantHorsLigne(h) <= 30) ? 'attention' : '');
+// Activité du jour : celle du rapport d'activité (BO13).
+const JOUR_RESEAU = { envois: 412, montantEnvois: 486300000, retraits: 298, montantRetraits: 312750000 };
+const TENTATIVES_ANORMALES = [['07:12', 'Connexion refusée hors zone autorisée', 'Compte A. Diallo · Kaloum'], ['06:58', 'Trois codes erronés', 'Compte S. Keita · Kaloum']]; // démonstration (déduit)
+
+const TABLEAUX = {
+  conformite: () => {
+    const alertes = lignesAlertes();
+    const prio = (p) => alertes.filter((l) => l.dataset.priorite === p).length;
+    const matchs = alertes.filter((l) => /PPE|sanctions/.test(l.cells[4].textContent));
+    const centif = alertes.filter((l) => l.dataset.type === 'centif');
+    const anc = (ls) => plusAncien(ls.map((l) => minutesDuree(l.cells[5].textContent)));
+    const grise = new Set(Object.values(OPERATIONS).filter((o) => o.blocage?.type === 'surveillance').map((o) => o.exp));
+    const retard = matchs.filter((l) => /Dépassé/.test(l.cells[6].textContent)).length;
+    return {
+      afaire: [
+        { n: alertes.length, libelle: 'Alertes ouvertes', detail: `${prio('critique')} critiques · ${prio('elevee')} élevées · ${prio('moyenne')} moyennes · ${prio('faible')} faibles`, ton: prio('critique') ? 'blocage' : '', min: anc(alertes), cible: 'bo1' },
+        { n: matchs.length, libelle: 'Correspondances sanctions et PEP en attente', detail: retard ? `dont ${retard} hors délai` : 'dans les délais', ton: retard ? 'attention' : '', min: anc(matchs), cible: 'bo1' },
+        { n: centif.length, libelle: 'Déclarations CENTIF à valider', detail: 'opérations de 150 000 000 GNF ou plus', min: anc(centif), cible: 'bo4' },
+      ],
+      indicateurs: [
+        { libelle: 'Clients en liste grise', valeur: grise.size, detail: 'pays sous surveillance · sans blocage' },
+        { libelle: 'Reporting BCRG', valeur: '9 jours', detail: 'avant l\'échéance du 10/10' },
+        { libelle: 'Clients bloqués', valeur: Object.keys(CLIENTS_BLOQUES).length, detail: 'tout le réseau' },
+        { libelle: 'Envois hors ligne à contrôler', valeur: compteur(ecranPar('bo21')), detail: 'à la reconnexion' },
+      ],
+    };
+  },
+  operations: () => {
+    const verif = parGenreBo24(['verif']);
+    const decider = parGenreBo24(['decider', 'declinee']);
+    const echoues = parGenreBo24(['rejet']);
+    const anc = (refs) => plusAncien(refs.map((r) => minutesDepuis(OPERATIONS[r].date)));
+    const proches = verif.filter((r) => /sous/.test(OPERATIONS[r].echeance)).length;
+    const demandes = demandesDe('operations', 'moi').filter((d) => d.auteur !== 'operations');
+    const enLigne = Object.values(AGENCES).filter((a) => a.genre === 'agence' && a.connexion[0] !== 'activation');
+    return {
+      afaire: [
+        { n: verif.length, libelle: 'Opérations bloquées', detail: proches ? `dont ${proches} à l'échéance des 30 jours sous 7 jours` : 'en vérification', ton: proches ? 'attention' : '', min: anc(verif), cible: 'bo24' },
+        { n: aValider('operations'), libelle: 'Secondes validations en attente', detail: 'à valider par les Opérations', min: plusAncien(demandes.map((d) => minutesDuree(d.depuis))), cible: 'bo6' },
+        { n: HORS_LIGNE.length, libelle: 'Agences hors ligne', detail: HORS_LIGNE.map((h) => `${AGENCES[h.cle].nom} · ${enHeures(h.depuis)} sur 2 h`).join(' · ') || 'toutes en ligne', ton: tonHorsLigne(HORS_LIGNE), min: plusAncien(HORS_LIGNE.map((h) => h.depuis)), cible: 'bo27' },
+        { n: echoues.length, libelle: 'Versements échoués et rejets partenaires', detail: 'relancer ou annuler', min: anc(echoues), cible: 'bo26' },
+        { n: 0, libelle: 'Codes de retrait verrouillés', detail: 'Aucun écran de déverrouillage dans le prototype' },
+        { n: decider.length, libelle: 'Annulations et remboursements à décider', detail: 'déclinées ou passées par la conformité', min: anc(decider), cible: 'bo24' },
+      ],
+      indicateurs: [
+        { libelle: 'Volume du jour', valeur: montantDe(JOUR_RESEAU.montantEnvois), detail: `envoyés · ${montantDe(JOUR_RESEAU.montantRetraits)} payés` },
+        { libelle: 'Transactions', valeur: grouper(String(JOUR_RESEAU.envois + JOUR_RESEAU.retraits)), detail: `${JOUR_RESEAU.envois} envois · ${JOUR_RESEAU.retraits} retraits` },
+        { libelle: 'Agences en ligne', valeur: `${enLigne.filter((a) => a.connexion[0] !== 'hors-ligne').length} sur ${enLigne.length}`, detail: 'agences SAFICO ouvertes' },
+      ],
+    };
+  },
+  finance: () => {
+    const appros = APPROS.filter((x) => x.etat === 'attente');
+    const ecarts = ECARTS.filter((e) => e.etat === 'attente');
+    const ruptures = [...Object.keys(SOLDES_AGENCES).filter(sousSeuil), ...Object.keys(SOLDES_DISTRIBUTEURS).filter((c) => soldeDistributeur(c) < 0)];
+    const publiees = new Set(HISTORIQUE_TAUX.map(([, quoi]) => quoi.split(' ')[0]));
+    const aPublier = ['USD', 'XOF', 'LRD'].filter((d) => !publiees.has(d));
+    const raf = profil.cle === 'raf';
+    return {
+      afaire: [
+        ...(raf ? [{ n: aPublier.length, libelle: 'Taux du jour à publier', detail: aPublier.length ? `${aPublier.join(' et ')} au taux d'hier` : 'tous publiés', ton: aPublier.length ? 'attention' : '', min: aPublier.length ? minutesDepuis('01/10 · 07:00') : 0, cible: 'bo12' }] : []),
+        { n: appros.length, libelle: 'Demandes d\'approvisionnement en solde virtuel', detail: appros.some((x) => /Rupture/.test(x.motif)) ? 'dont une agence en rupture' : 'agences et distributeurs', ton: appros.some((x) => /Rupture/.test(x.motif)) ? 'attention' : '', min: plusAncien(appros.map((x) => minutesDepuis(x.recue))), cible: 'bo41' },
+        { n: ecarts.length, libelle: 'Écarts de caisse à régulariser', detail: ecarts.map((e) => `${e.agence} · ${e.ecart}`).join(' · ') || 'aucun', min: plusAncien(ecarts.map(() => minutesDuree(DEMANDES.find((d) => d.id === 'ecart-kaloum')?.depuis))), cible: 'bo9' },
+        { n: rejetsOdoo(), libelle: 'Rejets d\'export Odoo', detail: 'écritures de distributeurs', min: rejetsOdoo() ? minutesDepuis('01/10 · 10:30') : 0, cible: 'bo11' },
+      ],
+      indicateurs: [
+        { libelle: 'Points en rupture ou en découvert', valeur: ruptures.length, detail: ruptures.map(nomPoint).join(' · ') || 'aucun' },
+        { libelle: 'Taux du jour', valeur: `${3 - aPublier.length} sur 3 publiés`, detail: aPublier.length ? `${aPublier.join(' et ')} au taux d'hier` : `publiés à ${HISTORIQUE_TAUX[0][0]}` },
+        { libelle: 'Solde virtuel des agences', valeur: montantDe(Object.keys(SOLDES_AGENCES).filter((c) => AGENCES[c].devise === 'GNF').reduce((n, c) => n + soldeAgence(c), 0)), detail: 'agences en GNF' },
+      ],
+    };
+  },
+  administration: () => {
+    const sensibles = DEMANDES.filter((d) => d.etat === 'attente' && d.sensible);
+    const agences = Object.entries(AGENCES).filter(([, a]) => a.connexion[0] === 'activation');
+    const caisses = Object.values(AGENCES).flatMap((a) => a.caisses).filter((c) => c[2] === 'En attente d\'activation');
+    const anomalies = [...ecranPar('bo47').querySelectorAll('tbody tr')].filter((tr) => tr.querySelector('.statut.attention'));
+    const suspendus = UTILISATEURS.filter((u) => u.etat === 'Suspendu');
+    const activations = agences.map(([cle]) => DEMANDES.find((d) => d.effet?.[0] === 'agence' && d.effet[1] === cle && d.etat === 'attente')).filter(Boolean);
+    return {
+      afaire: [
+        { n: sensibles.length, libelle: 'Affectations de rôles sensibles en attente', detail: sensibles.map((d) => d.pour).join(' · ') || 'aucune', min: plusAncien(sensibles.map((d) => minutesDuree(d.depuis))), cible: 'bo14' },
+        { n: agences.length + caisses.length, libelle: 'Agences et caisses en attente d\'activation', detail: `${pluriel(agences.length, 'agence', 'agences')} · ${pluriel(caisses.length, 'caisse', 'caisses')}`, min: plusAncien(activations.map((d) => minutesDuree(d.depuis))), cible: 'bo33' },
+        { n: anomalies.length + suspendus.length, libelle: 'Incidents ouverts', detail: `${pluriel(anomalies.length, 'anomalie technique', 'anomalies techniques')} · ${pluriel(suspendus.length, 'compte bloqué', 'comptes bloqués')}`, min: plusAncien(anomalies.map((tr) => minutesDepuis(tr.cells[0].textContent))), cible: 'bo47' },
+      ],
+      indicateurs: [
+        { libelle: 'Comptes suspendus', valeur: suspendus.length, detail: 'tout le réseau' },
+        { libelle: 'Dernière sauvegarde', valeur: 'À définir', detail: 'Sauvegarde et reprise · au stade de la structure' },
+        { libelle: 'Tentatives d\'authentification anormales', valeur: TENTATIVES_ANORMALES.length, detail: `dernière à ${TENTATIVES_ANORMALES[0][0]} · ${TENTATIVES_ANORMALES[0][1].toLowerCase()}` },
+      ],
+    };
+  },
+  audit: () => {
+    const sensibles = journalGlobal().filter((l) => l.quand.startsWith('01/10') && /décision|confirmé|bloqué|validée|refusée|modification|recherche par téléphone|reprise|suspendu|débloqué/i.test(l.quoi));
+    const recents = [...UTILISATEURS.filter((u) => minutesDepuis(u.cree) <= 30 * 1440), ...AUDIT_ROLES];
+    return {
+      afaire: [
+        { n: sensibles.length, libelle: 'Actions sensibles du jour', detail: 'décisions, blocages, modifications, recherches par téléphone', min: plusAncien(sensibles.map((l) => minutesDepuis(l.quand))), cible: 'bo18' },
+        { n: 0, libelle: 'Opérations hors plage horaire', detail: 'aucune saisie hors plage aujourd\'hui', cible: 'bo18' },
+        { n: recents.length, libelle: 'Affectations de rôles récentes', detail: '30 derniers jours · créations et affectations', min: plusAncien(UTILISATEURS.filter((u) => minutesDepuis(u.cree) <= 30 * 1440).map((u) => minutesDepuis(u.cree))), cible: 'bo18', choisir: 'journal:utilisateur' },
+      ],
+      indicateurs: [
+        { libelle: 'Journal d\'audit', valeur: 'Ouvrir', detail: 'recherche par référence, utilisateur, agence', cible: 'bo18' },
+        { libelle: 'Retracer un utilisateur', valeur: 'Ouvrir', detail: 'tout ce qu\'un compte a fait sur une période', cible: 'bo18', choisir: 'journal:utilisateur' },
+        { libelle: 'Recherches par téléphone', valeur: RECHERCHES_TELEPHONE.length, detail: 'aujourd\'hui · tracées' },
+      ],
+    };
+  },
+  zone: () => {
+    const zone = 'Basse-Guinée';
+    const points = Object.entries(AGENCES).filter(([, a]) => a.zone === zone && a.connexion[0] !== 'activation');
+    const ouvertures = DEMANDES.filter((d) => d.etat === 'attente' && d.auteur === 'zone');
+    const horsLigne = HORS_LIGNE.filter((h) => AGENCES[h.cle].zone === zone);
+    const sous = points.filter(([cle, a]) => (SOLDES_AGENCES[cle] && sousSeuil(cle)) || (SOLDES_DISTRIBUTEURS[cle] && soldeDistributeur(cle) < 0)).map(([cle]) => cle);
+    return {
+      afaire: [
+        { n: horsLigne.length, libelle: 'Points de la zone hors ligne', detail: horsLigne.map((h) => `${AGENCES[h.cle].nom} · ${enHeures(h.depuis)} sur 2 h`).join(' · ') || 'tous en ligne', ton: tonHorsLigne(horsLigne), min: plusAncien(horsLigne.map((h) => h.depuis)), cible: 'bo32' },
+        { n: ouvertures.length, libelle: 'Mes demandes d\'ouverture', detail: 'en attente des Opérations', min: plusAncien(ouvertures.map((d) => minutesDuree(d.depuis))), cible: 'bo32' },
+        { n: sous.length, libelle: 'Points sous le seuil ou à découvert', detail: sous.map(nomPoint).join(' · ') || 'aucun', cible: 'bo32' },
+      ],
+      indicateurs: [
+        { libelle: 'Points actifs', valeur: points.length, detail: `${points.filter(([, a]) => a.genre === 'agence').length} agences · ${points.filter(([, a]) => a.genre === 'distributeur').length} distributeurs` },
+        { libelle: 'Solde virtuel des agences', valeur: montantDe(points.filter(([cle]) => SOLDES_AGENCES[cle]).reduce((n, [cle]) => n + soldeAgence(cle), 0)), detail: 'total de la zone' },
+        { libelle: 'Opérations du mois', valeur: '1 920', detail: '2,1 Md GNF · vue de zone' },
+      ],
+    };
+  },
+  // Direction et Contrôleur (BO20) : les cinq indicateurs, en nombre seulement, sans accès au détail.
+  direction: () => {
+    const alertes = lignesAlertes();
+    const ecarts = ECARTS.filter((e) => e.etat === 'attente');
+    return {
+      indicateurs: [
+        { libelle: 'Volume du jour', valeur: montantDe(JOUR_RESEAU.montantEnvois), detail: 'envoyés' },
+        { libelle: 'Transactions', valeur: grouper(String(JOUR_RESEAU.envois + JOUR_RESEAU.retraits)), detail: `${JOUR_RESEAU.envois} envois · ${JOUR_RESEAU.retraits} retraits` },
+        { libelle: 'Alertes ouvertes', valeur: alertes.length, detail: `dont ${alertes.filter((l) => l.dataset.priorite === 'critique').length} critiques` },
+        { libelle: 'Opérations bloquées', valeur: refsBo24().length, detail: 'en vérification, déclinées ou échouées' },
+        { libelle: 'Écarts de caisse', valeur: ecarts.length, detail: ecarts.map((e) => e.ecart).join(' · ') || 'aucun à régulariser' },
+      ],
+    };
+  },
+};
+TABLEAUX.raf = TABLEAUX.finance;
+TABLEAUX.controleur = TABLEAUX.direction;
+
+const RANG_TON = { blocage: 0, attention: 1 };
+function carteATraiter(c) {
+  const ton = c.n ? c.ton || '' : '';
+  const classe = `carte compteur${ton ? ` ${ton}` : ''}${c.n ? '' : ' zero'}`;
+  const corps = `<span class="tdb-libelle">${c.libelle}</span><b class="montant">${c.n}</b><span class="secondaire">${c.detail}</span>`
+    + `<span class="tdb-depuis">${c.n ? `Plus ancien : ${depuisTexte(c.min || 0)}` : 'Rien en attente'}</span>`;
+  // Contrôleur et écrans sans cible : compteur seul, non cliquable.
+  if (!c.cible || profil.cle === 'controleur') return `<div class="${classe}">${corps}</div>`;
+  return `<a class="${classe}" href="#${c.cible}"${c.choisir ? ` data-choisir="${c.choisir}"` : ''}>${corps}<span class="tdb-ouvrir">Ouvrir ›</span></a>`;
+}
+function carteIndicateur(i) {
+  const corps = `<span class="secondaire">${i.libelle}</span><b class="montant-petit">${i.valeur}</b><span class="secondaire">${i.detail}</span>`;
+  return i.cible && profil.cle !== 'controleur' ? `<a class="carte compteur" href="#${i.cible}"${i.choisir ? ` data-choisir="${i.choisir}"` : ''}>${corps}</a>` : `<section class="carte compteur">${corps}</section>`;
+}
+const squelettes = (n) => Array.from({ length: n }, () => '<section class="carte compteur" aria-hidden="true"><span class="squelette court"></span><span class="squelette chiffre"></span><span class="squelette"></span></section>').join('');
+function rendreTableauDeBord() {
+  const hote = contenu.querySelector('[data-tableau-de-bord]');
+  if (!hote) return;
+  const t = TABLEAUX[profil.cle]?.();
+  if (!t) { hote.innerHTML = ''; return; }
+  const [nom, fonction] = profil.agent.split('|');
+  retitrer('Tableau de bord', `${nom} · ${fonction} · jeudi 01/10/2026`, `${ecranCourant.dataset.code} · Tableau de bord · ${nom}`);
+  const afaire = (t.afaire || []).map((c, i) => ({ ...c, i }))
+    .sort((a, b) => ((a.n ? RANG_TON[a.ton] ?? 2 : 3) - (b.n ? RANG_TON[b.ton] ?? 2 : 3)) || (b.min || 0) - (a.min || 0) || a.i - b.i);
+  const revue = '<div class="revue-etat"><span>Outil de revue · état de l\'écran</span><div class="segmente" data-choix="etat-tdb" role="group" aria-label="État de l\'écran (outil de revue)">'
+    + ['donnees:Données', 'vide:Vide', 'chargement:Chargement', 'erreur:Erreur'].map((x) => { const [v, l] = x.split(':'); return `<button data-valeur="${v}"${v === etats['etat-tdb'] ? ' class="actif"' : ''}>${l}</button>`; }).join('')
+    + '</div></div>';
+  const erreur = '<div class="bandeau blocage" data-si-etat-tdb="erreur"><strong>Les données n\'ont pas pu être chargées.</strong><span>Vérifiez la connexion, puis réessayez.</span>'
+    + '<div class="actions"><button class="bouton secondaire petit" type="button" data-reessayer>Réessayer</button></div></div>';
+  const vide = (texte) => `<section class="carte vide" data-si-etat-tdb="vide"><b>${texte}</b><span class="secondaire">Les files du profil sont à jour. Elles se rempliront ici dès qu'un élément arrive.</span></section>`;
+  const titre = (h, avecRevue) => `<div class="tdb-titre"><h2>${h}</h2>${avecRevue ? revue : ''}</div>`;
+  const indicateurs = t.indicateurs.map(carteIndicateur).join('');
+  hote.innerHTML = (t.afaire
+    ? titre('À traiter', true) + erreur
+      + `<div class="tdb-grille" data-si-etat-tdb="donnees">${afaire.map(carteATraiter).join('')}</div>`
+      + vide('Rien à traiter')
+      + `<div class="tdb-grille" data-si-etat-tdb="chargement">${squelettes(Math.min(afaire.length, 4))}</div>`
+      + titre('Indicateurs du jour', false)
+    : titre('Indicateurs du jour', true) + erreur + vide('Aucune activité aujourd\'hui'))
+    + `<div class="tdb-grille" data-si-etat-tdb="donnees${t.afaire ? ' vide' : ''}">${indicateurs}</div>`
+    + `<div class="tdb-grille" data-si-etat-tdb="chargement">${squelettes(t.indicateurs.length)}</div>`;
+}
+
 /* ---------- Effets d'une décision enregistrée ---------- */
 const SEUILS_MODIFIES = {};
 function apresDecision(ecranId, issue) {
@@ -6304,6 +7130,9 @@ function apresDecision(ecranId, issue) {
       o.clos = true;
       TRAITES.add(`op:${d.ref}`);
       o.j.push(['01/10 · 10:42', issue === 'annuler' ? 'Opération annulée' : 'Remboursement ouvert', 'M. Sow · Opérations']);
+      // Versement échoué annulé (atelier 6, lot 1) : la relance en attente n'a plus d'objet.
+      const relanceOp = DEMANDES.find((x) => x.pour === d.ref && x.etat === 'attente');
+      if (relanceOp) relanceOp.etat = 'refusee';
     }
   }
   if (ecranId === 'bo9') {
@@ -6337,7 +7166,9 @@ function apresDecision(ecranId, issue) {
         u.roles = valeur;
       }
       u.demande = null;
-      u.journal.unshift(['01/10 · 10:42', ok ? `Modification des rôles validée · ${echapper(valeur.join(' · '))}` : 'Modification des rôles refusée', 'M. Sow · Opérations']);
+      u.journal.unshift(['01/10 · 10:42', ok ? `Modification des rôles validée · ${echapper(valeur.join(' · '))}` : 'Modification des rôles refusée', `Demandé par ${d.demandeur} · ${ok ? 'validé' : 'refusé'} par M. Sow · Opérations`]);
+      // Rôle sensible (atelier 6) : la ligne d'audit montre demandeur, valideur, utilisateur, date et heure.
+      if (d.sensible) AUDIT_ROLES.unshift(['01/10/2026 · 10:42', `${ok ? 'Rôle sensible affecté' : 'Affectation refusée'} · ${echapper(valeur.join(' · '))} → ${echapper(u.nom)}`, `Demandé par ${d.demandeur} · ${ok ? 'validé' : 'refusé'} par M. Sow · Opérations`]);
     }
     if (genre === 'deblocage' && CLIENTS_BLOQUES[cle]) {
       if (ok) delete CLIENTS_BLOQUES[cle];
@@ -6348,9 +7179,9 @@ function apresDecision(ecranId, issue) {
     if (genre === 'seuils-client' && ok && FICHES_KYC[cle]) FICHES_KYC[cle].seuils = valeur;
     if (genre === 'role' && ok && !ROLES.includes(cle)) ROLES.push(cle);
     if (genre === 'frais') {
-      const [, pays, rang, nouveau] = d.effet;
-      if (ok) FRAIS[pays][rang] = nouveau;
-      HISTORIQUE_FRAIS.unshift(['01/10/2026 · 10:42', `${pays} · ${TYPES_TRANSACTION[rang]} · ${ok ? `${nouveau} · validé` : 'modification refusée'}`, `L. Condé · ${ok ? 'validé' : 'refusé'} par F. Camara · Finance`]);
+      const [, type, partenaire, corridor, nouveau] = d.effet;
+      if (ok) FRAIS[type][partenaire][corridor] = nouveau;
+      HISTORIQUE_FRAIS.unshift(['01/10/2026 · 10:42', `${TYPES_FRAIS[type]} · ${partenaire} · ${corridor} · ${ok ? `${nouveau} · validé` : 'modification refusée'}`, `L. Condé · ${ok ? 'validé' : 'refusé'} par F. Camara · Finance`]);
     }
     // PEP (liste maker-checker : Conformité → DG). Acceptée : la relation se poursuit et
     // l'opération reprend ; refusée : la suite revient aux Opérations (annuler ou rembourser).
@@ -6413,6 +7244,7 @@ function ouvrirTiroir(cle) {
   if (!voile) return;
   voile.hidden = false;
   if (cle === 'bo17') preparerOuverture();
+  if (cle === 'seconde-validation') voile.querySelector('[data-second-changements]').innerHTML = changementsSeconde().map((c) => `<li>${echapper(c)}</li>`).join('');
   rafraichir();
   voile.querySelector('input:not([type=checkbox]), textarea, select')?.focus();
 }
@@ -6568,9 +7400,11 @@ const SOUMISSIONS = {
     const a = AGENCES[agenceCourante];
     const nom = lireChamp('#bo34-caisse-nom');
     const caissier = lireChamp('#bo34-caisse-caissier');
-    a.caisses.push([nom, caissier === 'Aucun' ? '—' : caissier, 'Fermée', '—', '—', '—', '—']);
+    // Atelier 6 (retour 4.5) : en attente d'activation par le chef d'agence.
+    a.caisses.push([nom, caissier === 'Aucun' ? '—' : caissier, 'En attente d\'activation', '—', '—', '—', '—']);
+    a.caissesAjoutees = (a.caissesAjoutees || 0) + 1;
     ficheAgence();
-    return ['Caisse ajoutée', `${nom} · ${a.nom} · fermée, à ouvrir avec un comptage.`];
+    return ['Caisse ajoutée', `${nom} · ${a.nom} · en attente d'activation : le chef d'agence l'active avec son code personnel.`];
   },
   // Agence SAFICO : mise en œuvre d'une ouverture validée, activation en maker-checker.
   // Distributeur : saisi et activé par l'administrateur (atelier 5, 01/10).
@@ -6640,15 +7474,45 @@ const SOUMISSIONS = {
     rendreSecurite();
     return ['Règle modifiée', `${regle} · ${lireChamp('#bo49-valeur')} · historisé.`];
   },
+  // BO49 (atelier 6) : nouvelle règle géographique, en tête de liste.
+  'regle-geo'() {
+    const portee = etats.portee;
+    const centre = lireChamp('#bo49-centre');
+    const zone = portee === 'pays' ? lireChamp('#bo49-pays') : portee === 'perimetre' ? `${centre} · ${lireChamp('#bo49-rayon').replace(/\s*km$/, '')} km` : lireChamp('#bo49-lieu');
+    const libelle = { pays: 'Pays', region: 'Région', ville: 'Ville', perimetre: 'Périmètre' }[portee];
+    const regle = { portee: libelle, zone, effet: etats['effet-geo'], profils: lireChamp('#bo49-profils'), ...(portee === 'perimetre' ? { centre } : {}) };
+    const ancienne = RESTRICTIONS_GEO.findIndex((r) => r.portee === libelle && r.zone === zone);
+    if (ancienne >= 0) RESTRICTIONS_GEO.splice(ancienne, 1);
+    RESTRICTIONS_GEO.unshift(regle);
+    HISTORIQUE_SEUILS.unshift(['01/10/2026 · 10:42', `Sécurité · restriction géographique · ${libelle} ${echapper(zone)} · ${regle.effet === 'autoriser' ? 'autorisé' : 'restreint'} · ${echapper(regle.profils)}`, 'L. Condé · Administrateur · code personnel']);
+    rendreRestrictions();
+    return ['Règle enregistrée', `${libelle} · ${zone} · ${regle.effet === 'autoriser' ? 'autorisé' : 'restreint'} · historisée.`];
+  },
+  // BO50 (atelier 6) : les interrupteurs et le valideur deviennent la règle en vigueur.
+  'seconde-validation'() {
+    const changements = changementsSeconde();
+    for (const caseOp of contenu.querySelectorAll('[data-second]')) {
+      const [i, j] = caseOp.dataset.second.split(':').map(Number);
+      SECONDE_VALIDATION.domaines[i][1][j][1] = caseOp.checked;
+    }
+    SECONDE_VALIDATION.valideur = etats.valideur;
+    for (const c of changements) HISTORIQUE_SECONDE.unshift(['01/10/2026 · 10:42', echapper(c), `L. Condé · Administrateur · ${echapper(lireChamp('#bo50-motif'))}`]);
+    rendreSecondeValidation();
+    return ['Seconde validation modifiée', `${changements.length} modification${changements.length > 1 ? 's' : ''} · historisée${changements.length > 1 ? 's' : ''} au journal d'audit.`];
+  },
   role() {
     const nom = lireChamp('#bo14-role-nom');
     const droits = [...contenu.querySelectorAll('[data-matrice-roles] tr:not(.espace)')].map((tr) => {
       const coches = [...tr.querySelectorAll('[data-droit]:checked')].map((c) => c.dataset.droit.toLowerCase());
       return coches.length ? `${tr.cells[0].textContent} : ${coches.join(', ')}` : null;
     }).filter(Boolean);
-    nouvelleDemande({ type: 'Création d\'un rôle', demandeur: 'L. Condé · Administrateur', auteur: 'administration', pour: nom, valideur: 'operations', effet: ['role', nom],
-      details: [['Rôle', echapper(nom)], ['Droits', echapper(droits.join(' · '))]] });
-    return ['Rôle soumis à validation', `${nom} · ${droits.length} fonctionnalité${droits.length > 1 ? 's' : ''} · attribuable après la validation d'un second habilité.`];
+    // Atelier 6 (retour 4.3) : effet immédiat, sans seconde validation ; tracé au journal d'audit.
+    if (!ROLES.includes(nom)) ROLES.push(nom);
+    const sensible = !!contenu.querySelector('[data-matrice-roles] [data-droit="Administration"]:checked');
+    if (sensible && !ROLES_SENSIBLES.includes(nom)) ROLES_SENSIBLES.push(nom);
+    AUDIT_ROLES.unshift(['01/10/2026 · 10:42', `Rôle créé · ${echapper(nom)} · ${echapper(droits.join(' · '))}`, 'L. Condé · Administrateur · code personnel']);
+    rolesSensibles();
+    return ['Rôle créé', `${nom} · ${droits.length} fonctionnalité${droits.length > 1 ? 's' : ''} · attribuable dès maintenant${sensible ? ' · rôle sensible : son affectation passe par une seconde validation' : ''} · tracé au journal d'audit.`];
   },
   session() {
     const x = SESSIONS[sessionCourante];
@@ -6671,11 +7535,13 @@ const SOUMISSIONS = {
     return [zoneCourante ? 'Zone modifiée' : 'Zone créée', `${nom} · ${coches.length} point${coches.length > 1 ? 's' : ''} rattaché${coches.length > 1 ? 's' : ''} · historisé.`];
   },
   frais() {
-    const [pays, rang] = fraisCourant;
-    const valeur = lireChamp('#bo44-valeur');
-    const objet = `${pays} · ${TYPES_TRANSACTION[rang]}`;
-    nouvelleDemande({ type: 'Modification des frais', demandeur: 'L. Condé · Administrateur', auteur: 'administration', pour: objet, valideur: 'finance', effet: ['frais', pays, rang, valeur],
-      details: [['Frais', objet], ['En vigueur', FRAIS[pays][rang]], ['Nouveaux frais', echapper(valeur)], ['Justification', echapper(lireChamp('#bo44-motif'))]] });
+    const [type, partenaire, corridor] = fraisCourant;
+    const pourcentage = lireChamp('#bo44-valeur').replace(/\s*%$/, '');
+    const minimum = lireChamp('#bo44-minimum');
+    const valeur = `${pourcentage} %${minimum ? ` · minimum ${minimum}` : ''}`;
+    const objet = `${TYPES_FRAIS[type]} · ${partenaire} · ${corridor}`;
+    nouvelleDemande({ type: 'Modification des frais', demandeur: 'L. Condé · Administrateur', auteur: 'administration', pour: objet, valideur: 'finance', effet: ['frais', type, partenaire, corridor, valeur],
+      details: [['Frais', objet], ['En vigueur', FRAIS[type][partenaire][corridor]], ['Nouveaux frais', echapper(valeur)], ['Justification', echapper(lireChamp('#bo44-motif'))]] });
     rendreFrais();
     return ['Modification soumise à la finance', `${objet} · ${valeur} · appliquée après sa validation.`];
   },
@@ -6729,12 +7595,18 @@ const SOUMISSIONS = {
   'envoi-perdu'() {
     return ['Envoi reconstitué', `${lireChamp('#bo28-exp').toUpperCase()} ${lireChamp('#bo28-exp-prenom')} · ${lireChamp('#bo28-montant')} · soumis au contrôle de la conformité, puis au chef d'agence.`];
   },
+  // BO29 (atelier 6) : créer ou modifier un message, avec sa cible, ses dates et son état.
   message() {
-    const au = lireChamp('#bo29-au') || '—';
-    garder('bo29', '[data-messages]', `<tr><td>${echapper(lireChamp('#bo29-message'))}</td><td>${echapper(destinataires().join(' · '))}</td>`
-      + `<td>${echapper(lireChamp('#bo29-du'))}</td><td>${echapper(au)}</td><td>M. Sow</td>`
-      + '<td class="nombre"><button class="bouton discret petit" type="button" data-retirer>Retirer</button></td></tr>');
-    return ['Message publié', 'Il s\'affiche sur l\'accueil des destinataires choisis.'];
+    const cible = etats['cible-message'];
+    const m = { texte: lireChamp('#bo29-message'), cible, lieu: cible === 'zone' ? lireChamp('#bo29-zone') : cible === 'agence' ? lireChamp('#bo29-agence') : '',
+      destinataires: destinataires(), du: lireChamp('#bo29-du'), au: lireChamp('#bo29-au'), actif: contenu.querySelector('#bo29-actif').checked, par: 'M. Sow' };
+    const modifie = messageCourant !== null;
+    if (modifie) MESSAGES[messageCourant] = m;
+    else MESSAGES.unshift(m);
+    messageCourant = null;
+    rendreMessages();
+    const ou = cible === 'reseau' ? 'tout le réseau' : `${cible === 'zone' ? 'zone' : 'point'} ${m.lieu}`;
+    return [modifie ? 'Message modifié' : 'Message publié', `${m.actif ? `Affiché à partir du ${m.du}` : 'Enregistré désactivé'} · ${ou} · ${m.destinataires.join(' et ').toLowerCase()}.`];
   },
 };
 
@@ -6767,6 +7639,7 @@ function afficher(code = location.hash.replace('#', '')) {
   // Un écran hors du profil courant bascule sur le profil qui le porte. Un écran partagé
   // (data-profils, BO33, BO34) garde le profil ; un écran réservé à son espace (BO15, BO17)
   // bascule sur un profil de cet espace.
+  if (profilDemande) { profil = PROFILS.find((p) => p.cle === profilDemande) || profil; profilDemande = null; }
   if (demande.dataset.espace) {
     // Un écran « consultable » (BO23, BO12, BO41) s'ouvre aussi depuis la vue des paramètres (BO46).
     const permis = (p) => (entrees(p).includes(parentDe(demande)) || entrees(p).includes(demande.dataset.consultable))
@@ -6794,6 +7667,12 @@ function afficher(code = location.hash.replace('#', '')) {
   etats = { ...CLES, profil: profil.cle };
   for (const actif of contenu.querySelectorAll('[data-choix] .actif')) {
     etats[actif.closest('[data-choix]').dataset.choix] = actif.dataset.valeur;
+  }
+  // Mode du journal demandé par le lien d'arrivée (tableau de bord de l'Audit : « Retracer un utilisateur »).
+  if (SEL.journal) {
+    for (const b of contenu.querySelectorAll('[data-choix="journal"] [data-valeur]')) b.classList.toggle('actif', b.dataset.valeur === SEL.journal);
+    if (contenu.querySelector('[data-choix="journal"]')) etats.journal = SEL.journal;
+    SEL.journal = '';
   }
   for (const encadre of contenu.querySelectorAll('.reauth')) construireReauth(encadre);
   for (const saisie of contenu.querySelectorAll('[data-montant]')) formaterMontant(saisie);
@@ -6831,6 +7710,12 @@ function afficher(code = location.hash.replace('#', '')) {
   rendreZones();
   rendreSessions();
   matriceRoles();
+  rolesSensibles();
+  rendreSecondeValidation();
+  rendreRejetsOdoo();
+  rendreRestrictions();
+  rendreMessages();
+  rendreTableauDeBord();
   historiqueSeuils();
   rendreParametres();
   comptesIncidents();
@@ -6862,11 +7747,15 @@ function appliquer() {
 function montrer(cle, valeur) {
   etats[cle] = valeur;
   if (cle === 'distributeur') rendreReleve();
+  // BO44 (atelier 6) : un autre mode de versement ramène à son premier partenaire.
+  if (cle === 'type-frais') { etats.partenaire = Object.keys(FRAIS[valeur])[0]; rendreFrais(); }
+  if (cle === 'partenaire') rendreFrais();
   rafraichir();
 }
 
 function rafraichir() {
   rendreValidations();
+  compterSecondes();
   appliquer();
   filtrer();
   exigences();
@@ -6924,6 +7813,8 @@ const CONDITIONS = {
   // Rôles (BO38) : la sélection diffère des rôles en vigueur.
   'roles-changes': () => [...contenu.querySelectorAll('[data-compte="cases"] input:checked')].map((c) => c.value).sort().join('|') !== [...compte().roles].sort().join('|'),
   destinataire: () => [...contenu.querySelectorAll('[data-destinataire]')].some((c) => c.checked),
+  // Seconde validation (BO50, atelier 6) : au moins un changement à enregistrer.
+  'second-modifie': () => changementsSeconde().length > 0,
   // Rôle sur mesure (BO14) : au moins un droit coché.
   droit: () => [...contenu.querySelectorAll('[data-droit]')].some((c) => c.checked),
   // Distributeur (BO17) : la commission du modèle choisi est saisie.
@@ -7111,6 +8002,30 @@ contenu.addEventListener('click', (e) => {
     comptesIncidents();
     return notifier('Compte débloqué', `${u.nom} · tracé au journal d'audit.`);
   }
+  // Tableau de bord (atelier 6, lot 5) : « Réessayer » revient à l'état « Données ».
+  if (e.target.closest('[data-reessayer]')) return choisirSegment(contenu.querySelector('[data-choix="etat-tdb"] [data-valeur="donnees"]'));
+  // Bandeau d'information (BO29, atelier 6) : créer, modifier, désactiver.
+  const message = e.target.closest('[data-message-ouvrir]');
+  if (message) return ouvrirMessage(message.dataset.messageOuvrir);
+  const bascule = e.target.closest('[data-message-actif]');
+  if (bascule) {
+    const m = MESSAGES[Number(bascule.dataset.messageActif)];
+    m.actif = !m.actif;
+    rendreMessages();
+    return notifier(m.actif ? 'Message réactivé' : 'Message désactivé', `${m.actif ? 'De nouveau affiché' : 'Il ne s\'affiche plus'} sur l'accueil des destinataires · tracé au journal d'audit.`);
+  }
+  // Restrictions géographiques (BO49, atelier 6) : un pays cliqué ouvre une règle à son nom.
+  const geo = e.target.closest('[data-regle-geo], [data-pays-geo]');
+  if (geo) return ouvrirRegleGeo(geo.dataset.paysGeo);
+  // Rejet d'export Odoo (BO11, atelier 6) : relancé, tracé.
+  const odoo = e.target.closest('[data-relancer-odoo]');
+  if (odoo) {
+    const r = REJETS_ODOO.find((x) => x.id === odoo.dataset.relancerOdoo);
+    r.etat = 'relance';
+    r.par = profil.cle === 'administration' ? 'L. Condé' : profil.cle === 'raf' ? 'O. Baldé' : 'F. Camara';
+    rendreRejetsOdoo();
+    return notifier('Écriture relancée', `${r.ref} · renvoyée à Odoo · tracée au journal d'audit.`);
+  }
   const regle = e.target.closest('[data-regle]');
   if (regle) return ouvrirRegle(Number(regle.dataset.regle));
   const session = e.target.closest('[data-session]');
@@ -7132,7 +8047,8 @@ contenu.addEventListener('click', (e) => {
   const plage = e.target.closest('[data-modifier-plage]');
   if (plage) return ouvrirPlage(plage.dataset.modifierPlage);
   const ouvreTiroir = e.target.closest('[data-ouvrir-tiroir]');
-  if (ouvreTiroir) return ouvrirTiroir(ouvreTiroir.dataset.ouvrirTiroir);
+  // Un lien posé dans une ligne qui ouvre un panneau (BO26 : « Annuler ») suit son lien.
+  if (ouvreTiroir && !(ouvreTiroir.matches('tr') && e.target.closest('a, button'))) return ouvrirTiroir(ouvreTiroir.dataset.ouvrirTiroir);
   if (e.target.closest('[data-fermer-tiroir]') || e.target.matches('.tiroir-voile')) return fermerTiroir();
   const envoi = e.target.closest('[data-soumettre]');
   if (envoi) return envoi.disabled || soumettre(envoi);

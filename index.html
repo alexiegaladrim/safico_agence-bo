@@ -698,6 +698,16 @@ body{font:400 14px/20px var(--police)}
 .tuile.primaire:hover{background:#09255D;border-color:#09255D}
 .tuile.primaire .pictogramme{background:var(--marque-turquoise);color:#09255D;border-radius:var(--rayon-capsule)}
 .tuile .pictogramme{border-radius:var(--rayon-capsule)}
+/* Fenêtre de fin de transaction (atelier 6, 12/10) : le nouveau solde virtuel, un seul bouton
+   « Continuer ». Ancrée en bas à droite, au-dessus de la barre d'actions : elle ne masque ni le
+   bandeau de confirmation ni les boutons, et n'empêche pas de remettre le reçu. */
+.fenetre-solde,.app.sans-rail:not(.nu) .contenu > .fenetre-solde{position:fixed;right:24px;bottom:88px;z-index:20;
+  width:300px;max-width:calc(100vw - 32px);margin:0;
+  display:flex;flex-direction:column;gap:6px;padding:16px;background:var(--fond-surface);
+  border:1px solid var(--trait-leger);border-radius:var(--rayon);box-shadow:var(--ombre-haute)}
+.fenetre-solde strong{font:700 15px/20px var(--police)}
+.fenetre-solde .actions{justify-content:flex-end;margin-top:6px}
+@media (max-width:640px){.fenetre-solde{right:14px;bottom:150px}}
 </style>
 </head>
 <body>
@@ -836,7 +846,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Même guichet que B1, caisse fermée : rien ne s'encaisse ni ne se décaisse avant
          le comptage d'ouverture. La consultation reste ouverte (déduit, à trancher). -->
-    <section class="ecran" id="a2" data-nom="Guichet — caisse fermée" data-node="(hors Figma)" data-rail="Guichet" data-titre="Guichet" data-contexte="Caisse 3 fermée · ouvrez-la pour commencer" data-heure="08:06" data-caisse="fermee" data-virtuel="100000000" data-trancher="La consultation (recherche, historique) est-elle ouverte caisse fermée ? — (atelier 5, 01/10) Tranché : plusieurs messages d'information, qui défilent en boucle (Q13). — (déduit) Le message « Nouvelle destination : Mali… » est une valeur de démonstration ; le second reprend l'exemple de Babacar (Cameroun). — (déduit) Solde virtuel de début de journée (100 000 000 GNF) : valeur de démonstration. Est-il reporté de la veille ou remis à zéro ?" data-ajout="carte « Taux du jour », reprise de B1" data-fait="oui">
+    <section class="ecran" id="a2" data-nom="Guichet — caisse fermée" data-node="(hors Figma)" data-rail="Guichet" data-titre="Guichet" data-contexte="Caisse 3 fermée · ouvrez-la pour commencer" data-heure="08:06" data-caisse="fermee" data-virtuel="100000000" data-trancher="(atelier 6, 12/10) Qui publie, ciblage agence ou zone, durée d'affichage ? — La consultation (recherche, historique) est-elle ouverte caisse fermée ? — (atelier 5, 01/10) Tranché : plusieurs messages d'information, qui défilent en boucle (Q13). — (déduit) Le message « Nouvelle destination : Mali… » est une valeur de démonstration ; le second reprend l'exemple de Babacar (Cameroun). — (déduit) Solde virtuel de début de journée (100 000 000 GNF) : valeur de démonstration. Est-il reporté de la veille ou remis à zéro ?" data-ajout="carte « Taux du jour », reprise de B1" data-fait="oui">
       <!-- Retour client du 22/09 : rien n'est possible caisse fermée, le bandeau porte donc
            l'ouverture. Une modale bloquante a été essayée le même jour, puis retirée : elle
            fermait aussi la consultation du taux, qu'ouvre la décision du 17/09. Voir
@@ -915,7 +925,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Comptage à l'aveugle : le solde reporté (20 000 000 GNF) n'est jamais affiché.
          Pré-rempli avec le cas nominal ; changer un nombre mène à l'écart (A4). -->
-    <section class="ecran" id="a3" data-virtuel="100000000" data-guichet="a2" data-nom="Ouverture — comptage à l'aveugle" data-node="(hors Figma)" data-rail="Caisse" data-titre="Ouvrir la caisse" data-contexte="Caisse 3 · comptage à l'aveugle" data-heure="08:10" data-caisse="fermee" data-trancher="Comptage par coupure (proposé ici) ou saisie d'un total unique ?" data-fait="oui">
+    <section class="ecran" id="a3" data-virtuel="100000000" data-guichet="a2" data-nom="Ouverture — comptage à l'aveugle" data-node="(hors Figma)" data-rail="Caisse" data-titre="Ouvrir la caisse" data-contexte="Caisse 3 · comptage à l'aveugle" data-heure="08:10" data-caisse="fermee" data-trancher="Hypothèse Galadrim : comptage par coupure (C1)." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>Comptage des espèces</h2>
@@ -950,7 +960,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Valeurs de la fiche (cas écart) ; remplacées par le comptage saisi en A3
          quand on vient de là (data-compte). -->
-    <section class="ecran" id="a4" data-virtuel="100000000" data-guichet="a2" data-nom="Ouverture — écart constaté" data-node="(hors Figma)" data-rail="Caisse" data-titre="Ouvrir la caisse" data-contexte="Le comptage ne correspond pas à la clôture d'hier" data-heure="08:13" data-caisse="bloquee" data-trancher="Blocage systématique à l'ouverture, quel que soit le montant (« blocage possible », dit le compte rendu) ? — Si le caissier d'hier n'est pas celui d'aujourd'hui, qui répond de l'écart ? — Un manque à l'ouverture se rembourse-t-il comme à la clôture ?" data-fait="oui">
+    <section class="ecran" id="a4" data-virtuel="100000000" data-guichet="a2" data-nom="Ouverture — écart constaté" data-node="(hors Figma)" data-rail="Caisse" data-titre="Ouvrir la caisse" data-contexte="Le comptage ne correspond pas à la clôture d'hier" data-heure="08:13" data-caisse="bloquee" data-trancher="Hypothèse Galadrim : blocage à l'ouverture quel que soit le montant, levé par le chef d'agence avec un motif ; l'écart est rattaché au caissier de la veille et suit la régularisation de clôture (C2). — Un manque à l'ouverture se rembourse-t-il comme à la clôture ?" data-fait="oui">
       <div class="bandeau blocage">
         <strong>La caisse reste fermée</strong>
         <span>Recomptez une fois. Si l'écart persiste, justifiez-le : le chef d'agence lève le blocage.</span>
@@ -1022,7 +1032,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Le solde théorique affiché à 14:32 est celui de fin de journée (fiche) :
          quatrième version du solde de la caisse 3, signalée au registre. -->
-    <section class="ecran" id="a6" data-nom="Ma caisse" data-node="(hors Figma)" data-rail="Caisse" data-titre="Ma caisse" data-contexte="Caisse 3 · ouverte depuis 08:12" data-heure="14:32" data-caisse="ouverte" data-virtuel="7600000" data-trancher="(atelier 5, 01/10) Le solde virtuel est visible en permanence. Reste le solde espèces : si le caissier voit son solde espèces théorique en journée (C7 l'affiche déjà : « Solde avant / après »), le comptage à l'aveugle du soir ne protège plus rien — faut-il masquer le solde espèces partout ? — (déduit) Solde virtuel de début de journée (100 000 000 GNF), approvisionnement de 11:40 (20 000 000 GNF) et seuil minimum (10 000 000 GNF) : valeurs de démonstration. Les envois débités reprennent les encaissements de la carte Espèces. — Que contient l'export du rapprochement (format, en-tête, signature) ? — Wallet et banque passent par la caisse (Babacar, 16/09) : solde et comptage séparés espèces / électronique ? — La valeur 47 500 000 est un solde de fin de journée ; le solde réel à 14:32 est à fournir." data-fait="oui">
+    <section class="ecran" id="a6" data-nom="Ma caisse" data-node="(hors Figma)" data-rail="Caisse" data-titre="Ma caisse" data-contexte="Caisse 3 · ouverte depuis 08:12" data-heure="14:32" data-caisse="ouverte" data-virtuel="7600000" data-trancher="(atelier 5, 01/10) Le solde virtuel est visible en permanence. (atelier 6, 12/10) Conflit à trancher : la page « Retours proto Agence » demande d'afficher les deux soldes, virtuel et espèces ; l'hypothèse C5 du registre veut que le caissier ne voie pas son solde espèces théorique en journée, seul le chef d'agence le voyant, pour que le comptage à l'aveugle du soir garde son sens. Cet écran (carte Espèces) et C7 (solde avant / après) le montrent au caissier : faut-il le masquer ? — (atelier 6, 12/10) Les deux versements directs demandés (approvisionnement du solde virtuel des distributeurs, et de la caisse) : celui de la caisse passe par A12 (solde virtuel ou espèces) ; celui des distributeurs relève de la finance, au back-office. La carte « Versements directs » ci-dessous parle d'autre chose : les versements wallet et banque. — (déduit) Solde virtuel de début de journée (100 000 000 GNF), approvisionnement de 11:40 (20 000 000 GNF) et seuil minimum (10 000 000 GNF) : valeurs de démonstration. Les envois débités reprennent les encaissements de la carte Espèces. — Que contient l'export du rapprochement (format, en-tête, signature) ? — Wallet et banque passent par la caisse (Babacar, 16/09) : solde et comptage séparés espèces / électronique ? — La valeur 47 500 000 est un solde de fin de journée ; le solde réel à 14:32 est à fournir." data-fait="oui">
       <!-- Atelier 5 (01/10) : alerte quand le solde virtuel passe sous le seuil minimum, pour
            que le caissier fasse sa demande avant de recevoir un client qu'il ne pourrait pas
            servir. Seuil de démonstration (déduit). -->
@@ -1115,7 +1125,7 @@ body{font:400 14px/20px var(--police)}
     <!-- Passation et clôture sont deux fins de journée alternatives de la caisse 3.
          Billetage de 47 500 000 GNF déduit (spec/A07-A12.md). Pas de comparaison ici :
          le comptage du sortant est confronté à celui de l'entrant en A8. -->
-    <section class="ecran" id="a7" data-virtuel="12600000" data-nom="Passation — comptage du caissier sortant" data-node="(hors Figma)" data-rail="Caisse" data-titre="Passer la caisse" data-contexte="Caisse 3 · M. Camara → S. Keita" data-heure="20:00" data-caisse="passation" data-trancher="Double comptage (sortant puis entrant) ou comptage unique en présence des deux ? — Qui planifie la prise de poste : l'administrateur (acquis pour l'affectation) ou le chef d'agence ? — Un écart en passation suit-il la règle de clôture ?" data-fait="oui">
+    <section class="ecran" id="a7" data-virtuel="12600000" data-nom="Passation — comptage du caissier sortant" data-node="(hors Figma)" data-rail="Caisse" data-titre="Passer la caisse" data-contexte="Caisse 3 · M. Camara → S. Keita" data-heure="20:00" data-caisse="passation" data-trancher="Hypothèse Galadrim : un seul comptage, en présence des deux caissiers, validé par chacun ; le chef d'agence planifie la prise de poste et tranche en cas de désaccord (C3). (atelier 6, 12/10) Non dessinée : l'écran garde le double comptage, sortant ici, entrant en A8. — Un écart en passation suit-il la règle de clôture ?" data-fait="oui">
       <div class="bandeau attention">
         <strong>La caisse 3 est arrêtée</strong>
         <span>Aucune opération n'est possible pendant la passation.</span>
@@ -1157,7 +1167,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Le poste est tenu par le caissier entrant (data-agent). Le bandeau « concordent »
          est fixe : la fiche ne donne pas le texte d'un désaccord. -->
-    <section class="ecran" id="a8" data-virtuel="12600000" data-nom="Passation — comptage de l'entrant, en attente de validation" data-node="(hors Figma)" data-rail="Caisse" data-titre="Prendre la caisse" data-contexte="Caisse 3 · passation de M. Camara" data-heure="20:03" data-caisse="passation" data-agent="Saliou Keita|Guichetier · Caisse 3" data-trancher="Que se passe-t-il si les deux comptages diffèrent — qui recompte, qui tranche ?" data-fait="oui">
+    <section class="ecran" id="a8" data-virtuel="12600000" data-nom="Passation — comptage de l'entrant, en attente de validation" data-node="(hors Figma)" data-rail="Caisse" data-titre="Prendre la caisse" data-contexte="Caisse 3 · passation de M. Camara" data-heure="20:03" data-caisse="passation" data-agent="Saliou Keita|Guichetier · Caisse 3" data-trancher="Hypothèse Galadrim : si les comptages diffèrent, le chef d'agence tranche ; un seul comptage, fait en présence des deux caissiers et validé par chacun (C3). (atelier 6, 12/10) Non dessinée : l'écran garde le second comptage, celui de l'entrant." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>Votre comptage</h2>
@@ -1188,7 +1198,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Clôture à l'aveugle. Pré-rempli avec le cas écart (47 450 000 GNF) ; pour clôturer
          sans écart, passer les billets de 2 000 de 100 à 125. -->
-    <section class="ecran" id="a9" data-virtuel="12600000" data-nom="Clôture — comptage à l'aveugle" data-node="(hors Figma)" data-rail="Caisse" data-titre="Clôturer la caisse" data-contexte="Caisse 3 · comptage à l'aveugle" data-heure="19:30" data-caisse="ouverte" data-trancher="Une demande en attente de validation bloque-t-elle la clôture ? — Une annulation validée plusieurs jours après l'envoi produit un mouvement sur la caisse du jour : règle attendue d'Issiaga et de la comptabilité depuis le 10/09." data-fait="oui">
+    <section class="ecran" id="a9" data-virtuel="12600000" data-nom="Clôture — comptage à l'aveugle" data-node="(hors Figma)" data-rail="Caisse" data-titre="Clôturer la caisse" data-contexte="Caisse 3 · comptage à l'aveugle" data-heure="19:30" data-caisse="ouverte" data-trancher="Hypothèse Galadrim : une demande en attente de validation bloque la clôture (C4). — Une annulation validée plusieurs jours après l'envoi produit un mouvement sur la caisse du jour : règle attendue d'Issiaga et de la comptabilité depuis le 10/09." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>Comptage des espèces</h2>
@@ -1223,7 +1233,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Valeurs de la fiche (manque de 50 000 GNF), remplacées par le comptage de A9.
          Un excédent masque la carte de remboursement (clé sens). -->
-    <section class="ecran" id="a10" data-virtuel="12600000" data-nom="Clôture — écart" data-node="(hors Figma)" data-rail="Caisse" data-titre="Clôturer la caisse" data-contexte="Écart constaté · clôture bloquée" data-heure="19:31" data-caisse="bloquee" data-trancher="Un excédent (écart positif) — que devient l'argent ? — Si le caissier n'a pas la somme sur lui ? — La clôture est-elle définitive avant que la Finance ait validé la régularisation (chaîne Chef d'agence → Finance) ? — Délai de justification d'un écart (BO9, sans réponse)." data-fait="oui">
+    <section class="ecran" id="a10" data-virtuel="12600000" data-nom="Clôture — écart" data-node="(hors Figma)" data-rail="Caisse" data-titre="Clôturer la caisse" data-contexte="Écart constaté · clôture bloquée" data-heure="19:31" data-caisse="bloquee" data-trancher="Hypothèse Galadrim : tout écart, excédent ou manque, part en régularisation à la finance ; la clôture est définitive, et la régularisation suit à part (C4). — Si le caissier n'a pas la somme sur lui ? — Délai de justification d'un écart (BO9, sans réponse)." data-fait="oui">
       <div class="bandeau blocage">
         <strong>La clôture est bloquée</strong>
         <span>Justifiez l'écart pour clôturer. Un manque se rembourse sur le champ. Le chef d'agence est prévenu dans tous les cas.</span>
@@ -1283,7 +1293,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Rapport de clôture. Clé ecart : « oui » par défaut et depuis A10, « non » quand
          le comptage de A9 concordait. -->
-    <section class="ecran" id="a11" data-virtuel="12600000" data-nom="Clôture — terminée" data-node="(hors Figma)" data-rail="Caisse" data-titre="Caisse clôturée" data-contexte="Caisse 3 · rapport transmis au siège" data-heure="19:32" data-caisse="cloturee" data-trancher="Format du rapport imprimé (ticket ou A4) et mentions obligatoires. — (atelier 5, 01/10) Le comptage à l'aveugle reste limité aux espèces ; le rapprochement du solde virtuel est calculé, sans saisie. — (déduit) Valeurs de démonstration : 100 000 000 GNF en début de journée, approvisionnements de 11:40 (20 000 000) et de 16:17 (5 000 000, D19). Que se passe-t-il si le solde constaté s'écarte du solde attendu, et qui l'examine ?" data-fait="oui">
+    <section class="ecran" id="a11" data-virtuel="12600000" data-nom="Clôture — terminée" data-node="(hors Figma)" data-rail="Caisse" data-titre="Caisse clôturée" data-contexte="Caisse 3 · rapport transmis au siège" data-heure="19:32" data-caisse="cloturee" data-trancher="Hypothèse Galadrim : rapport de clôture imprimé au format A4 (C11). — Mentions obligatoires du rapport ? — (atelier 5, 01/10) Le comptage à l'aveugle reste limité aux espèces ; le rapprochement du solde virtuel est calculé, sans saisie. — (déduit) Valeurs de démonstration : 100 000 000 GNF en début de journée, approvisionnements de 11:40 (20 000 000) et de 16:17 (5 000 000, D19). Que se passe-t-il si le solde constaté s'écarte du solde attendu, et qui l'examine ?" data-fait="oui">
       <div class="bandeau valide">
         <strong>Caisse 3 clôturée</strong>
         <span>Le rapport de clôture est transmis au siège.</span>
@@ -1338,7 +1348,7 @@ body{font:400 14px/20px var(--police)}
          d'agence, qui la prélève sur le solde virtuel de l'agence. Venue de C6 (liquidité
          insuffisante), elle porte sur les espèces, dont la provenance reste à trancher
          (clé nature). -->
-    <section class="ecran" id="a12" data-nom="Demande d'approvisionnement" data-node="(hors Figma)" data-rail="Caisse" data-titre="Approvisionner la caisse" data-contexte="Caisse 3 · demande au chef d'agence" data-heure="15:06" data-caisse="ouverte" data-virtuel="7600000" data-trancher="(atelier 5, 01/10) Tranché pour le solde virtuel : la finance seule approvisionne l'agence, le chef d'agence ventile entre ses caisses et valide la demande du caissier. — Espèces seulement : l'approvisionnement vient-il d'un coffre, d'une autre caisse, du siège ? — Le dégagement (sortir un excédent de la caisse vers le coffre) suit-il le même circuit ? — (déduit) Contenu de la demande en attente : ce qui est gelé en attendant n'est pas dit. — (déduit) Le montant de démonstration (5 000 000 GNF) est le même pour les deux natures." data-fait="oui">
+    <section class="ecran" id="a12" data-nom="Demande d'approvisionnement" data-node="(hors Figma)" data-rail="Caisse" data-titre="Approvisionner la caisse" data-contexte="Caisse 3 · demande au chef d'agence" data-heure="15:06" data-caisse="ouverte" data-virtuel="7600000" data-trancher="(atelier 5, 01/10) Tranché pour le solde virtuel : la finance seule approvisionne l'agence, le chef d'agence ventile entre ses caisses et valide la demande du caissier. — Hypothèse Galadrim : en espèces, l'approvisionnement vient du coffre de l'agence, sur validation du chef d'agence ; le dégagement suit le même circuit (C6). — (déduit) Contenu de la demande en attente : ce qui est gelé en attendant n'est pas dit. — (déduit) Le montant de démonstration (5 000 000 GNF) est le même pour les deux natures." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>Pourquoi</h2>
@@ -1397,7 +1407,7 @@ body{font:400 14px/20px var(--police)}
          corrections). Détail : spec/D01-D10.md et spec/D11-D16.md. -->
 
     <!-- Profil chef (atelier 3) : la correction prend effet à l'enregistrement. -->
-    <section class="ecran" id="d1" data-nom="Corriger le bénéficiaire" data-node="(hors Figma)" data-profil="chef" data-rail="Transactions" data-titre="Corriger le bénéficiaire" data-contexte="SFC-8F42-1907 · en attente de retrait" data-heure="16:08" data-trancher="L'expéditeur doit-il être présent et signer la correction ? — L'expéditeur est-il notifié d'une correction (les notifications actées ne couvrent qu'envoi, retrait, annulation) ? — Le pays ou l'agence de retrait se corrigent-ils ? — (déduit) Le chef d'agence n'est pas au guichet : qui vérifie la pièce du client qui demande la correction, et comment le caissier la lui transmet-il ?" data-fait="oui">
+    <section class="ecran" id="d1" data-nom="Corriger le bénéficiaire" data-node="(hors Figma)" data-profil="chef" data-rail="Transactions" data-titre="Corriger le bénéficiaire" data-contexte="SFC-8F42-1907 · en attente de retrait" data-heure="16:08" data-trancher="(atelier 6, 12/10) Reçus des transactions problématiques éditables par le chef d'agence ? Contredit la règle : nom et prénom lus sur la pièce non corrigeables (D1, D24). — Hypothèse Galadrim : l'expéditeur est présent et sa pièce est vérifiée ; il reçoit un SMS de la correction ; le pays de retrait ne se corrige pas, on annule et on refait l'envoi (C8). — (déduit) Le chef d'agence n'est pas au guichet : qui vérifie la pièce du client qui demande la correction, et comment le caissier la lui transmet-il ?" data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
           <section class="carte">
@@ -1473,7 +1483,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Profil chef (atelier 3) : reprend les contrôles, le journal et la réauthentification
          de l'ancien D13. Le remboursement se fait ensuite au guichet (D5). -->
-    <section class="ecran" id="d3" data-nom="Annuler une opération" data-node="(hors Figma)" data-profil="chef" data-rail="Transactions" data-titre="Annuler l'opération" data-contexte="SFC-8F42-1907 · envoyée le 03/09 à 14:32" data-heure="16:21" data-trancher="(atelier 5, 01/10) Tranché : annuler supprime la transaction tant qu'elle n'est pas payée ; l'expéditeur récupère le principal et la totalité des frais (5 045 000 GNF), à l'agence d'origine. La décision revient au chef d'agence ou aux Opérations, avec réauthentification. — Quel critère fait choisir l'annulation plutôt que le remboursement ? — Un envoi décliné parce que le taux a évolué pendant une coupure : annulation ou remboursement (Q8) ? — Qui appelle l'expéditeur pour le consulter, et avec quelle formule (Q9) ? — Un versement direct wallet ou banque s'annule-t-il ? — (déduit) Le chef d'agence n'est pas au guichet : qui coche « pièce d'identité vérifiée » ? — (déduit) Comment le guichetier sait-il que l'annulation est faite et qu'il doit rembourser ?" data-fait="oui">
+    <section class="ecran" id="d3" data-nom="Annuler une opération" data-node="(hors Figma)" data-profil="chef" data-rail="Transactions" data-titre="Annuler l'opération" data-contexte="SFC-8F42-1907 · envoyée le 03/09 à 14:32" data-heure="16:21" data-trancher="(atelier 5, 01/10) Tranché : annuler supprime la transaction tant qu'elle n'est pas payée ; l'expéditeur récupère le principal et la totalité des frais (5 045 000 GNF), à l'agence d'origine. La décision revient au chef d'agence ou aux Opérations, avec réauthentification. — Hypothèse Galadrim : annulation tant que l'envoi n'est pas payé et que l'expéditeur est à l'agence d'origine ; remboursement dans les autres cas, expiration ou expéditeur ailleurs (G14). Le registre rangeait aussi le rejet d'un partenaire dans le remboursement : depuis le 12/10, un versement refusé passe en « Échoué » et s'annule. — Hypothèse Galadrim : un envoi décliné parce que le taux a évolué pendant une coupure est annulé intégralement, frais compris, puisque le refus vient de SAFICO (G15, Q8). — Hypothèse Galadrim : le service client appelle l'expéditeur, avec une formule neutre : « vérification complémentaire de votre transfert » (G16, Q9). — (atelier 6, 12/10) Un versement wallet ou banque échoué s'annule ; un versement qui n'a pas échoué : voir D23. — (déduit) Le chef d'agence n'est pas au guichet : qui coche « pièce d'identité vérifiée » ? — (déduit) Comment le guichetier sait-il que l'annulation est faite et qu'il doit rembourser ?" data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
           <section class="carte">
@@ -1485,7 +1495,8 @@ body{font:400 14px/20px var(--police)}
             <!-- Les deux contrôles supposent un retrait en agence. Pour un versement direct,
                  la règle n'existe pas : D23 met la question à l'écran. -->
             <ul class="liste">
-              <li><a href="#d23">Versement wallet ou bancaire : la règle d'annulation n'est pas cadrée.</a></li>
+              <li>Versement wallet ou bancaire refusé par le partenaire (statut « Échoué ») : annulable par vous ou par les Opérations (atelier 6, 12/10).</li>
+              <li><a href="#d23">Versement wallet ou bancaire qui n'a pas échoué : la règle d'annulation n'est pas cadrée.</a></li>
             </ul>
             <div class="separateur"></div>
             <label class="case">
@@ -1585,7 +1596,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Caissier, disposition de C7 : l'annulation faite par le chef (D3), le
          remboursement se fait au guichet (décision du 17/09). -->
-    <section class="ecran" id="d5" data-virtuel="12600000" data-nom="Annulation — restituer les fonds à l'expéditeur" data-node="(hors Figma)" data-profil="caissier" data-rail="Transactions" data-titre="Restituer les fonds" data-contexte="SFC-8F42-1907 · annulation validée · agence d'origine" data-heure="16:25" data-caisse="ouverte" data-trancher="(atelier 5, 01/10) Annuler et rembourser sont deux opérations distinctes. Cet écran reste celui de l'annulation : principal et totalité des frais, à l'agence d'origine. Il n'est pas réaligné sur le parcours de remboursement (C1 à C9), qui ne rend que le principal, à tout guichet. — L'annulation recrédite-t-elle le solde virtuel de la caisse, débité à l'envoi ? — (atelier 5, Q30) La case « Les espèces ont été comptées » est facultative et ne bloque pas la validation. — (déduit) Le bandeau repris de C7 parle de « reçu de retrait » : reformulé en « reçu »." data-fait="oui">
+    <section class="ecran" id="d5" data-virtuel="12600000" data-nom="Annulation — restituer les fonds à l'expéditeur" data-node="(hors Figma)" data-profil="caissier" data-rail="Transactions" data-titre="Restituer les fonds" data-contexte="SFC-8F42-1907 · annulation validée · agence d'origine" data-heure="16:25" data-caisse="ouverte" data-trancher="(atelier 5, 01/10) Annuler et rembourser sont deux opérations distinctes. Cet écran reste celui de l'annulation : principal et totalité des frais, à l'agence d'origine. Il n'est pas réaligné sur le parcours de remboursement (C1 à C9), qui ne rend que le principal, à tout guichet. — L'annulation recrédite-t-elle le solde virtuel de la caisse, débité à l'envoi ? (atelier 6, 12/10) Hypothèse Galadrim : oui, du montant débité à l'envoi (G13). Non dessinée : l'écran ne montre que les espèces. — (atelier 5, Q30) La case « Les espèces ont été comptées » est facultative et ne bloque pas la validation. — (déduit) Le bandeau repris de C7 parle de « reçu de retrait » : reformulé en « reçu »." data-fait="oui">
       <div class="bandeau valide">
         <strong>Annulation validée par K. Bah à 16:22</strong>
         <span>Restituez les fonds à l'expéditeur, principal et frais, sur présentation de sa pièce.</span>
@@ -1654,7 +1665,7 @@ body{font:400 14px/20px var(--police)}
           <section class="carte">
             <h2>Transmission</h2>
             <div class="segmente" data-choix="canal">
-              <button class="actif" data-valeur="imprimer">Imprimer</button>
+              <button class="actif" data-valeur="imprimer">Reçu papier</button>
               <button data-valeur="whatsapp">Envoyer par WhatsApp</button>
               <button data-valeur="les-deux">Les deux</button>
             </div>
@@ -1732,6 +1743,8 @@ body{font:400 14px/20px var(--police)}
       </div>
 
       <div class="actions a-droite">
+        <!-- Atelier 6 (12/10) : l'impression reste possible après un envoi par WhatsApp. -->
+        <button class="bouton secondaire" data-si-canal="whatsapp" hidden>Imprimer le reçu</button>
         <a class="bouton primaire" href="#b1" data-action-canal>Imprimer</a>
       </div>
     </section>
@@ -1773,7 +1786,7 @@ body{font:400 14px/20px var(--police)}
          D8 portait « Annulation refusée » dans une version antérieure de la fiche ; ce que cet
          écran retiré consignait est repris dans spec/D01-D10.md, sous D3. Toute l'opération
          SFC-8F43-5518 est inventée pour la démonstration. -->
-    <section class="ecran" id="d8" data-nom="Paiement rejeté — demander une relance" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Paiement rejeté" data-contexte="SFC-8F43-5518 · wallet · rejeté à 15:40" data-heure="16:17" data-trancher="Le chef d'agence voit-il les rejets de toute son agence, ou seulement ceux que le back-office lui transmet ? — Le numéro corrigé vient-il du back-office, qui a parlé au client, ou du chef d'agence ? — Délai de validation de la relance, et combien de relances possibles ? — L'expéditeur est-il prévenu du rejet, puis de la relance (les notifications actées ne couvrent qu'envoi, retrait, annulation) ? — La caisse, débitée dès l'envoi quel que soit le canal, bouge-t-elle au rejet ou à la relance ? — Toute l'opération SFC-8F43-5518 est inventée pour la démonstration." data-fait="oui">
+    <section class="ecran" id="d8" data-nom="Paiement rejeté — demander une relance" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Paiement rejeté" data-contexte="SFC-8F43-5518 · wallet · rejeté à 15:40" data-heure="16:17" data-trancher="Hypothèse Galadrim : le chef d'agence voit tous les rejets de son agence ; le numéro corrigé vient du back-office ; une seule relance, puis remboursement (C9). — Délai de validation de la relance ? — L'expéditeur est-il prévenu du rejet, puis de la relance (les notifications actées ne couvrent qu'envoi, retrait, annulation) ? — La caisse, débitée dès l'envoi quel que soit le canal, bouge-t-elle au rejet ou à la relance ? — Toute l'opération SFC-8F43-5518 est inventée pour la démonstration." data-fait="oui">
       <div class="bandeau attention">
         <strong>Rejet récupérable</strong>
         <span>Motif du partenaire : Numéro de wallet erroné. Le back-office a contacté le client.</span>
@@ -1852,7 +1865,7 @@ body{font:400 14px/20px var(--police)}
          les envois de l'agence en attente de retrait (table OPERATIONS), triés par échéance
          la plus proche : ceux qui expirent restent en tête. Une ligne ouvre le reçu de
          l'envoi (D25), en lecture seule. Les trois SFC-8D… sont inventés (fiche de cadrage). -->
-    <section class="ecran" id="d9" data-nom="Transferts en attente de retrait" data-node="(hors Figma)" data-profil="chef" data-rail="Agence" data-titre="Transferts en attente de retrait" data-contexte="7 opérations · 3 expirent sous 5 jours · 1 bloquée" data-heure="14:32" data-trancher="Qui appelle l'expéditeur pour le consulter, et avec quelle formule (Q9) ? — (atelier 5, 01/10) Tranché : le remboursement d'office est décidé par le chef d'agence ou les Opérations, et l'expéditeur est remboursé à n'importe quel guichet, agence ou distributeur, du principal seul. — (atelier 5, 01/10) SFC-8F36-5208, bloquée par la conformité, est inventée pour la démonstration ; son échéance (02/10) est calculée. — (retour client 29/09) Tranché : ces transferts ne concernent que le chef d'agence, le caissier ne les voit plus. — (retour client 01/10) Tranché : l'écran montre tous les transferts en attente de retrait, avec leur reçu. — (déduit) L'échéance des trois envois du 03/09 est calculée (émission + 30 jours, comme C3). — Les références, noms et montants des trois SFC-8D… sont inventés pour la démonstration." data-fait="oui">
+    <section class="ecran" id="d9" data-nom="Transferts en attente de retrait" data-node="(hors Figma)" data-profil="chef" data-rail="Agence" data-titre="Transferts en attente de retrait" data-contexte="7 opérations · 3 expirent sous 5 jours · 1 bloquée" data-heure="14:32" data-trancher="Hypothèse Galadrim : le service client appelle l'expéditeur, avec une formule neutre : « vérification complémentaire de votre transfert » (G16, Q9). — (atelier 5, 01/10) Tranché : le remboursement d'office est décidé par le chef d'agence ou les Opérations, et l'expéditeur est remboursé à n'importe quel guichet, agence ou distributeur, du principal seul. — (atelier 5, 01/10) SFC-8F36-5208, bloquée par la conformité, est inventée pour la démonstration ; son échéance (02/10) est calculée. — (retour client 29/09) Tranché : ces transferts ne concernent que le chef d'agence, le caissier ne les voit plus. — (retour client 01/10) Tranché : l'écran montre tous les transferts en attente de retrait, avec leur reçu. — (déduit) L'échéance des trois envois du 03/09 est calculée (émission + 30 jours, comme C3). — Les références, noms et montants des trois SFC-8D… sont inventés pour la démonstration." data-fait="oui">
       <section class="carte">
         <h2>En attente de retrait</h2>
         <div class="defilant">
@@ -1918,7 +1931,7 @@ body{font:400 14px/20px var(--police)}
     </section>
 
     <!-- ===== Chef d'agence ===== -->
-    <section class="ecran" id="d11" data-nom="Mon agence" data-node="(hors Figma)" data-profil="chef" data-rail="Agence" data-titre="Agence Kaloum" data-contexte="Jeudi 03/09/2026 · 3 caisses" data-heure="16:16" data-trancher="Le chef d'agence « souvent lui-même au guichet » tient-il une caisse ? Si oui, il ne peut pas valider les demandes de sa propre caisse (cumul interdit) : qui les valide ? — Quels indicateurs d'activité de l'agence veut-il voir (reporting par profil, décision 10, sans réponse) ? — (atelier 5, 01/10) Tranché : plusieurs messages d'information, qui défilent en boucle (Q13). — (déduit) Le message « Nouvelle destination : Mali… » est une valeur de démonstration ; le second reprend l'exemple de Babacar (Cameroun). — (déduit) Solde virtuel de l'agence (60 000 000 GNF) et de la caisse 1 (18 400 000 GNF) : valeurs de démonstration. — Les distributeurs utilisent-ils l'application agence dans le lot 1 ? Si oui : solde virtuel seul, commission créditée après chaque transaction, découvert accordé par la finance, demande de retrait de leur solde. Un distributeur sans solde ni découvert peut-il faire un envoi ? (Le compte rendu dit non, la réponse écrite dit oui.) — La demande à la finance : qui la valide, sous quel délai, et le justificatif est-il une pièce jointe ? — Opération bloquée par la conformité (SFC-8F36-5208) : inventée pour la démonstration." data-fait="oui">
+    <section class="ecran" id="d11" data-nom="Mon agence" data-node="(hors Figma)" data-profil="chef" data-rail="Agence" data-titre="Agence Kaloum" data-contexte="Jeudi 03/09/2026 · 4 caisses" data-heure="16:16" data-trancher="Hypothèse Galadrim : un chef d'agence qui tient lui-même une caisse ne valide pas ses propres demandes ; les Opérations, qui suppléent déjà les chefs d'agence, les valident (C7). — Quels indicateurs d'activité de l'agence veut-il voir (reporting par profil, décision 10, sans réponse) ? — (atelier 6, 12/10) Qui publie, ciblage agence ou zone, durée d'affichage ? — (atelier 5, 01/10) Tranché : plusieurs messages d'information, qui défilent en boucle (Q13). — (déduit) Le message « Nouvelle destination : Mali… » est une valeur de démonstration ; le second reprend l'exemple de Babacar (Cameroun). — (déduit) Solde virtuel de l'agence (60 000 000 GNF) et de la caisse 1 (18 400 000 GNF) : valeurs de démonstration. — Les distributeurs utilisent-ils l'application agence dans le lot 1 ? Si oui : solde virtuel seul, commission créditée après chaque transaction, découvert accordé par la finance, demande de retrait de leur solde. Un distributeur sans solde ni découvert peut-il faire un envoi ? (Le compte rendu dit non, la réponse écrite dit oui.) — La demande à la finance : qui la valide, sous quel délai, et le justificatif est-il une pièce jointe ? — Opération bloquée par la conformité (SFC-8F36-5208) : inventée pour la démonstration. — (atelier 6, 12/10) Tranché : une caisse ajoutée au back-office (BO34) arrive « En attente d'activation » ; le chef d'agence l'active avec son code personnel, et tant qu'elle ne l'est pas, elle ne peut ni ouvrir ni opérer. (déduit) Caisse 4, créée par l'administration le 03/09 à 09:30 : valeurs de démonstration. Après activation, qui y affecte un caissier ?" data-fait="oui">
       <!-- Retour client du 29/09 : l'information du jour, comme sur l'accueil du caissier. -->
       <div class="bandeau information" role="marquee" aria-label="Information du jour" data-information></div>
 
@@ -1929,7 +1942,7 @@ body{font:400 14px/20px var(--police)}
         <a class="tuile primaire" href="#d12" style="--part:1">
           <span class="pictogramme"><svg class="ico"><use href="#i-validations"/></svg></span>
           <b>À traiter</b>
-          <span>2 paiements rejetés · 1 opération bloquée · 1 demande de caisse.</span>
+          <span>3 paiements rejetés, dont 1 échoué · 1 opération bloquée · 1 demande de caisse.</span>
           <span class="suite">Ouvrir la file <svg class="ico"><use href="#i-suite"/></svg></span>
         </a>
         <section class="carte" style="--part:2">
@@ -1997,27 +2010,48 @@ body{font:400 14px/20px var(--police)}
         <table class="tableau">
           <thead>
             <tr>
-              <th style="width:160px">Caisse</th><th style="width:200px">Caissier</th>
-              <th style="width:160px">État</th><th style="width:200px">Espèces</th>
-              <th style="width:200px">Solde virtuel</th>
+              <th style="width:120px">Caisse</th><th style="width:150px">Caissier</th>
+              <th style="width:200px">État</th><th style="width:160px">Espèces</th>
+              <th style="width:200px">Solde virtuel</th><th style="width:110px"></th>
             </tr>
           </thead>
           <!-- Atelier 5 (01/10) : la ventilation du solde virtuel par caisse. La caisse 3 est
                sous le seuil minimum (déduit, 10 000 000 GNF). -->
           <tbody>
-            <tr><td>Caisse 1</td><td>A. Diallo</td><td><span class="statut valide">Ouverte</span></td><td>6 900 000 GNF</td><td>18 400 000 GNF</td></tr>
-            <tr><td>Caisse 2</td><td>—</td><td><span class="statut">Fermée</span></td><td>—</td><td>—</td></tr>
-            <tr><td>Caisse 3</td><td>M. Camara</td><td><span class="statut valide">Ouverte</span></td><td>3 200 000 GNF</td><td><span class="statut attention">7 600 000 GNF · sous le seuil</span></td></tr>
+            <tr><td>Caisse 1</td><td>A. Diallo</td><td><span class="statut valide">Ouverte</span></td><td>6 900 000 GNF</td><td>18 400 000 GNF</td><td></td></tr>
+            <tr><td>Caisse 2</td><td>—</td><td><span class="statut">Fermée</span></td><td>—</td><td>—</td><td></td></tr>
+            <tr><td>Caisse 3</td><td>M. Camara</td><td><span class="statut valide">Ouverte</span></td><td>3 200 000 GNF</td><td><span class="statut attention">7 600 000 GNF · sous le seuil</span></td><td></td></tr>
+            <!-- Atelier 6 (12/10) : une caisse ajoutée au back-office (BO34) attend que le chef
+                 d'agence l'active, avec son code personnel (clé activation). -->
+            <tr><td>Caisse 4</td><td>—</td><td><span class="statut attente" data-si-activation="ferme ouvert">En attente d'activation</span><span class="statut" data-si-activation="activee" hidden>Fermée · activée</span></td><td>—</td><td>—</td><td><button class="bouton secondaire" data-montrer="activation ouvert" data-si-activation="ferme">Activer</button></td></tr>
           </tbody>
         </table>
         </div>
+        <p class="pied">Une caisse en attente d'activation ne peut ni ouvrir ni enregistrer d'opération.</p>
       </section>
+
+      <section class="carte" data-si-activation="ouvert" hidden>
+        <h2>Activer la caisse 4</h2>
+        <div class="info"><span>Créée par</span><span>Administration (siège) · 03/09 à 09:30</span></div>
+        <div class="info"><span>Agence</span><span>Kaloum</span></div>
+        <div class="info"><span>Tant qu'elle n'est pas activée</span><span>Ni ouverture, ni opération</span></div>
+        <div class="reauth"></div>
+        <div class="actions">
+          <button class="bouton discret" data-montrer="activation ferme">Annuler</button>
+          <button class="bouton primaire" data-montrer="activation activee" data-exige="[data-code-perso]">Activer la caisse</button>
+        </div>
+      </section>
+
+      <div class="bandeau valide" data-si-activation="activee" hidden>
+        <strong>Caisse 4 activée</strong>
+        <span>Elle peut désormais être ouverte par un caissier, après comptage.</span>
+      </div>
     </section>
 
     <!-- Réduite après l'atelier 3 : le chef annule et corrige lui-même, il ne reste que
          l'approvisionnement de A12, sans écran de décision. Les décisions D14 à D16
          se passent à d'autres heures : elles s'ouvrent par leur ancre. -->
-    <section class="ecran" id="d12" data-nom="À traiter" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="À traiter" data-contexte="4 éléments en attente" data-heure="16:16" data-trancher="Délai maximal de validation et escalade. — (retour client 01/10) Tranché : le suppléant est le profil Opérations du siège, qui peut remplacer tous les chefs d'agence. — (atelier 5, 01/10, Q33 « Exact ») Tranché : le chef d'agence affiche et réimprime les reçus, sans en modifier le contenu. — (atelier 5, 01/10) Une opération bloquée par la conformité porte pour le chef le statut « Bloquée par la conformité », sans le motif. Qu'attend-on de lui : prévenir le client, le faire patienter ? SFC-8F36-5208 est inventée pour la démonstration. — Le chef voit-il aussi les éléments traités du jour ? — Le chef d'agence voit-il les rejets de toute son agence, ou seulement ceux que le back-office lui transmet ? — Les deux paiements rejetés sont inventés pour la démonstration (voir D8 et D13)." data-fait="oui">
+    <section class="ecran" id="d12" data-nom="À traiter" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="À traiter" data-contexte="5 éléments en attente" data-heure="16:16" data-trancher="Délai maximal de validation et escalade. — (retour client 01/10) Tranché : le suppléant est le profil Opérations du siège, qui peut remplacer tous les chefs d'agence. — (atelier 5, 01/10, Q33 « Exact ») Tranché : le chef d'agence affiche et réimprime les reçus, sans en modifier le contenu. — (atelier 5, 01/10) Une opération bloquée par la conformité porte pour le chef le statut « Bloquée par la conformité », sans le motif. Qu'attend-on de lui : prévenir le client, le faire patienter ? SFC-8F36-5208 est inventée pour la démonstration. — Le chef voit-il aussi les éléments traités du jour ? — Hypothèse Galadrim : le chef d'agence voit tous les rejets de son agence (C9). — Les deux paiements rejetés sont inventés pour la démonstration (voir D8 et D13). — (atelier 6, 12/10) SFC-8F38-2716, au statut « Échoué », est inventée pour la démonstration ; sa ligne ouvre le détail (C11), d'où le chef l'annule. Un rejet « récupérable » (D8) prend-il aussi le statut « Échoué » ?" data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
         <!-- Atelier 3 (17/09) : un paiement wallet ou bancaire rejeté par le partenaire
@@ -2040,6 +2074,8 @@ body{font:400 14px/20px var(--police)}
             </thead>
             <tbody>
               <tr class="ouvrable" tabindex="0" data-cible="d8"><td>15:40</td><td>SFC-8F43-5518</td><td>Wallet</td><td>Numéro de wallet erroné</td><td><span class="statut attention">Récupérable</span></td><td><a href="#d25" data-recu="SFC-8F43-5518">Voir</a></td></tr>
+              <!-- Atelier 6 (12/10, lot 1) : versement refusé, statut Échoué, à annuler par le chef. -->
+              <tr class="ouvrable" tabindex="0" data-cible="c11" data-operation="SFC-8F38-2716"><td>11:24</td><td>SFC-8F38-2716</td><td>Wallet</td><td>Compte wallet inexistant</td><td><span class="statut blocage">Échoué</span></td><td><a href="#d25" data-recu="SFC-8F38-2716">Voir</a></td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="d13"><td>11:02</td><td>SFC-8F40-7702</td><td>Compte bancaire</td><td>RIB invalide</td><td><span class="statut">Traité par le back-office</span></td><td><a href="#d25" data-recu="SFC-8F40-7702">Voir</a></td></tr>
             </tbody>
           </table>
@@ -2116,7 +2152,7 @@ body{font:400 14px/20px var(--police)}
          constater. Le code D13 portait « Décider — annulation » dans une version antérieure de
          la fiche ; ce que cet écran retiré consignait est repris dans spec/D11-D16.md, sous D3.
          Toute l'opération SFC-8F40-7702 est inventée pour la démonstration. -->
-    <section class="ecran" id="d13" data-nom="Paiement rejeté — non récupérable" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Paiement rejeté" data-contexte="SFC-8F40-7702 · compte bancaire · rejeté à 11:02" data-heure="16:17" data-trancher="Comment l'argent revient-il au client, qui a quitté le guichet — espèces dans l'agence d'envoi, virement, wallet ? — La caisse de l'agence, débitée à l'envoi, est-elle recréditée, et par qui ? — « Remboursement » n'a pas de date : le prototype ne sait pas quand ni comment il se fait. — Le chef d'agence n'a aucune action : faut-il seulement lui montrer ces rejets ? — Toute l'opération SFC-8F40-7702 est inventée pour la démonstration." data-fait="oui">
+    <section class="ecran" id="d13" data-nom="Paiement rejeté — non récupérable" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Paiement rejeté" data-contexte="SFC-8F40-7702 · compte bancaire · rejeté à 11:02" data-heure="16:17" data-trancher="Comment l'argent revient-il au client, qui a quitté le guichet — espèces dans l'agence d'envoi, virement, wallet ? — La caisse de l'agence, débitée à l'envoi, est-elle recréditée, et par qui ? — « Remboursement » n'a pas de date : le prototype ne sait pas quand ni comment il se fait. — Hypothèse Galadrim : le chef d'agence voit tous les rejets de son agence, même ceux où il n'a rien à faire ; une seule relance, puis remboursement (C9). — Toute l'opération SFC-8F40-7702 est inventée pour la démonstration." data-fait="oui">
       <div class="bandeau blocage">
         <strong>Rejet non récupérable</strong>
         <span>Motif du partenaire : RIB invalide. L'opération est annulée et remboursée par le back-office.</span>
@@ -2157,7 +2193,7 @@ body{font:400 14px/20px var(--police)}
 
         <!-- Décisions du chef (D14 à D16) : boutons actifs une fois le champ obligatoire rempli
          et le code personnel saisi. Comptages et écarts repris du bloc A quand on en vient. -->
-    <section class="ecran" id="d14" data-nom="Décider — blocage d'ouverture" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Blocage d'ouverture" data-contexte="Caisse 3 · M. Camara · écart de − 100 000 GNF" data-heure="08:18" data-caisse="bloquee" data-trancher="Lever le blocage ouvre-t-il une régularisation d'écart vers la Finance, comme à la clôture ? — (déduit) La fiche ne donne pas de motif de démonstration pour l'écart d'ouverture." data-fait="oui">
+    <section class="ecran" id="d14" data-nom="Décider — blocage d'ouverture" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Blocage d'ouverture" data-contexte="Caisse 3 · M. Camara · écart de − 100 000 GNF" data-heure="08:18" data-caisse="bloquee" data-trancher="Hypothèse Galadrim : le chef d'agence lève le blocage avec un motif ; l'écart, rattaché au caissier de la veille, suit la régularisation de clôture vers la finance (C2). — (déduit) La fiche ne donne pas de motif de démonstration pour l'écart d'ouverture." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>L'écart</h2>
@@ -2197,7 +2233,7 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="d15" data-nom="Décider — passation" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Passation de caisse" data-contexte="Caisse 3 · M. Camara → S. Keita" data-heure="20:05" data-caisse="passation" data-trancher="(déduit, reprise de A8) Que se passe-t-il si les deux comptages diffèrent — qui recompte, qui tranche ? Un refus sans motif est-il acceptable ?" data-fait="oui">
+    <section class="ecran" id="d15" data-nom="Décider — passation" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Passation de caisse" data-contexte="Caisse 3 · M. Camara → S. Keita" data-heure="20:05" data-caisse="passation" data-trancher="Hypothèse Galadrim : en cas de désaccord sur la passation, le chef d'agence tranche (C3). — (déduit) Un refus sans motif est-il acceptable ?" data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
           <section class="carte">
@@ -2229,7 +2265,7 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="d16" data-nom="Examiner un écart de clôture" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Écart de clôture" data-contexte="Caisse 3 · M. Camara · − 50 000 GNF" data-heure="19:35" data-caisse="cloturee" data-trancher="Délai de justification d'un écart (BO9, sans réponse). — Un écart remboursé sur le champ doit-il encore être régularisé par la Finance ? — (déduit) La fiche ne donne ni motif ni explication de démonstration pour l'écart de clôture." data-fait="oui">
+    <section class="ecran" id="d16" data-nom="Examiner un écart de clôture" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Écart de clôture" data-contexte="Caisse 3 · M. Camara · − 50 000 GNF" data-heure="19:35" data-caisse="cloturee" data-trancher="Délai de justification d'un écart (BO9, sans réponse). — Hypothèse Galadrim : tout écart, excédent ou manque, part en régularisation à la finance ; la clôture est définitive, et la régularisation suit à part (C4). — (déduit) La fiche ne donne ni motif ni explication de démonstration pour l'écart de clôture." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>L'écart</h2>
@@ -2310,7 +2346,7 @@ body{font:400 14px/20px var(--police)}
          historique d'envois et de réceptions. Une seule section, remplie par ficheClient()
          depuis la table CLIENTS selon la ligne cliquée ; ouverte par son ancre, elle montre
          BALDÉ Fatoumata. -->
-    <section class="ecran" id="d18" data-nom="Fiche client" data-node="(hors Figma)" data-profil="chef" data-rail="Clients" data-titre="Fiche client" data-contexte="Client de l'agence Kaloum" data-heure="16:16" data-trancher="(atelier 5, 01/10) Profil KYC : catégorie socioprofessionnelle et revenus nets mensuels. (déduit) Seule BALDÉ Fatoumata a des valeurs, de démonstration ; les autres clients, enregistrés avant l'atelier, affichent « À compléter ». Comment se complète le profil des clients existants, et que montre-t-on de leurs plafonds internes au chef d'agence ? — Historique : seules SFC-8F42-1907, SFC-8F39-7741, SFC-7C10-4482, SFC-8F41-0932, SFC-8F37-2210, SFC-8E77-3320, SFC-8E33-9087, SFC-8D12-5540 et les deux envois de SOUMAH Alpha (B4, montants et heures) viennent du prototype ; les autres lignes, les références de SOUMAH Alpha et les expéditeurs des retraits de SOW Ibrahima et KANTÉ Mory sont inventés. Les dates des envois antérieurs de BALDÉ Fatoumata viennent de B7. — L'historique montre-t-il les opérations faites dans d'autres agences (SOUMAH Alpha, Matam) ? — Jusqu'où remonte-t-il, et le chef peut-il l'exporter ? — Chaque ligne ouvre le détail de son opération (C11)." data-fait="oui">
+    <section class="ecran" id="d18" data-nom="Fiche client" data-node="(hors Figma)" data-profil="chef" data-rail="Clients" data-titre="Fiche client" data-contexte="Client de l'agence Kaloum" data-heure="16:16" data-trancher="(atelier 5, 01/10) Profil KYC : catégorie socioprofessionnelle et revenus nets mensuels. (déduit) Seule BALDÉ Fatoumata a des valeurs, de démonstration ; les autres clients, enregistrés avant l'atelier, affichent « À compléter ». — Hypothèse Galadrim : le profil KYC d'un client enregistré avant l'atelier 5 est complété au guichet, lors de son prochain envoi, avant l'encaissement (C10). — Que montre-t-on de leurs plafonds internes au chef d'agence ? — Historique : seules SFC-8F42-1907, SFC-8F39-7741, SFC-7C10-4482, SFC-8F41-0932, SFC-8F37-2210, SFC-8E77-3320, SFC-8E33-9087, SFC-8D12-5540 et les deux envois de SOUMAH Alpha (B4, montants et heures) viennent du prototype ; les autres lignes, les références de SOUMAH Alpha et les expéditeurs des retraits de SOW Ibrahima et KANTÉ Mory sont inventés. Les dates des envois antérieurs de BALDÉ Fatoumata viennent de B7. — L'historique montre-t-il les opérations faites dans d'autres agences (SOUMAH Alpha, Matam) ? — Jusqu'où remonte-t-il, et le chef peut-il l'exporter ? — Chaque ligne ouvre le détail de son opération (C11)." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:360" data-fiche-client>
           <div class="carte-tete">
@@ -2365,7 +2401,7 @@ body{font:400 14px/20px var(--police)}
          22/09, est confirmé par l'atelier 5 (01/10) : le caissier demande à son chef d'agence,
          qui valide en prélevant sur le solde virtuel de l'agence, puis ventile entre ses
          caisses. La finance seule approvisionne l'agence. -->
-    <section class="ecran" id="d19" data-nom="Décider — approvisionnement" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Approvisionnement du solde virtuel" data-contexte="Caisse 3 · M. Camara · 5 000 000 GNF" data-heure="16:17" data-trancher="(atelier 5, 01/10) Tranché : le chef d'agence valide la demande du caissier, en prélevant sur le solde virtuel de l'agence ; la finance seule approvisionne l'agence. — Le dégagement d'un excédent de solde virtuel (rendre à l'agence) existe-t-il ? — (déduit) Motif de la décision et réauthentification repris de D14 : la fiche ne les demande pas ici. — (déduit) Solde virtuel de l'agence (60 000 000 GNF) et de la caisse 1 (18 400 000 GNF) : valeurs de démonstration. — Une demande d'espèces (venue de C6) arrive-t-elle dans la même file, et d'où vient l'argent : coffre, autre caisse, siège ?" data-fait="oui">
+    <section class="ecran" id="d19" data-nom="Décider — approvisionnement" data-node="(hors Figma)" data-profil="chef" data-rail="À traiter" data-titre="Approvisionnement du solde virtuel" data-contexte="Caisse 3 · M. Camara · 5 000 000 GNF" data-heure="16:17" data-trancher="(atelier 5, 01/10) Tranché : le chef d'agence valide la demande du caissier, en prélevant sur le solde virtuel de l'agence ; la finance seule approvisionne l'agence. — Le dégagement d'un excédent de solde virtuel (rendre à l'agence) existe-t-il ? — (déduit) Motif de la décision et réauthentification repris de D14 : la fiche ne les demande pas ici. — (déduit) Solde virtuel de l'agence (60 000 000 GNF) et de la caisse 1 (18 400 000 GNF) : valeurs de démonstration. — Hypothèse Galadrim : une demande d'espèces (venue de C6) est servie depuis le coffre de l'agence, sur validation du chef d'agence ; le dégagement suit le même circuit (C6)." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>La demande</h2>
@@ -2420,7 +2456,7 @@ body{font:400 14px/20px var(--police)}
          bénéficiaire, à tout guichet, agence ou distributeur, du principal seul. D21 et D22
          cèdent donc la place au parcours de retrait en mode « Remboursement » (C1 à C13).
          Opération SFC-8E51-1044, seule opération expirée que le prototype connaisse (C10). -->
-    <section class="ecran" id="d20" data-nom="Décider le remboursement d'office" data-node="(hors Figma)" data-profil="chef" data-rail="Transactions" data-titre="Remboursement d'office" data-contexte="SFC-8E51-1044 · transfert expiré" data-heure="16:34" data-ajout="parcours du remboursement d'office : la fiche de cadrage n'en donne aucun écran" data-trancher="(atelier 5, 01/10) Tranché : la décision revient au chef d'agence ou aux Opérations (et non au siège seul, comme à l'atelier 4) ; l'expéditeur est remboursé à n'importe quel guichet, agence ou distributeur, du principal seul ; réauthentification exigée. — Qui appelle l'expéditeur pour le consulter, et avec quelle formule (Q9) ? — Quel critère fait choisir l'annulation plutôt que le remboursement ? — Si l'expéditeur ne se présente jamais, que devient l'argent, et sous quel délai ? — Le principal de SFC-8E51-1044 n'est pas connu : le prototype n'a que le total encaissé (460 000 GNF). — SFC-8E51-1044 est émise le 12/08 : 30 jours la portent au 11/09, après le 03/09 du prototype. Incohérence des listes, même famille que les soldes de la caisse 3. — Le statut « Remboursée » existe, mais aucune transition n'est écrite (question du diagramme de statuts de C12)." data-fait="oui">
+    <section class="ecran" id="d20" data-nom="Décider le remboursement d'office" data-node="(hors Figma)" data-profil="chef" data-rail="Transactions" data-titre="Remboursement d'office" data-contexte="SFC-8E51-1044 · transfert expiré" data-heure="16:34" data-ajout="parcours du remboursement d'office : la fiche de cadrage n'en donne aucun écran" data-trancher="(atelier 5, 01/10) Tranché : la décision revient au chef d'agence ou aux Opérations (et non au siège seul, comme à l'atelier 4) ; l'expéditeur est remboursé à n'importe quel guichet, agence ou distributeur, du principal seul ; réauthentification exigée. — Hypothèse Galadrim : le service client appelle l'expéditeur, avec une formule neutre : « vérification complémentaire de votre transfert » (G16, Q9). — Hypothèse Galadrim : annulation tant que l'envoi n'est pas payé et que l'expéditeur est à l'agence d'origine ; remboursement dans les autres cas, expiration ou expéditeur ailleurs (G14). — Si l'expéditeur ne se présente jamais, que devient l'argent, et sous quel délai ? — Le principal de SFC-8E51-1044 n'est pas connu : le prototype n'a que le total encaissé (460 000 GNF). — SFC-8E51-1044 est émise le 12/08 : 30 jours la portent au 11/09, après le 03/09 du prototype. Incohérence des listes, même famille que les soldes de la caisse 3. — Le statut « Remboursée » existe, mais aucune transition n'est écrite (question du diagramme de statuts de C12)." data-fait="oui">
       <div class="bandeau attention">
         <strong>Transfert expiré</strong>
         <span>Passé 30 jours sans retrait, le remboursement de l'expéditeur s'impose réglementairement. Le bénéficiaire ne peut plus rien percevoir.</span>
@@ -2526,7 +2562,7 @@ body{font:400 14px/20px var(--police)}
          donc pas un parcours : il met la question à l'écran, avec ce qui est acquis autour et
          trois règles possibles à arbitrer. Sans lui, la question ne vivait que dans des
          data-trancher, invisibles en atelier. -->
-    <section class="ecran" id="d23" data-nom="Annuler un versement direct — état du cadrage" data-node="(hors Figma)" data-profil="chef" data-rail="Transactions" data-titre="Annuler un versement direct" data-contexte="Wallet et compte bancaire · règle non cadrée" data-heure="16:44" data-ajout="écran d'état du cadrage : ni la fiche ni le Figma ne portent l'annulation d'un versement direct" data-trancher="Peut-on annuler un versement direct, et jusqu'à quand (B8, D3) ? — Le guichetier attend-il la confirmation du partenaire avant de libérer le client (B13) ? — Quel statut porte l'opération : les cinq statuts actuels supposent tous un retrait (B13) ? — L'API du partenaire permet-elle un rappel, et sous quel délai ? — Une fois le wallet crédité ou le compte alimenté, les fonds peuvent-ils être repris ? — Listes des opérateurs et des banques raccordés, par pays, toujours attendues (B7). — Les trois règles proposées sont une contribution Galadrim : aucune ne vient d'un atelier." data-fait="oui">
+    <section class="ecran" id="d23" data-nom="Annuler un versement direct — état du cadrage" data-node="(hors Figma)" data-profil="chef" data-rail="Transactions" data-titre="Annuler un versement direct" data-contexte="Wallet et compte bancaire · règle non cadrée" data-heure="16:44" data-ajout="écran d'état du cadrage : ni la fiche ni le Figma ne portent l'annulation d'un versement direct" data-trancher="Peut-on annuler un versement direct qui n'a pas échoué, à la demande de l'expéditeur, et jusqu'à quand (B8, D3) ? — (atelier 6, 12/10) Tranché (G3) : le client repart sur « Versement transmis », sans attendre la confirmation du partenaire ; un versement refusé prend le statut « Échoué », que le chef d'agence ou les Opérations annulent. — L'API du partenaire permet-elle un rappel, et sous quel délai ? — Une fois le wallet crédité ou le compte alimenté, les fonds peuvent-ils être repris ? — Listes des opérateurs et des banques raccordés, par pays, toujours attendues (B7). — Les trois règles proposées sont une contribution Galadrim : aucune ne vient d'un atelier." data-fait="oui">
       <div class="bandeau blocage">
         <strong>L'annulation d'un versement direct n'est pas cadrée</strong>
         <span>Aucune décision ne dit si un versement wallet ou bancaire peut être rappelé. Le guichet ne peut donc rien proposer à l'expéditeur qui le demande.</span>
@@ -2540,13 +2576,15 @@ body{font:400 14px/20px var(--police)}
               <li>✓ La caisse de l'agence est débitée dès l'envoi, quel que soit le canal de sortie (atelier 3, 17/09).</li>
               <li>✓ Un rejet du partenaire est traité : récupérable, le chef soumet une relance ; non récupérable, le back-office annule et rembourse (atelier 3, 17/09).</li>
               <li>✓ L'expéditeur est prévenu du versement, et en cas d'échec (B13).</li>
+              <li>✓ Le client repart sur « Versement transmis » : ni le reçu ni l'écran de fin ne promettent de crédit immédiat (atelier 6, 12/10).</li>
+              <li>✓ Un versement refusé par le partenaire prend le statut <span class="statut blocage">Échoué</span> ; le chef d'agence ou les Opérations l'annulent, avec leur code personnel (atelier 6, 12/10).</li>
             </ul>
             <div class="separateur"></div>
             <ul class="liste">
               <li><a href="#d8">Rejet récupérable : demander une relance.</a></li>
               <li><a href="#d13">Rejet non récupérable : suivi par le back-office.</a></li>
             </ul>
-            <p class="pied">L'échec du versement est donc couvert. Ce qui manque, c'est l'annulation à la demande de l'expéditeur, alors que le versement n'a pas échoué.</p>
+            <p class="pied">L'échec du versement est donc couvert, et son annulation aussi depuis le 12/10. Ce qui manque, c'est l'annulation à la demande de l'expéditeur, alors que le versement n'a pas échoué.</p>
           </section>
 
           <section class="carte">
@@ -2569,10 +2607,8 @@ body{font:400 14px/20px var(--police)}
             <ul class="liste">
               <li>« Peut-on annuler un versement direct ? » — B8, étape 4</li>
               <li>« Un versement direct wallet ou banque s'annule-t-il ? » — D3</li>
-              <li>« Le guichetier attend-il la confirmation du partenaire avant de libérer le client ? » — B13</li>
-              <li>« Quel statut porte l'opération — les cinq statuts actuels supposent tous un retrait ? » — B13</li>
             </ul>
-            <p class="pied">Posées depuis la construction de ces écrans, jamais reprises en atelier.</p>
+            <p class="pied">Posées depuis la construction de ces écrans. Les deux questions de B13 (attente de la confirmation du partenaire, statut de l'opération) sont tranchées le 12/10 : « Versement transmis », puis « Échoué » en cas de refus.</p>
           </section>
 
           <section class="carte">
@@ -2708,7 +2744,7 @@ body{font:400 14px/20px var(--police)}
          rempli par ficheRecu() depuis la table RECUS selon la ligne ou le lien cliqué
          (data-recu). Ouvert par son ancre : SFC-8F42-1907, le reçu de B11. Les valeurs que le
          prototype ne connaît pas s'affichent « À charger ». -->
-    <section class="ecran" id="d25" data-nom="Reçu d'un envoi" data-node="(hors Figma)" data-profil="chef" data-rail="Agence" data-titre="SFC-8F42-1907" data-contexte="Reçu de l'envoi · lecture seule" data-heure="16:16" data-trancher="(atelier 5, 01/10, Q33 « Exact ») Tranché : le chef d'agence affiche et réimprime les reçus, sans en modifier le contenu. — (atelier 5, Q26) La mention « Taux bloqué » quitte le reçu. — Sur quelle imprimante et dans quel format le chef réimprime-t-il ? Le reçu réimprimé porte-t-il une mention « duplicata » ? — (déduit) Hors SFC-8F42-1907, le prototype ne connaît pas tout le reçu : origine des fonds, frais, taux et, pour la plupart, destination s'affichent « À charger ». — Les opérations SFC-8F43-5518 et SFC-8F40-7702 (D8, D13) sont inventées ; leur reçu n'existe qu'ici." data-fait="oui">
+    <section class="ecran" id="d25" data-nom="Reçu d'un envoi" data-node="(hors Figma)" data-profil="chef" data-rail="Agence" data-titre="SFC-8F42-1907" data-contexte="Reçu de l'envoi · lecture seule" data-heure="16:16" data-trancher="(atelier 5, 01/10, Q33 « Exact ») Tranché : le chef d'agence affiche et réimprime les reçus, sans en modifier le contenu. — (atelier 5, Q26) La mention « Taux bloqué » quitte le reçu. — Hypothèse Galadrim : réimpression au format A4, avec la mention « Duplicata » et la date de la réimpression (C11). — (déduit) Hors SFC-8F42-1907, le prototype ne connaît pas tout le reçu : origine des fonds, frais, taux et, pour la plupart, destination s'affichent « À charger ». — Les opérations SFC-8F43-5518 et SFC-8F40-7702 (D8, D13) sont inventées ; leur reçu n'existe qu'ici." data-fait="oui">
       <div class="bandeau valide" data-si-envoi="oui" hidden>
         <strong>Reçu réimprimé</strong>
         <span>La réimpression est inscrite au journal de l'opération.</span>
@@ -2731,6 +2767,9 @@ body{font:400 14px/20px var(--police)}
           <section class="carte">
             <h2>Réimpression</h2>
             <div class="info"><span>Réimpression</span><span>Possible sans restriction</span></div>
+            <!-- Hypothèse Galadrim (registre C11, atelier 6) : A4, mention « Duplicata » datée. -->
+            <div class="info"><span>Format</span><span>A4</span></div>
+            <div class="info"><span>Mention</span><span>« Duplicata », avec la date de la réimpression</span></div>
             <p class="pied">« Éditer » un reçu, c'est le produire et le réimprimer : son contenu ne se modifie pas.</p>
           </section>
         </div>
@@ -2831,11 +2870,12 @@ body{font:400 14px/20px var(--police)}
 
     <!-- B1 hors-ligne (conducteur, écran 2) : les actions suspendues restent visibles, avec leur
          motif. Point 1 du conducteur, basculable en séance : envois en attente ou suspendus. -->
-    <section class="ecran" id="e2" data-virtuel="" data-nom="Accueil guichet hors-ligne" data-node="(hors Figma)" data-rail="Guichet" data-titre="Guichet" data-contexte="Hors-ligne depuis 16:10 · consultation sur les données du poste" data-heure="16:30" data-connexion="hors-ligne" data-coupure="depuis 16:10" data-autorisation="1 h 42" data-provisoires="0" data-trancher="Point 1 du conducteur, à trancher en séance : un envoi encaissé hors-ligne, en attente sans code de retrait jusqu'au contrôle central, est-il une mise en attente conforme à la fiche « Fonctionnalités minimales BCRG », ou faut-il suspendre tout nouvel envoi ? — Le questionnaire coche tout le périmètre d'envoi (international, wallet et banque, nouveau client, nouveau bénéficiaire) ; la fiche d'Issiaga suspend les nouveaux envois quand le plafond central est indisponible. — (déduit) « Payer un retrait » reste ouvert pour la seule recherche dans les données du poste (E5) : le paiement, lui, est impossible." data-fait="oui">
+    <section class="ecran" id="e2" data-virtuel="" data-nom="Accueil guichet hors-ligne" data-node="(hors Figma)" data-rail="Guichet" data-titre="Guichet" data-contexte="Hors-ligne depuis 16:10 · consultation sur les données du poste" data-heure="16:30" data-connexion="hors-ligne" data-coupure="depuis 16:10" data-autorisation="1 h 42" data-provisoires="0" data-trancher="Hypothèse Galadrim : un envoi encaissé hors ligne reste en attente, sans code de retrait, jusqu'au contrôle central, comme le montre le prototype (M1). La version « Envois suspendus » reste basculable pour la séance. — Le questionnaire coche tout le périmètre d'envoi (international, wallet et banque, nouveau client, nouveau bénéficiaire) ; la fiche d'Issiaga suspend les nouveaux envois quand le plafond central est indisponible. — (déduit) « Payer un retrait » reste ouvert pour la seule recherche dans les données du poste (E5) : le paiement, lui, est impossible." data-fait="oui">
       <div class="bandeau trancher avec-action">
         <div class="texte">
           <strong>Envoyer hors-ligne : en attente, ou suspendu ?</strong>
-          <span>Un envoi encaissé hors-ligne reste en attente, sans code de retrait, jusqu'au contrôle central. Est-ce une mise en attente conforme, ou faut-il suspendre tout nouvel envoi ?</span>
+          <!-- Atelier 6 (12/10, registre M1) : le bandeau reçoit l'hypothèse dessinée. -->
+          <span>Hypothèse Galadrim : un envoi encaissé hors ligne reste en attente, sans code de retrait, jusqu'au contrôle central. L'autre version suspend tout nouvel envoi.</span>
         </div>
         <div class="segmente" data-choix="envois" role="group" aria-label="Version à montrer">
           <button class="actif" data-valeur="attente">Envois en attente</button>
@@ -2927,7 +2967,7 @@ body{font:400 14px/20px var(--police)}
     <!-- Envoi hors-ligne (conducteur, écran 3) : le parcours B ramené à un écran, sur le fil de
          démonstration Conakry → Kankan. Validation du chef d'agence sur le poste (MD8), code du
          caissier sur clavier aléatoire (MD20), plafonds sans valeur (MD11-12). -->
-    <section class="ecran" id="e3" data-virtuel="" data-nom="Envoi provisoire" data-node="(hors Figma)" data-rail="" data-guichet="e2" data-titre="Envoi hors-ligne" data-contexte="Conakry → Kankan · l'envoi reste en attente de validation" data-heure="16:34" data-connexion="hors-ligne" data-coupure="depuis 16:10" data-autorisation="1 h 38" data-provisoires="0" data-trancher="Le chef d'agence valide-t-il chaque envoi avant l'encaissement, client au guichet, ou après, en fin de coupure (0 bis, point 3b) ? Impact direct sur la cible de 1 min 30. — Plafonds hors-ligne : aucune valeur (MD11-12 renvoient à la fiche d'Issiaga, qui n'en donne pas). Qui les fixe, et pour quand ? — Un envoi par client et par coupure : proposition Galadrim par défaut, MD13 ne tranche pas. — Le périmètre coché dans le questionnaire va au-delà du fil de démonstration (international, wallet et banque, nouveau client) : l'écran ne montre que l'envoi domestique en espèces. — (déduit) Bénéficiaire DIALLO Alpha, montant de 1 500 000 GNF : valeurs de démonstration. Les frais d'un envoi domestique ne sont pas connus du prototype." data-fait="oui">
+    <section class="ecran" id="e3" data-virtuel="" data-nom="Envoi provisoire" data-node="(hors Figma)" data-rail="" data-guichet="e2" data-titre="Envoi hors-ligne" data-contexte="Conakry → Kankan · l'envoi reste en attente de validation" data-heure="16:34" data-connexion="hors-ligne" data-coupure="depuis 16:10" data-autorisation="1 h 38" data-provisoires="0" data-trancher="(atelier 6, 12/10) Tranché (M2) : chaque envoi hors ligne est validé avant l'encaissement, client au guichet, par le chef d'agence ou les Opérations (et non plus le chef d'agence seul). (déduit) Hors ligne, comment le code des Opérations parvient-il au poste : même question qu'en E1. — Hypothèse Galadrim (M3) : plafonds hors ligne en champs paramétrables, sans valeur par défaut ; un envoi par client et par coupure. — Le périmètre coché dans le questionnaire va au-delà du fil de démonstration (international, wallet et banque, nouveau client) : l'écran ne montre que l'envoi domestique en espèces. — (déduit) Bénéficiaire DIALLO Alpha, montant de 1 500 000 GNF : valeurs de démonstration. Les frais d'un envoi domestique ne sont pas connus du prototype." data-fait="oui">
       <div class="bandeau blocage" data-si-envois="suspendus" hidden>
         <strong>Version « envois suspendus » : cet écran disparaît</strong>
         <span>Aucun envoi n'est saisi hors-ligne. Voir la bascule sur le guichet.</span>
@@ -2977,14 +3017,14 @@ body{font:400 14px/20px var(--police)}
         </div>
 
         <div class="colonne" style="--part:476">
-          <div class="bandeau trancher">
-            <strong>Le chef d'agence valide-t-il avant l'encaissement ?</strong>
-            <span>Vous demandez que chaque envoi hors-ligne soit validé. Ici, il l'est sur le poste, client au guichet. L'autre choix : après, en fin de coupure.</span>
-          </div>
+          <!-- Atelier 6 (12/10, M2) : la validation se fait avant l'encaissement, par le chef
+               d'agence ou les Opérations. Le bandeau violet « Le chef d'agence valide-t-il avant
+               l'encaissement ? » est retiré : la question est tranchée. -->
           <section class="carte">
             <h2>Validation</h2>
             <div class="info"><span>Total à encaisser</span><b class="montant-petit">1 500 000 GNF + frais</b></div>
-            <div class="reauth" data-libelle="Code personnel du chef d'agence · K. Bah" data-champ-id="e3-code-chef"></div>
+            <div class="info"><span>Validé par</span><span>Le chef d'agence ou les Opérations</span></div>
+            <div class="reauth" data-libelle="Code personnel du valideur · chef d'agence (K. Bah) ou Opérations" data-champ-id="e3-code-chef"></div>
             <div class="clavier" data-libelle="Code du caissier · M. Camara" data-champ-id="e3-code-caissier"></div>
             <p class="pied">Touches mélangées à chaque affichage. Le code se compose à la souris.</p>
           </section>
@@ -2999,7 +3039,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Reçu provisoire (conducteur, écran 4). MD22 : la mention ne doit pas alarmer le client.
          MD25 : le client n'est pas informé du mode dégradé, aucune mention ne le dit. -->
-    <section class="ecran" id="e4" data-virtuel="" data-nom="Reçu provisoire" data-node="(hors Figma)" data-rail="" data-guichet="e2" data-titre="Reçu de l'envoi" data-contexte="P-KAL3-0001 · en attente de validation" data-heure="16:36" data-connexion="hors-ligne" data-coupure="depuis 16:10" data-autorisation="1 h 36" data-provisoires="1" data-trancher="Mention du reçu (MD22) : « En cours de traitement » est une proposition tirée de la réponse à MD23, à valider sur l'écran. — Le reçu signé en deux exemplaires fait-il foi devant la BCRG pour une opération enregistrée hors-ligne (MD26, Issiaga vérifie) ? — La lettre P de la référence, qui distingue l'envoi provisoire, suffit-elle à l'agence ? — Les 30 jours de validité courent-ils de l'encaissement ou de la validation ? — MD24 (SMS de validation à l'expéditeur, avec le code de retrait) : non dessiné, la cohérence avec la règle du code de l'atelier 1 est à vérifier. — (déduit) Format P-KAL3-0001 : référence générée par le poste, valeur de démonstration." data-fait="oui">
+    <section class="ecran" id="e4" data-virtuel="" data-nom="Reçu provisoire" data-node="(hors Figma)" data-rail="" data-guichet="e2" data-titre="Reçu de l'envoi" data-contexte="P-KAL3-0001 · en attente de validation" data-heure="16:36" data-connexion="hors-ligne" data-coupure="depuis 16:10" data-autorisation="1 h 36" data-provisoires="1" data-trancher="Hypothèse Galadrim : la mention « En cours de traitement », la lettre P de la référence et le reçu signé en deux exemplaires suffisent, comme dessiné (M4). — Les 30 jours de validité courent-ils de l'encaissement ou de la validation ? — MD24 (SMS de validation à l'expéditeur, avec le code de retrait) : non dessiné, la cohérence avec la règle du code de l'atelier 1 est à vérifier. — (déduit) Format P-KAL3-0001 : référence générée par le poste, valeur de démonstration." data-fait="oui">
       <div class="bandeau blocage" data-si-envois="suspendus" hidden>
         <strong>Version « envois suspendus » : cet écran disparaît</strong>
         <span>Aucun envoi n'est saisi hors-ligne. Voir la bascule sur le guichet.</span>
@@ -3025,7 +3065,8 @@ body{font:400 14px/20px var(--police)}
 
           <div class="bandeau trancher">
             <strong>Quelle mention sur le reçu ?</strong>
-            <span>Elle doit dire à l'agence que l'opération attend sa validation, sans alarmer le client. Le client n'étant pas prévenu du mode dégradé, c'est elle qui porte toute l'information.</span>
+            <!-- Atelier 6 (12/10, registre M4) : le bandeau reçoit l'hypothèse dessinée. -->
+            <span>Hypothèse Galadrim : « En cours de traitement », la lettre P de la référence et le reçu signé en deux exemplaires suffisent. La mention dit à l'agence que l'opération attend sa validation, sans alarmer le client.</span>
           </div>
           <section class="carte">
             <h2>Mention proposée <span class="etiquette ajout">proposition</span></h2>
@@ -3134,7 +3175,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- Clôture hors-ligne (conducteur, écran 6) : comptage à l'aveugle comme en ligne (A9),
          rapport « à transmettre », envoi différé automatique, recontrôle à la reconnexion. -->
-    <section class="ecran" id="e6" data-virtuel="" data-nom="Clôture de caisse hors-ligne" data-node="(hors Figma)" data-rail="" data-guichet="e2" data-titre="Caisse clôturée" data-contexte="Caisse 3 · rapport à transmettre au retour de la connexion" data-heure="19:32" data-caisse="cloturee" data-connexion="hors-ligne" data-coupure="depuis 16:10" data-autorisation="0 h 40" data-provisoires="2" data-trancher="MD30 (sans réponse) : le comptage est-il recontrôlé à la reconnexion contre les opérations synchronisées, et qui traite un écart ? — MD31 (sans réponse) : le rapport part-il seul au retour du réseau, ou faut-il un export (clé, photo, SMS) pendant une coupure longue ? — (déduit) Totaux de A11, repris tels quels : le rapport d'une journée coupée à 16:10 ne peut pas être celui d'une journée en ligne." data-fait="oui">
+    <section class="ecran" id="e6" data-virtuel="" data-nom="Clôture de caisse hors-ligne" data-node="(hors Figma)" data-rail="" data-guichet="e2" data-titre="Caisse clôturée" data-contexte="Caisse 3 · rapport à transmettre au retour de la connexion" data-heure="19:32" data-caisse="cloturee" data-connexion="hors-ligne" data-coupure="depuis 16:10" data-autorisation="0 h 40" data-provisoires="2" data-trancher="Hypothèse Galadrim : le comptage est recontrôlé automatiquement à la reconnexion, contre les opérations synchronisées, et tout écart va aux Opérations ; le rapport part seul au retour du réseau (M5, MD30-MD31). — (déduit) Totaux de A11, repris tels quels : le rapport d'une journée coupée à 16:10 ne peut pas être celui d'une journée en ligne." data-fait="oui">
       <div class="bandeau attention">
         <strong>Caisse 3 clôturée · rapport à transmettre</strong>
         <span>Le rapport part automatiquement au retour de la connexion. Le comptage sera recontrôlé contre les opérations synchronisées.</span>
@@ -3157,13 +3198,15 @@ body{font:400 14px/20px var(--police)}
         <div class="colonne" style="--part:476">
           <div class="bandeau trancher">
             <strong>Le rapport part-il seul au retour du réseau ?</strong>
-            <span>Ici, l'envoi est différé et automatique. Qui recontrôle le comptage à la reconnexion, et qui traite un écart ?</span>
+            <!-- Atelier 6 (12/10, registre M5) : le bandeau reçoit l'hypothèse dessinée. -->
+            <span>Hypothèse Galadrim : envoi différé et automatique au retour du réseau ; le comptage est recontrôlé automatiquement, et tout écart va aux Opérations.</span>
           </div>
           <section class="carte">
             <h2>Transmission</h2>
             <div class="info"><span>Siège · finance</span><span><span class="statut attention">À transmettre</span></span></div>
             <div class="info"><span>Envoi</span><span>Automatique, au retour de la connexion</span></div>
-            <div class="info"><span>Recontrôle</span><span>À la reconnexion</span></div>
+            <div class="info"><span>Recontrôle</span><span>Automatique, à la reconnexion</span></div>
+            <div class="info"><span>Écart éventuel</span><span>Aux Opérations</span></div>
             <p class="pied">Le comptage se fait à l'aveugle, comme en ligne.</p>
           </section>
         </div>
@@ -3241,7 +3284,7 @@ body{font:400 14px/20px var(--police)}
     <!-- Envoi bloqué après coup (conducteur, écran 8). Scénario A retenu au questionnaire :
          conduite par défaut sur les trois motifs. Sanctions / PEP : point 2 du conducteur,
          basculable en séance (Rembourser / Geler). La colonne caissier ne change pas. -->
-    <section class="ecran" id="e8" data-virtuel="" data-nom="Envoi bloqué après coup" data-node="(hors Figma)" data-rail="" data-guichet="b1" data-titre="Envoi bloqué après coup" data-contexte="P-KAL3-0002 · saisi hors-ligne le 03/09 à 18:40" data-heure="09:10" data-trancher="Point 2 du conducteur, à trancher en séance : pour un nom proche d'une liste de sanctions, rembourse-t-on aussi l'expéditeur, ou gèle-t-on ? Si gel, le scénario A est acté avec une exception sanctions / PEP. — MD32 : qui est prévenu en premier ? — MD33 : ce que voit le caissier — proposition, statut neutre sans motif. — MD34 : qui appelle l'expéditeur, avec quelle formule — proposition, le service client, formule neutre, à valider par Issiaga. — MD35 : délai de la conformité, et le client qui revient entre-temps. — MD36 : remboursement à l'agence d'origine ou partout, frais compris ou non. — (déduit) SOUMAH Alpha, dont la fiche porte « Plafond du jour atteint » (D17), sert d'exemple aux trois motifs ; montant de 2 000 000 GNF, valeur de démonstration." data-fait="oui">
+    <section class="ecran" id="e8" data-virtuel="" data-nom="Envoi bloqué après coup" data-node="(hors Figma)" data-rail="" data-guichet="b1" data-titre="Envoi bloqué après coup" data-contexte="P-KAL3-0002 · saisi hors-ligne le 03/09 à 18:40" data-heure="09:10" data-trancher="Hypothèse Galadrim : pour un nom proche d'une liste de sanctions, les fonds sont gelés ; les sanctions / PEP font exception au remboursement par défaut du scénario A (M6). La version « Rembourser » reste basculable pour la séance. — MD32 : qui est prévenu en premier ? — MD33 : ce que voit le caissier — proposition, statut neutre sans motif. — MD34 : qui appelle l'expéditeur, avec quelle formule — proposition, le service client, formule neutre, à valider par Issiaga. — MD35 : délai de la conformité, et le client qui revient entre-temps. — MD36 : remboursement à l'agence d'origine ou partout, frais compris ou non. — (déduit) SOUMAH Alpha, dont la fiche porte « Plafond du jour atteint » (D17), sert d'exemple aux trois motifs ; montant de 2 000 000 GNF, valeur de démonstration." data-fait="oui">
       <div class="bandeau blocage" data-si-envois="suspendus" hidden>
         <strong>Version « envois suspendus » : cet écran disparaît</strong>
         <span>Aucun envoi n'est saisi hors-ligne, aucun n'est bloqué après coup.</span>
@@ -3300,11 +3343,12 @@ body{font:400 14px/20px var(--police)}
           <div class="bandeau trancher avec-action" data-si-motif="sanctions" hidden>
             <div class="texte">
               <strong>Sanctions / PEP : rembourser, ou geler ?</strong>
-              <span>Rembourser un nom proche d'une liste de sanctions, c'est restituer des fonds peut-être gelables.</span>
+              <!-- Atelier 6 (12/10, registre M6) : l'hypothèse dessinée, le gel, est montrée d'abord. -->
+              <span>Hypothèse Galadrim : gel des fonds ; les sanctions / PEP font exception au remboursement par défaut. Rembourser, c'est restituer des fonds peut-être gelables.</span>
             </div>
             <div class="segmente" data-choix="issue" role="group" aria-label="Version à montrer">
-              <button class="actif" data-valeur="rembourser">Rembourser</button>
-              <button data-valeur="geler">Geler</button>
+              <button data-valeur="rembourser">Rembourser</button>
+              <button class="actif" data-valeur="geler">Geler</button>
             </div>
           </div>
 
@@ -3331,7 +3375,7 @@ body{font:400 14px/20px var(--police)}
 
     <!-- fin du bloc E -->
 
-    <section class="ecran" id="b1" data-nom="Accueil guichet" data-node="6:2" data-rail="Guichet" data-titre="Guichet" data-contexte="Poste ouvert depuis 08:12" data-virtuel="7600000" data-fait="oui" data-ajout="carte « Taux du jour »" data-trancher="(atelier 5, 01/10) Tranché : plusieurs messages d'information, qui défilent en boucle (Q13). Durée d'affichage d'un message toujours non déterminée ; le prototype en change toutes les 7 secondes. — (déduit) Le message « Nouvelle destination : Mali… » est une valeur de démonstration ; le second reprend l'exemple de Babacar (Cameroun). — (déduit) Seuil minimum du solde virtuel (10 000 000 GNF) : valeur de démonstration. Qui le fixe, par caisse ou pour tout le réseau ? — L'alerte de solde bas ajoute une ligne à l'accueil : à 1440 × 800, il ne tient plus tout à fait sans défilement. — Refonte du 22/09 (retour client) : Envoyer et Payer en haut à gauche, le taux du jour en haut à droite, les dernières opérations et la caisse dessous. La tuile « Mes opérations du jour » disparaît : C14 s'ouvre par « Tout voir » — faut-il lui rendre un accès propre ? — Refonte du 18/09 (retour client) : encaissements et décaissements du jour quittent l'accueil pour « Mes opérations du jour » (C14) et « Ma caisse » (A6). Le caissier doit-il les voir dès l'accueil ? — Le taux affiché au guichet est-il le taux de la Banque centrale ou un taux SAFICO avec marge de change, et qui fixe cette marge ? — Si le taux change pendant une simulation, lequel s'applique ? — (déduit) « Mis à jour à 08:00 » est une valeur de démonstration.">
+    <section class="ecran" id="b1" data-nom="Accueil guichet" data-node="6:2" data-rail="Guichet" data-titre="Guichet" data-contexte="Poste ouvert depuis 08:12" data-virtuel="7600000" data-fait="oui" data-ajout="carte « Taux du jour »" data-trancher="(atelier 6, 12/10) Qui publie, ciblage agence ou zone, durée d'affichage ? — (atelier 5, 01/10) Tranché : plusieurs messages d'information, qui défilent en boucle (Q13). Durée d'affichage d'un message toujours non déterminée ; le prototype en change toutes les 7 secondes. — (déduit) Le message « Nouvelle destination : Mali… » est une valeur de démonstration ; le second reprend l'exemple de Babacar (Cameroun). — (déduit) Seuil minimum du solde virtuel (10 000 000 GNF) : valeur de démonstration. Qui le fixe, par caisse ou pour tout le réseau ? — (atelier 6, 12/10) L'alerte rappelle de faire la demande avant que le solde ne soit trop bas : un envoi non couvert ne peut pas être saisi (G5). — L'alerte de solde bas ajoute une ligne à l'accueil : à 1440 × 800, il ne tient plus tout à fait sans défilement. — Refonte du 22/09 (retour client) : Envoyer et Payer en haut à gauche, le taux du jour en haut à droite, les dernières opérations et la caisse dessous. La tuile « Mes opérations du jour » disparaît : C14 s'ouvre par « Tout voir » — faut-il lui rendre un accès propre ? — Refonte du 18/09 (retour client) : encaissements et décaissements du jour quittent l'accueil pour « Mes opérations du jour » (C14) et « Ma caisse » (A6). Le caissier doit-il les voir dès l'accueil ? — Le taux affiché au guichet est-il le taux de la Banque centrale ou un taux SAFICO avec marge de change, et qui fixe cette marge ? — Si le taux change pendant une simulation, lequel s'applique ? — (déduit) « Mis à jour à 08:00 » est une valeur de démonstration.">
       <!-- Retour client du 22/09 : en haut, les deux actions du guichet et, à leur droite,
            le taux du jour — la première chose que le client demande en arrivant. Les
            dernières opérations et la caisse passent dessous. -->
@@ -3349,7 +3393,7 @@ body{font:400 14px/20px var(--police)}
           <div class="bandeau attention avec-action">
             <div class="texte">
               <strong>Solde virtuel sous le seuil minimum</strong>
-              <span>7 600 000 GNF pour un seuil de 10 000 000 GNF. Faites votre demande avant le prochain envoi.</span>
+              <span>7 600 000 GNF pour un seuil de 10 000 000 GNF. Faites votre demande maintenant : un envoi que le solde ne couvre pas ne peut pas être saisi.</span>
             </div>
             <a class="bouton secondaire" href="#a12" data-nature="virtuel">Demander un approvisionnement</a>
           </div>
@@ -3433,7 +3477,7 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="b2" data-nom="Simulation du taux et des frais" data-node="6:136" data-rail="Envoyer" data-titre="Simulation" data-etape="1" data-contexte="Étape 1 sur 5 · avant toute saisie, le client peut renoncer ici" data-trancher="Frais et taux sont-ils les mêmes pour les trois modes de réception ? Le wallet et le compte bancaire sont-ils ouverts sur toutes les destinations, ou sur les seuls corridors raccordés à un partenaire ?" data-fait="oui">
+    <section class="ecran" id="b2" data-nom="Simulation du taux et des frais" data-node="6:136" data-rail="Envoyer" data-titre="Simulation" data-etape="1" data-contexte="Étape 1 sur 5 · avant toute saisie, le client peut renoncer ici" data-trancher="(atelier 6, 12/10) Tranché (G4) : les frais dépendent du partenaire (wallet ou banque) et le taux est unique pour tout le réseau ; changer de mode de réception ne recalcule que les frais. — (déduit) Frais de démonstration : 45 000 GNF en espèces, 30 000 en wallet, 60 000 en banque. La grille par partenaire est à fournir (BO44). B8 et le reçu B11 suivent le mode ; l'encaissement (B9) et la confirmation (B13) gardent les montants de l'envoi en espèces, seul cas du fil de démonstration. — Hypothèse Galadrim : le wallet et le compte bancaire ne sont proposés que sur les corridors raccordés à un partenaire." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:520">
           <h2>Ce que le client demande</h2>
@@ -3490,11 +3534,15 @@ body{font:400 14px/20px var(--police)}
           <section class="carte">
             <h2>Ce que cela coûte</h2>
             <div class="info"><span>Montant envoyé</span><span>5 000 000 GNF</span></div>
-            <div class="info"><span>Frais SAFICO</span><span>45 000 GNF</span></div>
-            <div class="bloc"><span>Total à encaisser</span><b class="montant">5 045 000 GNF</b></div>
-            <div class="info"><span>Taux appliqué</span><span data-taux>1 XOF = 18,32 GNF</span></div>
+            <!-- Atelier 6 (12/10, G4) : les frais dépendent du partenaire de versement, le taux est
+                 unique pour tout le réseau. Changer de mode ne recalcule que les frais. Frais de
+                 démonstration (déduit) : la grille par partenaire n'est pas fournie. -->
+            <div class="info"><span>Frais SAFICO</span><span><span data-si-mode="especes">45 000 GNF</span><span data-si-mode="wallet">30 000 GNF</span><span data-si-mode="banque">60 000 GNF</span></span></div>
+            <div class="bloc"><span>Total à encaisser</span><b class="montant"><span data-si-mode="especes">5 045 000 GNF</span><span data-si-mode="wallet">5 030 000 GNF</span><span data-si-mode="banque">5 060 000 GNF</span></b></div>
+            <div class="info"><span>Taux appliqué · unique pour le réseau</span><span data-taux>1 XOF = 18,32 GNF</span></div>
             <div class="bloc"><span>Le bénéficiaire reçoit</span><b class="montant" data-recoit>272 926 XOF</b></div>
             <!-- Règle confirmée le 10/09 : le taux est fixé à l'envoi, jamais recalculé. -->
+            <p class="pied">Les frais dépendent du partenaire de versement (<span data-si-mode="especes">réseau SAFICO</span><span data-si-mode="wallet">opérateur wallet</span><span data-si-mode="banque">banque</span>) ; le taux, lui, ne dépend pas du mode de réception.</p>
             <p class="pied">Une fois l'envoi validé, le taux est bloqué <span data-si-mode="especes">jusqu'au retrait, quelle que soit sa date</span><span data-si-mode="wallet banque">jusqu'au versement, quelle que soit sa date</span> : aucun recalcul au paiement.</p>
           </section>
 
@@ -3526,13 +3574,13 @@ body{font:400 14px/20px var(--police)}
       </section>
     </section>
 
-    <section class="ecran" id="b4" data-nom="Envoi — étape 2 · Plafond dépassé" data-node="8:257" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="2" data-contexte="Étape 2 sur 5 · opération impossible en l'état" data-trancher="(retour client 29/09) L'historique du client (date d'enregistrement, nombre d'opérations) est retiré de l'écran du caissier. Le cumul du jour par agence (Kaloum 09:14, Matam 11:02) reste affiché, parce que le blocage ne se comprend pas sans lui : relève-t-il aussi de l'historique à masquer ? Si oui, le caissier ne verrait que « plafond dépassé » et le montant maximum possible." data-fait="oui">
+    <section class="ecran" id="b4" data-nom="Envoi — étape 2 · Plafond dépassé" data-node="8:257" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="2" data-contexte="Étape 2 sur 5 · opération impossible en l'état" data-trancher="(retour client 29/09) L'historique du client (date d'enregistrement, nombre d'opérations) est retiré de l'écran du caissier. Le cumul du jour par agence (Kaloum 09:14, Matam 11:02) reste affiché, parce que le blocage ne se comprend pas sans lui : — Hypothèse Galadrim : le cumul du jour reste affiché au caissier, sans lui le blocage n'est pas compréhensible (G8)." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>Identifier l'expéditeur</h2>
           <div class="champs">
             <div class="champ focus">
-              <label for="b4-tel">Numéro de téléphone</label>
+              <label for="b4-tel">Téléphone de l'expéditeur · facultatif</label>
               <select id="b4-tel" data-expediteur>
                 <option data-cible="b5">+224 62 44 18 07 · client connu</option>
                 <option data-cible="b6">+224 66 30 92 55 · client inconnu</option>
@@ -3610,13 +3658,13 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="b5" data-nom="Envoi — étape 2 · Expéditeur retrouvé" data-node="8:393" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="2" data-contexte="Étape 2 sur 5 · client déjà connu" data-trancher="Origine des fonds (17/09) : liste complète à arrêter par SAFICO en s'inspirant des concurrents — seuls salaire, commerce et épargne ont été cités. — Motif du transfert (atelier 5, 01/10) : obligatoire, mais sa liste n'est pas connue. (déduit) Celle de l'écran reprend la liste proposée avant l'atelier 3 (Assistance familiale, Frais médicaux, Frais scolaires, Œuvres et dons) : à remplacer par celle de SAFICO. — Origine et motif pèsent sur l'objectif de 1 min 30 : peuvent-ils être pré-remplis avec la dernière valeur du client connu ? — (atelier 5, 01/10) Tranché : il n'y a pas de seuil en montant. Le justificatif est demandé selon le profil du client, son niveau de risque ou une incohérence. Comment le guichetier sait-il qu'il doit le demander, et où le saisit-il ?" data-fait="oui">
+    <section class="ecran" id="b5" data-nom="Envoi — étape 2 · Expéditeur retrouvé" data-node="8:393" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="2" data-contexte="Étape 2 sur 5 · client déjà connu" data-trancher="Hypothèse Galadrim : les listes du prototype, pour l'origine des fonds (Salaire, Commerce, Épargne) comme pour le motif du transfert (Assistance familiale, Frais médicaux, Frais scolaires, Œuvres et dons), complétées d'un choix « Autre » avec un champ libre, et paramétrables par la conformité (G1). (déduit) Le champ libre n'est dessiné que pour l'origine des fonds. — Origine et motif pèsent sur l'objectif de 1 min 30 : peuvent-ils être pré-remplis avec la dernière valeur du client connu ? — (atelier 5, 01/10) Tranché : il n'y a pas de seuil en montant. Le justificatif est demandé selon le profil du client, son niveau de risque ou une incohérence. Comment le guichetier sait-il qu'il doit le demander, et où le saisit-il ?" data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>Identifier l'expéditeur</h2>
           <div class="champs">
             <div class="champ focus">
-              <label for="b5-tel">Numéro de téléphone</label>
+              <label for="b5-tel">Téléphone de l'expéditeur · facultatif</label>
               <select id="b5-tel" data-expediteur>
                 <option data-cible="b5" selected>+224 62 44 18 07 · client connu</option>
                 <option data-cible="b6">+224 66 30 92 55 · client inconnu</option>
@@ -3719,13 +3767,13 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="b6" data-nom="Envoi — étape 2 · Nouveau client" data-node="11:267" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="2" data-contexte="Étape 2 sur 5 · client inconnu, enregistrement obligatoire" data-trancher="Origine des fonds (17/09) : liste complète à arrêter par SAFICO en s'inspirant des concurrents — seuls salaire, commerce et épargne ont été cités. — Motif du transfert (atelier 5, 01/10) : obligatoire, mais sa liste n'est pas connue. (déduit) Celle de l'écran reprend la liste proposée avant l'atelier 3 (Assistance familiale, Frais médicaux, Frais scolaires, Œuvres et dons) : à remplacer par celle de SAFICO. — Origine et motif pèsent sur l'objectif de 1 min 30 : peuvent-ils être pré-remplis avec la dernière valeur du client connu ? — (atelier 5, 01/10) Tranché : il n'y a pas de seuil en montant. Le justificatif est demandé selon le profil du client, son niveau de risque ou une incohérence. Comment le guichetier sait-il qu'il doit le demander, et où le saisit-il ?" data-fait="oui">
+    <section class="ecran" id="b6" data-nom="Envoi — étape 2 · Nouveau client" data-node="11:267" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="2" data-contexte="Étape 2 sur 5 · client inconnu, enregistrement obligatoire" data-trancher="(atelier 6, 12/10) Le téléphone de l'expéditeur devient facultatif (G2). (déduit) Il reste la clé qui retrouve un client connu à l'étape 2 : sans téléphone, comment le guichetier retrouve-t-il la fiche, par la pièce d'identité ? — Hypothèse Galadrim : les listes du prototype, pour l'origine des fonds (Salaire, Commerce, Épargne) comme pour le motif du transfert (Assistance familiale, Frais médicaux, Frais scolaires, Œuvres et dons), complétées d'un choix « Autre » avec un champ libre, et paramétrables par la conformité (G1). (déduit) Le champ libre n'est dessiné que pour l'origine des fonds. — Origine et motif pèsent sur l'objectif de 1 min 30 : peuvent-ils être pré-remplis avec la dernière valeur du client connu ? — (atelier 5, 01/10) Tranché : il n'y a pas de seuil en montant. Le justificatif est demandé selon le profil du client, son niveau de risque ou une incohérence. Comment le guichetier sait-il qu'il doit le demander, et où le saisit-il ?" data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>Identifier l'expéditeur</h2>
           <div class="champs">
             <div class="champ focus">
-              <label for="b6-tel">Numéro de téléphone</label>
+              <label for="b6-tel">Téléphone de l'expéditeur · facultatif</label>
               <select id="b6-tel" data-expediteur>
                 <option data-cible="b5">+224 62 44 18 07 · client connu</option>
                 <option data-cible="b6" selected>+224 66 30 92 55 · client inconnu</option>
@@ -3734,6 +3782,8 @@ body{font:400 14px/20px var(--police)}
               <span class="aide">La recherche par téléphone est le chemin normal pour un client régulier</span>
             </div>
           </div>
+          <!-- Atelier 6 (12/10) : le téléphone de l'expéditeur devient facultatif ; le code de
+               retrait part au bénéficiaire. -->
           <p class="mention">Pas d'historique pour ce numéro · création d'un nouveau client</p>
           <div class="champs">
             <div class="paire">
@@ -3866,7 +3916,7 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="b7" data-nom="Envoi — étape 3 · Bénéficiaire (client connu)" data-node="11:436" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="3" data-contexte="Étape 3 sur 5 · le champ le plus critique du produit" data-trancher="Le code part par SMS. Si le bénéficiaire n'a pas de numéro, c'est l'expéditeur qui le transmet — et le parcours change. Ligne ouverte au registre. — Wallet : le nom et le prénom du bénéficiaire sont gardés, alors que le retour du 10/09 ne cite que l'opérateur et le numéro ; sans eux, ni le reçu ni le filtrage conformité n'ont de bénéficiaire nommé. L'opérateur renvoie-t-il le nom du titulaire ? Listes des opérateurs et des banques raccordés, par pays, à fournir." data-fait="oui">
+    <section class="ecran" id="b7" data-nom="Envoi — étape 3 · Bénéficiaire (client connu)" data-node="11:436" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="3" data-contexte="Étape 3 sur 5 · le champ le plus critique du produit" data-trancher="(atelier 6, 12/10) Tranché (G2) : le téléphone du bénéficiaire est obligatoire, le code de retrait lui part par SMS ; celui de l'expéditeur devient facultatif. Le bandeau violet « Bénéficiaire sans téléphone » est retiré. — Wallet : le nom et le prénom du bénéficiaire sont gardés, alors que le retour du 10/09 ne cite que l'opérateur et le numéro ; sans eux, ni le reçu ni le filtrage conformité n'ont de bénéficiaire nommé. L'opérateur renvoie-t-il le nom du titulaire ? Listes des opérateurs et des banques raccordés, par pays, à fournir." data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
           <section class="carte" data-vue="liste">
@@ -3917,8 +3967,8 @@ body{font:400 14px/20px var(--police)}
             </div>
             <div class="champ focus" data-si-mode="especes">
               <label for="b7-tel">Téléphone du bénéficiaire</label>
-              <input id="b7-tel" value="+225 07 88 41 20" data-benef="tel">
-              <span class="aide">C'est sur ce numéro que part le code de retrait</span>
+              <input id="b7-tel" value="+225 07 88 41 20" data-benef="tel" required aria-required="true">
+              <span class="aide">Obligatoire · le code de retrait part par SMS sur ce numéro</span>
             </div>
             <div class="paire" data-si-mode="especes">
               <div class="champ">
@@ -3988,11 +4038,9 @@ body{font:400 14px/20px var(--police)}
             </div>
           </section>
 
-          <!-- Question propre au retrait en espèces : sans objet en wallet ou en banque. -->
-          <div class="bandeau trancher" data-si-mode="especes">
-            <strong>Bénéficiaire sans téléphone</strong>
-            <span>Le code part par SMS. Si le bénéficiaire n'a pas de numéro, c'est l'expéditeur qui le transmet — et le parcours change. Ligne ouverte au registre.</span>
-          </div>
+          <!-- Bandeau violet du Figma « Bénéficiaire sans téléphone » retiré sur décision de
+               l'atelier 6 (12/10, G2) : le téléphone du bénéficiaire est obligatoire, le code
+               de retrait lui part par SMS. Voir CLAUDE.md, « Retours du 12/10 ». -->
         </div>
       </div>
 
@@ -4002,7 +4050,7 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="b7n" data-nom="Envoi — étape 3 · Bénéficiaire (nouveau client)" data-node="11:436" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="3" data-contexte="Étape 3 sur 5 · premier envoi pour ce client" data-trancher="Le code part par SMS. Si le bénéficiaire n'a pas de numéro, c'est l'expéditeur qui le transmet — et le parcours change. Ligne ouverte au registre. — Wallet : le nom et le prénom du bénéficiaire sont gardés, alors que le retour du 10/09 ne cite que l'opérateur et le numéro ; sans eux, ni le reçu ni le filtrage conformité n'ont de bénéficiaire nommé. L'opérateur renvoie-t-il le nom du titulaire ? Listes des opérateurs et des banques raccordés, par pays, à fournir." data-fait="oui">
+    <section class="ecran" id="b7n" data-nom="Envoi — étape 3 · Bénéficiaire (nouveau client)" data-node="11:436" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="3" data-contexte="Étape 3 sur 5 · premier envoi pour ce client" data-trancher="(atelier 6, 12/10) Tranché (G2) : le téléphone du bénéficiaire est obligatoire, le code de retrait lui part par SMS ; celui de l'expéditeur devient facultatif. Le bandeau violet « Bénéficiaire sans téléphone » est retiré. — Wallet : le nom et le prénom du bénéficiaire sont gardés, alors que le retour du 10/09 ne cite que l'opérateur et le numéro ; sans eux, ni le reçu ni le filtrage conformité n'ont de bénéficiaire nommé. L'opérateur renvoie-t-il le nom du titulaire ? Listes des opérateurs et des banques raccordés, par pays, à fournir." data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <p class="mention">Aucun destinataire enregistré · premier envoi pour ce client</p>
@@ -4024,8 +4072,8 @@ body{font:400 14px/20px var(--police)}
             </div>
             <div class="champ focus" data-si-mode="especes">
               <label for="b7n-tel">Téléphone du bénéficiaire</label>
-              <input id="b7n-tel" value="+225 07 88 41 20" data-benef="tel">
-              <span class="aide">C'est sur ce numéro que part le code de retrait</span>
+              <input id="b7n-tel" value="+225 07 88 41 20" data-benef="tel" required aria-required="true">
+              <span class="aide">Obligatoire · le code de retrait part par SMS sur ce numéro</span>
             </div>
             <div class="paire" data-si-mode="especes">
               <div class="champ">
@@ -4094,11 +4142,9 @@ body{font:400 14px/20px var(--police)}
             </div>
           </section>
 
-          <!-- Question propre au retrait en espèces : sans objet en wallet ou en banque. -->
-          <div class="bandeau trancher" data-si-mode="especes">
-            <strong>Bénéficiaire sans téléphone</strong>
-            <span>Le code part par SMS. Si le bénéficiaire n'a pas de numéro, c'est l'expéditeur qui le transmet — et le parcours change. Ligne ouverte au registre.</span>
-          </div>
+          <!-- Bandeau violet du Figma « Bénéficiaire sans téléphone » retiré sur décision de
+               l'atelier 6 (12/10, G2) : le téléphone du bénéficiaire est obligatoire, le code
+               de retrait lui part par SMS. Voir CLAUDE.md, « Retours du 12/10 ». -->
         </div>
       </div>
 
@@ -4108,7 +4154,7 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="b8" data-nom="Envoi — étape 4 · Récapitulatif" data-node="11:595" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="4" data-contexte="Étape 4 sur 5 · dernier point de renoncement pour le client" data-trancher="Paiement direct (wallet, banque) : le versement part-il à la validation de l'encaissement ? Que se passe-t-il s'il échoue — nouvel essai, bascule en retrait espèces, remboursement de l'expéditeur ? Peut-on annuler un versement direct ? — (atelier 5, 01/10, Q26) Tranché : la mention « Taux bloqué » quitte aussi le reçu (B11) et l'écran de retrait (C3), le taux reste. — Un envoi qui dépasse les plafonds internes du client (calculés à partir de sa tranche de revenus) crée une alerte « profil » non bloquante. Le caissier en est-il informé, et doit-il demander un justificatif sur le moment ? — (déduit) Motif du transfert relu ici, comme l'origine des fonds ; « Assistance familiale » est la valeur de démonstration quand l'écran est ouvert par son ancre. — (retour client 29/09) Nom et prénom(s) sont dissociés, mais le titulaire d'un compte bancaire reste un champ unique, comme il est saisi en B7 : faut-il aussi le saisir et l'afficher en nom et prénom(s) ?" data-fait="oui">
+    <section class="ecran" id="b8" data-nom="Envoi — étape 4 · Récapitulatif" data-node="11:595" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="4" data-contexte="Étape 4 sur 5 · dernier point de renoncement pour le client" data-trancher="(atelier 6, 12/10) Tranché (G3) : le client repart sur « Versement transmis », sans promesse de crédit immédiat ; un versement refusé par le partenaire prend le statut « Échoué », que le chef d'agence ou les Opérations annulent, avec réauthentification. — Un versement direct qui n'a pas échoué s'annule-t-il à la demande de l'expéditeur (D23) ? — (atelier 5, 01/10, Q26) Tranché : la mention « Taux bloqué » quitte aussi le reçu (B11) et l'écran de retrait (C3), le taux reste. — Un envoi qui dépasse les plafonds internes du client (calculés à partir de sa tranche de revenus) crée une alerte « profil » non bloquante. Le caissier en est-il informé, et doit-il demander un justificatif sur le moment ? — (déduit) Motif du transfert relu ici, comme l'origine des fonds ; « Assistance familiale » est la valeur de démonstration quand l'écran est ouvert par son ancre. — (retour client 29/09) Nom et prénom(s) sont dissociés, mais le titulaire d'un compte bancaire reste un champ unique, comme il est saisi en B7 : faut-il aussi le saisir et l'afficher en nom et prénom(s) ?" data-fait="oui">
       <div class="ligne align-haut">
         <section class="carte">
           <h2>Expéditeur</h2>
@@ -4142,7 +4188,7 @@ body{font:400 14px/20px var(--police)}
         <section class="carte">
           <h2>Opération</h2>
           <div class="info"><span>Montant envoyé</span><span>5 000 000 GNF</span></div>
-          <div class="info"><span>Frais</span><span>45 000 GNF</span></div>
+          <div class="info"><span>Frais</span><span><span data-si-mode="especes">45 000 GNF</span><span data-si-mode="wallet">30 000 GNF</span><span data-si-mode="banque">60 000 GNF</span></span></div>
           <div class="info"><span>Taux</span><span>1 XOF = 18,32 GNF</span></div>
           <!-- Retour client du 29/09 : la ligne « Taux bloqué · Jusqu'au retrait » est retirée,
                elle semait la confusion. L'atelier 5 (Q26) la retire aussi du reçu B11 et de C3. -->
@@ -4153,7 +4199,7 @@ body{font:400 14px/20px var(--police)}
       <div class="ligne align-haut">
         <section class="carte" style="--part:700">
           <h2>Total à encaisser en espèces</h2>
-          <div class="valeurs"><b class="montant">5 045 000 GNF</b></div>
+          <div class="valeurs"><b class="montant"><span data-si-mode="especes">5 045 000 GNF</span><span data-si-mode="wallet">5 030 000 GNF</span><span data-si-mode="banque">5 060 000 GNF</span></b></div>
           <p class="pied">Rien n'est enregistré tant que les espèces ne sont pas encaissées. Le client peut encore renoncer sans conséquence.</p>
         </section>
         <section class="carte" style="--part:476" data-si-mode="especes">
@@ -4162,13 +4208,17 @@ body{font:400 14px/20px var(--police)}
           <div class="info"><span>Passé ce délai</span><span>Remboursement de l'expéditeur</span></div>
           <div class="info"><span>Annulation possible</span><span>Tant que le retrait n'a pas eu lieu</span></div>
         </section>
-        <!-- Variante supposée du paiement direct : ni retrait, ni code, ni délai de
-             30 jours. Ce qui arrive si le partenaire refuse le versement n'est pas écrit. -->
+        <!-- Paiement direct : ni retrait, ni code, ni délai de 30 jours. Atelier 6 (12/10, G3) :
+             le client repart sur « Versement transmis », sans promesse de crédit immédiat ; un
+             refus du partenaire fait passer l'opération en « Échoué », annulable par le chef
+             d'agence ou les Opérations. -->
         <section class="carte" style="--part:476" data-si-mode="wallet banque">
           <h2>Paiement direct</h2>
           <div class="info"><span>Versement</span><span>Par l'API du partenaire, à la validation</span></div>
           <div class="info"><span>Retrait au guichet</span><span>Aucun · pas de code de retrait</span></div>
-          <div class="info"><span>Si le versement échoue</span><span>À définir</span></div>
+          <div class="info"><span>Le client repart avec</span><span>« Versement transmis »</span></div>
+          <div class="info"><span>Si le partenaire refuse</span><span><span class="statut blocage">Échoué</span></span></div>
+          <p class="pied">Une opération échouée s'annule par le chef d'agence ou les Opérations, avec réauthentification.</p>
         </section>
       </div>
 
@@ -4184,7 +4234,7 @@ body{font:400 14px/20px var(--police)}
            doit encaisser l'argent. Attention, pas blocage : rien n'est encore refusé. -->
       <div class="bandeau attention">
         <strong>Rappel</strong>
-        <span>Encaissez les espèces du client avant de valider.</span>
+        <span>Encaissez maintenant les espèces auprès du client.</span>
       </div>
 
       <div class="ligne align-haut">
@@ -4259,7 +4309,7 @@ body{font:400 14px/20px var(--police)}
       </section>
     </section>
 
-    <section class="ecran" id="b11" data-nom="Envoi — reçu, impression ou envoi" data-node="12:602 + 12:761" data-rail="Envoyer" data-titre="Reçu de l'envoi" data-contexte="Prévisualisation · impression ou envoi au client" data-virtuel="7600000" data-trancher="Sans impression, il n'y a pas de signature manuscrite. La signature électronique proposée par SAFICO est hors du chiffrage actuel, et ce qui fait foi devant la BCRG reste à confirmer. — Paiement direct (wallet, banque) : reçu supposé sans code ni validité de 30 jours. Doit-il porter la preuve du versement (identifiant de transaction du partenaire), et peut-il être remis avant que le partenaire ait confirmé ? — En ticket, l'exemplaire agence s'obtient-il par une seconde impression automatique ou à la demande ?" data-fait="oui">
+    <section class="ecran" id="b11" data-nom="Envoi — reçu, impression ou envoi" data-node="12:602 + 12:761" data-rail="Envoyer" data-titre="Reçu de l'envoi" data-contexte="Prévisualisation · impression ou envoi au client" data-virtuel="7600000" data-trancher="Hypothèse Galadrim : le reçu imprimé, signé par le client, fait foi devant la BCRG ; la signature électronique sort du lot 1 (G7). — (atelier 6, 12/10) Tranché (G3) : le reçu d'un paiement direct, sans code ni validité de 30 jours, affiche « Versement transmis » et ne promet pas de crédit immédiat ; il est remis sans attendre la confirmation du partenaire. Doit-il porter l'identifiant de transaction du partenaire ? — En ticket, l'exemplaire agence s'obtient-il par une seconde impression automatique ou à la demande ?" data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
           <!-- Retour client du 29/09 : la transmission se choisit en premier, et l'envoi par
@@ -4267,7 +4317,7 @@ body{font:400 14px/20px var(--police)}
           <section class="carte">
             <h2>Transmission</h2>
             <div class="segmente" data-choix="canal">
-              <button class="actif" data-valeur="imprimer">Imprimer</button>
+              <button class="actif" data-valeur="imprimer">Reçu papier</button>
               <button data-valeur="whatsapp">Envoyer par WhatsApp</button>
               <button data-valeur="les-deux">Les deux</button>
             </div>
@@ -4344,18 +4394,20 @@ body{font:400 14px/20px var(--police)}
               <div class="l"><span>Réception</span><span data-si-mode="especes">Espèces dans le réseau</span><span data-si-mode="wallet">Wallet · Orange Money</span><span data-si-mode="banque">Compte bancaire</span></div>
               <div class="l" data-si-mode="wallet"><span>N° de wallet</span><span>+225 07 88 41 20</span></div>
               <div class="l" data-si-mode="banque"><span>Compte</span><span>CI93 CI00 8011 1301 1342 9120 0589</span></div>
+              <!-- Atelier 6 (12/10, G3) : le reçu ne promet pas de crédit immédiat. -->
+              <div class="l" data-si-mode="wallet banque"><span>Statut</span><span>Versement transmis</span></div>
             </div>
             <div class="bloc-recu">
               <div class="l"><span>Montant envoyé</span><span>5 000 000 GNF</span></div>
-              <div class="l"><span>Frais</span><span>45 000 GNF</span></div>
-              <div class="l"><span>Total encaissé</span><span>5 045 000 GNF</span></div>
+              <div class="l"><span>Frais</span><span><span data-si-mode="especes">45 000 GNF</span><span data-si-mode="wallet">30 000 GNF</span><span data-si-mode="banque">60 000 GNF</span></span></div>
+              <div class="l"><span>Total encaissé</span><span><span data-si-mode="especes">5 045 000 GNF</span><span data-si-mode="wallet">5 030 000 GNF</span><span data-si-mode="banque">5 060 000 GNF</span></span></div>
               <div class="l"><span>Taux</span><span>1 XOF = 18,32 GNF</span></div>
               <div class="l"><span>À recevoir</span><span>272 926 XOF</span></div>
             </div>
             <div class="bloc-recu mentions">
               <p data-si-mode="especes">Validité 30 jours. Retrait sur présentation du code et d'une pièce d'identité en cours de validité.</p>
-              <p data-si-mode="wallet">Versement direct sur le wallet du bénéficiaire : ni retrait au guichet, ni code de retrait.</p>
-              <p data-si-mode="banque">Virement direct sur le compte du bénéficiaire : ni retrait au guichet, ni code de retrait.</p>
+              <p data-si-mode="wallet">Versement transmis à l'opérateur, sur le wallet du bénéficiaire : le crédit dépend du partenaire. Ni retrait au guichet, ni code de retrait.</p>
+              <p data-si-mode="banque">Virement transmis à la banque, sur le compte du bénéficiaire : le crédit dépend du partenaire. Ni retrait au guichet, ni code de retrait.</p>
               <p>Mentions légales BCRG — à compléter</p>
             </div>
             <div class="bloc-recu signatures">
@@ -4368,12 +4420,15 @@ body{font:400 14px/20px var(--police)}
 
         <div class="bandeau trancher">
           <strong>Sur quoi le client signe-t-il ?</strong>
-          <span>Sans impression, il n'y a pas de signature manuscrite. La signature électronique proposée par SAFICO est hors du chiffrage actuel, et ce qui fait foi devant la BCRG reste à confirmer.</span>
+          <!-- Atelier 6 (12/10, registre G7) : la question du Figma reçoit l'hypothèse dessinée. -->
+          <span>Hypothèse Galadrim : le reçu imprimé, signé par le client, fait foi devant la BCRG ; la signature électronique sort du lot 1.</span>
         </div>
         </div>
       </div>
 
       <div class="actions a-droite">
+        <!-- Atelier 6 (12/10) : l'impression reste possible après un envoi par WhatsApp. -->
+        <button class="bouton secondaire" data-si-canal="whatsapp" hidden>Imprimer le reçu</button>
         <a class="bouton primaire" href="#b13" data-action-canal>Imprimer</a>
       </div>
     </section>
@@ -4391,7 +4446,7 @@ body{font:400 14px/20px var(--police)}
       </section>
     </section>
 
-    <section class="ecran" id="b13" data-nom="Envoi — confirmation finale" data-node="(hors Figma)" data-rail="Envoyer" data-titre="Envoi terminé" data-contexte="Référence SFC-8F42-1907 · reçu remis au client" data-virtuel="7600000" data-trancher="(déduit) L'alerte de solde bas apparaît ici, à l'envoi qui fait passer le solde virtuel sous le seuil : c'est le moment où le caissier peut faire sa demande avant le client suivant. — Paiement direct (wallet, banque) : confirmation supposée « versement transmis au partenaire ». Le guichetier attend-il la confirmation du partenaire avant de libérer le client ? Quel statut porte l'opération — les cinq statuts actuels supposent tous un retrait ?" data-fait="oui">
+    <section class="ecran" id="b13" data-nom="Envoi — confirmation finale" data-node="(hors Figma)" data-rail="Envoyer" data-titre="Envoi terminé" data-contexte="Référence SFC-8F42-1907 · reçu remis au client" data-virtuel="7600000" data-trancher="(déduit) L'alerte de solde bas apparaît ici, à l'envoi qui fait passer le solde virtuel sous le seuil : c'est le moment où le caissier peut faire sa demande avant le client suivant. — (atelier 6, 12/10) Tranché (G3) : paiement direct, le client repart sur « Versement transmis », sans attendre la confirmation du partenaire ; un refus fait passer l'opération en « Échoué », annulable par le chef d'agence ou les Opérations. — (atelier 6, 12/10) La fenêtre « Nouveau solde virtuel » se ferme par « Continuer » ; elle ne bloque pas la remise du reçu." data-fait="oui">
       <div class="bandeau valide">
         <strong>Opération enregistrée et caisse mise à jour</strong>
         <span data-si-mode="especes">Le transfert existe, la caisse est à jour et le reçu a été remis à l'expéditeur.</span>
@@ -4413,6 +4468,8 @@ body{font:400 14px/20px var(--police)}
           <div class="info"><span>Bénéficiaire</span><span>TOURÉ Mariam</span></div>
           <div class="info"><span>Destination</span><span>Côte d'Ivoire</span></div>
           <div class="info"><span>Réception</span><span data-si-mode="especes">Retrait en espèces dans le réseau</span><span data-si-mode="wallet">Wallet · Orange Money · +225 07 88 41 20</span><span data-si-mode="banque">Compte bancaire · CI93 CI00 8011 1301 1342 9120 0589</span></div>
+          <!-- Atelier 6 (12/10, G3) : aucune promesse de crédit immédiat. -->
+          <div class="info" data-si-mode="wallet banque"><span>Statut</span><span>Versement transmis</span></div>
           <div class="separateur"></div>
           <div class="info"><span>Montant envoyé</span><span>5 000 000 GNF</span></div>
           <div class="info"><span>Total encaissé</span><b class="montant-petit">5 045 000 GNF</b></div>
@@ -4438,8 +4495,20 @@ body{font:400 14px/20px var(--police)}
         </section>
       </div>
 
+      <!-- Atelier 6 (12/10) : après chaque transaction, une fenêtre rappelle le nouveau solde
+           virtuel, avec un seul bouton. Ancrée en coin, elle laisse remettre le reçu. -->
+      <div class="fenetre-solde" role="status" aria-live="polite" data-si-fenetre="ouverte">
+        <strong>Nouveau solde virtuel</strong>
+        <b class="montant-petit">7 600 000 GNF</b>
+        <span class="secondaire">Caisse 3 · après le débit de l'envoi (5 045 000 GNF). Sous le seuil de 10 000 000 GNF.</span>
+        <div class="actions"><button class="bouton primaire" data-montrer="fenetre fermee">Continuer</button></div>
+      </div>
+
       <div class="actions a-droite">
         <a class="bouton discret" href="#b2">Nouvelle opération</a>
+        <!-- Atelier 6 (12/10) : l'impression reste ouverte, même après un envoi du reçu par
+             WhatsApp, SMS ou mail. -->
+        <button class="bouton secondaire">Imprimer le reçu</button>
         <a class="bouton primaire" href="#b1">Retour au guichet</a>
       </div>
     </section>
@@ -4449,10 +4518,10 @@ body{font:400 14px/20px var(--police)}
          après vérification auprès de la Banque centrale ; seuils et liste sont paramétrables par
          les profils Opérations ou Conformité. Hors parcours : aucune destination du prototype
          n'est sur la liste. L'écran s'ouvre par son ancre, comme B3 ou C5. -->
-    <section class="ecran" id="b14" data-nom="Envoi en attente de vérification conformité" data-node="(hors Figma)" data-rail="Envoyer" data-titre="Envoi en attente" data-contexte="SFC-8F42-1907 · vérification conformité" data-trancher="À quelle étape le blocage se déclenche-t-il — dès la simulation (B2), ou après l'encaissement ? — L'argent est-il encaissé avant la vérification ? — Que dit-on au client, et que se passe-t-il si la conformité refuse ? — Délai de réponse de la conformité pendant les heures d'ouverture (toujours sans réponse). — (déduit) La liste des pays à risque n'est pas transmise : la Côte d'Ivoire de l'opération de démonstration n'y figure pas. L'écran montre la forme du blocage, pas un cas réel. — (déduit) L'opération porte déjà une référence alors que le sort de l'encaissement n'est pas tranché." data-fait="oui">
+    <section class="ecran" id="b14" data-nom="Envoi en attente de vérification conformité" data-node="(hors Figma)" data-rail="Envoyer" data-titre="Envoi en attente" data-contexte="SFC-8F42-1907 · vérification conformité" data-trancher="Hypothèse Galadrim : contrôle après la saisie, avant l'encaissement : rien n'est encaissé. Le statut « En vérification » est neutre, et le service client recontacte le client (G6). — Que se passe-t-il si la conformité refuse ? — Délai de réponse de la conformité pendant les heures d'ouverture (toujours sans réponse). — (déduit) La liste des pays à risque n'est pas transmise : la Côte d'Ivoire de l'opération de démonstration n'y figure pas. L'écran montre la forme du blocage, pas un cas réel. — (déduit) L'opération porte déjà une référence alors que rien n'est encaissé." data-fait="oui">
       <div class="bandeau attention">
         <strong>Envoi en attente de vérification</strong>
-        <span>La destination figure sur la liste des pays à risque. La conformité doit vérifier l'opération avant qu'elle parte.</span>
+        <span>La destination figure sur la liste des pays à risque. La conformité doit vérifier l'opération avant qu'elle parte. Rien n'est encaissé.</span>
       </div>
 
       <div class="ligne align-haut">
@@ -4474,7 +4543,10 @@ body{font:400 14px/20px var(--police)}
 
         <section class="carte" style="--part:476">
           <h2>Au comptoir</h2>
-          <p>Expliquez au client que son envoi est en cours de vérification. Il est prévenu par SMS dès la décision.</p>
+          <!-- Hypothèse Galadrim (registre G6, atelier 6) : rien n'est encaissé, statut neutre,
+               le service client recontacte le client. -->
+          <div class="info"><span>Statut</span><span><span class="statut">En vérification</span></span></div>
+          <p>Expliquez au client que son envoi est en cours de vérification et que rien n'est encaissé. Le service client le recontactera.</p>
         </section>
       </div>
 
@@ -4488,10 +4560,10 @@ body{font:400 14px/20px var(--police)}
          invite le caissier à faire sa demande. Modèle de C6 (liquidité insuffisante), pour le
          solde virtuel au lieu des espèces. Hors fil de démonstration : il s'ouvre depuis B9
          par un lien de revue, ou par son ancre. Détail : spec/B15.md. -->
-    <section class="ecran" id="b15" data-nom="Envoi — solde virtuel insuffisant" data-node="(hors Figma)" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="5" data-contexte="Étape 5 sur 5 · le solde virtuel ne couvre pas l'envoi" data-virtuel="4200000" data-trancher="(déduit) Même envoi qu'en B9 (5 045 000 GNF), sur un solde virtuel de démonstration de 4 200 000 GNF : l'écran montre la forme du blocage, pas un cas du fil. — L'envoi est-il gardé en attente pendant la demande, ou faut-il tout ressaisir après l'approvisionnement ? — Le caissier voit-il le solde virtuel des autres caisses, comme C6 lui montre leurs espèces ? — Le contrôle peut-il venir plus tôt, dès la simulation (B2), pour ne pas faire saisir un envoi que la caisse ne pourra pas servir ? — (déduit) « Ce que l'agent peut proposer » reprend la carte de C6, adaptée au solde virtuel." data-fait="oui">
+    <section class="ecran" id="b15" data-nom="Envoi — solde virtuel insuffisant" data-node="(hors Figma)" data-rail="Envoyer" data-titre="Nouvel envoi" data-etape="5" data-contexte="Étape 5 sur 5 · le solde virtuel ne couvre pas l'envoi" data-virtuel="4200000" data-trancher="(déduit) Même envoi qu'en B9 (5 045 000 GNF), sur un solde virtuel de démonstration de 4 200 000 GNF : l'écran montre la forme du blocage, pas un cas du fil. — (atelier 6, 12/10) Tranché (G5) : l'envoi n'est pas mis en attente. Tant que le solde virtuel ne le couvre pas, il ne peut pas être saisi ; après l'approvisionnement, il est saisi à nouveau. — Le caissier voit-il le solde virtuel des autres caisses, comme C6 lui montre leurs espèces ? — Le contrôle peut-il venir plus tôt, dès la simulation (B2), pour ne pas faire saisir un envoi que la caisse ne pourra pas servir ? — (déduit) « Ce que l'agent peut proposer » reprend la carte de C6, adaptée au solde virtuel." data-fait="oui">
       <div class="bandeau blocage">
         <strong>Solde virtuel insuffisant</strong>
-        <span>Le solde virtuel de la caisse 3 est de 4 200 000 GNF. L'envoi en demande 5 045 000, principal et frais. Rien n'est encaissé.</span>
+        <span>Le solde virtuel de la caisse 3 est de 4 200 000 GNF. L'envoi en demande 5 045 000, principal et frais : il ne peut pas être saisi. Rien n'est encaissé, rien n'est mis en attente.</span>
       </div>
 
       <div class="ligne align-haut">
@@ -4510,7 +4582,7 @@ body{font:400 14px/20px var(--police)}
             <ul class="liste">
               <li>Demander un approvisionnement du solde virtuel au chef d'agence.</li>
               <li>Orienter le client vers une autre caisse de l'agence.</li>
-              <li>Convenir d'un retour dans la journée.</li>
+              <li>Inviter le client à revenir après l'approvisionnement : l'envoi sera saisi à nouveau.</li>
             </ul>
           </section>
 
@@ -4524,7 +4596,8 @@ body{font:400 14px/20px var(--police)}
       </div>
 
       <div class="actions a-droite">
-        <a class="bouton discret" href="#b8">Revenir au récapitulatif</a>
+        <!-- Atelier 6 (12/10, G5) : l'envoi n'est pas gardé en attente ; on l'abandonne. -->
+        <a class="bouton discret" href="#b1">Abandonner l'envoi</a>
         <a class="bouton primaire" href="#a12" data-nature="virtuel">Demander un approvisionnement</a>
       </div>
     </section>
@@ -4533,7 +4606,7 @@ body{font:400 14px/20px var(--police)}
          accepte le code de retrait, la référence ou le téléphone, et son bouton de
          recherche à côté. C2 « code invalide » est l'état d'erreur de ce champ : les
          blocs data-si-etat="erreur" viennent du node 13:115. -->
-    <section class="ecran" id="c1" data-virtuel="7600000" data-nom="Retrait — recherche de l'opération" data-node="13:2 + 13:115" data-rail="Payer" data-titre="Payer un retrait" data-contexte="Deux facteurs cumulatifs : le code et la pièce d'identité" data-titre-remboursement="Rembourser l'expéditeur" data-contexte-remboursement="L'expéditeur devient le bénéficiaire · seul le montant envoyé lui est versé" data-trancher="Retrait du 22/09 (retour client) : les cartes « Ce que le caissier vérifie » et « Code perdu ou non reçu » sortent de l'écran, l'étape 1 se réduit à la saisie du code. Où le caissier apprend-il qu'un code perdu se retrouve au back-office ? — Nombre de tentatives avant blocage, durée du verrouillage, et qui le lève. — Une opération retrouvée par référence se paie-t-elle sans le code ? Si oui, le code cesse d'être un facteur et la pièce reste seule. — (atelier 5, 01/10) Tranché : la recherche par téléphone est interdite au guichet (Q29), réservée à la conformité, à l'audit et aux Opérations, au siège. — (atelier 5, 01/10) Le choix « Remboursement » est placé ici, avant la recherche : c'est là que le caissier sait ce que le client vient faire. — L'expéditeur n'a pas le code de retrait, parti par SMS au bénéficiaire : le prototype retrouve l'opération par la référence de son reçu. Le code lui est-il aussi communiqué ? — Quel critère fait choisir l'annulation plutôt que le remboursement ? — Comment le guichet sait-il que le remboursement a été décidé par le chef d'agence ou les Opérations ? — (retour client 01/10) Le code se saisit sans séparateur et sa longueur peut évoluer : aucune longueur n'est supposée. Quelle sera-t-elle, et le code ne compte-t-il que des chiffres ?" data-fait="oui">
+    <section class="ecran" id="c1" data-virtuel="7600000" data-nom="Retrait — recherche de l'opération" data-node="13:2 + 13:115" data-rail="Payer" data-titre="Payer un retrait" data-contexte="Deux facteurs cumulatifs : le code et la pièce d'identité" data-titre-remboursement="Rembourser l'expéditeur" data-contexte-remboursement="L'expéditeur devient le bénéficiaire · seul le montant envoyé lui est versé" data-trancher="Retrait du 22/09 (retour client) : les cartes « Ce que le caissier vérifie » et « Code perdu ou non reçu » sortent de l'écran, l'étape 1 se réduit à la saisie du code. Où le caissier apprend-il qu'un code perdu se retrouve au back-office ? — Hypothèse Galadrim : nombre de tentatives paramétrable ; au-delà, l'opération est verrouillée, et seuls les Opérations la déverrouillent (G9). — Hypothèse Galadrim : une opération retrouvée par sa référence ne se paie pas sans le code : il est toujours exigé, et un code perdu se retrouve au back-office (G10). (atelier 6, 12/10) Non dessinée : la démonstration ouvre encore C3 par la référence SFC-7C10-4482. — (atelier 5, 01/10) Tranché : la recherche par téléphone est interdite au guichet (Q29), réservée à la conformité, à l'audit et aux Opérations, au siège. — (atelier 5, 01/10) Le choix « Remboursement » est placé ici, avant la recherche : c'est là que le caissier sait ce que le client vient faire. — L'expéditeur n'a pas le code de retrait, parti par SMS au bénéficiaire : le prototype retrouve l'opération par la référence de son reçu. Le code lui est-il aussi communiqué ? — Hypothèse Galadrim : annulation tant que l'envoi n'est pas payé et que l'expéditeur est à l'agence d'origine ; remboursement dans les autres cas, expiration ou expéditeur ailleurs (G14). — Comment le guichet sait-il que le remboursement a été décidé par le chef d'agence ou les Opérations ? — (retour client 01/10 ; atelier 6, 12/10) Le code se saisit sans séparateur, sans masque ni longueur fixe, et peut compter des lettres : les espaces et tirets collés sont retirés à la saisie. Quelle sera sa longueur ?" data-fait="oui">
       <div class="bandeau blocage" data-si-etat="erreur">
         <strong data-erreur-titre>Code inconnu ou déjà utilisé</strong>
         <span data-erreur-texte>Aucune opération en attente de retrait ne correspond à ce code dans le réseau SAFICO.</span>
@@ -4580,7 +4653,8 @@ body{font:400 14px/20px var(--police)}
         <div class="colonne" style="--part:476" data-si-etat="erreur">
           <div class="bandeau trancher">
             <strong>Combien de tentatives avant blocage ?</strong>
-            <span>Le nombre d'essais, la durée du verrouillage et la personne qui le lève ne sont pas définis. Cas limite du parcours 9, resté ouvert.</span>
+            <!-- Atelier 6 (12/10, registre G9) : la question du Figma reçoit l'hypothèse dessinée. -->
+            <span>Hypothèse Galadrim : nombre de tentatives paramétrable ; au-delà, l'opération est verrouillée, et seuls les Opérations la déverrouillent.</span>
           </div>
 
           <section class="carte">
@@ -4602,7 +4676,7 @@ body{font:400 14px/20px var(--police)}
     <!-- C2 n'est plus un écran : c'est C1 dans son état d'erreur (retour client 10/09).
          L'ancre #c2 reste valide pour les liens déjà envoyés ; elle garde le node
          13:115 et la question « à trancher » au registre. -->
-    <section class="ecran" id="c2" data-virtuel="7600000" data-alias="c1" data-etat="erreur" data-nom="Retrait — opération introuvable (état d'erreur de C1)" data-node="13:115" data-rail="Payer" data-titre="Payer un retrait" data-contexte="La saisie ne correspond à aucune opération payable" data-trancher="Nombre de tentatives avant blocage, durée du verrouillage, et qui le lève." data-fait="oui"></section>
+    <section class="ecran" id="c2" data-virtuel="7600000" data-alias="c1" data-etat="erreur" data-nom="Retrait — opération introuvable (état d'erreur de C1)" data-node="13:115" data-rail="Payer" data-titre="Payer un retrait" data-contexte="La saisie ne correspond à aucune opération payable" data-trancher="Hypothèse Galadrim : nombre de tentatives paramétrable ; au-delà, l'opération est verrouillée, et seuls les Opérations la déverrouillent (G9)." data-fait="oui"></section>
 
     <section class="ecran" id="c3" data-nom="Retrait — opération trouvée" data-node="14:201" data-rail="Payer" data-titre="Payer un retrait" data-contexte="SFC-7C10-4482 · transfert reçu d'Abidjan, en attente de retrait" data-titre-remboursement="Rembourser l'expéditeur" data-contexte-remboursement="SFC-8F42-1907 · envoi du 03/09, en attente de retrait" data-virtuel="7600000" data-trancher="(atelier 5, 01/10, Q26) « Taux bloqué à l'envoi » devient « Taux appliqué à l'envoi » : la mention « bloqué » quitte les reçus et les écrans du retrait, la règle du taux fixé à l'envoi ne change pas. — Remboursement (atelier 5) : (déduit) l'opération de démonstration est SFC-8F42-1907, seule dont le prototype connaît le principal et les frais séparément ; la liquidité reprend celle du paiement. — Qui a décidé le remboursement, et où le caissier le voit-il ? La ligne « Décidé par » s'affiche « À charger »." data-fait="oui">
       <!-- Retour client du 01/10 : le bénéficiaire est mis en avant au même niveau que le
@@ -4750,10 +4824,11 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="c5" data-virtuel="7600000" data-nom="Retrait — écart de nom" data-node="14:468" data-rail="Payer" data-titre="Payer un retrait" data-contexte="Le cas le plus fréquent au guichet · règle non tranchée" data-trancher="Règle graduée sur l'écart de nom du bénéficiaire — reportée à l'atelier 2." data-fait="oui">
+    <section class="ecran" id="c5" data-virtuel="7600000" data-nom="Retrait — écart de nom" data-node="14:468" data-rail="Payer" data-titre="Payer un retrait" data-contexte="Le cas le plus fréquent au guichet · règle non tranchée" data-trancher="Hypothèse Galadrim : tout écart entre le nom enregistré et la pièce est soumis au chef d'agence (G12). (atelier 6, 12/10) La règle graduée du Figma reste à l'écran comme alternative ; l'action principale devient l'escalade." data-fait="oui">
       <div class="bandeau trancher">
         <strong>Écran construit sur une hypothèse</strong>
-        <span>La tolérance sur l'écart de nom et la procédure d'escalade n'ont pas été tranchées à l'atelier 1 : le sujet est reporté à l'atelier 2. Cet écran montre une proposition, pas une décision.</span>
+        <!-- Atelier 6 (12/10, registre G12) : le bandeau du Figma reçoit l'hypothèse dessinée. -->
+        <span>Hypothèse Galadrim : tout écart est soumis au chef d'agence. La règle graduée ci-dessous, proposée par le Figma, reste une alternative à arbitrer.</span>
       </div>
 
       <div class="ligne align-haut">
@@ -4809,8 +4884,9 @@ body{font:400 14px/20px var(--police)}
 
       <div class="actions a-droite">
         <a class="bouton discret" href="#c12">Refuser le retrait</a>
-        <button class="bouton secondaire">Escalader au chef d'agence</button>
-        <a class="bouton primaire" href="#c7">Accepter et décaisser</a>
+        <!-- Hypothèse G12 (atelier 6) : l'escalade devient l'action principale. -->
+        <a class="bouton secondaire" href="#c7">Accepter et décaisser</a>
+        <button class="bouton primaire">Escalader au chef d'agence</button>
       </div>
     </section>
 
@@ -4856,7 +4932,7 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="c7" data-nom="Retrait — décaissement" data-node="15:292" data-rail="Payer" data-titre="Payer un retrait" data-contexte="Identité confirmée · remise des espèces" data-titre-remboursement="Rembourser l'expéditeur" data-contexte-remboursement="Identité confirmée · remboursement en espèces" data-heure="15:04" data-virtuel="7600000" data-trancher="Un retrait en agence SAFICO crédite-t-il le solde virtuel, comme chez un distributeur (crédit du montant payé et de la commission) ? Le prototype ne fait varier que les espèces. — Même question pour un remboursement. — (atelier 5, 01/10) Remboursement : la réauthentification est exigée ; c'est le caissier qui la fait, au moment de rembourser (déduit)." data-fait="oui">
+    <section class="ecran" id="c7" data-nom="Retrait — décaissement" data-node="15:292" data-rail="Payer" data-titre="Payer un retrait" data-contexte="Identité confirmée · remise des espèces" data-titre-remboursement="Rembourser l'expéditeur" data-contexte-remboursement="Identité confirmée · remboursement en espèces" data-heure="15:04" data-virtuel="7600000" data-trancher="Un retrait en agence SAFICO crédite-t-il le solde virtuel, comme chez un distributeur (crédit du montant payé et de la commission) ? Le prototype ne fait varier que les espèces. — Même question pour un remboursement. — (atelier 6, 12/10) Hypothèse Galadrim : oui, du montant payé, sans commission (G13). Non dessinée : ce crédit romprait la chaîne des soldes virtuels de l'après-midi (D10, D11, D19 à 7 600 000 GNF). — (atelier 6, 12/10) Conflit à trancher (C5) : cet écran montre au caissier son solde espèces avant / après ; l'hypothèse C5 le réserve au chef d'agence. Voir A6. — (atelier 5, 01/10) Remboursement : la réauthentification est exigée ; c'est le caissier qui la fait, au moment de rembourser (déduit)." data-fait="oui">
       <!-- Retour client du 01/10 : le montant remis n'est plus saisi (valeur figée, égale au
            montant dû). La case « Les espèces ont été comptées devant le bénéficiaire », retirée
            le 01/10, revient à l'atelier 5 (Q30), facultative : « une plus-value qui peut servir
@@ -4911,7 +4987,7 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="c8" data-nom="Retrait — opération close" data-node="15:407" data-rail="Payer" data-titre="Retrait effectué" data-contexte="SFC-7C10-4482 · statut Payée" data-titre-remboursement="Remboursement effectué" data-contexte-remboursement="SFC-8F42-1907 · statut Remboursée" data-heure="15:04" data-virtuel="7600000" data-trancher="(déduit) Remboursement : le SMS « remboursement effectué » à l'expéditeur et l'information du bénéficiaire initial ne sont pas décidés. Le bénéficiaire, qui attendait des fonds, est-il prévenu que le transfert est remboursé ?" data-fait="oui">
+    <section class="ecran" id="c8" data-nom="Retrait — opération close" data-node="15:407" data-rail="Payer" data-titre="Retrait effectué" data-contexte="SFC-7C10-4482 · statut Payée" data-titre-remboursement="Remboursement effectué" data-contexte-remboursement="SFC-8F42-1907 · statut Remboursée" data-heure="15:04" data-virtuel="7600000" data-trancher="Hypothèse Galadrim : un SMS prévient le bénéficiaire initial que le transfert est remboursé ; le reçu de remboursement indique la cause (G17)." data-fait="oui">
       <div class="bandeau valide">
         <strong><span data-si-retrait="paiement">Retrait effectué et caisse mise à jour</span><span data-si-retrait="remboursement">Remboursement effectué et caisse mise à jour</span></strong>
         <span>L'opération est close. Elle ne peut plus être annulée.</span>
@@ -4933,6 +5009,8 @@ body{font:400 14px/20px var(--police)}
           <section class="carte">
             <h2>Notifications envoyées</h2>
             <div class="info"><span>Expéditeur</span><span><span data-si-retrait="paiement">SMS · retrait effectué</span><span data-si-retrait="remboursement">SMS · remboursement effectué</span></span></div>
+            <!-- Hypothèse Galadrim (registre G17, atelier 6) : le bénéficiaire initial est prévenu. -->
+            <div class="info" data-si-retrait="remboursement"><span>Bénéficiaire initial</span><span>SMS · transfert remboursé</span></div>
             <div class="info"><span>Canal choisi à l'envoi</span><span>SMS</span></div>
             <p class="pied">L'expéditeur est prévenu à l'envoi, au retrait et en cas d'annulation.</p>
           </section>
@@ -4953,7 +5031,7 @@ body{font:400 14px/20px var(--police)}
       </div>
     </section>
 
-    <section class="ecran" id="c9" data-nom="Retrait — reçu de retrait" data-node="15:523" data-rail="Payer" data-titre="Reçu de retrait" data-contexte="Prévisualisation · 2 exemplaires signés" data-titre-remboursement="Reçu de remboursement" data-contexte-remboursement="Prévisualisation · 2 exemplaires signés" data-heure="15:05" data-virtuel="7600000" data-trancher="(déduit) Reçu de remboursement : mêmes blocs que le reçu de retrait, l'expéditeur à la place du bénéficiaire, les frais non remboursés rappelés. La fiche des mentions obligatoires d'Issiaga le couvre-t-elle ? — Le reçu de remboursement doit-il dire la cause (expiration à 30 jours, demande de l'expéditeur) ? Question reprise de D22, retiré." data-fait="oui">
+    <section class="ecran" id="c9" data-nom="Retrait — reçu de retrait" data-node="15:523" data-rail="Payer" data-titre="Reçu de retrait" data-contexte="Prévisualisation · 2 exemplaires signés" data-titre-remboursement="Reçu de remboursement" data-contexte-remboursement="Prévisualisation · 2 exemplaires signés" data-heure="15:05" data-virtuel="7600000" data-trancher="(déduit) Reçu de remboursement : mêmes blocs que le reçu de retrait, l'expéditeur à la place du bénéficiaire, les frais non remboursés rappelés. La fiche des mentions obligatoires d'Issiaga le couvre-t-elle ? — Hypothèse Galadrim : le reçu de remboursement indique la cause (expiration à 30 jours, demande de l'expéditeur) ; un SMS prévient le bénéficiaire initial (G17). (déduit) La cause de l'opération de démonstration n'est pas connue : « À charger »." data-fait="oui">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:700">
           <!-- Retour client du 29/09, comme en B11 : la transmission se choisit en premier,
@@ -4961,7 +5039,7 @@ body{font:400 14px/20px var(--police)}
           <section class="carte">
             <h2>Transmission</h2>
             <div class="segmente" data-choix="canal">
-              <button class="actif" data-valeur="imprimer">Imprimer</button>
+              <button class="actif" data-valeur="imprimer">Reçu papier</button>
               <button data-valeur="whatsapp">Envoyer par WhatsApp</button>
               <button data-valeur="les-deux">Les deux</button>
             </div>
@@ -5041,6 +5119,8 @@ body{font:400 14px/20px var(--police)}
               <div class="l"><span>Pièce</span><span>CNI · GN-4471029</span></div>
               <div class="l"><span>Bénéficiaire initial</span><span>TOURÉ Mariam</span></div>
               <div class="l"><span>Envoi du</span><span>03/09/2026 · Agence Kaloum</span></div>
+              <!-- Hypothèse Galadrim (registre G17, atelier 6) : le reçu dit la cause. -->
+              <div class="l"><span>Cause</span><span>À charger</span></div>
             </div>
             <div class="bloc-recu">
               <div class="l"><span><span data-si-retrait="paiement">Montant remis</span><span data-si-retrait="remboursement">Montant remboursé</span></span><span>5 000 000 GNF</span></div>
@@ -5067,11 +5147,13 @@ body{font:400 14px/20px var(--police)}
       </div>
 
       <div class="actions a-droite">
+        <!-- Atelier 6 (12/10) : l'impression reste possible après un envoi par WhatsApp. -->
+        <button class="bouton secondaire" data-si-canal="whatsapp" hidden>Imprimer le reçu</button>
         <a class="bouton primaire" href="#c13" data-action-canal>Imprimer</a>
       </div>
     </section>
 
-    <section class="ecran" id="c13" data-nom="Retrait — confirmation finale" data-node="(hors Figma)" data-rail="Payer" data-titre="Retrait terminé" data-contexte="SFC-7C10-4482 · reçu remis au bénéficiaire" data-titre-remboursement="Remboursement terminé" data-contexte-remboursement="SFC-8F42-1907 · reçu remis à l'expéditeur" data-heure="15:05" data-virtuel="7600000" data-trancher="Un retrait en agence SAFICO crédite-t-il le solde virtuel, comme chez un distributeur (crédit du montant payé et de la commission) ? Le prototype ne fait varier que les espèces (voir C7)." data-fait="oui">
+    <section class="ecran" id="c13" data-nom="Retrait — confirmation finale" data-node="(hors Figma)" data-rail="Payer" data-titre="Retrait terminé" data-contexte="SFC-7C10-4482 · reçu remis au bénéficiaire" data-titre-remboursement="Remboursement terminé" data-contexte-remboursement="SFC-8F42-1907 · reçu remis à l'expéditeur" data-heure="15:05" data-virtuel="7600000" data-trancher="Un retrait en agence SAFICO crédite-t-il le solde virtuel, comme chez un distributeur (crédit du montant payé et de la commission) ? Le prototype ne fait varier que les espèces (voir C7). — (atelier 6, 12/10) Hypothèse Galadrim : oui, du montant payé, sans commission (G13) ; non dessinée, voir C7. — (atelier 6, 12/10) La fenêtre « Nouveau solde virtuel » se ferme par « Continuer » ; elle ne bloque pas la remise du reçu." data-fait="oui">
       <div class="bandeau valide">
         <strong><span data-si-retrait="paiement">Retrait effectué et reçu remis</span><span data-si-retrait="remboursement">Remboursement effectué et reçu remis</span></strong>
         <span>L'opération est close. Elle ne peut plus être annulée.</span>
@@ -5106,27 +5188,38 @@ body{font:400 14px/20px var(--police)}
         </section>
       </div>
 
+      <!-- Atelier 6 (12/10) : même fenêtre qu'en fin d'envoi (B13). -->
+      <div class="fenetre-solde" role="status" aria-live="polite" data-si-fenetre="ouverte">
+        <strong>Nouveau solde virtuel</strong>
+        <b class="montant-petit">7 600 000 GNF</b>
+        <span class="secondaire">Caisse 3 · inchangé par <span data-si-retrait="paiement">le retrait</span><span data-si-retrait="remboursement">le remboursement</span> (à confirmer, voir C7).</span>
+        <div class="actions"><button class="bouton primaire" data-montrer="fenetre fermee">Continuer</button></div>
+      </div>
+
       <div class="actions a-droite">
         <a class="bouton discret" href="#c1">Nouvelle opération</a>
         <a class="bouton primaire" href="#b1">Retour au guichet</a>
       </div>
     </section>
 
-    <!-- Les clés de recherche de C1 s'appliquent ici aussi (retour client 10/09) : le champ
-         unique accepte le code de retrait et la référence. Le téléphone en est retiré
-         (retour client 01/10, sécurité). Le nom du client reste un champ à part. -->
-    <section class="ecran" id="c10" data-nom="Recherche d'une transaction" data-node="15:672" data-rail="Transactions" data-profil="partage" data-titre="Transactions" data-contexte="L'écran le plus sollicité après la saisie" data-trancher="Chercher par code de retrait montre à quelle opération appartient un code — ce que C2 exclut : « Le caissier ne voit jamais si le code existe ailleurs, ni à quelle opération il appartient. » Faut-il réserver la recherche par code au paiement (C1) ? — (atelier 5, 01/10, Q32) Tranché : le caissier exporte en PDF seulement, le chef d'agence choisit Excel ou PDF. Que porte le fichier : la liste filtrée, toutes les colonnes ? — (atelier 5, 01/10) SFC-8F36-5208, bloquée par la conformité, est inventée pour la démonstration : le caissier la voit « En vérification », le chef « Bloquée par la conformité »." data-fait="oui">
+    <!-- Les clés de recherche de C1 s'appliquaient ici aussi (retour client 10/09). Le téléphone
+         en est retiré (retour client 01/10, sécurité), puis le code de retrait (hypothèse G11,
+         atelier 6, 12/10) : le champ ne prend plus que la référence. Le nom du client reste un
+         champ à part. -->
+    <section class="ecran" id="c10" data-nom="Recherche d'une transaction" data-node="15:672" data-rail="Transactions" data-profil="partage" data-titre="Transactions" data-contexte="L'écran le plus sollicité après la saisie" data-trancher="Hypothèse Galadrim : la recherche par code de retrait est réservée au paiement (C1) : chercher un code ici montrerait à quelle opération il appartient, ce que C2 exclut. Le champ ne prend plus que la référence (G11). — (atelier 5, 01/10, Q32) Tranché : le caissier exporte en PDF seulement, le chef d'agence choisit Excel ou PDF. Que porte le fichier : la liste filtrée, toutes les colonnes ? — (atelier 5, 01/10) SFC-8F36-5208, bloquée par la conformité, est inventée pour la démonstration : le caissier la voit « En vérification », le chef « Bloquée par la conformité ». — (atelier 6, 12/10) Statut « Échoué » ajouté au filtre et à la liste ; SFC-8F38-2716 (wallet, caisse 1) est inventée pour la démonstration." data-fait="oui">
       <section class="carte">
         <h2>Rechercher</h2>
         <form class="champs" data-recherche="transactions" novalidate>
           <div class="paire">
             <div class="champ" style="--part:2">
-              <label for="c10-cle">Code de retrait ou référence</label>
+              <!-- Hypothèse Galadrim (registre G11, atelier 6) : la recherche par code de retrait est
+                   réservée au paiement (C1). -->
+              <label for="c10-cle">Référence</label>
               <div class="saisie-action">
-                <input id="c10-cle" placeholder="Code ou SFC-…" autocomplete="off" data-cle-recherche>
+                <input id="c10-cle" placeholder="SFC-…" autocomplete="off">
                 <button class="bouton primaire" type="submit">Rechercher</button>
               </div>
-              <span class="aide" data-cle-aide>Code de retrait (chiffres à la suite) ou référence SFC-…</span>
+              <span class="aide">Référence SFC-… · le code de retrait ne se cherche qu'au paiement</span>
             </div>
             <div class="champ">
               <label for="c10-nom">Nom du client</label>
@@ -5147,6 +5240,7 @@ body{font:400 14px/20px var(--police)}
                 <option>Annulée</option>
                 <option>Expirée</option>
                 <option>Remboursée</option>
+                <option>Échoué</option>
               </select>
             </div>
             <div class="champ">
@@ -5189,6 +5283,8 @@ body{font:400 14px/20px var(--police)}
               <tr class="ouvrable" tabindex="0" data-cible="c11" data-operation="SFC-8F39-7741"><td>SFC-8F39-7741</td><td>Envoi</td><td>BARRY Aïssatou</td><td>SYLLA Ousmane</td><td>12 000 000 GNF</td><td><span class="statut attente">En attente de retrait</span></td><td>03/09 13:48</td></tr>
               <!-- Atelier 5 (01/10) : le statut d'un blocage conformité dépend du profil. -->
               <tr class="ouvrable" tabindex="0" data-cible="c11" data-operation="SFC-8F36-5208"><td>SFC-8F36-5208</td><td>Envoi</td><td>KOUROUMA Sidiki</td><td>DIALLO Oumar</td><td>4 040 000 GNF</td><td><span class="statut" data-si-profil="caissier">En vérification</span><span class="statut blocage" data-si-profil="chef">Bloquée par la conformité</span></td><td>03/09 12:47</td></tr>
+              <!-- Atelier 6 (12/10, lot 1) : versement wallet refusé par le partenaire. Inventée. -->
+              <tr class="ouvrable" tabindex="0" data-cible="c11" data-operation="SFC-8F38-2716"><td>SFC-8F38-2716</td><td>Envoi</td><td>BANGOURA Mamadou</td><td>KONATÉ Awa</td><td>1 530 000 GNF</td><td><span class="statut blocage">Échoué</span></td><td>03/09 11:20</td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="c11" data-operation="SFC-8E77-3320"><td>SFC-8E77-3320</td><td>Envoi</td><td>KANTÉ Mory</td><td>KANTÉ Sira</td><td>850 000 GNF</td><td><span class="statut">Remboursée</span></td><td>28/08 09:12</td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="c11" data-operation="SFC-8E51-1044"><td>SFC-8E51-1044</td><td>Envoi</td><td>CONDÉ Sékou</td><td>DIALLO Thierno</td><td>460 000 GNF</td><td><span class="statut attention">Expirée</span></td><td>12/08 11:57</td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="c11" data-operation="SFC-8E33-9087"><td>SFC-8E33-9087</td><td>Envoi</td><td>SOW Ibrahima</td><td>BAH Kadiatou</td><td>2 300 000 GNF</td><td><span class="statut">Annulée</span></td><td>05/08 16:40</td></tr>
@@ -5197,10 +5293,10 @@ body{font:400 14px/20px var(--police)}
         </div>
       </section>
 
-      <p class="secondaire">Cinq statuts coexistent : en attente de retrait, payée, annulée, expirée, remboursée. Leur diagramme de transitions n'est pas encore écrit — ligne bloquante au registre. S'y ajoute le blocage conformité, « En vérification » pour le caissier, « Bloquée par la conformité » pour le chef d'agence (atelier 5).</p>
+      <p class="secondaire">Six statuts coexistent : en attente de retrait, payée, annulée, expirée, remboursée et, pour un versement wallet ou banque refusé par le partenaire, échoué (atelier 6). Leur diagramme de transitions n'est pas encore écrit — ligne bloquante au registre. S'y ajoute le blocage conformité, « En vérification » pour le caissier, « Bloquée par la conformité » pour le chef d'agence (atelier 5).</p>
     </section>
 
-    <section class="ecran" id="c11" data-nom="Détail d'une transaction" data-node="16:484" data-rail="Transactions" data-profil="partage" data-titre="SFC-8F42-1907" data-contexte="Envoi · en attente de retrait · expire dans 30 jours" data-trancher="Délai maximal de validation d'une demande soumise au maker-checker, et conduite à tenir si le valideur ne répond pas (atelier 3, 17/09 : la liste des opérations est arrêtée). — (18/09) Le détail suit l'opération cliquée (table OPERATIONS du JS). Hors SFC-8F42-1907 (Figma) et SFC-7C10-4482 (C3 à C9), les journaux ne portent que ce que les listes disent ; destinations, expéditeurs des retraits et montants absents des listes sont omis ou inventés, voir spec/C07-C12.md. — (déduit) Corriger et Annuler mènent à D1 et D3, qui restent ceux de SFC-8F42-1907 quelle que soit l'opération." data-fait="oui">
+    <section class="ecran" id="c11" data-nom="Détail d'une transaction" data-node="16:484" data-rail="Transactions" data-profil="partage" data-titre="SFC-8F42-1907" data-contexte="Envoi · en attente de retrait · expire dans 30 jours" data-trancher="Délai maximal de validation d'une demande soumise au maker-checker, et conduite à tenir si le valideur ne répond pas (atelier 3, 17/09 : la liste des opérations est arrêtée). — (18/09) Le détail suit l'opération cliquée (table OPERATIONS du JS). Hors SFC-8F42-1907 (Figma) et SFC-7C10-4482 (C3 à C9), les journaux ne portent que ce que les listes disent ; destinations, expéditeurs des retraits et montants absents des listes sont omis ou inventés, voir spec/C07-C12.md. — (déduit) Corriger et Annuler mènent à D1 et D3, qui restent ceux de SFC-8F42-1907 quelle que soit l'opération. — (atelier 6, 12/10) Statut « Échoué » : versement wallet ou banque refusé par le partenaire ; le chef voit « Annuler l'opération » (D3, code personnel), le caissier une mention qui le renvoie au chef. SFC-8F38-2716 est inventée pour la démonstration." data-fait="oui">
       <!-- Détail dynamique (retour client 18/09) : ficheOperation() remplit le journal, la
            carte « L'opération », les actions et la barre d'état depuis la table OPERATIONS,
            selon la ligne cliquée (data-operation). Ouvert par son ancre : SFC-8F42-1907, le
@@ -5237,6 +5333,8 @@ body{font:400 14px/20px var(--police)}
           <section class="carte">
             <h2>Correction et annulation</h2>
             <p class="mention" data-si-profil="caissier" data-op-si="modifiable">Correction ou annulation : le client s'adresse au chef d'agence, qui les fait lui-même.</p>
+            <p class="mention" data-si-profil="caissier" data-op-si="echouee">Versement refusé par le partenaire : l'annulation revient au chef d'agence ou aux Opérations. Le client s'adresse au chef d'agence.</p>
+            <p class="mention" data-si-profil="chef" data-op-si="echouee">Versement refusé par le partenaire (statut « Échoué »). Vous pouvez annuler l'opération, avec votre code personnel ; les Opérations le peuvent aussi.</p>
             <p class="mention" data-si-profil="caissier" data-op-si="expiree">Remboursement d'office : le chef d'agence ou les Opérations le décident ; l'expéditeur est remboursé à n'importe quel guichet, par « Payer un retrait » · Remboursement.</p>
             <!-- Atelier 5 (01/10) : le chef sait que l'opération est bloquée, pas pourquoi. -->
             <p class="mention" data-si-profil="chef" data-op-si="bloquee">Bloquée par la conformité. Le motif de l'alerte n'est pas communiqué : prenez vos dispositions avec le client.</p>
@@ -5265,6 +5363,8 @@ body{font:400 14px/20px var(--police)}
         <a class="bouton secondaire" href="#d1" data-si-profil="chef" data-op-si="modifiable">Corriger le bénéficiaire</a>
         <a class="bouton secondaire" href="#d3" data-si-profil="chef" data-op-si="modifiable">Annuler l'opération</a>
         <a class="bouton secondaire" href="#d7" data-si-profil="chef" data-op-si="payee">Annuler l'opération</a>
+        <!-- Atelier 6 (12/10, lot 1) : une opération échouée s'annule par le chef d'agence. -->
+        <a class="bouton secondaire" href="#d3" data-si-profil="chef" data-op-si="echouee">Annuler l'opération</a>
         <a class="bouton secondaire" href="#d20" data-si-profil="chef" data-op-si="expiree">Déclencher le remboursement</a>
       </div>
     </section>
@@ -5308,9 +5408,12 @@ body{font:400 14px/20px var(--police)}
 
         <section class="carte" style="--part:476">
           <h2>Diagramme de statuts</h2>
-          <p class="secondaire">Cinq statuts, aucune transition écrite à ce jour.</p>
+          <p class="secondaire">Six statuts, aucune transition écrite à ce jour.</p>
           <div class="info"><span>En attente de retrait</span><span>→ Payée, Annulée, Expirée</span></div>
           <div class="info"><span>Expirée</span><span>→ Remboursée</span></div>
+          <!-- Atelier 6 (12/10, lot 1) : le versement direct refusé par le partenaire. -->
+          <div class="info"><span>Versement transmis (wallet, banque)</span><span>→ Échoué, si le partenaire refuse</span></div>
+          <div class="info"><span>Échoué</span><span>→ Annulée</span></div>
           <div class="info"><span>Payée</span><span>État final</span></div>
           <p class="pied">Ligne bloquante au registre : sans ce diagramme, les actions disponibles sur chaque écran de transaction restent des suppositions.</p>
         </section>
@@ -5327,7 +5430,7 @@ body{font:400 14px/20px var(--police)}
          les rapports financiers sont au back-office, pour le comptable. Aucun chiffre
          n'est inventé : les lignes viennent de B1 et de C10, les totaux du jour de la
          carte « Ma caisse » de B1 ; ceux de la semaine n'existent nulle part. -->
-    <section class="ecran" id="c14" data-nom="Mes opérations du jour" data-node="(hors Figma)" data-rail="Transactions" data-titre="Mes opérations du jour" data-contexte="Jeudi 03/09/2026 · caisse 3 · seulement mes opérations" data-trancher="(atelier 5, 01/10) Un blocage conformité garde le statut neutre « En vérification » : SFC-8F36-5208 est inventée pour la démonstration. — (retour client 29/09) La balance est la différence entre encaissé et décaissé, hors fonds d'ouverture (20 000 000 GNF) : elle ne dit pas ce qu'il y a dans le tiroir. Est-ce bien le chiffre attendu, ou le solde théorique d'A6 (ouverture comprise) ? — Que porte la liste imprimée : en-tête (agence, caisse, caissier, date), totaux, signature ? Sur quelle imprimante et dans quel format ?" data-fait="oui">
+    <section class="ecran" id="c14" data-nom="Mes opérations du jour" data-node="(hors Figma)" data-rail="Transactions" data-titre="Mes opérations du jour" data-contexte="Jeudi 03/09/2026 · caisse 3 · seulement mes opérations" data-trancher="(atelier 5, 01/10) Un blocage conformité garde le statut neutre « En vérification » : SFC-8F36-5208 est inventée pour la démonstration. — (retour client 29/09) La balance est la différence entre encaissé et décaissé, hors fonds d'ouverture (20 000 000 GNF) : elle ne dit pas ce qu'il y a dans le tiroir. Est-ce bien le chiffre attendu, ou le solde théorique d'A6 (ouverture comprise) ? — (atelier 6, 12/10) « Imprimer la liste » devient « Exporter en PDF », qui sert aussi à l'impression. Que porte le PDF : en-tête (agence, caisse, caissier, date), totaux, signature ?" data-fait="oui">
       <!-- Retour client du 18/09 : une vision simple, sur la journée seulement. Le filtre
            jour / semaine du 10/09 est retiré, avec sa question sur la semaine. -->
       <div class="ligne">
@@ -5350,10 +5453,12 @@ body{font:400 14px/20px var(--police)}
           <h2>Mes opérations</h2>
           <div class="actions">
             <a class="bouton secondaire" href="#c10"><svg class="ico"><use href="#i-recherche"/></svg>Rechercher une opération</a>
-            <!-- Retour client du 29/09 : la liste s'imprime. Sans enchaînement. -->
-            <button class="bouton secondaire">Imprimer la liste</button>
+            <!-- Retour client du 29/09 : la liste s'imprime. Page « Retours proto Agence »
+                 (atelier 6, 12/10) : « Exporter en PDF », qui sert aussi à l'impression. -->
+            <button class="bouton secondaire" data-envoyer>Exporter en PDF</button>
           </div>
         </div>
+        <p class="mention" data-si-envoi="oui" hidden>Export lancé : le PDF reprend la liste du jour et sert aussi à l'impression. (Prototype : aucun fichier n'est produit.)</p>
         <div class="defilant">
           <table class="tableau">
             <thead>
@@ -5470,7 +5575,7 @@ const AUTORISATION = {
 };
 let envoisHorsLigne = 'attente';
 let motifAlerte = 'plafond';
-let issueSanctions = 'rembourser';
+let issueSanctions = 'geler';
 // « Connexion instable » choisie au menu : vaut pour l'écran courant seulement.
 let connexionRevue = null;
 let ecranCourant = null;
@@ -5787,6 +5892,16 @@ const OPERATIONS = {
     infos: [['Expéditeur', 'KOUROUMA Sidiki'], ['Bénéficiaire', 'DIALLO Oumar'], ['Destination', 'Sénégal'], ['Total encaissé', '4 040 000 GNF']],
     journal: [creee('03/09 12:47'), ['03/09 12:47', 'Encaissement 4 040 000 GNF', 'Caisse 3'],
       ['03/09 12:47', 'Code de retrait non envoyé', "Opération en vérification"], ['03/09 12:48', 'Reçu imprimé', '2 exemplaires · signés']] },
+  // Atelier 6 (12/10, lot 1) : un versement wallet ou banque refusé par le partenaire prend le
+  // statut « Échoué » (teinte Blocage). Le chef d'agence ou les Opérations l'annulent, avec
+  // réauthentification. Opération inventée pour la démonstration (C10, C11, D12, D25), faite à
+  // la caisse 1 : elle n'a pas sa place dans les opérations du caissier de la caisse 3 (C14, A6).
+  'SFC-8F38-2716': { sens: 'envoi', statut: ['Échoué', 'blocage'], contexte: 'Envoi · wallet · échoué, versement refusé par le partenaire',
+    infos: [['Expéditeur', 'BANGOURA Mamadou'], ['Bénéficiaire', 'KONATÉ Awa'], ['Destination', 'Sénégal'],
+      ['Réception', 'Wallet · Orange Money'], ['Total encaissé', '1 530 000 GNF'], ['Motif du partenaire', 'Compte wallet inexistant']],
+    journal: [creee('03/09 11:20', 'A. Diallo · Agence Kaloum · caisse 1'), ['03/09 11:20', 'Encaissement 1 530 000 GNF', 'Caisse 1'],
+      ['03/09 11:20', 'Versement transmis', 'Orange Money · Sénégal'], ['03/09 11:21', 'Reçu imprimé', '2 exemplaires · signés'],
+      ['03/09 11:24', 'Versement refusé par le partenaire', 'Compte wallet inexistant · statut Échoué']] },
   'SFC-8F33-1170': { sens: 'envoi', statut: ATTENTE, contexte: 'Envoi · Agence Matam · en attente de retrait',
     infos: [['Expéditeur', 'SOUMAH Alpha'], ['Bénéficiaire', 'CISSÉ Lansana'], ['Agence', 'Matam'], ['Total encaissé', '2 500 000 GNF']],
     journal: [creee('03/09 11:02', 'Agence Matam'), ['03/09 11:02', 'Encaissement 2 500 000 GNF', 'Agence Matam']],
@@ -5855,7 +5970,11 @@ function ficheOperation() {
   // avec les cas qui restent ouverts. Le chef seul y va, comme pour corriger et annuler.
   const payee = op.statut === PAYEE && !op.ailleurs;
   const bloquee = !!op.statutChef;
-  const conditions = { sms: enAttente, modifiable: enAttente, expiree, payee, bloquee, close: !enAttente };
+  // Échoué (atelier 6, 12/10) : versement refusé par le partenaire. Le chef d'agence (ou les
+  // Opérations) l'annule, avec réauthentification (D3) ; le caissier est renvoyé au chef.
+  const echouee = op.statut[0] === 'Échoué' && !op.ailleurs;
+  const conditions = { sms: enAttente, modifiable: enAttente, expiree, payee, bloquee, echouee,
+    close: !enAttente && !echouee };
   for (const el of contenu.querySelectorAll('[data-op-si]')) {
     if (!conditions[el.dataset.opSi]) el.hidden = true;
     else if (el.dataset.opSi === 'close') el.hidden = false;
@@ -5892,6 +6011,11 @@ const RECUS = {
     mode: 'wallet', reception: 'Wallet', compte: ['N° de wallet', '+225 07 45 12 90'],
     date: '03/09/2026 15:12', guichetier: 'M. Camara', expediteur: 'KOUYATÉ Ibrahima', beneficiaire: 'DIABY Salimata',
     destination: "Côte d'Ivoire", montant: '2 000 000 GNF' },
+  // Atelier 6 (12/10) : opération échouée inventée pour la démonstration (voir OPERATIONS).
+  'SFC-8F38-2716': { statut: ['Échoué', 'blocage'], motif: 'Compte wallet inexistant · statut Échoué',
+    mode: 'wallet', reception: 'Wallet · Orange Money', compte: ['N° de wallet', '+221 77 503 18 42'],
+    date: '03/09/2026 11:20', guichetier: 'A. Diallo', expediteur: 'BANGOURA Mamadou', beneficiaire: 'KONATÉ Awa',
+    destination: 'Sénégal', total: '1 530 000 GNF' },
   'SFC-8F40-7702': { statut: ['Annulée', ''], motif: 'RIB invalide · traité par le back-office',
     mode: 'banque', reception: 'Compte bancaire', compte: ['Compte', A_CHARGER_RECU],
     date: '03/09/2026 10:31', guichetier: 'A. Diallo', expediteur: 'SAMPIL Moussa', beneficiaire: 'KONÉ Adama',
@@ -5899,8 +6023,9 @@ const RECUS = {
 };
 const MENTIONS_RECU = {
   especes: "Validité 30 jours. Retrait sur présentation du code et d'une pièce d'identité en cours de validité.",
-  wallet: 'Versement direct sur le wallet du bénéficiaire : ni retrait au guichet, ni code de retrait.',
-  banque: 'Virement direct sur le compte du bénéficiaire : ni retrait au guichet, ni code de retrait.',
+  // Atelier 6 (12/10, G3) : « Versement transmis », sans promesse de crédit immédiat.
+  wallet: "Versement transmis à l'opérateur, sur le wallet du bénéficiaire : le crédit dépend du partenaire. Ni retrait au guichet, ni code de retrait.",
+  banque: 'Virement transmis à la banque, sur le compte du bénéficiaire : le crédit dépend du partenaire. Ni retrait au guichet, ni code de retrait.',
 };
 let recuCourant = 'SFC-8F42-1907';
 let recuOrigine = 'd9';
@@ -6115,6 +6240,10 @@ function afficher() {
   montrer('retrait', modeRetrait);
   montrer('nature', natureAppro);
   montrer('finance', 'ferme');
+  // Fin de transaction (B13, C13, atelier 6) : la fenêtre du solde virtuel se rouvre ;
+  // activation d'une caisse (D11) : le panneau repart fermé.
+  montrer('fenetre', 'ouverte');
+  montrer('activation', 'ferme');
   ficheClient();
   ficheOperation();
   ficheRecu();
@@ -6791,13 +6920,14 @@ contenu.addEventListener('input', (e) => {
   Retour client du 01/10 : le téléphone n'est plus une clé (sécurité), et le code n'a
   plus de longueur fixe — il peut évoluer. Toute saisie faite de chiffres (espaces et
   séparateurs ignorés) est un code ; un « + » en tête n'est pas reconnu.
+  Atelier 6 (12/10, page « Retours proto Agence ») : le code est alphanumérique, sans masque
+  ni longueur fixe ; les espaces et tirets collés sont retirés du champ à la saisie.
 */
 function cleDe(saisie) {
-  const brut = saisie.trim().toUpperCase();
-  const chiffres = brut.replace(/\D/g, '');
+  // Atelier 6 (12/10) : le code peut compter des lettres ; espaces et tirets ne comptent pas.
+  const brut = saisie.trim().toUpperCase().replace(/[\s-]/g, '');
   if (brut.startsWith('SFC')) return 'reference';
-  if (/[A-Z]/.test(brut) || brut.startsWith('+')) return null;
-  if (chiffres.length) return 'code';
+  if (/^[A-Z0-9]+$/.test(brut)) return 'code';
   return null;
 }
 
@@ -6817,7 +6947,7 @@ const CLES = {
   },
 };
 const CLE_INCONNUE = {
-  aide: 'Code de retrait (chiffres à la suite) ou référence SFC-…',
+  aide: 'Code de retrait (lettres et chiffres, sans espace) ou référence SFC-…',
   erreur: 'Saisir un code de retrait ou une référence SFC-…',
   titre: 'Saisie non reconnue',
   texte: "Ce n'est ni un code de retrait, ni une référence d'opération. La recherche par téléphone n'est pas autorisée.",
@@ -6841,9 +6971,8 @@ function trouver(saisie) {
   const cle = cleDe(saisie);
   // Tirets et espaces ne comptent pas : « sfc 7c10 4482 » vaut SFC-7C10-4482.
   const alnum = (texte) => texte.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  const chiffres = saisie.replace(/\D/g, '');
   const operation = OPERATIONS_A_PAYER.filter((o) => o.retrait === modeRetrait).find((o) =>
-    (cle === 'code' && o.code === chiffres)
+    (cle === 'code' && o.code && alnum(o.code) === alnum(saisie))
     || (cle === 'reference' && o.reference && alnum(o.reference) === alnum(saisie)));
   return operation ? operation.cible : 'c2';
 }
@@ -6879,6 +7008,14 @@ function etatRecherche(etat) {
 
 contenu.addEventListener('input', (e) => {
   if (!e.target.matches('[data-cle-recherche]')) return;
+  // Atelier 6 (12/10) : un code collé avec espaces ou tirets est nettoyé sur place. Une
+  // référence (SFC-…) garde ses tirets, la recherche les ignore de toute façon.
+  const saisie = e.target;
+  if (!/^\s*SFC/i.test(saisie.value) && /[\s-]/.test(saisie.value)) {
+    const avant = saisie.value.slice(0, saisie.selectionStart).replace(/[\s-]/g, '').length;
+    saisie.value = saisie.value.replace(/[\s-]/g, '');
+    saisie.setSelectionRange(avant, avant);
+  }
   e.target.closest('.champ').classList.replace('erreur', 'focus');
   aideRecherche(e.target, false);
 });
