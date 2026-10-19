@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SAFICO — Prototypes</title>
 <!--
-  Porte d'entrée du déploiement Vercel : renvoie vers les deux prototypes.
+  Porte d'entrée du déploiement Vercel : renvoie vers les trois prototypes.
   index.html reste le prototype agence (voir CLAUDE.md) ; vercel.json redirige « / » ici.
+  proto-b2c.html est une copie de ../proto-b2c/proto-b2c_1.html, la source : la recopier à chaque mise à jour.
   Jetons et marque recopiés d'index.html.
 -->
 <style>
@@ -28,14 +29,14 @@
 html,body{height:100%}
 body{margin:0;background:var(--fond-page);color:var(--texte-principal);font:400 14px/20px var(--police);
      display:flex;align-items:center;justify-content:center;padding:24px 16px}
-main{width:100%;max-width:760px}
+main{width:100%;max-width:880px}
 .marque{display:flex;align-items:center;gap:12px;margin-bottom:28px}
 .marque svg{width:40px;height:40px;flex:none}
 .marque b{display:block;font:700 18px/24px var(--police)}
 .marque span{color:var(--texte-secondaire);font-size:13px}
 h1{font:700 26px/32px var(--police);margin:0 0 6px}
 .chapo{color:var(--texte-secondaire);margin:0 0 24px}
-.choix{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.choix{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .tuile{display:flex;flex-direction:column;gap:10px;padding:22px;border-radius:var(--rayon);
        background:var(--fond-surface);border:1px solid var(--trait-leger);box-shadow:var(--ombre);
        color:inherit;text-decoration:none;transition:box-shadow .15s,border-color .15s,transform .15s}
@@ -48,6 +49,7 @@ h1{font:700 26px/32px var(--police);margin:0 0 6px}
 .tuile p{margin:0;color:var(--texte-secondaire)}
 .tuile .ouvrir{margin-top:auto;padding-top:8px;color:var(--accent);font-weight:600}
 .pied{margin-top:24px;color:var(--texte-secondaire);font-size:12px;line-height:18px}
+@media (max-width:820px){.choix{grid-template-columns:1fr 1fr}}
 @media (max-width:640px){.choix{grid-template-columns:1fr}h1{font-size:22px;line-height:28px}}
 </style>
 </head>
@@ -55,7 +57,7 @@ h1{font:700 26px/32px var(--police);margin:0 0 6px}
 <main>
   <div class="marque">
     <svg viewBox="0 0 100 100" aria-hidden="true"><line x1="35" y1="43" x2="66" y2="22" stroke="var(--marque-vif)" stroke-width="21" stroke-linecap="round"/><line x1="65" y1="57" x2="34" y2="78" stroke="var(--marque-turquoise)" stroke-width="21" stroke-linecap="round"/><circle cx="18" cy="23" r="9.5" fill="var(--marque)"/><circle cx="82" cy="77" r="9.5" fill="var(--marque-tete)"/></svg>
-    <div><b>Safico</b><span>Safico × Galadrim</span></div>
+    <div><b>Safico</b><span>SAU × Galadrim</span></div>
   </div>
 
   <h1>Prototypes</h1>
@@ -72,6 +74,12 @@ h1{font:700 26px/32px var(--police);margin:0 0 6px}
       <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/><path d="M3 21h18"/></svg></span>
       <h2>Back-office</h2>
       <p>Les parcours du siège.</p>
+      <span class="ouvrir">Ouvrir →</span>
+    </a>
+    <a class="tuile" href="proto-b2c.html">
+      <span class="ico"><svg viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/></svg></span>
+      <h2>Application mobile</h2>
+      <p>L'espace client grand public : créer son compte, envoyer de l'argent, suivre ses envois.</p>
       <span class="ouvrir">Ouvrir →</span>
     </a>
   </div>
