@@ -504,7 +504,7 @@ h2{font:700 16px/22px var(--police)}
       <div class="rubrique" style="margin:0 4px">Comment ça marche</div>
       <div class="piste">
         <div class="diapo"><span class="num">1</span><div><b>Créez votre compte</b><span>Votre numéro de téléphone et une pièce d'identité suffisent.</span></div></div>
-        <div class="diapo"><span class="num">2</span><div><b>Envoyez</b><span>Payez par carte ou mobile money. Vous voyez le montant reçu avant de payer.</span></div></div>
+        <div class="diapo"><span class="num">2</span><div><b>Envoyez</b><span>Payez par Orange Money. Vous voyez le montant reçu avant de payer.</span></div></div>
         <div class="diapo"><span class="num">3</span><div><b>Votre proche retire</b><span>Avec le code reçu par SMS et sa pièce d'identité, en agence ou chez un distributeur.</span></div></div>
       </div>
       <div class="points"><i class="actif"></i><i></i><i></i></div>
@@ -739,7 +739,7 @@ h2{font:700 16px/22px var(--police)}
 
 <section class="ecran" id="a1" data-code="A1" data-groupe="Accueil" data-titre="Accueil connecté"
   data-contexte="Le taux du jour en tête, comme au guichet (« c'est l'info que demande le client en arrivant », 22/09). Le plafond restant du jour s'affiche en temps réel, avec l'entrée vers la demande de plafond plus élevé (point client 15/10) ; valeurs de démonstration de X1. Le profil se met à jour tous les 6 mois, sur notification : bandeau visible par le cas « Profil de plus de 6 mois » (point client 15/10). Une demande de justificatif s'affiche ici quand la conformité en fait une (Q15). Le message réseau reprend la publication des Opérations (BO29), étendue aux clients : proposition."
-  data-q="Q15|Q24" data-cas="profil plafond">
+  data-q="Q15|Q24" data-cas="profil plafond client">
   <header class="barre marque">
     <span class="logo"><svg><use href="#i-symbole-inv"/></svg>Safico</span><span style="flex:1"></span>
     <a class="icone-btn" href="#h1" aria-label="Aide"><svg width="22" height="22"><use href="#i-aide"/></svg></a>
@@ -754,10 +754,11 @@ h2{font:700 16px/22px var(--police)}
       <a class="bouton primaire" href="#e1"><svg width="20" height="20"><use href="#i-envoyer"/></svg>Envoyer de l'argent</a>
     </div>
     <div class="carte">
-      <div class="ligne"><span class="label">Vous pouvez encore envoyer aujourd'hui</span><span class="trancher" title="Q24 · Plafond de 10 millions : en GNF ? par jour, par mois ou par envoi ? Remplace-t-il les 5 000 USD/jour du lot 1 ?">Q24</span></div>
+      <div class="ligne"><span class="label">Vous pouvez encore envoyer <span data-x-periode></span></span><span class="trancher" title="Q24 · Plafond de 10 M GNF de la première opération : vaut-il pour le premier envoi seulement, ou pour une période ? Quand les 5 000 USD par jour prennent-ils le relais ?">Q24</span></div>
       <div class="montant-petit" data-x-reste></div>
       <div class="jauge"><i data-x-jauge></i></div>
-      <div class="micro">Déjà envoyé aujourd'hui : <span data-x-deja></span>. Plafond renouvelé à 00:00.</div>
+      <div class="micro" data-si-client="actif">Déjà envoyé aujourd'hui : <span data-x-deja></span>. Plafond renouvelé à 00:00.</div>
+      <div class="micro" data-si-client="premier" hidden>Votre première opération est limitée à 10 000 000 GNF, en plusieurs envois de <span data-x-max></span> au plus.</div>
       <a class="lien" style="align-self:flex-start" href="#x2" data-si-plafond="aucune">Demander un plafond plus élevé</a>
       <span class="statut attente" style="align-self:flex-start" data-si-plafond="examen" hidden>Demande en cours d'examen</span>
     </div>
@@ -778,13 +779,13 @@ h2{font:700 16px/22px var(--police)}
 <!-- ═════════════ C. ENVOYER ═════════════ -->
 
 <section class="ecran" id="e1" data-code="E1" data-groupe="Envoyer" data-titre="Envoi · 1 Montant et réception"
-  data-contexte="Le parcours commence par la simulation, comme au guichet. Saisie possible dans les deux devises, devise choisie dans une feuille du bas, montant au pavé numérique (Q11 tranchée le 07/10). Mêmes frais et même taux pour les trois modes (hypothèse G4) ; wallet et banque sur les seuls corridors raccordés. Les passerelles de sortie (mobile money, comptes bancaires) dépendent de partenariats non encore signés, négociés après l'audit du lot 1 (point client 15/10) : les deux modes restent dessinés. Le simulateur n'est accessible qu'une fois connecté (point client 15/10). Sous le simulateur, le plafond restant du jour, mis à jour à chaque montant (point client 15/10) ; un envoi qui le dépasse mène à X1."
-  data-q="Q16|Q21|Q22|Q24|Q25">
+  data-contexte="Le parcours commence par la simulation, comme au guichet. L'application mobile sert la Guinée : on envoie en francs guinéens, la devise de réception se choisit dans une feuille du bas, le montant au pavé numérique (compte rendu de l'atelier 7, 15/10). Au lancement, le retrait se fait en espèces : mobile money et compte bancaire restent visibles, grisés, « prévus après le lancement », le temps que les partenariats soient signés. Le simulateur n'est accessible qu'une fois connecté. Sous le simulateur, le plafond restant, mis à jour à chaque montant, et le montant maximal par envoi : 4 000 000 GNF, valeur d'exemple (3 à 4 M cités), paramétrable au back-office. Au-delà, « Continuer » se désactive ; au-delà du plafond restant, il mène à X1."
+  data-q="Q16|Q25" data-cas="client">
   <header class="barre"><a class="retour" href="#a1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Envoyer de l'argent</h1><span class="etapes">1 / 4</span></header>
   <div class="progression"><i style="width:25%"></i></div>
   <div class="contenu">
     <div data-simu></div>
-    <div class="micro">Vous pouvez encore envoyer <b data-x-reste></b> aujourd'hui. <span data-x-apres></span> <span class="trancher" title="Q24 · Plafond de 10 millions : en GNF ? par jour, par mois ou par envoi ? Remplace-t-il les 5 000 USD/jour du lot 1 ?">Q24</span> <span class="trancher" title="Q25 · Existe-t-il un montant maximal par envoi (3 à 4 M cités) ? Comment l'articuler avec la règle anti-fractionnement (≥ 3 opérations en 24 h, atelier 3) ?">Q25</span></div>
+    <div class="micro">Vous pouvez encore envoyer <b data-x-reste></b> <span data-x-periode></span>. <span data-x-apres></span><br>Jusqu'à <b data-x-max></b> par envoi. <span data-x-max-alerte></span> <span class="trancher" title="Q25 · Montant maximal par envoi : quelle valeur (3 à 4 M GNF cités en exemple) ? Comment l'articuler avec la règle anti-fractionnement (≥ 3 opérations en 24 h, atelier 3) ?">Q25</span></div>
     <div class="label" style="margin-top:4px">Comment votre proche reçoit l'argent</div>
     <div class="choix" data-modes>
       <label><input type="radio" name="mode" value="especes" checked><svg width="22" height="22" style="color:var(--action)"><use href="#i-agence"/></svg><div class="milieu"><b>Espèces dans le réseau</b><span class="micro">En agence Safico ou chez un distributeur, avec un code.</span></div></label>
@@ -810,29 +811,16 @@ h2{font:700 16px/22px var(--police)}
 </section>
 
 <section class="ecran" id="b3" data-code="B3" data-groupe="Envoyer" data-titre="Nouveau bénéficiaire"
-  data-contexte="Le téléphone du bénéficiaire est le champ le plus critique (atelier 1). Nom et prénom(s) sur deux lignes : une inversion fait refuser le paiement (29/09). Le rappel « exactement comme sur sa pièce » répond au premier motif d'échec en agence relevé par le benchmark. Point client 15/10 : le bénéficiaire est filtré sur les listes de sanctions dès sa création ici (sans compte, c'est à ce moment) ; rien n'est affiché au client. Il reçoit le code de retrait par SMS, sans compte obligatoire ; s'il a un compte Safico, il reçoit aussi une notification dans l'application (Q9, réponse partielle)."
-  data-q="Q8|Q9">
+  data-contexte="Le téléphone du bénéficiaire est le champ le plus critique (atelier 1). Nom et prénom(s) sur deux lignes : une inversion fait refuser le paiement (29/09). Le rappel « exactement comme sur sa pièce » répond au premier motif d'échec en agence relevé par le benchmark. Point client 15/10 : le bénéficiaire est filtré sur les listes de sanctions dès sa création ici (sans compte, c'est à ce moment) ; rien n'est affiché au client. Il reçoit le code de retrait par SMS, sans compte obligatoire ; s'il a un compte Safico, il reçoit aussi une notification dans l'application (Q9, réponse partielle). Le téléphone est obligatoire et le code part uniquement au bénéficiaire (compte rendu de l'atelier 7, 15/10 : Q8 tranchée) ; l'écran « Bénéficiaire sans téléphone » (B3n), où l'expéditeur recevait le code, est retiré."
+  data-q="Q9">
   <header class="barre"><a class="retour" href="#b1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Nouveau bénéficiaire</h1></header>
   <div class="contenu">
-    <div class="champ"><label>Son numéro de téléphone</label><div class="tel"><select class="indicatif"><option>+224</option><option>+225</option><option>+221</option><option>+231</option></select><input inputmode="tel" value="664 21 08 55"></div><span class="aide">Il recevra le code de retrait par SMS. Vérifiez chaque chiffre. <span class="trancher" title="Q8 · Envoi en ligne : qui reçoit le code de retrait ? L'expéditeur le voit-il à l'écran ?">Q8</span></span></div>
+    <div class="champ"><label>Son numéro de téléphone</label><div class="tel"><select class="indicatif"><option>+224</option><option>+225</option><option>+221</option><option>+231</option></select><input inputmode="tel" value="664 21 08 55"></div><span class="aide">Obligatoire : il recevra le code de retrait par SMS. Vérifiez chaque chiffre.</span></div>
     <div class="bandeau information"><svg><use href="#i-pièce"/></svg><span class="texte">Écrivez le nom <b>exactement comme sur sa pièce d'identité</b>. Sinon, l'agence ne pourra pas payer.</span></div>
     <div class="champ"><label>Nom</label><input value="SOUMAH"></div>
     <div class="champ"><label>Prénom(s)</label><input value="Mariama"></div>
     <div class="champ"><label>Ville</label><input value="Kindia"><span class="aide">Facultatif : nous vous indiquons les agences les plus proches.</span></div>
     <label style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--action);margin-top:1px"><span>Je confirme que le nom et le numéro sont exacts.</span></label>
-  </div>
-  <div class="pied"><a class="bouton primaire" href="#e4">Enregistrer et continuer</a><a class="micro" href="#b3n" style="text-align:center">Revue : bénéficiaire sans téléphone</a></div>
-</section>
-
-<section class="ecran" id="b3n" data-code="B3n" data-groupe="Envoyer" data-titre="Bénéficiaire sans téléphone"
-  data-contexte="Reprise de G2 (lot 1) : l'expéditeur reçoit le code par SMS et le transmet lui-même."
-  data-q="Q8">
-  <header class="barre"><a class="retour" href="#b3" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Nouveau bénéficiaire</h1></header>
-  <div class="contenu">
-    <label style="display:flex;gap:10px"><input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--action)">Mon proche n'a pas de téléphone</label>
-    <div class="bandeau attention"><svg><use href="#i-alerte"/></svg><span class="texte"><b>Vous recevrez le code de retrait</b> au <span data-persona-tel-lu></span>. Transmettez-le vous-même, sans le communiquer à personne d'autre. <span class="trancher" title="G2 / Q8 · Bénéficiaire sans numéro de téléphone : qui reçoit le code de retrait ?">G2</span></span></div>
-    <div class="champ"><label>Nom</label><input value="SOUMAH"></div>
-    <div class="champ"><label>Prénom(s)</label><input value="Mariama"></div>
   </div>
   <div class="pied"><a class="bouton primaire" href="#e4">Enregistrer et continuer</a></div>
 </section>
@@ -882,12 +870,12 @@ h2{font:700 16px/22px var(--police)}
 </section>
 
 <section class="ecran" id="e6" data-code="E5" data-groupe="Envoyer" data-titre="Paiement · moyen"
-  data-contexte="Modèle générique : les partenariats ne sont pas conclus. Le paiement en espèces au guichet d'un envoi préparé en ligne est une proposition hors chiffrage (Q17). Les moyens proposés suivent la devise d'envoi choisie dans le simulateur (hypothèse Q22) : GNF ouvre mobile money, carte locale et guichet ; EUR ou USD ouvre la carte internationale. Mobile money (point client 15/10) : paiement par le code marchand Safico, avec une confirmation sur le téléphone du payeur ; « Consor » est l'orthographe des notes du point, à vérifier. Le paiement se valide par le code PIN, dans une feuille du bas (point client 15/10). Aucun solde n'est stocké dans l'application : Safico n'a pas de licence d'émetteur de monnaie électronique (point client 15/10)."
-  data-q="Q22|Q17">
+  data-contexte="Un seul moyen de paiement (compte rendu de l'atelier 7, 15/10) : Orange Money, par le code marchand Safico ; le client valide la demande de débit sur son téléphone, ou paie directement sur le code marchand. La carte bancaire, peu utilisée en Guinée, est retirée ; Q22 est donc sans objet. Un envoi se fait de bout en bout soit en agence, soit dans l'application : pas de paiement au guichet d'un envoi préparé en ligne (Q17 tranchée). Aucun partenariat n'est signé à ce jour. Le paiement se valide par le code PIN, dans une feuille du bas. Aucun solde n'est stocké dans l'application : Safico n'a pas de licence de monnaie électronique."
+  data-q="">
   <header class="barre"><a class="retour" href="#e5" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Paiement</h1></header>
   <div class="contenu">
     <div class="ligne"><span class="sous-titre">Total à payer</span><span class="montant-petit" data-recap-total></span></div>
-    <div class="micro">Moyens proposés pour un envoi en <b data-devise-envoi></b>. <span class="trancher" title="Q22 · Qu'est-ce qui ouvre les moyens de paiement : le pays de résidence ou la devise d'envoi ?">Q22</span></div>
+    <div class="micro">Paiement par Orange Money, avec le code marchand Safico.</div>
     <div class="choix" data-paiements></div>
   </div>
   <div class="pied">
@@ -910,8 +898,8 @@ h2{font:700 16px/22px var(--police)}
 </section>
 
 <section class="ecran" id="e8" data-code="E7" data-groupe="Envoyer" data-titre="Envoi confirmé · informations de retrait"
-  data-contexte="Parcours 8, débloqué par le lot 1. Hypothèse Q8 : le code part par SMS au bénéficiaire ; l'expéditeur voit la référence et le numéro masqué, pas le code (au guichet, B10 a été retiré pour la même raison). Point client 15/10 : code de retrait par SMS, sans compte obligatoire ; le bénéficiaire qui a un compte reçoit aussi une notification dans l'application. Pas d'espace « envois reçus » dessiné : Q9 reste ouverte sur ce point."
-  data-q="Q8|Q9|Q20">
+  data-contexte="Parcours 8, débloqué par le lot 1. Le code part uniquement au bénéficiaire, par SMS (compte rendu de l'atelier 7, 15/10 : Q8 tranchée) ; l'expéditeur voit la référence et le numéro masqué, pas le code (au guichet, B10 a été retiré pour la même raison). Point client 15/10 : code de retrait par SMS, sans compte obligatoire ; le bénéficiaire qui a un compte reçoit aussi une notification dans l'application. Pas d'espace « envois reçus » dessiné : Q9 reste ouverte sur ce point."
+  data-q="Q9|Q20">
   <header class="barre"><span style="flex:1"></span><a class="icone-btn" href="#a1" aria-label="Fermer"><svg width="22" height="22"><use href="#i-fermer"/></svg></a></header>
   <div class="contenu">
     <div class="pictos valide"><svg><use href="#i-ok"/></svg></div>
@@ -922,7 +910,7 @@ h2{font:700 16px/22px var(--police)}
       <div class="reference">SFC-9A21-3307</div>
       <div class="separateur"></div>
       <div class="ligne"><span>Code de retrait</span><span class="fort">Envoyé par SMS</span></div>
-      <div class="micro">Au <span data-benef-tel></span>. Nous ne l'affichons pas ici, pour votre sécurité. <span class="trancher" title="Q8 · Envoi en ligne : qui reçoit le code de retrait ? L'expéditeur le voit-il à l'écran ?">Q8</span></div>
+      <div class="micro">Au <span data-benef-tel></span>. Nous ne l'affichons pas ici, pour votre sécurité.</div>
       <div class="micro">S'il a un compte Safico, il reçoit aussi une notification dans l'application. <span class="trancher" title="Q9 · Le bénéficiaire a-t-il un espace de suivi, ou seulement des SMS ?">Q9</span></div>
       <button class="bouton secondaire compact" style="width:100%" data-toast="SMS renvoyé au bénéficiaire.">Renvoyer le SMS</button>
     </div>
@@ -942,38 +930,39 @@ h2{font:700 16px/22px var(--police)}
 </section>
 
 <section class="ecran" id="x1" data-code="X1" data-groupe="Envoyer" data-titre="Plafond réglementaire atteint"
-  data-contexte="Seul plafond bloquant : 5 000 USD par client et par jour, sur tout le réseau (atelier 5). Le cumul du jour est montré, sans quoi le blocage ne se comprend pas (G8). Le client peut demander un plafond plus élevé depuis l'application, sans justificatif obligatoire ; la conformité valide en back-office (X2, point client 15/10). Le point cite un plafond de 10 millions, sans devise ni période : le chiffre du lot 1 reste affiché (Q24). Le plafond interne, lui, n'est jamais montré."
-  data-q="Q15|Q24">
+  data-contexte="Deux plafonds bloquants. Client actif : 5 000 USD par client et par jour, sur tout le réseau (atelier 5). Première opération d'un nouveau client : 10 000 000 GNF, en ligne comme en agence, en plusieurs envois (compte rendu de l'atelier 7, 15/10) ; le cas se choisit dans le panneau. Le cumul est montré, sans quoi le blocage ne se comprend pas (G8). Le client peut demander un plafond plus élevé depuis l'application (X2). Le plafond interne, lui, n'est jamais montré."
+  data-q="Q15|Q24" data-cas="client">
   <header class="barre"><a class="retour" href="#e1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Envoyer de l'argent</h1></header>
   <div class="contenu">
-    <div class="bandeau blocage"><svg><use href="#i-bloque"/></svg><span class="texte"><b>Cet envoi dépasse le plafond du jour.</b> La réglementation limite les envois à l'équivalent de 5 000 USD par personne et par jour, en ligne et en agence. <span class="trancher" title="Q24 · Plafond de 10 millions : en GNF ? par jour, par mois ou par envoi ? Remplace-t-il les 5 000 USD/jour du lot 1 ?">Q24</span></span></div>
+    <div class="bandeau blocage"><svg><use href="#i-bloque"/></svg><span class="texte"><b>Cet envoi dépasse votre plafond.</b> <span data-si-client="actif">La réglementation limite les envois à l'équivalent de 5 000 USD par personne et par jour, en ligne et en agence.</span><span data-si-client="premier" hidden>Votre première opération est limitée à 10 000 000 GNF, en ligne et en agence.</span> <span class="trancher" title="Q24 · Plafond de 10 M GNF de la première opération : vaut-il pour le premier envoi seulement, ou pour une période ? Quand les 5 000 USD par jour prennent-ils le relais ?">Q24</span></span></div>
     <div class="carte">
-      <div class="ligne"><span>Déjà envoyé aujourd'hui</span><span class="fort" data-x-deja></span></div>
+      <div class="ligne"><span>Déjà envoyé</span><span class="fort" data-x-deja></span></div>
       <div class="ligne"><span>Cet envoi</span><span class="fort" data-x-envoi></span></div>
       <div class="separateur"></div>
       <div class="ligne"><span>Vous pouvez encore envoyer</span><span class="montant-petit" data-x-reste></span></div>
     </div>
-    <p class="micro">Le plafond se renouvelle demain à 00:00 (heure de Conakry).</p>
+    <p class="micro" data-si-client="actif">Le plafond se renouvelle demain à 00:00 (heure de Conakry).</p>
   </div>
   <div class="pied"><a class="bouton primaire" href="#e1">Modifier le montant</a><a class="bouton secondaire" href="#x2">Demander un plafond plus élevé</a></div>
 </section>
 
 <section class="ecran" id="x2" data-code="X2" data-groupe="Envoyer" data-titre="Demander un plafond plus élevé"
-  data-contexte="Décision du point client 15/10 : le client demande un relèvement de plafond depuis l'application, sans justificatif obligatoire ; la conformité valide en back-office. Remplace la règle « pas de montée de palier ». Atteint depuis X1 et depuis la carte de plafond de l'accueil. Motifs : la liste du motif du transfert (E3). Le plafond interne n'est toujours pas montré. Le bouton reste désactivé tant que le montant et le motif ne sont pas saisis."
-  data-q="Q24|Q26">
+  data-contexte="Le client demande un relèvement depuis l'application ; la conformité et les Opérations le valident. Le justificatif n'est pas obligatoire, mais peut être demandé (compte rendu de l'atelier 7, 15/10 : Q26 tranchée). Alhassane Sow souhaite des garde-fous, ces demandes se faisant aujourd'hui en agence. Atteint depuis X1 et depuis la carte de plafond de l'accueil. Motifs : la liste du motif du transfert (E3). Le plafond interne n'est toujours pas montré. Le bouton reste désactivé tant que le montant et le motif ne sont pas saisis."
+  data-q="" data-cas="client">
   <header class="barre"><a class="retour" href="#a1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Plafond d'envoi</h1></header>
   <div class="contenu">
     <div class="titre-page">Demander un plafond plus élevé</div>
-    <p class="sous-titre">Notre équipe conformité examine chaque demande.</p>
+    <p class="sous-titre">Nos équipes conformité et opérations examinent chaque demande.</p>
     <div class="carte">
       <div class="ligne"><span>Plafond actuel</span><span class="fort" data-x-plafond></span></div>
-      <div class="micro">L'équivalent de 5 000 USD par jour, en ligne et en agence. <span class="trancher" title="Q24 · Plafond de 10 millions : en GNF ? par jour, par mois ou par envoi ? Remplace-t-il les 5 000 USD/jour du lot 1 ?">Q24</span></div>
+      <div class="micro" data-si-client="actif">L'équivalent de 5 000 USD par jour, en ligne et en agence.</div>
+      <div class="micro" data-si-client="premier" hidden>Pour votre première opération, en ligne et en agence.</div>
     </div>
     <div class="champ"><label for="x2-montant">Montant souhaité (GNF)</label><input id="x2-montant" inputmode="numeric" data-requis data-x-souhaite></div>
     <div class="champ"><label>Motif de la demande</label><select data-requis><option value="">Choisir…</option><option>Assistance familiale</option><option>Frais médicaux</option><option>Frais scolaires</option><option>Œuvres et dons</option><option>Autre</option></select></div>
     <div class="carte plate">
-      <h2>Justificatif <span class="trancher" title="Q26 · Le relèvement sans justificatif contredit la règle d'origine des fonds de la conformité (atelier 3). À confirmer par Issiaga Diallo.">Q26</span></h2>
-      <p class="micro">Facultatif. Il peut accélérer l'examen.</p>
+      <h2>Justificatif</h2>
+      <p class="micro">Facultatif. Nous pouvons vous en demander un pendant l'examen.</p>
       <div class="capture" style="height:96px" data-toast="Document ajouté."><div><svg width="26" height="26"><use href="#i-photo"/></svg><br><b>Prendre une photo ou choisir un fichier</b></div></div>
     </div>
   </div>
@@ -987,7 +976,7 @@ h2{font:700 16px/22px var(--police)}
   <div class="contenu centre">
     <div class="pictos valide"><svg><use href="#i-ok"/></svg></div>
     <div class="titre-page">Demande envoyée</div>
-    <p class="sous-titre">Notre équipe conformité examine votre demande. Nous vous prévenons par notification dès sa décision.</p>
+    <p class="sous-titre">Nos équipes examinent votre demande. Si un justificatif est nécessaire, nous vous le demanderons. Nous vous prévenons par notification dès la décision.</p>
     <div class="carte" style="width:100%">
       <div class="ligne"><span>Plafond demandé</span><span class="fort" data-x-demande></span></div>
       <div class="ligne"><span>Plafond actuel</span><span data-x-plafond></span></div>
@@ -1228,7 +1217,7 @@ h2{font:700 16px/22px var(--police)}
   <div class="panneau">
     <h3>Utilisateur de démonstration</h3>
     <p><b>Fatoumata BALDÉ</b> · Ratoma, Conakry · +224</p>
-    <p class="micro" style="margin-top:6px">Une seule application pour tous. La devise d'envoi choisie dans le simulateur (GNF, EUR, USD) ouvre les moyens de paiement (Q22). Taux et frais de démonstration, sans valeur d'engagement.</p>
+    <p class="micro" style="margin-top:6px">Application mobile pour la Guinée : envois en francs guinéens, payés par Orange Money. La diaspora aura sa plateforme web, non dessinée ici (atelier 7, 15/10). Taux et frais de démonstration, sans valeur d'engagement.</p>
   </div>
   <div class="panneau">
     <span class="code" id="n-code"></span>
@@ -1247,7 +1236,7 @@ h2{font:700 16px/22px var(--police)}
     <h3>Écrans</h3>
     <nav class="sommaire" id="sommaire"></nav>
   </div>
-  <p class="micro" style="padding:0 4px">Prototype lot 2 · démarré le 7 octobre 2026, à jour du point client du 15 octobre. Rien n'est connecté. Questions Q1 à Q26 : « Parcours utilisateurs — Espace client B2C · v2 ».</p>
+  <p class="micro" style="padding:0 4px">Prototype lot 2 · démarré le 7 octobre 2026, aligné le 19 octobre sur le compte rendu de l'atelier 7. Rien n'est connecté. Questions Q1 à Q26 : « Parcours utilisateurs — Espace client B2C · v2 ».</p>
 </aside>
 <button class="bascule-notes" id="bascule-notes">Notes et écrans</button>
 </div>
@@ -1279,40 +1268,40 @@ const Q = {
   Q22:["Qu'est-ce qui ouvre les moyens de paiement : le pays de résidence ou la devise d'envoi ?","La devise d'envoi choisie dans le simulateur. GNF : mobile money, carte locale, espèces au guichet ; EUR ou USD : carte internationale."],
   // Ajoutées au point client du 15/10
   Q23:["Règles du mot de passe (longueur, caractères)","Aucune règle dessinée : deux saisies identiques, case « Afficher »."],
-  Q24:["Plafond de 10 millions : en GNF ? par jour, par mois ou par envoi ? Remplace-t-il les 5 000 USD/jour du lot 1 ?","Le chiffre du lot 1 reste affiché : 5 000 USD par jour, environ 43 250 000 GNF au taux de démonstration."],
-  Q25:["Existe-t-il un montant maximal par envoi (3 à 4 M cités) ? Si oui, comment l'articuler avec la règle anti-fractionnement (≥ 3 opérations en 24 h, atelier 3) ?","Rien n'est dessiné : pas de maximum par envoi."],
+  Q24:["Plafond de 10 M GNF de la première opération : vaut-il pour le premier envoi seulement, ou pour une période ? Quand les 5 000 USD par jour prennent-ils le relais ?","La première opération d'un nouveau client est limitée à 10 000 000 GNF au total, en plusieurs envois ; ensuite, 5 000 USD par jour."],
+  Q25:["Montant maximal par envoi : quelle valeur (3 à 4 M GNF cités en exemple) ? Comment l'articuler avec la règle anti-fractionnement (≥ 3 opérations en 24 h, atelier 3) ?","4 000 000 GNF par envoi, valeur d'exemple paramétrable ; l'anti-fractionnement n'est pas dessiné."],
   Q26:["Le relèvement sans justificatif contredit la règle d'origine des fonds de la conformité (atelier 3). À confirmer par Issiaga Diallo.","Justificatif facultatif, comme décidé le 15/10 ; la conformité valide en back-office."]
 };
 // Tranchées le 07/10 (Alexie) : Q1 application en français ; Q11 deux devises modifiables, deux champs liés ; Q12 frais affichés ;
 // une seule application pour tous (fusion des profils diaspora et résident), les moyens de paiement suivent la devise d'envoi (Q22).
+// Tranchées par le compte rendu de l'atelier 7 (alignement du 19/10) : Q8 (code au bénéficiaire seul), Q17 (pas de paiement au guichet d'un envoi en ligne),
+// Q22 (sans objet : Orange Money seul), Q26 (justificatif facultatif, peut être demandé). Q21 vaut désormais pour la plateforme web de la diaspora.
 // Tranchée au point client du 15/10 : Q4, revue par la conformité, aucun délai affiché au client. Q9 : réponse partielle (notification au bénéficiaire qui a un compte), reste ouverte.
 
-// Utilisateur de démonstration : une seule application pour tous (décision du 07/10).
+// Utilisateur de démonstration. Atelier 7 (15/10) : l'application mobile sert la Guinée, la diaspora aura une plateforme web.
+// Les taux et frais EUR et USD restent dans les tables pour cette plateforme ; l'application n'envoie qu'en GNF.
 // Taux : valeurs de démonstration. GNF/EUR ~10 500 (chiffre cité par le client à l'atelier 1) ; XOF 18,32 GNF (Figma lot 1) ;
 // EUR/XOF parité fixe ; USD à 0,92 € (pure démonstration, Q21).
 const UTILISATEUR={prenom:"Fatoumata",nom:"BALDÉ",indicatif:"+224",tel:"622 14 33 07",telLu:"+224 622 •• •• 07",quartier:"Ratoma, Conakry",
   devise:"GNF",revenus:"3 à 8 M GNF",
-  envois:[["GNF","GN"],["EUR","FR"],["USD","US"]],
+  envois:[["GNF","GN"]], // EUR et USD : plateforme web de la diaspora, non dessinée (atelier 7)
   dest:[["GN","Guinée","GNF"],["CI","Côte d'Ivoire","XOF"],["SN","Sénégal","XOF"],["LR","Liberia","LRD"]],
-  wallet:true, banque:true,
+  wallet:false, banque:false, // atelier 7 : espèces seules au lancement ; wallet et banque viendront avec les partenariats
   benefs:[["CAMARA","Aïssata","+224 664 •• •• 52","Kankan"],["TOURÉ","Mariam","+225 07 •• •• 31","Abidjan"]]};
 // Taux par devise d'envoi → devise reçue (null : taux non chargé)
 const TAUX={GNF:{GNF:1,XOF:1/18.32,LRD:null},EUR:{GNF:10500,XOF:655.957,LRD:null},USD:{GNF:9660,XOF:603.48,LRD:null}};
 const VALEUR_GNF={GNF:1,EUR:10500,USD:9660};
 // Frais de démonstration : 1 % (minimum 5 000 GNF) en GNF ; 2,50 forfaitaires en EUR ou USD
 const FRAIS={GNF:m=>m<=0?0:Math.max(5000,Math.round(m*0.01/500)*500),EUR:m=>m<=0?0:2.5,USD:m=>m<=0?0:2.5};
-// Moyens de paiement : [code, pictogramme, libellé, précision, devises d'envoi qui l'ouvrent] (hypothèse Q22)
-const PAIEMENTS=[["mm","i-mobile","Mobile money","Orange Money, Consor",["GNF"]],
-  ["carte-locale","i-carte","Carte bancaire locale","Carte émise en Guinée",["GNF"]],
-  ["guichet","i-agence","Payer en espèces en agence","Présentez la référence au guichet",["GNF"]],
-  ["carte","i-carte","Carte bancaire internationale","Visa ou Mastercard · 3D Secure",["EUR","USD"]]];
+// Moyens de paiement : [code, pictogramme, libellé, précision, devises d'envoi qui l'ouvrent]
+// Atelier 7 (15/10) : un seul moyen, Orange Money par le code marchand Safico. Ni carte, ni paiement au guichet d'un envoi préparé en ligne.
+const PAIEMENTS=[["mm","i-mobile","Orange Money","Code marchand Safico : vous validez le débit sur votre téléphone.",["GNF"]]];
 // Remboursement sur le moyen de paiement d'origine (hypothèse Q13)
-const RENDU={mm:"Rendus sur votre compte mobile money, sous 24 h.","carte-locale":"Rendus sur votre carte bancaire, sous 3 à 5 jours.",
-  guichet:"Rendus en espèces dans une agence Safico, sur présentation de votre pièce.",carte:"Rendus sur votre carte Visa •• 4821, sous 3 à 5 jours."};
+const RENDU={mm:"Rendus sur le compte Orange Money qui a payé."};
 const DEVISES={EUR:"Euro",USD:"Dollar américain",GNF:"Franc guinéen",XOF:"Franc CFA",LRD:"Dollar libérien"};
 const DRAPEAU={US:"linear-gradient(#3C3B6E,#3C3B6E) 0 0/45% 55% no-repeat,repeating-linear-gradient(#B22234 0 2px,#fff 2px 4px)",GN:"linear-gradient(90deg,#CE1126 33%,#FCD116 33% 66%,#009460 66%)",CI:"linear-gradient(90deg,#F77F00 33%,#fff 33% 66%,#009E60 66%)",SN:"linear-gradient(90deg,#00853F 33%,#FDEF42 33% 66%,#E31B23 66%)",LR:"repeating-linear-gradient(#BF0A30 0 2px,#fff 2px 4px)",FR:"linear-gradient(90deg,#002395 33%,#fff 33% 66%,#ED2939 66%)"};
 
-const etat={piece:"Passeport",cas:{numero:"nouveau",connexion:"habituel",profil:"ajour",plafond:"aucune"},env:0,dest:0,envoi:1000000,benef:0,mode:"especes",paiement:null};
+const etat={piece:"Passeport",cas:{numero:"nouveau",connexion:"habituel",profil:"ajour",plafond:"aucune",client:"actif"},env:0,dest:0,envoi:1000000,benef:0,mode:"especes",paiement:null};
 const P=()=>UTILISATEUR;
 const fmt=(n,d)=>{if(n==null||isNaN(n))return "—";const dec=d==="EUR"||d==="USD"?2:0;return n.toLocaleString("fr-FR",{minimumFractionDigits:dec,maximumFractionDigits:dec}).replace(/ /g," ")+" "+(d==="EUR"?"€":d)};
 const calc=()=>{const p=P(),e=p.envois[etat.env],d=p.dest[etat.dest],t=TAUX[e[0]][d[2]],f=FRAIS[e[0]](etat.envoi);return{t,f,recu:t==null?null:(d[2]==="GNF"&&e[0]==="GNF"?etat.envoi:Math.floor(etat.envoi*t)),total:etat.envoi+f,devR:d[2],devE:e[0],drapE:e[1],pays:d[1],code:d[0]}};
@@ -1323,13 +1312,13 @@ const tauxTxt=c=>c.t==null?"Taux à charger":(c.devE==="GNF"&&c.devR==="GNF"?"En
 function rendreSimu(){
   const p=P(),c=calc();
     const html=`<div class="simu">
-    <div class="bloc${etat.saisie==="envoi"?" saisie":""}"><div class="milieu"><div class="label">Vous envoyez</div><input data-in="envoi" data-clavier readonly inputmode="none" aria-label="Montant envoyé" value="${fmt(etat.envoi,c.devE).replace(/\s\S+$/,"")}"></div><button type="button" class="devise" data-feuille="envoi" aria-label="Devise d'envoi"><span class="drapeau" style="background:${DRAPEAU[c.drapE]}"></span>${c.devE}<svg class="ico-bas" aria-hidden="true"><use href="#i-bas"/></svg></button></div>
+    <div class="bloc${etat.saisie==="envoi"?" saisie":""}"><div class="milieu"><div class="label">Vous envoyez</div><input data-in="envoi" data-clavier readonly inputmode="none" aria-label="Montant envoyé" value="${fmt(etat.envoi,c.devE).replace(/\s\S+$/,"")}"></div>${p.envois.length>1?`<button type="button" class="devise" data-feuille="envoi" aria-label="Devise d'envoi"><span class="drapeau" style="background:${DRAPEAU[c.drapE]}"></span>${c.devE}<svg class="ico-bas" aria-hidden="true"><use href="#i-bas"/></svg></button>`:`<span class="devise" aria-label="Devise d'envoi"><span class="drapeau" style="background:${DRAPEAU[c.drapE]}"></span>${c.devE}</span>`}</div>
     <div class="taux"><span>${tauxTxt(c)}</span><span>Frais : <b>${fmt(c.f,c.devE)}</b></span></div>
     <div class="bloc${etat.saisie==="recu"?" saisie":""}"><div class="milieu"><div class="label">Il reçoit</div><input data-in="recu" ${c.recu==null?"disabled placeholder='—'":"data-clavier readonly"} inputmode="none" aria-label="Montant reçu" value="${c.recu==null?"":fmt(c.recu,c.devR).replace(/\s\S+$/,"")}"></div>
       <button type="button" class="devise" data-feuille="dest" aria-label="Pays et devise de réception"><span class="drapeau" style="background:${DRAPEAU[c.code]}"></span>${c.devR}<svg class="ico-bas" aria-hidden="true"><use href="#i-bas"/></svg></button></div>
   </div>
   <div class="ligne" style="margin-top:4px"><span class="sous-titre">Total à payer</span><span class="montant-petit">${fmt(c.total,c.devE)}</span></div>
-  <div class="micro">Vers ${c.pays}. ${c.t==null?"Corridor à ouvrir : taux non chargé.":"Disponible au retrait en quelques minutes."} <span class="trancher" title="Q21 · Quelles devises d'envoi propose-t-on ?">Q21</span></div>`;
+  <div class="micro">Vers ${c.pays}. ${c.t==null?"Corridor à ouvrir : taux non chargé.":"Disponible au retrait en quelques minutes."}</div>`;
   document.querySelectorAll("[data-simu]").forEach(el=>el.innerHTML=html);
 }
 document.addEventListener("input",e=>{
@@ -1443,7 +1432,8 @@ const CAS={
   numero:["Ce qui se passe après le code SMS, selon le numéro saisi en P1.",[["nouveau","Nouveau numéro"],["compte","Numéro déjà inscrit (compte en ligne)"],["agence","Client connu en agence, sans compte en ligne"]]],
   connexion:["Ce qui se passe après « Se connecter », selon le téléphone utilisé.",[["habituel","Téléphone habituel"],["nouveau","Nouveau téléphone (C2)"]]],
   profil:["Mise à jour du profil, demandée tous les 6 mois (point client 15/10).",[["ajour","Profil à jour"],["ancien","Profil de plus de 6 mois"]]],
-  plafond:["Demande de plafond plus élevé (X2).",[["aucune","Aucune demande"],["examen","Demande en cours d'examen"]]]};
+  plafond:["Demande de plafond plus élevé (X2).",[["aucune","Aucune demande"],["examen","Demande en cours d'examen"]]],
+  client:["Plafond qui s'applique (atelier 7, 15/10).",[["actif","Client actif : 5 000 USD par jour"],["premier","Nouveau client : première opération, 10 M GNF"]]]};
 function rendreCas(){
   const s=document.querySelector(".ecran.visible"),cles=((s&&s.dataset.cas)||"").split(" ").filter(Boolean);
   document.getElementById("n-cas").hidden=!cles.length;
@@ -1453,8 +1443,7 @@ function rendreCas(){
 // Ce que les cas changent à l'écran
 function appliquerCas(){
   const sc=document.querySelector("[data-suite-connexion]");if(sc)sc.setAttribute("href",etat.cas.connexion==="nouveau"?"#c2":"#a1");
-  document.querySelectorAll("[data-si-profil]").forEach(el=>el.hidden=el.dataset.siProfil!==etat.cas.profil);
-  document.querySelectorAll("[data-si-plafond]").forEach(el=>el.hidden=el.dataset.siPlafond!==etat.cas.plafond);
+  Object.keys(etat.cas).forEach(k=>document.querySelectorAll(`[data-si-${k}]`).forEach(el=>el.hidden=el.getAttribute(`data-si-${k}`)!==etat.cas[k]));
 }
 
 // Champs de saisie : l'application est mobile, chaque champ ouvre un clavier du prototype.
@@ -1564,7 +1553,7 @@ document.addEventListener("click",e=>{
   const se=e.target.closest(".telephone select");if(se){e.preventDefault();return ouvrirFeuilleSelect(se)}
   const pc=e.target.closest("[data-piece]");if(pc)etat.piece=pc.dataset.piece;
   const dc=e.target.closest("[data-declencheur]");if(dc)return declencher(dc.dataset.declencheur);
-  const ca=e.target.closest("[data-cas-choix]");if(ca){etat.cas[ca.dataset.casGroupe]=ca.dataset.casChoix;rendreCas();return}
+  const ca=e.target.closest("[data-cas-choix]");if(ca){etat.cas[ca.dataset.casGroupe]=ca.dataset.casChoix;rendreCas();remplir();return}
   const pv=e.target.closest("[data-pin-vers]");if(pv){e.preventDefault();return ouvrirPin(pv.dataset.pinVers)}
   if(e.target.closest("[data-profil-a-jour]")){etat.cas.profil="ajour";rendreCas();return toast("Merci, vos informations sont à jour.")}
   const am=e.target.closest("[data-afficher-mdp]");if(am){document.querySelectorAll("#p2e [data-mdp]").forEach(i=>i.type=am.checked?"text":"password");return}
@@ -1591,14 +1580,23 @@ document.addEventListener("change",e=>{
 function modes(){
   const p=P(),c=calc(),raccorde=c.code==="GN"||c.code==="CI"||c.code==="SN";
   const w=document.querySelector("[data-mode-wallet]"),b=document.querySelector("[data-mode-banque]");
-  const ok=(el,on)=>{el.classList.toggle("indispo",!on);el.querySelector("input").disabled=!on;el.querySelector(".micro").textContent=on?el.dataset.txt||el.querySelector(".micro").textContent:"Pas encore disponible vers ce pays."};
+  const ok=(el,on)=>{el.classList.toggle("indispo",!on);el.querySelector("input").disabled=!on;el.querySelector(".micro").textContent=on?el.dataset.txt||el.querySelector(".micro").textContent:(p.wallet||p.banque?"Pas encore disponible vers ce pays.":"Prévu après le lancement.")};
   [w,b].forEach(el=>{if(!el.dataset.txt)el.dataset.txt=el.querySelector(".micro").textContent});
   ok(w,p.wallet&&raccorde); ok(b,p.banque&&raccorde);
   if((etat.mode==="wallet"&&!(p.wallet&&raccorde))||(etat.mode==="banque"&&!(p.banque&&raccorde))){etat.mode="especes";document.querySelector("[name=mode][value=especes]").checked=true}
-  const suite=document.querySelector("[data-suite-e1]"); suite.setAttribute("aria-disabled",c.t==null?"true":"false");
+  majSuite();
 }
 
 const MODE_TXT={especes:"Espèces dans le réseau",wallet:"Mobile money",banque:"Compte bancaire"};
+// Montant maximal par envoi : valeur d'exemple (atelier 7 : « 3 à 4 millions GNF », paramétrable au back-office, Q25)
+const MAX_ENVOI=4000000;
+// « Continuer » de E1 : désactivé sans taux ou au-delà du maximum par envoi ; vers X1 au-delà du plafond restant
+function majSuite(){
+  const se=document.querySelector("[data-suite-e1]");if(!se)return;
+  const c=calc(),prem=etat.cas.client==="premier",cet=etat.envoi*VALEUR_GNF[c.devE],reste=prem?10000000:43250000-38000000;
+  se.setAttribute("aria-disabled",c.t==null||cet>MAX_ENVOI?"true":"false");
+  se.setAttribute("href",cet>reste?"#x1":"#b1");
+}
 function remplir(){
   const p=P(),c=calc(),b=p.benefs[etat.benef];
   const set=(sel,v)=>document.querySelectorAll(sel).forEach(el=>{if(el.tagName==="INPUT")el.value=v;else el.textContent=v});
@@ -1617,16 +1615,19 @@ function remplir(){
   const etr=c.devE!=="GNF";
   set("[data-taux-accueil]",etr?"1 "+(c.devE==="EUR"?"€":c.devE)+" = "+fmt(TAUX[c.devE].GNF,"GNF"):"1 XOF = "+fmt(1/TAUX.GNF.XOF,"GNF").replace(/,\d+/,""));
   set("[data-taux-accueil-unite]",etr?"vers la Guinée":"vers la Côte d'Ivoire");
-  // Plafond réglementaire (X1) : démonstration, contre-valeur de 5 000 USD
-  const usd=43250000, deja=38000000;
-  set("[data-x-deja]",fmt(deja,"GNF")); set("[data-x-envoi]",fmt(Math.max(etat.envoi*VALEUR_GNF[c.devE],usd-deja+2500000),"GNF")); set("[data-x-reste]",fmt(usd-deja,"GNF"));
-  // Plafond restant en temps réel (A1, E1) et demande de plafond plus élevé (X2, X3) : point client du 15/10
-  const apres=usd-deja-etat.envoi*VALEUR_GNF[c.devE];
-  document.querySelectorAll("[data-x-jauge]").forEach(el=>el.style.width=Math.round(deja/usd*100)+"%");
-  set("[data-x-apres]",apres>=0?"Après cet envoi : "+fmt(apres,"GNF")+".":"Cet envoi dépasse votre plafond du jour.");
+  // Plafonds (X1, A1, E1, X2) — démonstration. Client actif : 5 000 USD par jour (≈ 43 250 000 GNF), 38 000 000 déjà envoyés.
+  // Première opération d'un nouveau client : 10 000 000 GNF en plusieurs envois (atelier 7). Montant maximal par envoi : MAX_ENVOI.
+  const prem=etat.cas.client==="premier", plaf=prem?10000000:43250000, deja=prem?0:38000000, cet=etat.envoi*VALEUR_GNF[c.devE];
+  set("[data-x-deja]",fmt(deja,"GNF")); set("[data-x-envoi]",fmt(Math.max(cet,plaf-deja+2500000),"GNF")); set("[data-x-reste]",fmt(plaf-deja,"GNF"));
+  set("[data-x-periode]",prem?"pour votre première opération":"aujourd'hui"); set("[data-x-max]",fmt(MAX_ENVOI,"GNF"));
+  const apres=plaf-deja-cet;
+  document.querySelectorAll("[data-x-jauge]").forEach(el=>el.style.width=Math.max(2,Math.round(deja/plaf*100))+"%");
+  set("[data-x-apres]",apres>=0?"Après cet envoi : "+fmt(apres,"GNF")+".":"Cet envoi dépasse votre plafond.");
   document.querySelectorAll("[data-x-apres]").forEach(el=>el.classList.toggle("depasse",apres<0));
-  const se=document.querySelector("[data-suite-e1]"); if(se)se.setAttribute("href",apres<0?"#x1":"#b1");
-  set("[data-x-plafond]",fmt(usd,"GNF")+" par jour");
+  set("[data-x-max-alerte]",cet>MAX_ENVOI?"Faites plusieurs envois.":"");
+  document.querySelectorAll("[data-x-max-alerte]").forEach(el=>el.classList.toggle("depasse",cet>MAX_ENVOI));
+  set("[data-x-plafond]",prem?fmt(plaf,"GNF"):fmt(plaf,"GNF")+" par jour");
+  majSuite();
   set("[data-x-demande]",etat.demande?fmt(etat.demande,"GNF"):"—");
   // Listes
   const benefLigne=(x,i,lien)=>`<a href="${lien}" data-benef="${i}"><span class="avatar">${x[1][0]}${x[0][0]}</span><div class="milieu"><b>${x[0]} ${x[1]}</b><span class="micro">${x[2]} · ${x[3]}</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>`;
@@ -1642,7 +1643,7 @@ function remplir(){
   // Paiements
   document.querySelectorAll("[data-paiements]").forEach(el=>{
     const ouv=paiementsOuverts(),autres=PAIEMENTS.filter(x=>!ouv.includes(x));
-    el.innerHTML=[...ouv,...autres].map(x=>{const on=ouv.includes(x);x=[x[0],x[1],x[2],on?x[3]:(x[4].includes("GNF")?"Pour un envoi en francs guinéens":"Pour un envoi en euros ou en dollars"),on];return x}).map(x=>`<label class="${x[4]?"":"indispo"}"><input type="radio" name="paiement" value="${x[0]}" ${x[0]===etat.paiement?"checked":""} ${x[4]?"":"disabled"}><svg width="22" height="22" style="color:var(--action)"><use href="#${x[1]}"/></svg><div class="milieu"><b>${x[2]}${x[0]==="guichet"?' <span class="trancher" title="Q17 · Peut-on préparer un envoi en ligne et le payer en espèces au guichet ?">Q17</span>':""}</b><span class="micro">${x[3]}</span></div></label>`).join("");
+    el.innerHTML=[...ouv,...autres].map(x=>{const on=ouv.includes(x);x=[x[0],x[1],x[2],on?x[3]:(x[4].includes("GNF")?"Pour un envoi en francs guinéens":"Pour un envoi en euros ou en dollars"),on];return x}).map(x=>`<label class="${x[4]?"":"indispo"}"><input type="radio" name="paiement" value="${x[0]}" ${x[0]===etat.paiement?"checked":""} ${x[4]?"":"disabled"}><svg width="22" height="22" style="color:var(--action)"><use href="#${x[1]}"/></svg><div class="milieu"><b>${x[2]}</b><span class="micro">${x[3]}</span></div></label>`).join("");
   });
   const sp=document.querySelector("[data-suite-paiement]"); if(sp)sp.textContent=etat.paiement==="guichet"?"Obtenir ma référence de paiement":"Confirmer le paiement";
 }
