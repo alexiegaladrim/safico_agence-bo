@@ -134,6 +134,8 @@ body.clavier-ouvert .bascule-notes,body.feuille-ouverte .bascule-notes{display:n
 .progression{flex:none;height:4px;background:var(--trait-leger)}
 .progression i{display:block;height:100%;background:var(--marque-turquoise);border-radius:0 4px 4px 0}
 .contenu{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+/* Les blocs d'un écran gardent leur hauteur : c'est la zone qui défile, pas eux qui s'écrasent (retour Alexie 19/10) */
+.contenu>*{flex-shrink:0}
 .pied{flex:none;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--fond-surface);box-shadow:0 -4px 12px rgba(21,31,43,.06);display:flex;flex-direction:column;gap:8px}
 .tabbar{flex:none;display:flex;background:var(--fond-surface);border-top:1px solid var(--trait-leger);padding-bottom:env(safe-area-inset-bottom)}
 .tabbar a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0 10px;font:500 11px/14px var(--police);color:var(--texte-secondaire);text-decoration:none}
@@ -273,6 +275,11 @@ h2{font:700 16px/22px var(--police)}
 .interrupteur:checked::after{transform:translateX(18px)}
 .interrupteur:disabled{opacity:.6;cursor:not-allowed}
 .reglage{display:flex;align-items:center;gap:12px}
+/* Champ mot de passe : l'œil, dans le champ, affiche ou masque la saisie (retour Alexie 19/10) */
+.mdp{position:relative}
+.mdp input{padding-right:52px}
+.mdp .oeil{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;border-radius:var(--rayon-capsule);background:none;color:var(--texte-secondaire);display:grid;place-items:center;cursor:pointer}
+.mdp .oeil[aria-pressed="true"]{color:var(--action)}
 /* Écrans manquants (19/10) */
 .vide{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:8px 0}
 .vide svg{width:28px;height:28px;color:var(--texte-desactive)}
@@ -285,10 +292,21 @@ h2{font:700 16px/22px var(--police)}
 .faq details[open] summary::after{content:"−"}
 .faq details p{margin-top:8px;color:var(--texte-secondaire);line-height:20px}
 .ancien{text-decoration:line-through;color:var(--texte-secondaire)}
+/* Autorisations (Z6, Z7) : contenu centré dans l'écran (retour Alexie 19/10) */
+.contenu.au-centre{align-items:center;justify-content:center;text-align:center}
+.au-centre .pictos{margin:0 auto 4px}
+.au-centre .sous-titre{max-width:300px}
 .chargement{width:120px;height:4px;border-radius:2px;background:rgba(255,255,255,.2);overflow:hidden}
 .chargement i{display:block;height:100%;width:40%;background:#fff;border-radius:inherit;animation:charge 1.2s var(--ressort, ease) infinite}
 @keyframes charge{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
 a.statut{text-decoration:none}
+/* Actions d'en-tête de carte (« Tout voir », « Ajouter », « Modifier ») : capsule de 36 px, zone de toucher de 44 px (retour Alexie 19/10) */
+.action-tete{display:inline-flex;align-items:center;gap:4px;min-height:36px;padding:0 12px;border-radius:var(--rayon-capsule);background:var(--fond-action);color:var(--action);font:600 13px/16px var(--police);text-decoration:none;white-space:nowrap;position:relative;flex:none;transition:transform .18s var(--ressort, ease),background-color .2s}
+.action-tete::after{content:"";position:absolute;inset:-4px -2px}
+.action-tete svg{width:16px;height:16px;flex:none}
+.action-tete:hover{background:var(--accent-trait)}
+.action-tete:active{transform:scale(.96)}
+.ligne:has(>.action-tete){align-items:center}
 .reglage .milieu{flex:1;display:flex;flex-direction:column}
 .jauge i{display:block;height:100%;background:var(--marque-turquoise);border-radius:inherit}
 .bandeau .texte{color:var(--texte-principal)}
@@ -361,7 +379,7 @@ a.statut{text-decoration:none}
 .toast{position:absolute;left:16px;right:16px;bottom:96px;background:var(--texte-principal);color:#fff;padding:12px 14px;border-radius:var(--rayon-petit);font-size:14px;box-shadow:var(--ombre-haute);z-index:5}
 
 /* P0 : accueil public inspirationnel (retour 07/10) */
-.p0-fond{position:relative;background:linear-gradient(170deg,#0B3D91 0,#0A4FB3 45%,#0E6E8C 100%);gap:16px;padding-top:20px;overflow-x:hidden}
+.p0-fond{position:relative;background:linear-gradient(170deg,#0B3D91 0,#0A4FB3 45%,#0E6E8C 100%);background-attachment:local;gap:16px;padding-top:20px;overflow-x:hidden}
 .p0-motif{position:absolute;right:0;top:0;width:190px;height:220px;overflow:hidden;opacity:.12;pointer-events:none}
 .p0-motif svg{position:absolute;left:0;top:-40px;width:260px;height:260px}
 .p0-accroche{color:#fff;display:flex;flex-direction:column;gap:8px;position:relative}
@@ -493,6 +511,8 @@ a.statut{text-decoration:none}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-cadenas" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 017 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-bas" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-oeil" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-oeil-barre" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 20L20 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-retour" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-envoyer" viewBox="0 0 24 24"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -595,16 +615,15 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="p2e" data-code="P2e" data-groupe="A · Entrer dans le service" data-titre="Créer un compte · mot de passe"
-  data-contexte="Décision du point client 15/10 : l'identifiant est le numéro de téléphone, on se connecte avec un mot de passe ; le code PIN à 6 chiffres (P2b) ne sert plus qu'aux envois et aux opérations sensibles. Atteint directement quand le code SMS est bon. Mot de passe saisi deux fois, au clavier texte du prototype, avec « Afficher ». Les règles de complexité ne sont pas connues : aucune n'est dessinée (Q23)."
+  data-contexte="Décision du point client 15/10 : l'identifiant est le numéro de téléphone, on se connecte avec un mot de passe ; le code PIN à 6 chiffres (P2b) ne sert plus qu'aux envois et aux opérations sensibles. Atteint directement quand le code SMS est bon. Mot de passe saisi deux fois, au clavier texte du prototype ; un œil dans chaque champ affiche ou masque la saisie (retour Alexie 19/10). Les règles de complexité ne sont pas connues : aucune n'est dessinée (Q23)."
   data-q="Q23">
   <header class="barre"><a class="retour" href="#p2" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Créer mon compte</h1><span class="etapes">2 / 4</span></header>
   <div class="progression"><i style="width:50%"></i></div>
   <div class="contenu">
     <div class="titre-page">Choisissez votre mot de passe</div>
     <p class="sous-titre">Avec votre numéro de téléphone, il vous servira à vous connecter.</p>
-    <div class="champ"><label for="mdp1">Mot de passe</label><input id="mdp1" type="password" data-mdp autocomplete="new-password"><span class="aide">Règles du mot de passe à définir. <span class="trancher" title="Q23 · Règles du mot de passe (longueur, caractères)">Q23</span></span></div>
-    <div class="champ"><label for="mdp2">Confirmez le mot de passe</label><input id="mdp2" type="password" data-mdp autocomplete="new-password"></div>
-    <label style="display:flex;gap:10px;align-items:center"><input type="checkbox" data-afficher-mdp style="width:18px;height:18px;accent-color:var(--action)">Afficher</label>
+    <div class="champ"><label for="mdp1">Mot de passe</label><div class="mdp"><input id="mdp1" type="password" data-mdp autocomplete="new-password"><button type="button" class="oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg width="22" height="22" aria-hidden="true"><use href="#i-oeil"/></svg></button></div><span class="aide">Règles du mot de passe à définir. <span class="trancher" title="Q23 · Règles du mot de passe (longueur, caractères)">Q23</span></span></div>
+    <div class="champ"><label for="mdp2">Confirmez le mot de passe</label><div class="mdp"><input id="mdp2" type="password" data-mdp autocomplete="new-password"><button type="button" class="oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg width="22" height="22" aria-hidden="true"><use href="#i-oeil"/></svg></button></div></div>
     <p class="micro" style="color:var(--blocage)" data-mdp-erreur hidden>Les deux mots de passe ne sont pas identiques.</p>
   </div>
   <div class="pied"><a class="bouton primaire" href="#p2b" data-suite-mdp aria-disabled="true">Continuer</a></div>
@@ -763,12 +782,10 @@ a.statut{text-decoration:none}
     <div class="pictos attente"><svg><use href="#i-horloge"/></svg></div>
     <div class="titre-page">Nous vérifions votre identité</div>
     <p class="sous-titre">Nous vous prévenons par SMS.</p>
-    <div class="carte" style="width:100%;text-align:left">
-      <h2>En attendant, vous pouvez déjà <span class="trancher" title="Q7 · Pendant l'attente de vérification, que peut faire le client ?">Q7</span></h2>
-      <div class="liste">
-        <a href="#e1"><svg width="22" height="22" style="color:var(--action)"><use href="#i-envoyer"/></svg><div class="milieu"><b>Préparer un envoi</b><span class="micro">Vous le paierez dès la vérification faite.</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
-        <a href="#b3"><svg width="22" height="22" style="color:var(--action)"><use href="#i-personnes"/></svg><div class="milieu"><b>Ajouter un bénéficiaire</b></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
-      </div>
+    <div class="rubrique" style="align-self:stretch">En attendant, vous pouvez déjà <span class="trancher" title="Q7 · Pendant l'attente de vérification, que peut faire le client ?">Q7</span></div>
+    <div class="tuiles" style="align-self:stretch">
+      <a class="tuile" href="#e1"><svg aria-hidden="true"><use href="#i-envoyer"/></svg><span>Préparer un envoi</span><span class="micro" style="font-weight:400">Vous le paierez dès la vérification faite.</span></a>
+      <a class="tuile" href="#b3"><svg aria-hidden="true"><use href="#i-personnes"/></svg><span>Ajouter un bénéficiaire</span><span class="micro" style="font-weight:400">Pour envoyer sans attendre ensuite.</span></a>
     </div>
   </div>
   <div class="pied"><a class="bouton secondaire" href="#a1">Aller à l'accueil</a><div class="boutons-ligne"><a class="micro" href="#p6" style="text-align:center">Revue : identité vérifiée</a><a class="micro" href="#p7" style="text-align:center">Revue : pièce refusée</a></div></div>
@@ -806,7 +823,7 @@ a.statut{text-decoration:none}
   <div class="contenu">
     <span class="logo" style="margin:8px 0"><svg><use href="#i-symbole"/></svg>Safico</span>
     <div class="champ"><label>Numéro de téléphone</label><div class="tel"><select class="indicatif" data-persona-indicatif><option>+224</option><option>+33</option></select><input inputmode="tel" data-persona-tel></div></div>
-    <div class="champ"><label for="mdp-c1">Mot de passe</label><input id="mdp-c1" type="password" value="motdepasse" autocomplete="current-password"></div>
+    <div class="champ"><label for="mdp-c1">Mot de passe</label><div class="mdp"><input id="mdp-c1" type="password" value="motdepasse" autocomplete="current-password"><button type="button" class="oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg width="22" height="22" aria-hidden="true"><use href="#i-oeil"/></svg></button></div></div>
     <a class="lien" style="align-self:flex-start" href="#c3">Mot de passe oublié</a>
     <div class="carte plate">
       <h2>Vous avez changé de numéro ? <span class="trancher" title="Q6 · Changement de numéro et numéro partagé dans une famille">Q6</span></h2>
@@ -861,9 +878,8 @@ a.statut{text-decoration:none}
   <header class="barre"><a class="retour" href="#c4" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Mot de passe</h1></header>
   <div class="contenu">
     <div class="titre-page">Choisissez un nouveau mot de passe</div>
-    <div class="champ"><label for="mdp-c5a">Nouveau mot de passe</label><input id="mdp-c5a" type="password" data-mdp autocomplete="new-password"><span class="aide">Règles du mot de passe à définir. <span class="trancher" title="Q23 · Règles du mot de passe (longueur, caractères)">Q23</span></span></div>
-    <div class="champ"><label for="mdp-c5b">Confirmez le mot de passe</label><input id="mdp-c5b" type="password" data-mdp autocomplete="new-password"></div>
-    <label style="display:flex;gap:10px;align-items:center"><input type="checkbox" data-afficher-mdp style="width:18px;height:18px;accent-color:var(--action)">Afficher</label>
+    <div class="champ"><label for="mdp-c5a">Nouveau mot de passe</label><div class="mdp"><input id="mdp-c5a" type="password" data-mdp autocomplete="new-password"><button type="button" class="oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg width="22" height="22" aria-hidden="true"><use href="#i-oeil"/></svg></button></div><span class="aide">Règles du mot de passe à définir. <span class="trancher" title="Q23 · Règles du mot de passe (longueur, caractères)">Q23</span></span></div>
+    <div class="champ"><label for="mdp-c5b">Confirmez le mot de passe</label><div class="mdp"><input id="mdp-c5b" type="password" data-mdp autocomplete="new-password"><button type="button" class="oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg width="22" height="22" aria-hidden="true"><use href="#i-oeil"/></svg></button></div></div>
     <p class="micro" style="color:var(--blocage)" data-mdp-erreur hidden>Les deux mots de passe ne sont pas identiques.</p>
   </div>
   <div class="pied"><a class="bouton primaire" href="#c1" data-suite-mdp aria-disabled="true" data-toast="Mot de passe modifié. Connectez-vous.">Enregistrer</a></div>
@@ -903,7 +919,7 @@ a.statut{text-decoration:none}
     <a class="icone-btn" href="#h1" aria-label="Aide"><svg width="22" height="22"><use href="#i-aide"/></svg></a>
     <a class="icone-btn" href="#n1" aria-label="Notifications, 1 non lue"><svg width="22" height="22"><use href="#i-cloche"/></svg><span class="badge"></span></a>
   </header>
-  <div class="contenu" style="background:linear-gradient(var(--fond-marque) 0 84px,var(--fond-page) 84px)">
+  <div class="contenu" style="background:linear-gradient(var(--fond-marque) 0 84px,var(--fond-page) 84px);background-attachment:local">
     <div style="color:#fff;font:600 18px/24px var(--police)">Bonjour <span data-persona-prenom-lu></span></div>
     <div class="bandeau neutre" data-si-reseau="faible" hidden><svg><use href="#i-info"/></svg><span class="texte">Connexion lente : les informations affichées datent de 14:32.</span></div>
     <div class="bandeau attention" data-si-identite="expiree" hidden><svg><use href="#i-alerte"/></svg><span class="texte"><b>Votre pièce d'identité a expiré.</b> <a href="#m5">La mettre à jour</a></span></div>
@@ -928,11 +944,11 @@ a.statut{text-decoration:none}
     <div class="bandeau attention"><svg><use href="#i-alerte"/></svg><span class="texte"><b>Un justificatif est demandé</b> pour votre envoi du 2 octobre. <a href="#s3">Ajouter le document</a> <span class="trancher" title="Q15 · Dépassement du plafond interne en ligne : comment le client apprend-il qu'un justificatif est demandé ?">Q15</span></span></div>
     <div class="bandeau information"><svg><use href="#i-info"/></svg><span>Nouveau : envoyez vers le Mali. Retrait en espèces dans 12 agences partenaires. <span class="etiquette" style="font-size:11px;color:var(--texte-secondaire)">proposition</span></span></div>
     <div class="carte">
-      <div class="ligne"><h2>Derniers envois</h2><a href="#s1" class="micro" style="color:var(--texte-lien);font-weight:600">Tout voir</a></div>
+      <div class="ligne"><h2>Derniers envois</h2><a href="#s1" class="action-tete">Tout voir<svg aria-hidden="true"><use href="#i-chevron"/></svg></a></div>
       <div class="liste" data-derniers></div>
     </div>
     <div class="carte">
-      <div class="ligne"><h2>Vos bénéficiaires</h2><a href="#b3" class="micro" style="color:var(--texte-lien);font-weight:600">Ajouter</a></div>
+      <div class="ligne"><h2>Vos bénéficiaires</h2><a href="#b3" class="action-tete"><svg aria-hidden="true"><use href="#i-plus"/></svg>Ajouter</a></div>
       <div class="liste" data-benef-accueil></div>
     </div>
   </div>
@@ -1053,11 +1069,11 @@ a.statut{text-decoration:none}
       <div class="micro" data-recu-mode></div>
     </div>
     <div class="carte">
-      <div class="ligne"><span class="label">Bénéficiaire</span><a href="#b1" class="micro" style="color:var(--texte-lien);font-weight:600">Modifier</a></div>
+      <div class="ligne"><span class="label">Bénéficiaire</span><a href="#b1" class="action-tete">Modifier</a></div>
       <div><div class="fort" data-benef-nom></div><div data-benef-prenom></div><div class="micro" data-benef-tel></div></div>
     </div>
     <div class="carte">
-      <div class="ligne"><span class="label">Point de retrait</span><a href="#l1" class="micro" style="color:var(--texte-lien);font-weight:600">Modifier</a></div>
+      <div class="ligne"><span class="label">Point de retrait</span><a href="#l1" class="action-tete">Modifier</a></div>
       <div><div class="fort" data-point-nom></div><div class="micro" data-point-detail></div></div>
     </div>
     <div class="carte">
@@ -1510,7 +1526,7 @@ a.statut{text-decoration:none}
   data-contexte="Ajouté sur retour d'Alexie (07/10) : un espace pour voir et modifier ses informations, gérer sa sécurité et se déconnecter. Il porte aussi le renouvellement d'une pièce expirée (parcours 13). Point client 15/10 : la sécurité porte deux lignes, mot de passe (connexion) et code PIN (envois et opérations sensibles) ; « mise à jour du profil », tous les 6 mois, rejoint les événements notifiés."
   data-q="Q6|Q20">
   <header class="barre marque"><h1 style="color:#fff;padding-left:4px">Mon compte</h1></header>
-  <div class="contenu" style="background:linear-gradient(var(--fond-marque) 0 72px,var(--fond-page) 72px)">
+  <div class="contenu" style="background:linear-gradient(var(--fond-marque) 0 72px,var(--fond-page) 72px);background-attachment:local">
     <div class="carte">
       <div class="profil-tete"><span class="avatar" style="background:var(--fond-action)" data-persona-initiales></span>
         <div style="flex:1;min-width:0"><div class="montant-petit"><span data-persona-prenom-lu></span> <span data-persona-nom-lu></span></div><div class="micro" data-persona-tel-lu></div></div></div>
@@ -1558,7 +1574,7 @@ a.statut{text-decoration:none}
     </div>
     <div class="rubrique">Coordonnées</div>
     <div class="carte">
-      <div class="ligne"><span class="label">Téléphone</span><span><span class="fort" data-persona-tel-lu></span><br><a href="#m3" class="micro" style="color:var(--texte-lien);font-weight:600">Changer de numéro</a></span></div>
+      <div class="ligne"><span class="label">Téléphone</span><span><span class="fort" data-persona-tel-lu></span><br><a href="#m3" class="action-tete" style="margin-top:6px">Changer de numéro</a></span></div>
       <div class="champ"><label>E-mail (facultatif)</label><input value="" placeholder="Pour recevoir vos reçus"></div>
       <div class="champ"><label>Quartier ou commune</label><input data-persona-quartier></div>
     </div>
@@ -1673,7 +1689,7 @@ a.statut{text-decoration:none}
     <div class="pictos attente"><svg><use href="#i-horloge"/></svg></div>
     <div class="titre-page">Votre session a expiré</div>
     <p class="sous-titre">Par sécurité, nous vous avons déconnecté après un moment d'inactivité. <span class="trancher" title="Q34 · Au bout de combien de temps d'inactivité la session expire-t-elle dans l'application ?">Q34</span></p>
-    <div class="champ"><label for="mdp-z1">Mot de passe</label><input id="mdp-z1" type="password" value="motdepasse" autocomplete="current-password"></div>
+    <div class="champ"><label for="mdp-z1">Mot de passe</label><div class="mdp"><input id="mdp-z1" type="password" value="motdepasse" autocomplete="current-password"><button type="button" class="oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg width="22" height="22" aria-hidden="true"><use href="#i-oeil"/></svg></button></div></div>
     <a class="lien" style="align-self:flex-start" href="#c3">Mot de passe oublié</a>
   </div>
   <div class="pied"><a class="bouton primaire" href="#a1">Me reconnecter</a></div>
@@ -1731,7 +1747,7 @@ a.statut{text-decoration:none}
   data-contexte="Application native : le système demande l'accès à l'appareil photo avant la prise de vue de la pièce (P4b). Écran d'explication avant la demande du système."
   data-q="">
   <header class="barre"><a class="retour" href="#p4" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Vérifier mon identité</h1></header>
-  <div class="contenu centre">
+  <div class="contenu centre au-centre">
     <div class="pictos attente"><svg><use href="#i-photo"/></svg></div>
     <div class="titre-page">Autorisez l'appareil photo</div>
     <p class="sous-titre">Pour photographier votre pièce d'identité et prendre un selfie. Vos photos servent seulement à vérifier votre identité.</p>
@@ -1743,7 +1759,7 @@ a.statut{text-decoration:none}
   data-contexte="Application native : demande d'autorisation des notifications, juste avant l'attente de vérification, qui en a besoin pour prévenir le client."
   data-q="">
   <header class="barre"><h1 style="padding-left:8px">Vérifier mon identité</h1></header>
-  <div class="contenu centre">
+  <div class="contenu centre au-centre">
     <div class="pictos attente"><svg><use href="#i-cloche"/></svg></div>
     <div class="titre-page">Activez les notifications</div>
     <p class="sous-titre">Nous vous prévenons dès que votre identité est vérifiée, puis à chaque étape de vos envois.</p>
@@ -2144,7 +2160,7 @@ document.addEventListener("click",e=>{
   const ca=e.target.closest("[data-cas-choix]");if(ca){etat.cas[ca.dataset.casGroupe]=ca.dataset.casChoix;rendreCas();remplir();return}
   const pv=e.target.closest("[data-pin-vers]");if(pv){e.preventDefault();return ouvrirPin(pv.dataset.pinVers)}
   if(e.target.closest("[data-profil-a-jour]")){etat.cas.profil="ajour";rendreCas();return toast("Merci, vos informations sont à jour.")}
-  const am=e.target.closest("[data-afficher-mdp]");if(am){am.closest(".ecran").querySelectorAll("[data-mdp]").forEach(i=>i.type=am.checked?"text":"password");return}
+  const oe=e.target.closest(".oeil");if(oe){const i=oe.previousElementSibling,vu=i.type==="password";i.type=vu?"text":"password";oe.setAttribute("aria-pressed",vu);oe.setAttribute("aria-label",vu?"Masquer le mot de passe":"Afficher le mot de passe");oe.querySelector("use").setAttribute("href",vu?"#i-oeil-barre":"#i-oeil");return}
   const ch2=e.target.closest(".telephone input");if(ch2&&ch2.dataset.mode&&!ch2.disabled)return ouvrirSaisie(ch2);
   if(e.target.closest("#clavier-texte"))return;
   if(etat.saisie&&!e.target.closest("#clavier"))fermerClavier();
