@@ -256,9 +256,6 @@ h2{font:700 16px/22px var(--police)}
 .aide-wa>svg:first-child{color:var(--valide);flex:none}
 .aide-wa .milieu{flex:1;display:flex;flex-direction:column}
 .aide-wa b{font-weight:600}
-.type-point{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:var(--rayon-capsule);background:var(--fond-action);color:var(--marque);font:600 11px/14px var(--police)}
-.type-point.distributeur{background:var(--fond-accent);color:var(--marque-tete)}
-.choix .horaires,.liste .horaires{display:block;color:var(--texte-secondaire);font-size:12px;line-height:16px}
 .minuteur{font:700 32px/38px var(--police);letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--marque)}
 .etapes-om{display:flex;flex-direction:column;gap:10px;counter-reset:om}
 .etapes-om li{list-style:none;display:flex;gap:10px;align-items:flex-start;counter-increment:om}
@@ -578,8 +575,8 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="p1" data-code="P1" data-groupe="A · Entrer dans le service" data-titre="Créer un compte · téléphone"
-  data-contexte="Le téléphone est l'identifiant (parcours 1). Un numéro déjà connu en agence est rattaché à la fiche existante (Q2). Si le numéro a déjà un compte en ligne, on ne le dit qu'après le code SMS (P2c) : ainsi, personne ne peut tester un numéro pour savoir s'il est inscrit."
-  data-q="Q2|Q6" data-cas="numero">
+  data-contexte="Le téléphone est l'identifiant (parcours 1). Un numéro déjà connu en agence est rattaché à la fiche existante (Q2, validée par Issiaga Diallo, commentaire d'Issiaga Diallo, doc atelier 8, 21/10 ; Babacar Faye ne s'est pas prononcé). Si le numéro a déjà un compte en ligne, on ne le dit qu'après le code SMS (P2c) : ainsi, personne ne peut tester un numéro pour savoir s'il est inscrit."
+  data-q="Q6" data-cas="numero">
   <header class="barre"><a class="retour" href="#p0" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Créer mon compte</h1><span class="etapes">1 / 4</span></header>
   <div class="progression"><i style="width:25%"></i></div>
   <div class="contenu">
@@ -593,7 +590,7 @@ a.statut{text-decoration:none}
       </div>
       <span class="aide">Le numéro doit être à votre nom. Un numéro, un compte.</span>
     </div>
-    <div class="bandeau information"><svg><use href="#i-info"/></svg><span>Vous êtes déjà client en agence ? Utilisez le même numéro : votre compte sera rattaché à votre fiche. <span class="trancher" title="Q2 · Un client déjà connu en agence ouvre un compte : rattache-t-on sa fiche existante ?">Q2</span></span></div>
+    <div class="bandeau information"><svg><use href="#i-info"/></svg><span>Vous êtes déjà client en agence ? Utilisez le même numéro : votre compte sera rattaché à votre fiche.</span></div>
   </div>
   <div class="pied">
     <a class="bouton primaire" href="#p2">Recevoir le code</a>
@@ -602,7 +599,7 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="p2" data-code="P2" data-groupe="A · Entrer dans le service" data-titre="Créer un compte · code SMS"
-  data-contexte="Code reçu par SMS, en 6 cases. Dès que le code est complet et bon, on passe directement au choix du mot de passe (P2e, point client 15/10), sans bouton « Continuer » (retour Alexie 07/10). Prototype : tout code à 6 chiffres est accepté. La suite dépend du numéro : nouveau (P2e), déjà inscrit (P2c), connu en agence (P2d). Cas limite dessiné : renvoi du SMS après 60 s."
+  data-contexte="Code reçu par SMS, en 6 cases. Dès que le code est complet et bon, on passe directement au choix du mot de passe (P2e, point client 15/10), sans bouton « Continuer » (retour Alexie 07/10). Prototype : tout code à 6 chiffres est accepté. Le code SMS garde un pavé ordinaire : seul le code PIN a un pavé dynamique (commentaire de Babacar Faye, doc atelier 8, 21/10). La suite dépend du numéro : nouveau (P2e), déjà inscrit (P2c), connu en agence (P2d). Cas limite dessiné : renvoi du SMS après 60 s."
   data-q="Q6" data-cas="numero">
   <header class="barre"><a class="retour" href="#p1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Créer mon compte</h1><span class="etapes">2 / 4</span></header>
   <div class="progression"><i style="width:50%"></i></div>
@@ -630,7 +627,7 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="p2b" data-code="P2b" data-groupe="A · Entrer dans le service" data-titre="Créer un compte · code PIN"
-  data-contexte="Décision du point client 15/10 : le code PIN à 6 chiffres est demandé pour valider les envois et les opérations sensibles ; il ne sert plus à la connexion (mot de passe, P2e). Mêmes 6 cases que le code SMS, chiffres visibles (retour Alexie 07/10). Saisi deux fois pour éviter une faute de frappe, puis passage direct à la suite.">
+  data-contexte="Décision du point client 15/10 : le code PIN à 6 chiffres est demandé pour valider les envois et les opérations sensibles ; il ne sert plus à la connexion (mot de passe, P2e). Mêmes 6 cases que le code SMS, chiffres visibles (retour Alexie 07/10). Saisi deux fois pour éviter une faute de frappe, puis passage direct à la suite. Pavé dynamique : les chiffres changent de place à chaque ouverture, l'effacement reste à sa place (« Il faut prévoir un clavier dynamique pour le code à 6 chiffres pour des mesures de sécurité », commentaire de Babacar Faye, doc atelier 8, 21/10).">
   <header class="barre"><a class="retour" href="#p2e" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Créer mon compte</h1><span class="etapes">2 / 4</span></header>
   <div class="progression"><i style="width:50%"></i></div>
   <div class="contenu">
@@ -663,28 +660,28 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="p2d" data-code="P2d" data-groupe="A · Entrer dans le service" data-titre="Créer un compte · déjà client en agence"
-  data-contexte="Le numéro correspond à une fiche client de l'agence, sans compte en ligne. Hypothèse Q2 : rattachement par le téléphone, confirmé par la pièce ; une seule fiche client. Rien de la fiche ne s'affiche avant la vérification de la pièce : avoir le téléphone ne suffit pas à voir les données d'un client. Hypothèse de la question 2 du document de l'atelier 8, 22/10 : code SMS, puis numéro de la pièce (P2f), et nouvelle photo seulement si la pièce enregistrée a expiré."
-  data-q="Q2" data-cas="numero">
+  data-contexte="Le numéro correspond à une fiche client de l'agence, sans compte en ligne. Hypothèse Q2 : rattachement par le téléphone, confirmé par la pièce ; une seule fiche client. Rien de la fiche ne s'affiche avant la vérification de la pièce : avoir le téléphone ne suffit pas à voir les données d'un client. Question 2 du document de l'atelier 8 : code SMS, puis numéro de la pièce (P2f), et nouvelle photo seulement si la pièce enregistrée a expiré. Validée par Issiaga Diallo le 21/10 (« ok pour moi », commentaire d'Issiaga Diallo, doc atelier 8, 21/10) ; Babacar Faye ne s'est pas prononcé. Q2 n'est plus à trancher."
+  data-q="" data-cas="numero">
   <header class="barre"><a class="retour" href="#p2" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Créer mon compte</h1><span class="etapes">2 / 4</span></header>
   <div class="progression"><i style="width:50%"></i></div>
   <div class="contenu">
     <div class="titre-page">Vous êtes déjà client Safico</div>
     <p class="sous-titre">Le numéro <b data-persona-tel-lu></b> correspond à une fiche client de nos agences.</p>
-    <div class="bandeau information"><svg><use href="#i-info"/></svg><span>Nous relierons cette fiche à votre compte quand votre pièce d'identité sera vérifiée. Une seule fiche, en agence comme dans l'application. <span class="trancher" title="Q2 · Un client déjà connu en agence ouvre un compte : rattache-t-on sa fiche existante ?">Q2</span></span></div>
+    <div class="bandeau information"><svg><use href="#i-info"/></svg><span>Nous relierons cette fiche à votre compte quand votre pièce d'identité sera vérifiée. Une seule fiche, en agence comme dans l'application.</span></div>
     <p class="micro">Par sécurité, nous n'affichons rien de votre fiche avant cette vérification.</p>
   </div>
   <div class="pied"><a class="bouton primaire" href="#p2f">Retrouver ma fiche</a></div>
 </section>
 
 <section class="ecran" id="p2f" data-code="P2f" data-groupe="A · Entrer dans le service" data-titre="Créer un compte · numéro de la pièce"
-  data-contexte="Client déjà enregistré au guichet. Hypothèse de la question 2 du document de l'atelier 8, 22/10 (Q2) : après le code SMS, il confirme son identité par le numéro de la pièce présentée en agence. Si la pièce enregistrée a expiré, il en photographie une nouvelle après avoir choisi ses codes ; sinon, il ne refait ni le questionnaire ni la photo. La conformité confirme le rattachement depuis le back-office (P5). Le cas « pièce expirée » se choisit dans le panneau."
-  data-q="Q2" data-cas="piece">
+  data-contexte="Client déjà enregistré au guichet. Question 2 du document de l'atelier 8 (Q2), Validée par Issiaga Diallo le 21/10 (« ok pour moi », commentaire d'Issiaga Diallo, doc atelier 8, 21/10) ; Babacar Faye ne s'est pas prononcé. Q2 n'est plus à trancher. Après le code SMS, il confirme son identité par le numéro de la pièce présentée en agence. Si la pièce enregistrée a expiré, il en photographie une nouvelle après avoir choisi ses codes ; sinon, il ne refait ni le questionnaire ni la photo. La conformité confirme le rattachement depuis le back-office (P5). Le cas « pièce expirée » se choisit dans le panneau."
+  data-q="" data-cas="piece">
   <header class="barre"><a class="retour" href="#p2d" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Créer mon compte</h1><span class="etapes">2 / 4</span></header>
   <div class="progression"><i style="width:50%"></i></div>
   <div class="contenu">
     <div class="titre-page">Confirmez votre identité</div>
     <p class="sous-titre">Saisissez le numéro de la pièce d'identité présentée en agence.</p>
-    <div class="champ"><label for="p2f-piece">Numéro de la pièce</label><input id="p2f-piece" data-requis autocomplete="off"><span class="aide">Tel qu'il figure sur la pièce, sans espace. <span class="trancher" title="Q2 · Retrouver son dossier ouvert en agence : code SMS seul, code SMS puis numéro de la pièce, ou les deux avec une nouvelle photo ?">Q2</span></span></div>
+    <div class="champ"><label for="p2f-piece">Numéro de la pièce</label><input id="p2f-piece" data-requis autocomplete="off"><span class="aide">Tel qu'il figure sur la pièce, sans espace.</span></div>
     <div class="bandeau attention" data-si-piece="expiree" hidden><svg><use href="#i-alerte"/></svg><span class="texte"><b>La pièce enregistrée en agence a expiré.</b> Vous photographierez la nouvelle après avoir choisi votre mot de passe et votre code PIN.</span></div>
     <p class="micro">Par sécurité, nous n'affichons rien de votre fiche. Notre équipe conformité confirme le rattachement.</p>
   </div>
@@ -693,7 +690,7 @@ a.statut{text-decoration:none}
 
 <section class="ecran" id="p3" data-code="P3" data-groupe="A · Entrer dans le service" data-titre="Vérification · votre profil"
   data-contexte="Mêmes données qu'en agence (note d'Issiaga Diallo, atelier 5) : catégorie socioprofessionnelle et revenus nets mensuels, obligatoires. La tranche fixe le plafond interne, qui n'est jamais montré au client comme un blocage."
-  data-q="Q2">
+  data-q="">
   <header class="barre"><a class="retour" href="#p2b" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Vérifier mon identité</h1><span class="etapes">3 / 4</span></header>
   <div class="progression"><i style="width:75%"></i></div>
   <div class="contenu">
@@ -769,13 +766,13 @@ a.statut{text-decoration:none}
     <div class="pictos attention"><svg><use href="#i-photo"/></svg></div>
     <div class="titre-page">Nous n'arrivons pas à lire votre pièce</div>
     <p class="sous-titre">Après 3 essais, un conseiller vous rappelle pour vous aider à terminer votre inscription.</p>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
   </div>
   <div class="pied"><a class="bouton primaire" href="#p5" data-toast="Un conseiller vous rappelle sur votre numéro.">Être rappelé</a><a class="bouton texte" href="#p4b">Réessayer</a></div>
 </section>
 
 <section class="ecran" id="p5" data-code="P5" data-groupe="A · Entrer dans le service" data-titre="Vérification en cours"
-  data-contexte="Ce que le client peut faire pendant l'attente : personne dans le benchmark ne le dit. Hypothèse (Q7) : simuler, enregistrer des bénéficiaires, préparer un envoi ; le paiement attend la vérification. Point client 15/10 (Q4 tranchée) : la revue est faite par la conformité, aucun délai réglementaire ne s'impose, aucun délai n'est affiché au client, le back-office traite au plus vite. L'expéditeur est filtré sur les listes de sanctions dès l'inscription ; rien n'est affiché au client."
+  data-contexte="Ce que le client peut faire pendant l'attente : personne dans le benchmark ne le dit. Hypothèse (Q7) : simuler, enregistrer des bénéficiaires, préparer un envoi ; le paiement attend la vérification. Point client 15/10 (Q4 tranchée) : la revue est faite par la conformité, aucun délai réglementaire ne s'impose, aucun délai n'est affiché au client, le back-office traite au plus vite. Le délai de validation des comptes ne répond à aucune exigence réglementaire : c'est une procédure interne de Safico (commentaire de SAFICO, doc atelier 8, 21/10). Toujours aucun délai affiché. L'expéditeur est filtré sur les listes de sanctions dès l'inscription ; rien n'est affiché au client."
   data-q="Q7">
   <header class="barre marque"><span class="logo"><svg><use href="#i-symbole-inv"/></svg>Safico</span></header>
   <div class="contenu centre">
@@ -811,13 +808,13 @@ a.statut{text-decoration:none}
     <div class="pictos attention"><svg><use href="#i-pièce"/></svg></div>
     <div class="titre-page">Nous n'avons pas pu vérifier votre identité</div>
     <p class="sous-titre">Les photos ne nous permettent pas de confirmer votre identité. Reprenez-les : pièce à plat, sans reflet, visage bien éclairé. <span class="trancher" title="Q35 · Pièce refusée par la conformité : quel motif dit-on au client, et combien de nouvelles tentatives ?">Q35</span></p>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
   </div>
   <div class="pied"><a class="bouton primaire" href="#p4">Reprendre les photos</a></div>
 </section>
 
 <section class="ecran" id="c1" data-code="C1" data-groupe="A · Entrer dans le service" data-titre="Connexion"
-  data-contexte="Téléphone + mot de passe (point client 15/10) : le code PIN ne sert plus à la connexion, seulement aux envois et aux opérations sensibles. Mot de passe et code PIN se réinitialisent par code SMS ; à défaut, par le service client ou en agence après contrôle d'identité (compte rendu de l'atelier 7, 15/10, parcours P4 : remplace la règle « jamais par le seul SMS »). Perdre son numéro ne fait pas perdre son compte : le changement passe par la pièce d'identité (M3, Q6). Connexion depuis un nouveau téléphone : réassociation par code SMS, l'ancien appareil est déconnecté (C2, point client 15/10)."
+  data-contexte="Téléphone + mot de passe (point client 15/10) : le code PIN ne sert plus à la connexion, seulement aux envois et aux opérations sensibles. Mot de passe et code PIN se réinitialisent par code SMS ; à défaut, par le service après-vente ou en agence après contrôle d'identité (compte rendu de l'atelier 7, 15/10, parcours P4 : remplace la règle « jamais par le seul SMS »). Perdre son numéro ne fait pas perdre son compte : le changement passe par la pièce d'identité (M3, Q6). Connexion depuis un nouveau téléphone : réassociation par code SMS, l'ancien appareil est déconnecté (C2, point client 15/10). « Service après-vente » plutôt que « service client » (commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="Q6" data-cas="connexion">
   <header class="barre"><a class="retour" href="#p0" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Se connecter</h1></header>
   <div class="contenu">
@@ -848,14 +845,14 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="c3" data-code="C3" data-groupe="A · Entrer dans le service" data-titre="Mot de passe · numéro"
-  data-contexte="Réinitialisation par code SMS (compte rendu de l'atelier 7, 15/10, parcours P4) ; à défaut, par le service client ou en agence après contrôle d'identité. Atteint depuis la connexion, P2c et Mon compte."
+  data-contexte="Réinitialisation par code SMS (compte rendu de l'atelier 7, 15/10, parcours P4) ; à défaut, par le service après-vente ou en agence après contrôle d'identité. Atteint depuis la connexion, P2c et Mon compte. « Service après-vente » plutôt que « service client » (commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="">
   <header class="barre"><a class="retour" href="#c1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Mot de passe</h1></header>
   <div class="contenu">
     <div class="titre-page">Nouveau mot de passe</div>
     <p class="sous-titre">Nous vous envoyons un code par SMS pour confirmer que c'est bien vous.</p>
     <div class="champ"><label>Numéro de téléphone</label><div class="tel"><select class="indicatif" data-persona-indicatif><option>+224</option><option>+33</option></select><input inputmode="tel" data-persona-tel></div></div>
-    <div class="carte plate"><h2>Vous n'avez plus ce numéro ?</h2><p class="micro">Un conseiller vérifie votre pièce d'identité, au service client ou en agence.</p><a class="lien" style="align-self:flex-start" href="#m3">Changer de numéro</a></div>
+    <div class="carte plate"><h2>Vous n'avez plus ce numéro ?</h2><p class="micro">Un conseiller vérifie votre pièce d'identité, au service après-vente ou en agence.</p><a class="lien" style="align-self:flex-start" href="#m3">Changer de numéro</a></div>
   </div>
   <div class="pied"><a class="bouton primaire" href="#c4">Recevoir le code</a></div>
 </section>
@@ -898,7 +895,7 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="c7" data-code="C7" data-groupe="A · Entrer dans le service" data-titre="Code PIN · nouveau"
-  data-contexte="Mêmes 6 cases et même double saisie qu'à l'inscription (P2b). Code bon : retour à Mon compte."
+  data-contexte="Mêmes 6 cases et même double saisie qu'à l'inscription (P2b). Code bon : retour à Mon compte. Pavé dynamique : les chiffres changent de place à chaque ouverture, l'effacement reste à sa place (« Il faut prévoir un clavier dynamique pour le code à 6 chiffres pour des mesures de sécurité », commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="">
   <header class="barre"><a class="retour" href="#c6" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Code PIN</h1></header>
   <div class="contenu">
@@ -912,8 +909,8 @@ a.statut{text-decoration:none}
 <!-- ═════════════ ACCUEIL ═════════════ -->
 
 <section class="ecran" id="a1" data-code="A1" data-groupe="Accueil" data-titre="Accueil connecté"
-  data-contexte="Le taux du jour en tête, comme au guichet (« c'est l'info que demande le client en arrivant », 22/09). Le plafond restant du jour s'affiche en temps réel, avec l'entrée vers la demande de plafond plus élevé (point client 15/10) ; valeurs de démonstration de X1. Le profil se met à jour tous les 6 mois, sur notification : bandeau visible par le cas « Profil de plus de 6 mois » (point client 15/10). Une demande de justificatif s'affiche ici quand la conformité en fait une (Q15). Le message réseau reprend la publication des Opérations (BO29), étendue aux clients : proposition."
-  data-q="Q15|Q24" data-cas="profil plafond client identite donnees reseau">
+  data-contexte="Le taux du jour en tête, comme au guichet (« c'est l'info que demande le client en arrivant », 22/09). La carte du plafond quitte l'accueil pour « Mon plafond », dans Mon compte (M6) : « L'affichage sur le menu principal n'est pas pertinent, il vaut mieux mettre cette rubrique dans les paramètres de l'utilisateur » (commentaire de Babacar Faye, doc atelier 8, 21/10). Le bandeau « justificatif demandé » reste ici : il porte sur un envoi, pas sur le plafond. Le profil se met à jour tous les 6 mois, sur notification : bandeau visible par le cas « Profil de plus de 6 mois » (point client 15/10). Une demande de justificatif s'affiche ici quand la conformité en fait une (Q15). Le message réseau reprend la publication des Opérations (BO29), étendue aux clients : proposition."
+  data-q="Q15" data-cas="profil identite donnees reseau">
   <header class="barre marque">
     <span class="logo"><svg><use href="#i-symbole-inv"/></svg>Safico</span><span style="flex:1"></span>
     <a class="icone-btn" href="#h1" aria-label="Aide"><svg width="22" height="22"><use href="#i-aide"/></svg></a>
@@ -928,18 +925,6 @@ a.statut{text-decoration:none}
       <div class="ligne"><span class="label">Taux du jour</span><span class="micro">Mis à jour à 08:00</span></div>
       <div class="ligne"><span class="montant-petit" data-taux-accueil></span><span class="micro" data-taux-accueil-unite></span></div>
       <a class="bouton primaire" href="#e1"><svg width="20" height="20"><use href="#i-envoyer"/></svg>Envoyer de l'argent</a>
-    </div>
-    <div class="carte">
-      <div class="ligne"><span class="label">Vous pouvez encore envoyer <span data-x-periode></span></span><span class="trancher" title="Q24 · Plafond de 10 M GNF de la première opération : vaut-il pour le premier envoi seulement, ou pour une période ? Quand les 5 000 USD par jour prennent-ils le relais ?">Q24</span></div>
-      <div class="montant-petit" data-x-reste></div>
-      <div class="jauge"><i data-x-jauge></i></div>
-      <div class="micro" data-si-client="actif">Déjà envoyé aujourd'hui : <span data-x-deja></span>. Plafond renouvelé à 00:00.</div>
-      <div class="micro" data-si-client="premier" hidden>Votre première opération est limitée à 10 000 000 GNF, en plusieurs envois de <span data-x-max></span> au plus.</div>
-      <a class="lien" style="align-self:flex-start" href="#x2" data-si-plafond="aucune">Demander un plafond plus élevé</a>
-      <span class="statut attente" style="align-self:flex-start" data-si-plafond="examen" hidden>Demande en cours d'examen</span>
-      <a class="statut valide" style="align-self:flex-start" href="#x4" data-si-plafond="accepte" hidden>Plafond relevé</a>
-      <a class="statut blocage" style="align-self:flex-start" href="#x4" data-si-plafond="refuse" hidden>Demande refusée</a>
-      <a class="statut attention" style="align-self:flex-start" href="#x4" data-si-plafond="justif" hidden>Justificatif demandé</a>
     </div>
     <div class="bandeau attention"><svg><use href="#i-alerte"/></svg><span class="texte"><b>Un justificatif est demandé</b> pour votre envoi du 2 octobre. <a href="#s3">Ajouter le document</a> <span class="trancher" title="Q15 · Dépassement du plafond interne en ligne : comment le client apprend-il qu'un justificatif est demandé ?">Q15</span></span></div>
     <div class="bandeau information"><svg><use href="#i-info"/></svg><span>Nouveau : envoyez vers le Mali. Retrait en espèces dans 12 agences partenaires. <span class="etiquette" style="font-size:11px;color:var(--texte-secondaire)">proposition</span></span></div>
@@ -956,7 +941,7 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="n1" data-code="N1" data-groupe="Accueil" data-titre="Notifications"
-  data-contexte="Atteint par la cloche de l'accueil. document de l'atelier 8, 22/10 : SMS à l'envoi, au retrait et à l'annulation, notification dans l'application, e-mail au choix. S'y ajoutent la mise à jour du profil tous les 6 mois et la demande de plafond (15/10), visibles selon les cas du panneau. Les envois sont ceux de « Mes envois »."
+  data-contexte="Atteint par la cloche de l'accueil. document de l'atelier 8, 22/10 : SMS à l'envoi, au retrait et à l'annulation, notification dans l'application, e-mail au choix. S'y ajoutent la mise à jour du profil tous les 6 mois et la demande de plafond (15/10), visibles selon les cas du panneau. Les envois sont ceux de « Mes envois ». La notification de retrait ne nomme plus de point de retrait (commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="Q20" data-cas="profil plafond">
   <header class="barre"><a class="retour" href="#a1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Notifications</h1><a class="icone-btn" href="#n2" aria-label="Réglages des notifications"><svg width="22" height="22"><use href="#i-profil"/></svg></a></header>
   <div class="contenu">
@@ -967,8 +952,8 @@ a.statut{text-decoration:none}
       <a href="#x4" data-si-plafond="refuse" hidden><div class="milieu notif non-lue"><b>Demande de plafond refusée</b><span class="micro">Votre plafond actuel reste valable.</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
       <a href="#x4" data-si-plafond="justif" hidden><div class="milieu notif non-lue"><b>Un justificatif est demandé</b><span class="micro">Pour votre demande de plafond.</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
       <a href="#x4" data-si-plafond="examen" hidden><div class="milieu notif"><b>Demande de plafond en cours d'examen</b><span class="micro">Nous vous prévenons dès la décision.</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
-      <a href="#s2"><div class="milieu notif non-lue"><b><span data-benef-nom-complet></span> peut retirer <span data-recu-montant></span></b><span class="micro">14:33 · au point <span data-point-nom></span></span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
-      <a href="#s2"><div class="milieu notif"><b>Paiement reçu : <span data-recap-total></span></b><span class="micro">14:32 · Orange Money · SFC-9A21-3307</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
+      <a href="#s2"><div class="milieu notif non-lue"><b><span data-benef-nom-complet></span> peut retirer <span data-recu-montant></span></b><span class="micro">14:33 · dans toute agence ou chez tout distributeur Safico</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
+      <a href="#s2"><div class="milieu notif"><b>Paiement reçu : <span data-recap-total></span></b><span class="micro">14:32 · <span data-paiement-nom></span> · SFC-9A21-3307</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
     </div></div>
     <div class="rubrique">Plus tôt</div>
     <div class="carte"><div class="liste">
@@ -1013,7 +998,7 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="b3" data-code="B3" data-groupe="Envoyer" data-titre="Nouveau bénéficiaire"
-  data-contexte="Le téléphone du bénéficiaire est le champ le plus critique (atelier 1). Nom et prénom(s) sur deux lignes : une inversion fait refuser le paiement (29/09). Le rappel « exactement comme sur sa pièce » répond au premier motif d'échec en agence relevé par le benchmark. Point client 15/10 : le bénéficiaire est filtré sur les listes de sanctions dès sa création ici (sans compte, c'est à ce moment) ; rien n'est affiché au client. Il reçoit le code de retrait par SMS, sans compte obligatoire ; s'il a un compte Safico, il reçoit aussi une notification dans l'application (Q9, réponse partielle). Pays et mode de réception figurent dans la fiche, comme le décrit le document de l'atelier 8, 22/10 ; au lancement, le seul mode est l'espèce. Le téléphone est obligatoire et le code part uniquement au bénéficiaire (compte rendu de l'atelier 7, 15/10 : Q8 tranchée) ; l'écran « Bénéficiaire sans téléphone » (B3n), où l'expéditeur recevait le code, est retiré."
+  data-contexte="Le téléphone du bénéficiaire est le champ le plus critique (atelier 1). Nom et prénom(s) sur deux lignes : une inversion fait refuser le paiement (29/09). Le rappel « exactement comme sur sa pièce » répond au premier motif d'échec en agence relevé par le benchmark. Point client 15/10 : le bénéficiaire est filtré sur les listes de sanctions dès sa création ici (sans compte, c'est à ce moment) ; rien n'est affiché au client. Il reçoit le code de retrait par SMS, sans compte obligatoire ; s'il a un compte Safico, il reçoit aussi une notification dans l'application (Q9, réponse partielle). Pays et mode de réception figurent dans la fiche, comme le décrit le document de l'atelier 8, 22/10 ; au lancement, le seul mode est l'espèce. Le téléphone est obligatoire et le code part uniquement au bénéficiaire (compte rendu de l'atelier 7, 15/10 : Q8 tranchée) ; l'écran « Bénéficiaire sans téléphone » (B3n), où l'expéditeur recevait le code, est retiré. La ville n'annonce plus « les agences les plus proches » et l'enregistrement mène aux déclarations (E3) : le client ne choisit pas de point de retrait et ne voit pas leur liste (commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="Q9">
   <header class="barre"><a class="retour" href="#b1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Nouveau bénéficiaire</h1></header>
   <div class="contenu">
@@ -1023,30 +1008,16 @@ a.statut{text-decoration:none}
     <div class="bandeau information"><svg><use href="#i-pièce"/></svg><span class="texte">Écrivez le nom <b>exactement comme sur sa pièce d'identité</b>. Sinon, l'agence ne pourra pas payer.</span></div>
     <div class="champ"><label>Nom</label><input value="SOUMAH"></div>
     <div class="champ"><label>Prénom(s)</label><input value="Mariama"></div>
-    <div class="champ"><label>Ville</label><input value="Kindia"><span class="aide">Facultatif : nous vous indiquons les agences les plus proches.</span></div>
+    <div class="champ"><label>Ville</label><input value="Kindia"><span class="aide">Facultatif.</span></div>
     <label style="display:flex;gap:10px;align-items:flex-start"><input type="checkbox" checked style="width:18px;height:18px;accent-color:var(--action);margin-top:1px"><span>Je confirme que le nom et le numéro sont exacts.</span></label>
   </div>
-  <div class="pied"><a class="bouton primaire" href="#l1">Enregistrer et continuer</a></div>
-</section>
-
-<section class="ecran" id="l1" data-code="L1" data-groupe="Envoyer" data-titre="Envoi · 2 Point de retrait"
-  data-contexte="Hypothèse de la question 3 du document de l'atelier 8, 22/10 (Q27) : l'expéditeur choisit un point de retrait à l'envoi ; le point accepte ou refuse depuis son application ; en cas de refus, l'expéditeur en choisit un autre et le bénéficiaire est prévenu par SMS. Elle remplace l'affichage de la disponibilité des espèces. Liste et horaires : parcours P13 de l'atelier 7. Points, adresses et horaires de démonstration, selon la ville du bénéficiaire : la liste réelle est à fournir par Safico."
-  data-q="Q27">
-  <header class="barre"><a class="retour" href="#b1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Point de retrait</h1><span class="etapes">2 / 4</span></header>
-  <div class="progression"><i style="width:50%"></i></div>
-  <div class="contenu">
-    <div class="titre-page">Où votre proche retire-t-il l'argent&nbsp;?</div>
-    <p class="sous-titre">Près de <b data-point-ville></b>. Nous lui envoyons l'adresse par SMS.</p>
-    <div class="choix" data-points="choix"></div>
-    <div class="bandeau information"><svg><use href="#i-info"/></svg><span class="texte">Le point de retrait confirme qu'il peut servir votre envoi. S'il ne le peut pas, vous en choisissez un autre et nous prévenons votre proche. <span class="trancher" title="Q27 · Demande au point de retrait : qui la reçoit, sous quel délai répond-il, que voient l'expéditeur et le bénéficiaire en cas de refus ? Vaut-elle pour les agences comme pour les distributeurs ?">Q27</span></span></div>
-  </div>
-  <div class="pied"><a class="bouton primaire" href="#e4">Continuer</a></div>
+  <div class="pied"><a class="bouton primaire" href="#e4">Enregistrer et continuer</a></div>
 </section>
 
 <section class="ecran" id="e4" data-code="E3" data-groupe="Envoyer" data-titre="Envoi · 3 Déclarations"
   data-contexte="Origine des fonds et motif du transfert, obligatoires à chaque envoi, mêmes listes qu'au guichet (ateliers 3 et 5 ; listes définitives : G1). Le bouton reste désactivé tant que les deux ne sont pas choisis."
   data-q="Q15">
-  <header class="barre"><a class="retour" href="#l1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Quelques précisions</h1><span class="etapes">3 / 4</span></header>
+  <header class="barre"><a class="retour" href="#b1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Quelques précisions</h1><span class="etapes">3 / 4</span></header>
   <div class="progression"><i style="width:75%"></i></div>
   <div class="contenu">
     <p class="sous-titre">La réglementation nous demande ces informations pour chaque envoi.</p>
@@ -1058,7 +1029,7 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="e5" data-code="E4" data-groupe="Envoyer" data-titre="Envoi · 4 Récapitulatif"
-  data-contexte="Tout ce qui engage, avant le paiement : bénéficiaire (nom et prénom(s) séparés), montant, frais, taux, total. Annulation et remboursement écrits en clair : aucun concurrent ne dit si les frais sont rendus (benchmark)."
+  data-contexte="Tout ce qui engage, avant le paiement : bénéficiaire (nom et prénom(s) séparés), montant, frais, taux, total. Annulation et remboursement écrits en clair : aucun concurrent ne dit si les frais sont rendus (benchmark). Plus de carte « Point de retrait » : un envoi se retire dans toute agence ou chez tout distributeur Safico, sans choix à l'envoi (commentaire de Babacar Faye, doc atelier 8, 21/10, Q27 tranchée)."
   data-q="Q16|Q13">
   <header class="barre"><a class="retour" href="#e4" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Récapitulatif</h1><span class="etapes">4 / 4</span></header>
   <div class="progression"><i style="width:100%"></i></div>
@@ -1073,10 +1044,6 @@ a.statut{text-decoration:none}
       <div><div class="fort" data-benef-nom></div><div data-benef-prenom></div><div class="micro" data-benef-tel></div></div>
     </div>
     <div class="carte">
-      <div class="ligne"><span class="label">Point de retrait</span><a href="#l1" class="action-tete">Modifier</a></div>
-      <div><div class="fort" data-point-nom></div><div class="micro" data-point-detail></div></div>
-    </div>
-    <div class="carte">
       <div class="ligne"><span>Vous envoyez</span><span class="fort" data-recap-envoi></span></div>
       <div class="ligne"><span>Frais</span><span data-recap-frais></span></div>
       <div class="ligne"><span>Taux</span><span data-recap-taux></span></div>
@@ -1085,7 +1052,7 @@ a.statut{text-decoration:none}
       <div class="micro">Taux garanti 15 minutes. <span class="trancher" title="Q16 · Le taux change entre la simulation et le paiement">Q16</span></div>
     </div>
     <div class="carte plate">
-      <div class="micro"><b>Vous changez d'avis ?</b> Tant que l'argent n'est pas retiré, vous pouvez annuler : nous vous rendons le montant <b>et les frais</b>. Non retiré après 30 jours, l'envoi vous est remboursé, sans les frais. <span class="trancher" title="Q13 · Annuler un envoi payé en ligne : vers quel moyen rend-on principal et frais ? Qui décide ?">Q13</span></div>
+      <div class="micro"><b>Vous changez d'avis ?</b> Tant que l'argent n'est pas retiré, vous pouvez annuler : nous vous rendons le montant <b>et les frais</b>. Non retiré après 30 jours, l'envoi vous est remboursé, sans les frais. <span class="trancher" title="Q13 · Annulation ou remboursement d'un envoi payé en ligne (Mobile Money ou carte) : les fonds reviennent-ils toujours au compte d'origine ? Quelle règle de frais ?">Q13</span></div>
     </div>
   </div>
   <div class="pied"><a class="bouton primaire" href="#e6">Payer <span data-recap-total></span></a><a class="micro" href="#e5b" data-si-conversion style="text-align:center">Revue : taux expiré après 15 minutes</a></div>
@@ -1112,18 +1079,18 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="e6" data-code="E5" data-groupe="Envoyer" data-titre="Paiement · moyen"
-  data-contexte="Un seul moyen de paiement (compte rendu de l'atelier 7, 15/10) : Orange Money, par le code marchand Safico ; le client valide la demande de débit sur son téléphone, ou paie directement sur le code marchand. La carte bancaire, peu utilisée en Guinée, est retirée ; Q22 est donc sans objet. Un envoi se fait de bout en bout soit en agence, soit dans l'application : pas de paiement au guichet d'un envoi préparé en ligne (Q17 tranchée). Aucun partenariat n'est signé à ce jour. Deux façons de payer (document de l'atelier 8, 22/10) : la demande de débit, validée sur le téléphone (E5b), ou le paiement direct sur le code marchand (E5c). Le paiement se valide par le code PIN, dans une feuille du bas ; « code faux » et « code bloqué » se choisissent dans le panneau (Q30). Aucun solde n'est stocké dans l'application : Safico n'a pas de licence de monnaie électronique."
-  data-q="Q30" data-cas="pin">
+  data-contexte="Deux moyens de paiement. Orange Money, par le code marchand Safico (compte rendu de l'atelier 7, 15/10) : le client valide la demande de débit sur son téléphone, ou paie directement sur le code marchand. Carte bancaire, retirée le 15/10 et rajoutée : « Il faut prévoir aussi le paiement des envois par carte bancaire, ce qui serait pertinent pour la diaspora surtout » (commentaire d'Issiaga Diallo, doc atelier 8, 21/10) ; Babacar Faye parle aussi d'envois « payés par Mobile Money ou carte bancaire » (commentaire de Babacar Faye, doc atelier 8, 21/10). Le prototype n'a plus de profil diaspora : la carte est active dans l'application, sous la question Q36 ; elle mène à la saisie de la carte (E5g). Un envoi se fait de bout en bout soit en agence, soit dans l'application : pas de paiement au guichet d'un envoi préparé en ligne (Q17 tranchée). Aucun partenariat n'est signé à ce jour. Deux façons de payer (document de l'atelier 8, 22/10) : la demande de débit, validée sur le téléphone (E5b), ou le paiement direct sur le code marchand (E5c). Le paiement se valide par le code PIN, dans une feuille du bas, au pavé dynamique (commentaire de Babacar Faye, doc atelier 8, 21/10) ; « code faux » et « code bloqué » se choisissent dans le panneau (Q30). Aucun solde n'est stocké dans l'application : Safico n'a pas de licence de monnaie électronique."
+  data-q="Q30|Q36" data-cas="pin">
   <header class="barre"><a class="retour" href="#e5" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Paiement</h1></header>
   <div class="contenu">
     <div class="ligne"><span class="sous-titre">Total à payer</span><span class="montant-petit" data-recap-total></span></div>
     <div class="choix" data-paiements></div>
-    <div class="label" style="margin-top:4px">Comment voulez-vous payer ?</div>
-    <div class="choix">
+    <div class="label" style="margin-top:4px" data-si-moyen="mm">Comment voulez-vous payer ?</div>
+    <div class="choix" data-si-moyen="mm">
       <label><input type="radio" name="facon" value="debit" checked><div class="milieu"><b>Recevoir une demande de débit</b><span class="micro">Vous la validez sur votre téléphone, dans Orange Money.</span></div></label>
       <label><input type="radio" name="facon" value="marchand"><div class="milieu"><b>Payer moi-même le code marchand</b><span class="micro">Depuis votre application Orange Money.</span></div></label>
     </div>
-    <div class="champ" data-si-facon="debit"><label for="om-tel">Numéro Orange Money qui paie</label><input id="om-tel" inputmode="tel" data-persona-tel><span class="aide">Il recevra la demande de débit.</span></div>
+    <div class="champ" data-si-moyen="mm" data-si-facon="debit"><label for="om-tel">Numéro Orange Money qui paie</label><input id="om-tel" inputmode="tel" data-persona-tel><span class="aide">Il recevra la demande de débit.</span></div>
   </div>
   <div class="pied">
     <a class="bouton primaire" href="#e6b" data-suite-paiement data-pin-vers="#e6b">Confirmer le paiement</a>
@@ -1168,7 +1135,7 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="e6d" data-code="E5d" data-groupe="Envoyer" data-titre="Paiement non confirmé"
-  data-contexte="Hypothèse du document de l'atelier 8, 22/10 : un paiement non confirmé au bout de 10 minutes est abandonné ; rien n'est envoyé et le client peut réessayer. La règle « aucun bouton ne relance le paiement » vaut pendant l'attente (E6) ; elle cède ici, une fois le paiement abandonné. Un débit validé après le délai n'est traité par aucune source (Q28) : le service client, avec la référence, est la seule issue dessinée."
+  data-contexte="Hypothèse du document de l'atelier 8, 22/10 : un paiement non confirmé au bout de 10 minutes est abandonné ; rien n'est envoyé et le client peut réessayer. La règle « aucun bouton ne relance le paiement » vaut pendant l'attente (E6) ; elle cède ici, une fois le paiement abandonné. Un débit validé après le délai n'est traité par aucune source (Q28) : le service après-vente, avec la référence, est la seule issue dessinée. « Service après-vente » plutôt que « service client » (commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="Q28">
   <header class="barre"><a class="retour" href="#e6" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Paiement</h1></header>
   <div class="contenu centre">
@@ -1176,7 +1143,7 @@ a.statut{text-decoration:none}
     <div class="titre-page">Paiement non confirmé</div>
     <p class="sous-titre">Orange Money ne nous a pas confirmé votre paiement dans les 10 minutes. Votre envoi n'est pas parti.</p>
     <div class="carte plate" style="gap:8px"><h2>Votre compte a été débité ? <span class="trancher" title="Q28 · Un débit Orange Money validé après l'abandon des 10 minutes : comment le client est-il remboursé, et par qui ?">Q28</span></h2><p class="micro">Écrivez-nous avant de réessayer : nous vérifions avec Orange Money.</p></div>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A21-3307. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A21-3307</span></span><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A21-3307. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A21-3307</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></button>
   </div>
   <div class="pied"><a class="bouton primaire" href="#e6">Réessayer le paiement</a><a class="bouton texte" href="#a1">Retour à l'accueil</a></div>
 </section>
@@ -1189,7 +1156,7 @@ a.statut{text-decoration:none}
     <div class="pictos blocage"><svg><use href="#i-bloque"/></svg></div>
     <div class="titre-page">Code PIN bloqué</div>
     <p class="sous-titre">Vous avez saisi un code PIN incorrect trop de fois. Pour votre sécurité, vos envois sont bloqués. Choisissez un nouveau code PIN pour les débloquer. <span class="trancher" title="Q30 · Combien d'essais du code PIN avant blocage, et comment le débloquer ?">Q30</span></p>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
   </div>
   <div class="pied"><a class="bouton primaire" href="#c6">Choisir un nouveau code PIN</a></div>
 </section>
@@ -1202,28 +1169,46 @@ a.statut{text-decoration:none}
     <div class="pictos blocage"><svg><use href="#i-mobile"/></svg></div>
     <div class="titre-page">Orange Money a refusé le paiement</div>
     <p class="sous-titre">Votre envoi n'est pas parti et votre compte n'a pas été débité. Vérifiez le solde de votre compte Orange Money, puis réessayez.</p>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A21-3307. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A21-3307</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A21-3307. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A21-3307</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
   </div>
   <div class="pied"><a class="bouton primaire" href="#e6">Réessayer le paiement</a><a class="bouton texte" href="#a1">Retour à l'accueil</a></div>
 </section>
 
+<section class="ecran" id="e6g" data-code="E5g" data-groupe="Envoyer" data-titre="Paiement · carte bancaire"
+  data-contexte="Paiement par carte bancaire, second moyen de paiement : « Il faut prévoir aussi le paiement des envois par carte bancaire, ce qui serait pertinent pour la diaspora surtout » (commentaire d'Issiaga Diallo, doc atelier 8, 21/10). Saisie minimale : numéro, date d'expiration, cryptogramme, titulaire. Le code PIN Safico valide ensuite le paiement (feuille du bas, pavé mélangé), puis « en cours de confirmation » (E6). Prestataire de paiement et 3-D Secure inconnus : aucune authentification de la banque n'est dessinée (Q36). Le bouton reste désactivé tant que les quatre champs ne sont pas remplis ; « code faux » et « code bloqué » se choisissent dans le panneau."
+  data-q="Q36" data-cas="pin">
+  <header class="barre"><a class="retour" href="#e6" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Paiement</h1></header>
+  <div class="contenu">
+    <div class="ligne"><span class="sous-titre">Total à payer</span><span class="montant-petit" data-recap-total></span></div>
+    <div class="titre-page">Votre carte bancaire</div>
+    <div class="champ"><label for="cb-numero">Numéro de la carte</label><input id="cb-numero" inputmode="numeric" data-requis autocomplete="off"></div>
+    <div style="display:flex;gap:12px">
+      <div class="champ" style="flex:1"><label for="cb-expiration">Date d'expiration</label><input id="cb-expiration" inputmode="numeric" placeholder="MM/AA" data-requis autocomplete="off"></div>
+      <div class="champ" style="flex:1"><label for="cb-cryptogramme">Cryptogramme</label><input id="cb-cryptogramme" inputmode="numeric" data-requis autocomplete="off"><span class="aide">Au dos de la carte.</span></div>
+    </div>
+    <div class="champ"><label for="cb-titulaire">Titulaire de la carte</label><input id="cb-titulaire" data-requis autocomplete="off"></div>
+    <p class="micro">Prestataire de paiement à choisir par Safico. <span class="trancher" title="Q36 · Carte bancaire : dans l'application Guinée aussi, ou seulement sur la plateforme diaspora ? Quel prestataire de paiement, et 3-D Secure ?">Q36</span></p>
+  </div>
+  <div class="pied"><a class="bouton primaire" href="#e7" data-pin-vers="#e7" data-attend-requis aria-disabled="true">Payer <span data-recap-total></span></a></div>
+</section>
+
 <section class="ecran" id="e7" data-code="E6" data-groupe="Envoyer" data-titre="Paiement en cours de confirmation"
-  data-contexte="Réseau faible ou opérateur lent : le statut d'un paiement incertain est « en cours de confirmation », jamais « échec ». Aucun bouton ne relance le paiement : c'est ce qui évite le double paiement."
+  data-contexte="Réseau faible ou opérateur lent : le statut d'un paiement incertain est « en cours de confirmation », jamais « échec ». Aucun bouton ne relance le paiement : c'est ce qui évite le double paiement. Atteint aussi après un paiement par carte bancaire (E5g, commentaire d'Issiaga Diallo, doc atelier 8, 21/10) : « Votre banque nous répond » au lieu de « Votre opérateur »."
   data-q="">
   <header class="barre"><h1 style="padding-left:8px">Paiement</h1></header>
   <div class="contenu centre">
     <div class="pictos attente"><svg><use href="#i-horloge"/></svg></div>
     <div class="titre-page">Paiement en cours de confirmation</div>
-    <p class="sous-titre">Votre opérateur nous répond. Ne relancez pas le paiement : vous ne serez débité qu'une fois.</p>
+    <p class="sous-titre"><span data-paiement-attente></span> Ne relancez pas le paiement : vous ne serez débité qu'une fois.</p>
     <div class="carte" style="width:100%;gap:10px"><div class="squelette" style="width:70%"></div><div class="squelette"></div><div class="squelette" style="width:50%"></div></div>
     <p class="micro">Vous pouvez fermer l'application : nous vous prévenons par SMS.</p>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A21-3307. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A21-3307</span></span><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A21-3307. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A21-3307</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></button>
   </div>
   <div class="pied"><a class="bouton secondaire" href="#e8">Revue : paiement confirmé</a></div>
 </section>
 
 <section class="ecran" id="e8" data-code="E7" data-groupe="Envoyer" data-titre="Envoi confirmé · informations de retrait"
-  data-contexte="Parcours 8, débloqué par le lot 1. Le code part uniquement au bénéficiaire, par SMS (compte rendu de l'atelier 7, 15/10 : Q8 tranchée) ; l'expéditeur voit la référence et le numéro masqué, pas le code (au guichet, B10 a été retiré pour la même raison). Point client 15/10 : code de retrait par SMS, sans compte obligatoire ; le bénéficiaire qui a un compte reçoit aussi une notification dans l'application. Pas d'espace « envois reçus » dessiné : Q9 reste ouverte sur ce point."
+  data-contexte="Parcours 8, débloqué par le lot 1. Le code part uniquement au bénéficiaire, par SMS (compte rendu de l'atelier 7, 15/10 : Q8 tranchée) ; l'expéditeur voit la référence et le numéro masqué, pas le code (au guichet, B10 a été retiré pour la même raison). Point client 15/10 : code de retrait par SMS, sans compte obligatoire ; le bénéficiaire qui a un compte reçoit aussi une notification dans l'application. Pas d'espace « envois reçus » dessiné : Q9 reste ouverte sur ce point. Retrait dans toute agence ou chez tout distributeur Safico : ni point choisi, ni lien vers la liste des points, que le client ne voit pas, pour des raisons de sécurité (commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="Q9|Q20">
   <header class="barre"><span style="flex:1"></span><a class="icone-btn" href="#a1" aria-label="Fermer"><svg width="22" height="22"><use href="#i-fermer"/></svg></a></header>
   <div class="contenu">
@@ -1244,10 +1229,9 @@ a.statut{text-decoration:none}
       <div class="liste">
         <div><svg width="22" height="22" style="color:var(--marque-tete)"><use href="#i-mobile"/></svg><div class="milieu">Le code reçu par SMS</div></div>
         <div><svg width="22" height="22" style="color:var(--marque-tete)"><use href="#i-pièce"/></svg><div class="milieu">Sa pièce d'identité, au nom de <b data-benef-nom-complet></b></div></div>
-        <div><svg width="22" height="22" style="color:var(--marque-tete)"><use href="#i-agence"/></svg><div class="milieu">Au point de retrait <b data-point-nom></b>, dès qu'il a confirmé</div></div>
+        <div><svg width="22" height="22" style="color:var(--marque-tete)"><use href="#i-agence"/></svg><div class="milieu">Dans toute agence ou chez tout distributeur Safico</div></div>
         <div><svg width="22" height="22" style="color:var(--marque-tete)"><use href="#i-horloge"/></svg><div class="milieu">Avant le 6 novembre 2026 (30 jours)</div></div>
       </div>
-      <a href="#l2" class="lien" style="align-self:flex-start">Voir les points de retrait et leurs horaires</a>
     </div>
   </div>
   <div class="pied">
@@ -1268,15 +1252,15 @@ a.statut{text-decoration:none}
       <div class="ligne"><span>Vous pouvez encore envoyer</span><span class="montant-petit" data-x-reste></span></div>
     </div>
     <p class="micro" data-si-client="actif">Le plafond se renouvelle demain à 00:00 (heure de Conakry).</p>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur mon plafond d'envoi. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur mon plafond d'envoi. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
   </div>
   <div class="pied"><a class="bouton primaire" href="#e1">Modifier le montant</a><a class="bouton secondaire" href="#x2">Demander un plafond plus élevé</a></div>
 </section>
 
 <section class="ecran" id="x2" data-code="X2" data-groupe="Envoyer" data-titre="Demander un plafond plus élevé"
-  data-contexte="Le client demande un relèvement depuis l'application ; la conformité et les Opérations le valident. Le justificatif n'est pas obligatoire, mais peut être demandé (compte rendu de l'atelier 7, 15/10 : Q26 tranchée). Alhassane Sow souhaite des garde-fous, ces demandes se faisant aujourd'hui en agence. Atteint depuis X1 et depuis la carte de plafond de l'accueil. Motifs : la liste du motif du transfert (E3). Le plafond interne n'est toujours pas montré. Le bouton reste désactivé tant que le montant et le motif ne sont pas saisis."
+  data-contexte="Le client demande un relèvement depuis l'application ; la conformité et les Opérations le valident. Le justificatif n'est pas obligatoire, mais peut être demandé (compte rendu de l'atelier 7, 15/10 : Q26 tranchée). Alhassane Sow souhaite des garde-fous, ces demandes se faisant aujourd'hui en agence. Atteint depuis X1 et depuis « Mon plafond » (M6, Mon compte), où la carte de l'accueil a été déplacée (commentaire de Babacar Faye, doc atelier 8, 21/10). Motifs : la liste du motif du transfert (E3). Le plafond interne n'est toujours pas montré. Le bouton reste désactivé tant que le montant et le motif ne sont pas saisis."
   data-q="" data-cas="client">
-  <header class="barre"><a class="retour" href="#a1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Plafond d'envoi</h1></header>
+  <header class="barre"><a class="retour" href="#m6" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Plafond d'envoi</h1></header>
   <div class="contenu">
     <div class="titre-page">Demander un plafond plus élevé</div>
     <p class="sous-titre">Nos équipes conformité et opérations examinent chaque demande.</p>
@@ -1297,7 +1281,7 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="x3" data-code="X3" data-groupe="Envoyer" data-titre="Demande de plafond envoyée"
-  data-contexte="Décision du point client 15/10 : la conformité examine la demande, le client est prévenu par notification. Aucun délai n'est affiché (même décision que pour la vérification d'identité). Arriver ici passe la carte de plafond de l'accueil en « Demande en cours d'examen »."
+  data-contexte="Décision du point client 15/10 : la conformité examine la demande, le client est prévenu par notification. Aucun délai n'est affiché (même décision que pour la vérification d'identité). Arriver ici passe « Mon plafond » (M6, déplacé de l'accueil : commentaire de Babacar Faye, doc atelier 8, 21/10) en « Demande en cours d'examen »."
   data-q="">
   <header class="barre"><span style="flex:1"></span><a class="icone-btn" href="#a1" aria-label="Fermer"><svg width="22" height="22"><use href="#i-fermer"/></svg></a></header>
   <div class="contenu centre">
@@ -1314,14 +1298,14 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="x4" data-code="X4" data-groupe="Envoyer" data-titre="Décision sur le plafond"
-  data-contexte="Issue d'une demande de plafond plus élevé, validée par la conformité et les Opérations ; le justificatif n'est pas obligatoire mais peut être demandé (compte rendu de l'atelier 7, 15/10). Les trois issues se choisissent dans le panneau. Atteint depuis la notification et la carte de plafond de l'accueil."
+  data-contexte="Issue d'une demande de plafond plus élevé, validée par la conformité et les Opérations ; le justificatif n'est pas obligatoire mais peut être demandé (compte rendu de l'atelier 7, 15/10). Les trois issues se choisissent dans le panneau. Atteint depuis la notification et « Mon plafond » (M6, déplacé de l'accueil : commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="" data-cas="plafond">
-  <header class="barre"><a class="retour" href="#a1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Plafond d'envoi</h1></header>
+  <header class="barre"><a class="retour" href="#m6" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Plafond d'envoi</h1></header>
   <div class="contenu">
     <div data-si-plafond="examen"><div class="pictos attente"><svg><use href="#i-horloge"/></svg></div><div class="titre-page">Demande en cours d'examen</div><p class="sous-titre">Nous vous prévenons dès la décision.</p></div>
     <div data-si-plafond="aucune" hidden><p class="sous-titre">Aucune demande en cours.</p></div>
     <div data-si-plafond="accepte" hidden><div class="pictos valide"><svg><use href="#i-ok"/></svg></div><div class="titre-page">Votre plafond est relevé</div><div class="carte"><div class="ligne"><span>Nouveau plafond</span><span class="montant-petit" data-x-demande></span></div></div></div>
-    <div data-si-plafond="refuse" hidden><div class="pictos blocage"><svg><use href="#i-bloque"/></svg></div><div class="titre-page">Demande refusée</div><p class="sous-titre">Votre plafond actuel reste de <b data-x-plafond></b>. Pour en parler, écrivez-nous.</p><button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button></div>
+    <div data-si-plafond="refuse" hidden><div class="pictos blocage"><svg><use href="#i-bloque"/></svg></div><div class="titre-page">Demande refusée</div><p class="sous-titre">Votre plafond actuel reste de <b data-x-plafond></b>. Pour en parler, écrivez-nous.</p><button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button></div>
     <div data-si-plafond="justif" hidden><div class="pictos attention"><svg><use href="#i-recu"/></svg></div><div class="titre-page">Un justificatif est demandé</div><p class="sous-titre">Pour examiner votre demande, nous avons besoin d'un justificatif de vos revenus ou de l'origine des fonds.</p><div class="capture" style="height:96px" data-toast="Document ajouté."><div><svg width="26" height="26"><use href="#i-photo"/></svg><br><b>Prendre une photo ou choisir un fichier</b></div></div></div>
   </div>
   <div class="pied"><a class="bouton primaire" href="#a1">Retour à l'accueil</a></div>
@@ -1330,50 +1314,26 @@ a.statut{text-decoration:none}
 <!-- ═════════════ D. SUIVRE ET GÉRER ═════════════ -->
 
 <section class="ecran" id="s1" data-code="S1" data-groupe="Suivre et gérer" data-titre="Mes envois"
-  data-contexte="Statuts du lot 1, dits avec les mots du client : « En attente de retrait » devient « Disponible au retrait ». « En vérification » reste neutre, comme au guichet."
-  data-q="Q14" data-cas="donnees">
+  data-contexte="Statuts du lot 1, dits avec les mots du client : « En attente de retrait » devient « Disponible au retrait ». « En vérification » reste neutre, comme au guichet. Issiaga Diallo propose une autre liste (« En attente / Validé / Disponible au retrait / Payé », plus « En vérification / Annulé / Remboursé », commentaire d'Issiaga Diallo, doc atelier 8, 21/10) : non appliquée, car son « Payé » veut dire versé au bénéficiaire, alors qu'ici « payé » veut dire réglé par l'expéditeur. Les libellés ne changent pas (Q38)."
+  data-q="Q14|Q38" data-cas="donnees">
   <header class="barre"><h1 style="padding-left:8px">Mes envois</h1></header>
   <div class="contenu">
-    <div class="puces"><label><input type="radio" name="f" checked>Tous</label><label><input type="radio" name="f">En cours</label><label><input type="radio" name="f">Terminés</label></div>
+    <div class="puces"><label><input type="radio" name="f" checked>Tous</label><label><input type="radio" name="f">En cours</label><label><input type="radio" name="f">Terminés</label><span class="trancher" style="align-self:center" title="Q38 · Statuts de suivi : garder ceux du lot 1 ou adopter la liste proposée par la conformité ? Que veut dire « Payé » ?">Q38</span></div>
     <div class="carte"><div class="liste" data-envois></div></div>
   </div>
   <nav class="tabbar" data-tabbar="s1"></nav>
 </section>
 
 <section class="ecran" id="s2" data-code="S2" data-groupe="Suivre et gérer" data-titre="Détail d'un envoi"
-  data-contexte="Chronologie et actions. « Demander l'annulation » tant que l'argent n'est pas retiré : la décision revient aux Opérations (hypothèse Q13). La correction du bénéficiaire ne se fait pas en ligne (Q10). Le point de retrait accepte l'envoi avant que le code parte (hypothèse Q27) ; le lien de revue montre un refus (L3). Le détail suit l'envoi choisi dans « Mes envois » : disponible, retiré, annulé ou remboursé (remboursement automatique à 30 jours, parcours P10). Accès au service client par WhatsApp, référence pré-remplie, sur chaque envoi (document de l'atelier 8, 22/10)."
-  data-q="Q10|Q13|Q20|Q27">
+  data-contexte="Chronologie et actions. « Demander l'annulation » tant que l'argent n'est pas retiré : la demande est traitée par le back-office Safico, pour éviter la fraude dans le réseau (commentaire de Babacar Faye, doc atelier 8, 21/10 ; Q13 reste ouverte sur le retour au compte d'origine et les frais). La correction du bénéficiaire ne se fait pas en ligne (Q10). Plus de point de retrait : l'envoi se retire dans toute agence ou chez tout distributeur Safico, et le client ne voit pas la liste des points ; tant que l'envoi est disponible, il peut « Demander une assistance pour le retrait », et les Opérations le contactent directement (commentaire de Babacar Faye, doc atelier 8, 21/10, Q27 tranchée). L'étape « Accepté par le point de retrait » et le lien de revue « le point de retrait refuse » (L3) sont retirés. Le détail suit l'envoi choisi dans « Mes envois » : disponible, retiré, annulé ou remboursé (remboursement automatique à 30 jours, parcours P10). Accès au service après-vente par WhatsApp, référence pré-remplie, sur chaque envoi (document de l'atelier 8, 22/10)."
+  data-q="Q10|Q13|Q20">
   <header class="barre"><a class="retour" href="#s1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1 data-s2-ref></h1></header>
   <div class="contenu" data-s2-contenu></div>
   <div class="pied" data-s2-pied></div>
 </section>
 
-<section class="ecran" id="l2" data-code="L2" data-groupe="Suivre et gérer" data-titre="Points de retrait"
-  data-contexte="Parcours P13 de l'atelier 7, repris dans le document de l'atelier 8, 22/10 : la liste des agences et des distributeurs, avec leurs horaires, consultable par l'expéditeur et transmise au bénéficiaire par SMS. Atteint depuis l'aide et depuis la confirmation d'envoi. Points, adresses et horaires de démonstration : la liste réelle est à fournir par Safico. Pas de carte : elle supposerait la géolocalisation des points."
-  data-q="Q27">
-  <header class="barre"><a class="retour" href="#h1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Points de retrait</h1></header>
-  <div class="contenu">
-    <div class="puces" data-villes></div>
-    <div class="carte"><div class="liste" data-points="liste"></div></div>
-    <p class="micro">Votre proche retire en espèces, avec le code reçu par SMS et sa pièce d'identité.</p>
-  </div>
-</section>
-
-<section class="ecran" id="l3" data-code="L3" data-groupe="Suivre et gérer" data-titre="Point de retrait indisponible"
-  data-contexte="Hypothèse de la question 3 du document de l'atelier 8, 22/10 (Q27) : le point de retrait refuse l'envoi ; l'expéditeur en choisit un autre, et le bénéficiaire est prévenu par SMS. Délai de réponse du point, et ce qui se passe si l'expéditeur ne choisit pas : non dessinés, ce sont les questions posées."
-  data-q="Q27">
-  <header class="barre"><a class="retour" href="#s2" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>SFC-9A21-3307</h1></header>
-  <div class="contenu">
-    <div class="bandeau attention"><svg><use href="#i-alerte"/></svg><span class="texte"><b><span data-point-refuse></span> ne peut pas servir cet envoi.</b> Choisissez un autre point de retrait. <span class="trancher" title="Q27 · Demande au point de retrait : qui la reçoit, sous quel délai répond-il, que voient l'expéditeur et le bénéficiaire en cas de refus ? Vaut-elle pour les agences comme pour les distributeurs ?">Q27</span></span></div>
-    <div class="choix" data-points="autres"></div>
-    <p class="micro">Nous prévenons <span data-benef-prenom></span> <span data-benef-nom></span> par SMS, avec la nouvelle adresse.</p>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A21-3307. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A21-3307</span></span><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></button>
-  </div>
-  <div class="pied"><a class="bouton primaire" href="#s2" data-toast="Point de retrait modifié. Votre proche est prévenu par SMS.">Confirmer ce point</a></div>
-</section>
-
 <section class="ecran" id="s3" data-code="S3" data-groupe="Suivre et gérer" data-titre="Envoi en vérification · justificatif demandé"
-  data-contexte="Statut neutre « En vérification » (atelier 5), jamais le motif. Formule du service client reprise de G16. Le téléversement de justificatif est l'hypothèse de Q15. Pas de délai chiffré (Q14)."
+  data-contexte="Statut neutre « En vérification » (atelier 5), jamais le motif. Formule du service après-vente reprise de G16. Le téléversement de justificatif est l'hypothèse de Q15. Pas de délai chiffré (Q14). « Service après-vente » plutôt que « service client » (commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="Q14|Q15|Q19">
   <header class="barre"><a class="retour" href="#a1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>SFC-9A18-0412</h1></header>
   <div class="contenu">
@@ -1389,13 +1349,13 @@ a.statut{text-decoration:none}
       <div class="capture" style="height:110px"><div><svg width="26" height="26"><use href="#i-photo"/></svg><br><b>Prendre une photo ou choisir un fichier</b></div></div>
     </div>
     <p class="micro">Votre argent est en sécurité. Si l'envoi ne peut pas aboutir, il vous est rendu.</p>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A18-0412. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A18-0412</span></span><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A18-0412. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A18-0412</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></button>
   </div>
   <div class="pied"><a class="bouton primaire" href="#s1" data-toast="Document envoyé. Nous vous prévenons par SMS.">Envoyer le document</a><a class="micro" href="#s6" style="text-align:center">Revue : envoi refusé après vérification</a></div>
 </section>
 
 <section class="ecran" id="s5" data-code="S4" data-groupe="Suivre et gérer" data-titre="Demander l'annulation"
-  data-contexte="Règle du lot 1 : annulation = principal + frais, tant que l'envoi n'est pas payé, décidée par le chef d'agence ou les Opérations, avec réauthentification. En ligne, il n'y a pas d'agence d'origine : remboursement sur le moyen de paiement (hypothèse Q13)."
+  data-contexte="Règle du lot 1 : annulation = principal + frais, tant que l'envoi n'est pas payé, avec réauthentification. Les demandes d'annulation ou de remboursement des envois payés en ligne (Mobile Money ou carte) sont traitées par le back-office Safico, pour éviter la fraude dans le réseau (commentaire de Babacar Faye, doc atelier 8, 21/10, question 4 du doc). Retour au compte d'origine et règle des frais : Babacar Faye n'a pas répondu ; le prototype rend principal et frais sur le moyen qui a payé (Q13). Le code PIN se saisit au pavé dynamique."
   data-q="Q13">
   <header class="barre"><a class="retour" href="#s2" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Annuler l'envoi</h1></header>
   <div class="contenu">
@@ -1406,9 +1366,10 @@ a.statut{text-decoration:none}
       <div class="ligne"><span class="fort">Vous seront rendus</span><span class="montant-petit" data-recap-total></span></div>
       <div class="micro" data-rendu-sur></div>
     </div>
-    <div class="bandeau attention"><svg><use href="#i-alerte"/></svg><span class="texte">Le code de votre proche ne fonctionnera plus. Nous le prévenons par SMS. <span class="trancher" title="Q13 · Annuler un envoi payé en ligne : vers quel moyen rend-on principal et frais ? Qui décide ?">Q13</span></span></div>
+    <div class="bandeau attention"><svg><use href="#i-alerte"/></svg><span class="texte">Le code de votre proche ne fonctionnera plus. Nous le prévenons par SMS. <span class="trancher" title="Q13 · Annulation ou remboursement d'un envoi payé en ligne (Mobile Money ou carte) : les fonds reviennent-ils toujours au compte d'origine ? Quelle règle de frais ?">Q13</span></span></div>
+    <p class="micro">Votre demande est traitée par le back-office Safico.</p>
     <div class="champ"><label>Pourquoi annulez-vous ?</label><select><option>Choisir…</option><option>Erreur sur le bénéficiaire</option><option>Erreur sur le montant</option><option>Je n'ai plus besoin d'envoyer</option><option>Autre</option></select></div>
-    <div class="champ"><label>Code PIN</label><input type="password" inputmode="numeric" value="••••••"></div>
+    <div class="champ"><label>Code PIN</label><input type="password" inputmode="numeric" value="••••••" data-pin></div>
   </div>
   <div class="pied"><a class="bouton danger" href="#s7">Demander l'annulation</a></div>
 </section>
@@ -1424,31 +1385,31 @@ a.statut{text-decoration:none}
       <div>DIALLO Kadiatou · <span class="micro">Espèces dans le réseau</span></div>
     </div>
     <div class="bandeau information"><svg><use href="#i-info"/></svg><span class="texte"><b>Nous ne pouvons pas effectuer cet envoi.</b> 1 515 000 GNF, montant et frais, vous sont rendus sur votre compte Orange Money. <span class="trancher" title="Q31 · Envoi refusé après vérification : quel statut, quel montant rendu (avec ou sans frais), sous quel délai ?">Q31</span></span></div>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A18-0412. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A18-0412</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A18-0412. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A18-0412</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
   </div>
 </section>
 
 <section class="ecran" id="s7" data-code="S6" data-groupe="Suivre et gérer" data-titre="Demande d'annulation"
-  data-contexte="Hypothèse Q13 : le client demande, les Opérations décident ; montant et frais rendus sur le compte Orange Money qui a payé. Pendant l'examen, le prototype suspend le retrait (Q32). Les trois issues se choisissent dans le panneau."
+  data-contexte="Le client demande ; la demande est traitée par le back-office Safico, pour éviter la fraude dans le réseau (commentaire de Babacar Faye, doc atelier 8, 21/10). Montant et frais rendus sur le moyen qui a payé : hypothèse, Babacar Faye ne s'est prononcé ni sur le retour au compte d'origine ni sur les frais (Q13). Pendant l'examen, le prototype suspend le retrait (Q32). Les trois issues se choisissent dans le panneau."
   data-q="Q13|Q32" data-cas="annulation">
   <header class="barre"><a class="retour" href="#s2" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>SFC-9A21-3307</h1></header>
   <div class="contenu">
     <div data-si-annulation="examen">
-      <div class="carte"><span class="statut attente" style="align-self:flex-start">Annulation demandée</span><div class="titre-page">Nous examinons votre demande</div><p class="sous-titre">Pendant l'examen, votre proche ne peut pas retirer l'argent. Nous vous prévenons dès la décision. <span class="trancher" title="Q32 · Pendant l'examen d'une demande d'annulation, le retrait est-il suspendu ?">Q32</span></p></div>
+      <div class="carte"><span class="statut attente" style="align-self:flex-start">Annulation demandée</span><div class="titre-page">Nous examinons votre demande</div><p class="sous-titre">Votre demande est traitée par le back-office Safico. Pendant l'examen, votre proche ne peut pas retirer l'argent. Nous vous prévenons dès la décision. <span class="trancher" title="Q32 · Pendant l'examen d'une demande d'annulation, le retrait est-il suspendu ?">Q32</span></p></div>
     </div>
     <div data-si-annulation="acceptee" hidden>
-      <div class="carte"><span class="statut attente" style="align-self:flex-start">Annulé</span><div class="titre-page">Annulation acceptée</div><p class="sous-titre"><b data-recap-total></b>, montant et frais, vous sont rendus sur le compte Orange Money qui a payé. Votre proche est prévenu par SMS.</p></div>
+      <div class="carte"><span class="statut attente" style="align-self:flex-start">Annulé</span><div class="titre-page">Annulation acceptée</div><p class="sous-titre"><b data-recap-total></b>, montant et frais. <span data-rendu-sur></span> Votre proche est prévenu par SMS. <span class="trancher" title="Q13 · Annulation ou remboursement d'un envoi payé en ligne (Mobile Money ou carte) : les fonds reviennent-ils toujours au compte d'origine ? Quelle règle de frais ?">Q13</span></p></div>
     </div>
     <div data-si-annulation="refusee" hidden>
       <div class="carte"><span class="statut dispo" style="align-self:flex-start">Disponible au retrait</span><div class="titre-page">Annulation refusée</div><p class="sous-titre">Votre envoi reste disponible au retrait pour votre proche.</p></div>
     </div>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A21-3307. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A21-3307</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi SFC-9A21-3307. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp, avec la référence SFC-9A21-3307</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
   </div>
   <div class="pied"><a class="bouton secondaire" href="#s2">Voir l'envoi</a></div>
 </section>
 
 <section class="ecran" id="r1" data-code="R1" data-groupe="Suivre et gérer" data-titre="Reçu"
-  data-contexte="Même contenu que le reçu du guichet (B11), nom et prénom(s) séparés, sans « taux bloqué » (Q26 de l'atelier 5). Partage par WhatsApp, comme au guichet. Valeur d'un reçu électronique non signé : Q18."
+  data-contexte="Même contenu que le reçu du guichet (B11), nom et prénom(s) séparés, sans « taux bloqué » (Q26 de l'atelier 5). Partage par WhatsApp, comme au guichet. Valeur d'un reçu électronique non signé : Q18. Plus de ligne « Point de retrait » : l'envoi se retire dans tout le réseau (commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="Q18">
   <header class="barre"><a class="retour" href="#s2" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Reçu</h1></header>
   <div class="contenu">
@@ -1470,7 +1431,6 @@ a.statut{text-decoration:none}
       <div class="ligne"><span>Total payé</span><span class="fort" data-recap-total></span></div>
       <div class="ligne"><span>Montant à retirer</span><span class="fort" data-recu-montant></span></div>
       <div class="ligne"><span>Mode</span><span data-recu-mode></span></div>
-      <div class="ligne"><span>Point de retrait</span><span data-point-nom></span></div>
       <div class="ligne"><span>Origine des fonds</span><span>Salaire</span></div>
       <div class="ligne"><span>Motif</span><span>Assistance familiale</span></div>
       <div class="separateur"></div>
@@ -1481,16 +1441,16 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="h1" data-code="H1" data-groupe="Suivre et gérer" data-titre="Aide et contact"
-  data-contexte="Le canal de support conditionne tous les écrans d'erreur (parcours 12). Hypothèse Q19 : WhatsApp et téléphone, accessibles depuis chaque écran de blocage. Orange Money Guinée publie un numéro WhatsApp (benchmark)."
-  data-q="Q19">
+  data-contexte="Le canal de support conditionne tous les écrans d'erreur (parcours 12). Safico n'a pas de service après-vente mais un service après-vente, joignable sur les canaux habituels, surtout WhatsApp, du lundi au vendredi de 8 h à 17 h et le samedi de 8 h à 13 h (commentaire de Babacar Faye, doc atelier 8, 21/10). Les autres canaux ne sont pas nommés : la ligne « Appeler le service après-vente » est retirée, aucun autre canal n'est dessiné (Q37). « Trouver un point de retrait » devient « Demander une assistance pour le retrait » : le client ne voit pas la liste des points, les Opérations le contactent directement (commentaire de Babacar Faye, doc atelier 8, 21/10)."
+  data-q="Q19|Q37">
   <header class="barre"><a class="retour" href="#a1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Aide</h1></header>
   <div class="contenu">
     <div class="titre-page">Nous sommes là pour vous</div>
+    <p class="sous-titre">Notre service après-vente vous répond, surtout sur WhatsApp. <span data-sav-horaires></span>.</p>
     <div class="carte">
       <div class="liste">
-        <a href="#h1" data-toast="WhatsApp s'ouvre."><svg width="24" height="24" style="color:var(--valide)"><use href="#i-whatsapp"/></svg><div class="milieu"><b>WhatsApp</b><span class="micro">Réponse en moins d'une heure, 8 h – 20 h</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
-        <a href="#h1"><svg width="24" height="24" style="color:var(--action)"><use href="#i-tel"/></svg><div class="milieu"><b>Appeler le service client</b><span class="micro">Numéro à fournir par Safico</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
-        <a href="#l2"><svg width="24" height="24" style="color:var(--action)"><use href="#i-agence"/></svg><div class="milieu"><b>Trouver un point de retrait</b><span class="micro">Agences et distributeurs, avec leurs horaires</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
+        <a href="#h1" data-toast="WhatsApp s'ouvre."><svg width="24" height="24" style="color:var(--valide)"><use href="#i-whatsapp"/></svg><div class="milieu"><b>WhatsApp</b><span class="micro" data-sav-horaires></span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
+        <a href="#h1" data-toast="Demande envoyée. Un conseiller Safico vous contacte."><svg width="24" height="24" style="color:var(--action)"><use href="#i-agence"/></svg><div class="milieu"><b>Demander une assistance pour le retrait</b><span class="micro">Les Opérations Safico vous contactent directement.</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
       </div>
     </div>
     <div class="carte plate">
@@ -1501,29 +1461,29 @@ a.statut{text-decoration:none}
         <a href="#h2"><span class="milieu">Annuler ou se faire rembourser : quelle différence ?</span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
       </div>
     </div>
-    <p class="micro">Horaires et délais de démonstration. <span class="trancher" title="Q19 · Canaux de support : téléphone, WhatsApp, formulaire, agence ?">Q19</span></p>
+    <p class="micro">Autres canaux du service après-vente : à préciser. <span class="trancher" title="Q37 · Quels autres canaux du service après-vente afficher (téléphone, e-mail, numéros) ? Que voit le client en dehors des horaires ?">Q37</span></p>
   </div>
   <nav class="tabbar" data-tabbar="h1"></nav>
 </section>
 
 <section class="ecran" id="h2" data-code="H2" data-groupe="Suivre et gérer" data-titre="Questions fréquentes"
-  data-contexte="Réponses écrites à partir des règles du prototype : renvoi du code (S2), écart de nom soumis à un conseiller comme au guichet (lot 1, Q10), annulation et remboursement à 30 jours (lot 1, Q13). Questions de démonstration ; la liste réelle est à construire avec le service client."
+  data-contexte="Réponses écrites à partir des règles du prototype : renvoi du code (S2), écart de nom soumis à un conseiller comme au guichet (lot 1, Q10), annulation et remboursement à 30 jours (lot 1, Q13) ; demande d'annulation traitée par le back-office Safico (commentaire de Babacar Faye, doc atelier 8, 21/10). Questions de démonstration ; la liste réelle est à construire avec le service après-vente."
   data-q="Q10|Q13">
   <header class="barre"><a class="retour" href="#h1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Questions fréquentes</h1></header>
   <div class="contenu">
     <div class="carte faq">
       <details open><summary>Mon proche n'a pas reçu le code</summary><p>Vérifiez son numéro dans le détail de l'envoi : vous pouvez lui renvoyer le code depuis ce même écran. S'il ne le reçoit toujours pas, écrivez-nous avec la référence de l'envoi.</p></details>
-      <details><summary>Que faire si le nom ne correspond pas à sa pièce ?</summary><p>Le point de retrait ne peut pas payer si le nom de l'envoi diffère de celui de la pièce. La correction se fait avec un conseiller : écrivez-nous avec la référence de l'envoi. <span class="trancher" title="Q10 · Après le paiement, l'expéditeur peut-il corriger le bénéficiaire en ligne ?">Q10</span></p></details>
-      <details><summary>Annuler ou se faire rembourser : quelle différence ?</summary><p>Tant que l'argent n'est pas retiré, vous pouvez demander l'annulation : nous vous rendons le montant et les frais. Si l'argent n'est pas retiré dans les 30 jours, l'envoi vous est remboursé automatiquement, sans les frais.</p></details>
+      <details><summary>Que faire si le nom ne correspond pas à sa pièce ?</summary><p>L'agence ou le distributeur ne peut pas payer si le nom de l'envoi diffère de celui de la pièce. La correction se fait avec un conseiller : écrivez-nous avec la référence de l'envoi. <span class="trancher" title="Q10 · Après le paiement, l'expéditeur peut-il corriger le bénéficiaire en ligne ?">Q10</span></p></details>
+      <details><summary>Annuler ou se faire rembourser : quelle différence ?</summary><p>Tant que l'argent n'est pas retiré, vous pouvez demander l'annulation, traitée par le back-office Safico : nous vous rendons le montant et les frais. Si l'argent n'est pas retiré dans les 30 jours, l'envoi vous est remboursé automatiquement, sans les frais.</p></details>
     </div>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
   </div>
 </section>
 
 <!-- ═════════════ MON COMPTE ═════════════ -->
 
 <section class="ecran" id="m1" data-code="M1" data-groupe="Mon compte" data-titre="Mon compte"
-  data-contexte="Ajouté sur retour d'Alexie (07/10) : un espace pour voir et modifier ses informations, gérer sa sécurité et se déconnecter. Il porte aussi le renouvellement d'une pièce expirée (parcours 13). Point client 15/10 : la sécurité porte deux lignes, mot de passe (connexion) et code PIN (envois et opérations sensibles) ; « mise à jour du profil », tous les 6 mois, rejoint les événements notifiés."
+  data-contexte="Ajouté sur retour d'Alexie (07/10) : un espace pour voir et modifier ses informations, gérer sa sécurité et se déconnecter. Il porte aussi le renouvellement d'une pièce expirée (parcours 13). Point client 15/10 : la sécurité porte deux lignes, mot de passe (connexion) et code PIN (envois et opérations sensibles) ; « mise à jour du profil », tous les 6 mois, rejoint les événements notifiés. « Mon plafond » (M6) rejoint « Mes informations » : le plafond quitte l'accueil pour les paramètres de l'utilisateur (commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="Q6|Q20">
   <header class="barre marque"><h1 style="color:#fff;padding-left:4px">Mon compte</h1></header>
   <div class="contenu" style="background:linear-gradient(var(--fond-marque) 0 72px,var(--fond-page) 72px);background-attachment:local">
@@ -1536,6 +1496,7 @@ a.statut{text-decoration:none}
     <div class="carte"><div class="liste">
       <a href="#m2"><svg width="22" height="22" style="color:var(--action)"><use href="#i-profil"/></svg><div class="milieu"><b>Informations personnelles</b><span class="micro">Coordonnées, profession, revenus</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
       <a href="#m5"><svg width="22" height="22" style="color:var(--action)"><use href="#i-pièce"/></svg><div class="milieu"><b>Pièce d'identité</b><span class="micro">Passeport · expire le 14/03/2031</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
+      <a href="#m6"><svg width="22" height="22" style="color:var(--action)"><use href="#i-envoyer"/></svg><div class="milieu"><b>Mon plafond</b><span class="micro">Ce que vous pouvez encore envoyer</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
       <a href="#b4"><svg width="22" height="22" style="color:var(--action)"><use href="#i-personnes"/></svg><div class="milieu"><b>Mes bénéficiaires</b></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>
     </div></div>
     <div class="rubrique">Sécurité</div>
@@ -1557,6 +1518,26 @@ a.statut{text-decoration:none}
     <p class="micro" style="text-align:center">Prototype · version de démonstration</p>
   </div>
   <nav class="tabbar" data-tabbar="m1"></nav>
+</section>
+
+<section class="ecran" id="m6" data-code="M6" data-groupe="Mon compte" data-titre="Mon plafond"
+  data-contexte="Déplacé de l'accueil (A1) dans Mon compte : « L'affichage sur le menu principal n'est pas pertinent, il vaut mieux mettre cette rubrique dans les paramètres de l'utilisateur » (commentaire de Babacar Faye, doc atelier 8, 21/10). Même contenu que l'ancienne carte de l'accueil : plafond restant, déjà envoyé, renouvellement, entrée vers la demande de plafond plus élevé (X2) et son statut (point client 15/10). Valeurs de démonstration de X1. Le plafond restant reste aussi affiché sous le simulateur de l'envoi (E1), au moment où il sert. Le plafond interne n'est jamais montré."
+  data-q="Q24" data-cas="client plafond">
+  <header class="barre"><a class="retour" href="#m1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Mon plafond</h1></header>
+  <div class="contenu">
+    <div class="carte">
+      <div class="ligne"><span class="label">Vous pouvez encore envoyer <span data-x-periode></span></span><span class="trancher" title="Q24 · Plafond de 10 M GNF de la première opération : vaut-il pour le premier envoi seulement, ou pour une période ? Quand les 5 000 USD par jour prennent-ils le relais ?">Q24</span></div>
+      <div class="montant-petit" data-x-reste></div>
+      <div class="jauge"><i data-x-jauge></i></div>
+      <div class="micro" data-si-client="actif">Déjà envoyé aujourd'hui : <span data-x-deja></span>. Plafond renouvelé à 00:00.</div>
+      <div class="micro" data-si-client="premier" hidden>Votre première opération est limitée à 10 000 000 GNF, en plusieurs envois de <span data-x-max></span> au plus.</div>
+      <a class="lien" style="align-self:flex-start" href="#x2" data-si-plafond="aucune">Demander un plafond plus élevé</a>
+      <span class="statut attente" style="align-self:flex-start" data-si-plafond="examen" hidden>Demande en cours d'examen</span>
+      <a class="statut valide" style="align-self:flex-start" href="#x4" data-si-plafond="accepte" hidden>Plafond relevé</a>
+      <a class="statut blocage" style="align-self:flex-start" href="#x4" data-si-plafond="refuse" hidden>Demande refusée</a>
+      <a class="statut attention" style="align-self:flex-start" href="#x4" data-si-plafond="justif" hidden>Justificatif demandé</a>
+    </div>
+  </div>
 </section>
 
 <section class="ecran" id="m2" data-code="M2" data-groupe="Mon compte" data-titre="Informations personnelles"
@@ -1708,29 +1689,29 @@ a.statut{text-decoration:none}
 </section>
 
 <section class="ecran" id="z3" data-code="Z3" data-groupe="États système" data-titre="Erreur"
-  data-contexte="Erreur technique générique, avec l'accès au service client (hypothèse Q19 : depuis chaque écran d'erreur)."
+  data-contexte="Erreur technique générique, avec l'accès au service après-vente (hypothèse Q19 : depuis chaque écran d'erreur). « Service après-vente » plutôt que « service client » (commentaire de Babacar Faye, doc atelier 8, 21/10)."
   data-q="Q19">
   <header class="barre"><a class="retour" href="#a1" aria-label="Retour"><svg width="24" height="24"><use href="#i-retour"/></svg></a><h1>Safico</h1></header>
   <div class="contenu centre">
     <div class="pictos blocage"><svg><use href="#i-alerte"/></svg></div>
     <div class="titre-page">Une erreur est survenue</div>
     <p class="sous-titre">Réessayez dans un instant. Si le problème continue, écrivez-nous.</p>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
   </div>
   <div class="pied"><a class="bouton primaire" href="#a1">Réessayer</a></div>
 </section>
 
 <section class="ecran" id="z4" data-code="Z4" data-groupe="États système" data-titre="Compte suspendu"
-  data-contexte="Compte suspendu (par la conformité ou les Opérations). Le motif n'est pas dit, comme pour un envoi en vérification (atelier 5). Le sort des envois en cours n'est pas écrit : l'écran n'en dit rien."
+  data-contexte="Compte suspendu (par la conformité ou les Opérations). Le motif n'est pas dit, comme pour un envoi en vérification (atelier 5). Le sort des envois en cours n'est pas écrit : l'écran n'en dit rien. « Trouver une agence » menait à la liste des points de retrait, que le client ne voit plus (commentaire de Babacar Faye, doc atelier 8, 21/10) : remplacé par « Aide et contact »."
   data-q="Q19">
   <header class="barre marque"><span class="logo"><svg><use href="#i-symbole-inv"/></svg>Safico</span></header>
   <div class="contenu centre">
     <div class="pictos blocage"><svg><use href="#i-bloque"/></svg></div>
     <div class="titre-page">Votre compte est suspendu</div>
-    <p class="sous-titre">Vous ne pouvez pas envoyer d'argent pour le moment. Contactez le service client pour en savoir plus.</p>
-    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
+    <p class="sous-titre">Vous ne pouvez pas envoyer d'argent pour le moment. Contactez le service après-vente pour en savoir plus.</p>
+    <button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, j'ai besoin d'aide. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp</span><span class="micro" data-sav-horaires></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>
   </div>
-  <div class="pied"><a class="bouton secondaire" href="#l2">Trouver une agence</a></div>
+  <div class="pied"><a class="bouton secondaire" href="#h1">Aide et contact</a></div>
 </section>
 
 <section class="ecran" id="z5" data-code="Z5" data-groupe="États système" data-titre="Lancement de l'application"
@@ -1797,7 +1778,7 @@ a.statut{text-decoration:none}
   <div class="panneau">
     <h3>Utilisateur de démonstration</h3>
     <p><b>Fatoumata BALDÉ</b> · Ratoma, Conakry · +224</p>
-    <p class="micro" style="margin-top:6px">Application mobile pour la Guinée : envois en francs guinéens, payés par Orange Money. La diaspora aura sa plateforme web, non dessinée ici (atelier 7, 15/10). Taux et frais de démonstration, sans valeur d'engagement.</p>
+    <p class="micro" style="margin-top:6px">Application mobile pour la Guinée : envois en francs guinéens, payés par Orange Money ou par carte bancaire (Q36). La diaspora aura sa plateforme web, non dessinée ici (atelier 7, 15/10). Taux et frais de démonstration, sans valeur d'engagement.</p>
   </div>
   <div class="panneau">
     <span class="code" id="n-code"></span>
@@ -1816,7 +1797,7 @@ a.statut{text-decoration:none}
     <h3>Écrans</h3>
     <nav class="sommaire" id="sommaire"></nav>
   </div>
-  <p class="micro" style="padding:0 4px">Prototype lot 2 · démarré le 7 octobre 2026, aligné le 19 octobre sur le compte rendu de l'atelier 7. Rien n'est connecté. Questions Q1 à Q26 : « Parcours utilisateurs — Espace client B2C · v2 ».</p>
+  <p class="micro" style="padding:0 4px">Prototype lot 2 · démarré le 7 octobre 2026, aligné le 19 octobre sur le compte rendu de l'atelier 7, puis le 22 octobre sur les commentaires du 21/10. Rien n'est connecté. Questions Q1 à Q38 : « Parcours utilisateurs — Espace client B2C · v2 ».</p>
 </aside>
 <button class="bascule-notes" id="bascule-notes">Notes et écrans</button>
 </div>
@@ -1825,6 +1806,7 @@ a.statut{text-decoration:none}
 // Questions de l'atelier 7 (doc « Parcours B2C v2 »), avec l'hypothèse Galadrim dessinée.
 const Q = {
   Q1:["Part de smartphones, USSD, langues nationales","Web app mobile légère en français simple ; USSD hors lot 2."],
+  // Q2 validée le 21/10 par Issiaga Diallo (« ok pour moi ») ; Babacar Faye ne s'est pas prononcé. Gardée pour mémoire.
   Q2:["Retrouver son dossier ouvert en agence : code SMS seul, code SMS puis numéro de la pièce, ou les deux avec une nouvelle photo ? (question 2 de l'atelier 8)","Code SMS, puis numéro de la pièce ; nouvelle photo seulement si la pièce enregistrée a expiré ; la conformité confirme le rattachement."],
   Q3:["Pièces acceptées pour la diaspora","Passeport (guinéen ou étranger), carte consulaire, CNI guinéenne."],
   Q4:["Vérification automatique ou par la conformité ? Délai ?","Revue par la conformité, « sous 24 h ouvrées », notification à la décision."],
@@ -1833,16 +1815,17 @@ const Q = {
   Q7:["Que faire pendant l'attente de vérification ?","Simuler, enregistrer des bénéficiaires, préparer un envoi ; payer après vérification."],
   Q8:["Qui reçoit le code de retrait ? L'expéditeur le voit-il ?","SMS au bénéficiaire ; l'expéditeur voit la référence et le numéro masqué."],
   Q9:["Le bénéficiaire a-t-il un espace de suivi ?","SMS seulement au lot 2. Réponse partielle du 15/10 : le bénéficiaire qui a un compte reçoit aussi une notification dans l'application ; pas d'espace « envois reçus » dessiné."],
-  Q10:["Corriger le bénéficiaire en ligne après paiement ?","Non : service client ou chef d'agence (comme C8)."],
+  Q10:["Corriger le bénéficiaire en ligne après paiement ?","Non : service après-vente ou chef d'agence (comme C8)."],
   Q11:["Saisie en devise d'envoi, de réception, ou les deux ?","Les deux champs, liés."],
   Q12:["Affichage des frais et du taux encadré par la BCRG ?","Frais, taux, total et montant reçu séparés, avant tout engagement."],
-  Q13:["Annuler un envoi payé en ligne : rendu où, décidé par qui ?","Demande dans l'appli, décision des Opérations, rendu sur le moyen de paiement."],
-  Q14:["Envoi en vérification : libellé, délai, qui recontacte ?","« Vérification complémentaire », pas de délai chiffré, le service client appelle."],
+  // Q13 : « qui décide » tranché le 21/10 (Babacar Faye, question 4 de l'atelier 8) : le back-office Safico. Reformulée sur les deux points restés sans réponse.
+  Q13:["Annulation ou remboursement d'un envoi payé en ligne (Mobile Money ou carte) : les fonds reviennent-ils toujours au compte d'origine ? Quelle règle de frais ?","Rendu sur le compte ou la carte qui a payé ; principal et frais à l'annulation, principal seul au remboursement à 30 jours (règle du lot 1)."],
+  Q14:["Envoi en vérification : libellé, délai, qui recontacte ?","« Vérification complémentaire », pas de délai chiffré, le service après-vente appelle."],
   Q15:["Plafond interne dépassé en ligne ; demande de justificatif","L'envoi passe, alerte conformité ; demande visible à l'accueil et dans le suivi."],
   Q16:["Taux qui change entre simulation et paiement","Taux garanti 15 min, puis nouveau récapitulatif."],
   Q17:["Préparer en ligne, payer en espèces au guichet ?","Oui, par une référence de préparation reprise en B9. À chiffrer."],
   Q18:["Le reçu électronique fait-il foi sans signature ?","Oui, horodaté avec la référence ; signature électronique hors lot."],
-  Q19:["Canaux de support","WhatsApp et téléphone, depuis chaque écran de blocage."],
+  Q19:["Canaux de support","Réponse partielle du 21/10 (Babacar Faye) : service après-vente, sur les canaux habituels, surtout WhatsApp, du lundi au vendredi 8 h – 17 h et le samedi 8 h – 13 h ; accessible depuis chaque écran de blocage. Autres canaux : Q37."],
   Q20:["Événements qui justifient un SMS","Atelier 8 : SMS à l'envoi, au retrait et à l'annulation, toujours actif ; notification dans l'application ; e-mail au choix. Ajouté le 15/10 : mise à jour du profil, tous les 6 mois."],
   Q21:["Devises d'envoi proposées","GNF, EUR et USD ; un taux par devise, fixé chaque jour par la finance."],
   Q22:["Qu'est-ce qui ouvre les moyens de paiement : le pays de résidence ou la devise d'envoi ?","La devise d'envoi choisie dans le simulateur. GNF : mobile money, carte locale, espèces au guichet ; EUR ou USD : carte internationale."],
@@ -1851,16 +1834,21 @@ const Q = {
   Q24:["Plafond de 10 M GNF de la première opération : vaut-il pour le premier envoi seulement, ou pour une période ? Quand les 5 000 USD par jour prennent-ils le relais ?","La première opération d'un nouveau client est limitée à 10 000 000 GNF au total, en plusieurs envois ; ensuite, 5 000 USD par jour."],
   Q25:["Montant maximal par envoi : quelle valeur (3 à 4 M GNF cités en exemple) ? Comment l'articuler avec la règle anti-fractionnement (≥ 3 opérations en 24 h, atelier 3) ?","4 000 000 GNF par envoi, valeur d'exemple paramétrable ; l'anti-fractionnement n'est pas dessiné."],
   // Ajoutées le 19/10 avec les écrans de l'atelier 8
+  // Q27 tranchée le 21/10 (Babacar Faye) : retrait dans tout le réseau, sans choix du point ni liste visible du client ; assistance par les Opérations. Gardée pour mémoire.
   Q27:["Demande au point de retrait : qui la reçoit, sous quel délai répond-il, que voient l'expéditeur et le bénéficiaire en cas de refus ? Vaut-elle pour les agences comme pour les distributeurs ? (question 3 de l'atelier 8)","L'expéditeur choisit un point de retrait à l'envoi ; le point accepte ou refuse depuis son application ; en cas de refus, l'expéditeur en choisit un autre et le bénéficiaire est prévenu par SMS."],
-  Q28:["Un débit Orange Money validé après l'abandon des 10 minutes : comment le client est-il remboursé, et par qui ?","Rien n'est dessiné : le client écrit au service client, avec la référence."],
+  Q28:["Un débit Orange Money validé après l'abandon des 10 minutes : comment le client est-il remboursé, et par qui ?","Rien n'est dessiné : le client écrit au service après-vente, avec la référence."],
   Q29:["Paiement direct sur le code marchand : comment le paiement est-il rattaché à l'envoi (référence saisie, montant exact, numéro du payeur) ?","Le client paie le montant exact et indique la référence de l'envoi."],
   // Ajoutées le 19/10 avec les écrans manquants
   Q30:["Combien d'essais du code PIN avant blocage, et comment le débloquer ?","3 essais, puis blocage des envois jusqu'à un nouveau code PIN choisi par code SMS."],
   Q31:["Envoi refusé après vérification : quel statut, quel montant rendu (avec ou sans frais), sous quel délai ?","Statut « Annulé », montant et frais rendus sur Orange Money ; aucun délai affiché, jamais de motif."],
-  Q32:["Pendant l'examen d'une demande d'annulation, le retrait est-il suspendu ?","Oui : le bénéficiaire ne peut pas retirer tant que les Opérations n'ont pas décidé."],
+  Q32:["Pendant l'examen d'une demande d'annulation, le retrait est-il suspendu ?","Oui : le bénéficiaire ne peut pas retirer tant que le back-office Safico n'a pas traité la demande."],
   Q33:["Pièce d'identité expirée : les envois sont-ils suspendus ? Prévient-on le client avant l'expiration ?","Envois suspendus jusqu'à la vérification de la nouvelle pièce ; bandeau sur l'accueil."],
   Q34:["Au bout de combien de temps d'inactivité la session expire-t-elle dans l'application ?","Non chiffrée ; le client ne ressaisit que son mot de passe."],
   Q35:["Pièce refusée par la conformité : quel motif dit-on au client, et combien de nouvelles tentatives ?","Pas de motif détaillé ; le client reprend ses photos, sans limite dessinée."],
+  // Ajoutées le 22/10 avec les commentaires du 21/10 sur le doc de l'atelier 8
+  Q36:["Carte bancaire : dans l'application Guinée aussi, ou seulement sur la plateforme diaspora ? Quel prestataire de paiement, et 3-D Secure ?","Carte active dans l'application, à côté d'Orange Money ; saisie minimale (numéro, expiration, cryptogramme, titulaire), validée par le code PIN ; ni prestataire ni 3-D Secure dessinés."],
+  Q37:["Quels autres canaux du service après-vente afficher (téléphone, e-mail, numéros) ? Que voit le client en dehors des horaires ?","WhatsApp seul, avec ses horaires ; aucun autre canal affiché ; rien de particulier en dehors des horaires."],
+  Q38:["Statuts de suivi. Prototype (lot 1) : Disponible au retrait · Retiré · En vérification · Annulé · Remboursé. Proposition d'Issiaga Diallo (21/10) : En attente · Validé · Disponible au retrait · Payé, plus En vérification · Annulé · Remboursé. Son « Payé » veut dire versé au bénéficiaire ; dans le prototype, « payé » veut dire réglé par l'expéditeur (« Paiement reçu », « Vous avez payé »). Quelle liste retenir, et quel mot pour le versement au bénéficiaire ?","Libellés du lot 1 conservés : « Retiré » pour le versement au bénéficiaire, « payé » réservé au règlement de l'expéditeur."],
   Q26:["Le relèvement sans justificatif contredit la règle d'origine des fonds de la conformité (atelier 3). À confirmer par Issiaga Diallo.","Justificatif facultatif, comme décidé le 15/10 ; la conformité valide en back-office."]
 };
 // Tranchées le 07/10 (Alexie) : Q1 application en français ; Q11 deux devises modifiables, deux champs liés ; Q12 frais affichés ;
@@ -1886,13 +1874,20 @@ const VALEUR_GNF={GNF:1,EUR:10500,USD:9660};
 const FRAIS={GNF:m=>m<=0?0:Math.max(5000,Math.round(m*0.01/500)*500),EUR:m=>m<=0?0:2.5,USD:m=>m<=0?0:2.5};
 // Moyens de paiement : [code, pictogramme, libellé, précision, devises d'envoi qui l'ouvrent]
 // Atelier 7 (15/10) : un seul moyen, Orange Money par le code marchand Safico. Ni carte, ni paiement au guichet d'un envoi préparé en ligne.
-const PAIEMENTS=[["mm","i-mobile","Orange Money","Code marchand Safico : vous validez le débit sur votre téléphone.",["GNF"]]];
+// 21/10 (Issiaga Diallo, doc atelier 8) : carte bancaire ajoutée en second moyen. Plus de profil diaspora dans ce fichier : active ici, sous Q36.
+// [code, pictogramme, libellé, précision, devises d'envoi qui l'ouvrent, étiquette]
+const PAIEMENTS=[["mm","i-mobile","Orange Money","Code marchand Safico : vous validez le débit sur votre téléphone.",["GNF"]],
+  ["carte","i-carte","Carte bancaire","Vous saisissez votre carte à l'étape suivante.",["GNF","EUR","USD"],` <span class="trancher" title="Q36 · Carte bancaire : dans l'application Guinée aussi, ou seulement sur la plateforme diaspora ? Quel prestataire de paiement, et 3-D Secure ?">Q36</span>`]];
 // Remboursement sur le moyen de paiement d'origine (hypothèse Q13)
-const RENDU={mm:"Rendus sur le compte Orange Money qui a payé."};
+const RENDU={mm:"Rendus sur le compte Orange Money qui a payé.",carte:"Rendus sur la carte qui a payé."};
+// Attente de confirmation (E6) selon le moyen de paiement
+const ATTENTE={mm:"Votre opérateur nous répond.",carte:"Votre banque nous répond."};
+// Service après-vente (pas de service client) : surtout WhatsApp. Horaires du commentaire de Babacar Faye, doc atelier 8, 21/10.
+const SAV_HORAIRES="Du lundi au vendredi de 8 h à 17 h, le samedi de 8 h à 13 h";
 const DEVISES={EUR:"Euro",USD:"Dollar américain",GNF:"Franc guinéen",XOF:"Franc CFA",LRD:"Dollar libérien"};
 const DRAPEAU={US:"linear-gradient(#3C3B6E,#3C3B6E) 0 0/45% 55% no-repeat,repeating-linear-gradient(#B22234 0 2px,#fff 2px 4px)",GN:"linear-gradient(90deg,#CE1126 33%,#FCD116 33% 66%,#009460 66%)",CI:"linear-gradient(90deg,#F77F00 33%,#fff 33% 66%,#009E60 66%)",SN:"linear-gradient(90deg,#00853F 33%,#FDEF42 33% 66%,#E31B23 66%)",LR:"repeating-linear-gradient(#BF0A30 0 2px,#fff 2px 4px)",FR:"linear-gradient(90deg,#002395 33%,#fff 33% 66%,#ED2939 66%)"};
 
-const etat={piece:"Passeport",cas:{numero:"nouveau",connexion:"habituel",profil:"ajour",plafond:"aucune",client:"actif",piece:"valide",facon:"debit",pin:"juste",annulation:"examen",identite:"valide",donnees:"rempli",reseau:"normal"},env:0,dest:0,envoi:1000000,benef:0,point:0,pointRefuse:null,villeL2:null,envoiSel:0,mode:"especes",paiement:null};
+const etat={piece:"Passeport",cas:{numero:"nouveau",connexion:"habituel",profil:"ajour",plafond:"aucune",client:"actif",piece:"valide",facon:"debit",pin:"juste",annulation:"examen",identite:"valide",donnees:"rempli",reseau:"normal"},env:0,dest:0,envoi:1000000,benef:0,envoiSel:0,mode:"especes",paiement:null};
 const P=()=>UTILISATEUR;
 const fmt=(n,d)=>{if(n==null||isNaN(n))return "—";const dec=d==="EUR"||d==="USD"?2:0;return n.toLocaleString("fr-FR",{minimumFractionDigits:dec,maximumFractionDigits:dec}).replace(/ /g," ")+" "+(d==="EUR"?"€":d)};
 const calc=()=>{const p=P(),e=p.envois[etat.env],d=p.dest[etat.dest],t=TAUX[e[0]][d[2]],f=FRAIS[e[0]](etat.envoi);return{t,f,recu:t==null?null:(d[2]==="GNF"&&e[0]==="GNF"?etat.envoi:Math.floor(etat.envoi*t)),total:etat.envoi+f,devR:d[2],devE:e[0],drapE:e[1],pays:d[1],code:d[0]}};
@@ -1943,6 +1938,8 @@ function fermerFeuille(){const f=document.getElementById("feuille");if(f.classLi
 let tampon="";
 function ouvrirClavier(k){
   if(!(k==="otp"&&document.getElementById("feuille").classList.contains("pin")))fermerFeuille();
+  const cl=document.getElementById("clavier"),dejaOuvert=cl.classList.contains("ouvert");
+  if(k==="otp"){const bx=boiteCode(),pin=!!bx&&/^(pin|valider)$/.test(bx.dataset.otp);if(!dejaOuvert||cl.classList.contains("dynamique")!==pin)placerChiffres(pin)}else placerChiffres(false);
   const c=calc();etat.saisie=k;tampon="";
   document.getElementById("clavier").classList.toggle("sans-virgule",k==="otp");
   document.getElementById("clavier").classList.add("ouvert");
@@ -1959,6 +1956,15 @@ function fermerClavier(){
   document.getElementById("clavier").classList.remove("ouvert");
   document.getElementById("telephone").classList.remove("clavier-ouvert");document.body.classList.remove("clavier-ouvert");
   rendreSimu();rendreCode();
+}
+// Code PIN : pavé dynamique, chiffres mélangés à chaque ouverture, grille 3×4, effacement à sa place
+// (« Il faut prévoir un clavier dynamique pour le code à 6 chiffres », commentaire de Babacar Faye, doc atelier 8, 21/10).
+// Code SMS, montants et téléphone gardent le pavé ordinaire.
+function placerChiffres(melange){
+  const ch=[..."1234567890"];
+  if(melange)for(let i=ch.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ch[i],ch[j]]=[ch[j],ch[i]]}
+  [...document.querySelectorAll("#clavier .touches [data-touche]")].filter(b=>/^\d$/.test(b.dataset.touche)).forEach((b,i)=>{b.dataset.touche=ch[i];b.textContent=ch[i]});
+  document.getElementById("clavier").classList.toggle("dynamique",melange);
 }
 // Codes en 6 cases (P2 code SMS, P2b code PIN, C2 nouvel appareil, feuille du code PIN), saisis au pavé numérique
 const otp={val:"",premier:null,bloque:false,vers:null};
@@ -2032,7 +2038,7 @@ const CAS={
   profil:["Mise à jour du profil, demandée tous les 6 mois (point client 15/10).",[["ajour","Profil à jour"],["ancien","Profil de plus de 6 mois"]]],
   plafond:["Demande de plafond plus élevé (X2, X4).",[["aucune","Aucune demande"],["examen","Demande en cours d'examen"],["accepte","Demande acceptée"],["refuse","Demande refusée"],["justif","Justificatif demandé"]]],
   pin:["Code PIN saisi au paiement (Q30).",[["juste","Code juste"],["faux","Code faux : 3 essais, puis blocage"],["bloque","Code déjà bloqué"]]],
-  annulation:["Décision des Opérations sur l'annulation (Q13).",[["examen","En cours d'examen"],["acceptee","Acceptée"],["refusee","Refusée"]]],
+  annulation:["Décision du back-office Safico sur l'annulation (Q13).",[["examen","En cours d'examen"],["acceptee","Acceptée"],["refusee","Refusée"]]],
   identite:["Pièce d'identité du client (Q33).",[["valide","Pièce valide"],["expiree","Pièce expirée"]]],
   donnees:["Données du client (états vides).",[["rempli","Envois et bénéficiaires"],["vide","Nouveau client : rien encore"]]],
   reseau:["Qualité du réseau.",[["normal","Réseau normal"],["faible","Connexion lente"]]],
@@ -2048,6 +2054,15 @@ function rendreCas(){
 function appliquerCas(){
   const sc=document.querySelector("[data-suite-connexion]");if(sc)sc.setAttribute("href",etat.cas.connexion==="nouveau"?"#c2":"#a1");
   Object.keys(etat.cas).forEach(k=>document.querySelectorAll(`[data-si-${k}]`).forEach(el=>el.hidden=el.getAttribute(`data-si-${k}`)!==etat.cas[k]));
+  majPaiement();
+}
+// E5 : Orange Money (demande de débit ou code marchand, puis code PIN) ou carte bancaire (saisie de la carte, E5g)
+function majPaiement(){
+  document.querySelectorAll("[data-si-moyen]").forEach(el=>el.hidden=el.dataset.siMoyen!==etat.paiement||(el.dataset.siFacon!=null&&el.dataset.siFacon!==etat.cas.facon));
+  const sp=document.querySelector("[data-suite-paiement]");if(!sp)return;
+  const carte=etat.paiement==="carte",v=carte?"#e6g":(etat.cas.facon==="debit"?"#e6b":"#e6c");
+  sp.setAttribute("href",v);if(carte)sp.removeAttribute("data-pin-vers");else sp.dataset.pinVers=v;
+  sp.textContent=carte?"Continuer":"Confirmer le paiement";
 }
 
 // Champs de saisie : l'application est mobile, chaque champ ouvre un clavier du prototype.
@@ -2070,6 +2085,7 @@ function ouvrirSaisie(el){
   const num=/^(tel|numeric|decimal)$/.test(el.dataset.mode);
   if(etat.saisie&&etat.saisie!=="champ"&&etat.saisie!=="texte")fermerClavier();
   champActif=el;etat.saisie=num?"champ":"texte";
+  if(num)placerChiffres(el.hasAttribute("data-pin"));
   const cn=document.getElementById("clavier"),ct=document.getElementById("clavier-texte");
   cn.classList.toggle("ouvert",num);cn.classList.toggle("sans-virgule",num);
   if(!num){couche="lettres";majuscule=false;rendreTexte()}
@@ -2179,9 +2195,7 @@ document.addEventListener("change",e=>{
   if(e.target.name==="mode"){etat.mode=e.target.value;remplir();}
   if(e.target.name==="paiement"){etat.paiement=e.target.value;remplir();}
   if(e.target.matches("[data-requis]"))verifRequis();
-  if(e.target.name==="point"||e.target.name==="point-autre"){etat.point=+e.target.value;remplir()}
-  if(e.target.name==="ville-l2"){etat.villeL2=e.target.value;remplir()}
-  if(e.target.name==="facon"){etat.cas.facon=e.target.value;const b=document.querySelector("[data-pin-vers]");b.dataset.pinVers=b.getAttribute("href").replace(/.*/,e.target.value==="debit"?"#e6b":"#e6c");b.setAttribute("href",b.dataset.pinVers);appliquerCas()}
+  if(e.target.name==="facon"){etat.cas.facon=e.target.value;appliquerCas()}
 });
 
 function modes(){
@@ -2195,12 +2209,6 @@ function modes(){
 }
 
 const MODE_TXT={especes:"Espèces dans le réseau",wallet:"Mobile money",banque:"Compte bancaire"};
-// Points de retrait (L1 à L3) — démonstration, selon la ville du bénéficiaire : la liste réelle est à fournir par Safico.
-// [nom, type, quartier, horaires]
-const POINTS={Kankan:[["Agence Safico Kankan","agence","Centre-ville","Lun. – sam. · 8 h – 18 h"],["Distributeur Salamani","distributeur","Quartier Salamani","Lun. – dim. · 8 h – 20 h"],["Distributeur Marché central","distributeur","Marché central","Lun. – sam. · 9 h – 19 h"]],
-  Abidjan:[["Agence Safico Abidjan","agence","Adjamé","Lun. – sam. · 8 h – 18 h"],["Distributeur Treichville","distributeur","Treichville","Lun. – dim. · 8 h – 20 h"]]};
-const TYPE_POINT={agence:"Agence Safico",distributeur:"Distributeur agréé"};
-const villePoints=()=>POINTS[P().benefs[etat.benef][3]]?P().benefs[etat.benef][3]:"Kankan";
 // Montant maximal par envoi : valeur d'exemple (atelier 7 : « 3 à 4 millions GNF », paramétrable au back-office, Q25)
 const MAX_ENVOI=4000000;
 // « Continuer » de E1 : désactivé sans taux ou au-delà du maximum par envoi ; vers X1 au-delà du plafond restant
@@ -2228,7 +2236,7 @@ function remplir(){
   const etr=c.devE!=="GNF";
   set("[data-taux-accueil]",etr?"1 "+(c.devE==="EUR"?"€":c.devE)+" = "+fmt(TAUX[c.devE].GNF,"GNF"):"1 XOF = "+fmt(1/TAUX.GNF.XOF,"GNF").replace(/,\d+/,""));
   set("[data-taux-accueil-unite]",etr?"vers la Guinée":"vers la Côte d'Ivoire");
-  // Plafonds (X1, A1, E1, X2) — démonstration. Client actif : 5 000 USD par jour (≈ 43 250 000 GNF), 38 000 000 déjà envoyés.
+  // Plafonds (X1, M6, E1, X2) — démonstration. Client actif : 5 000 USD par jour (≈ 43 250 000 GNF), 38 000 000 déjà envoyés.
   // Première opération d'un nouveau client : 10 000 000 GNF en plusieurs envois (atelier 7). Montant maximal par envoi : MAX_ENVOI.
   const prem=etat.cas.client==="premier", plaf=prem?10000000:43250000, deja=prem?0:38000000, cet=etat.envoi*VALEUR_GNF[c.devE];
   set("[data-x-deja]",fmt(deja,"GNF")); set("[data-x-envoi]",fmt(Math.max(cet,plaf-deja+2500000),"GNF")); set("[data-x-reste]",fmt(plaf-deja,"GNF"));
@@ -2242,20 +2250,10 @@ function remplir(){
   set("[data-x-plafond]",prem?fmt(plaf,"GNF"):fmt(plaf,"GNF")+" par jour");
   majSuite();
   set("[data-x-demande]",etat.demande?fmt(etat.demande,"GNF"):"—");
-  // Points de retrait
-  const vp=villePoints(),pts=POINTS[vp];if(etat.point>=pts.length)etat.point=0;
-  const pt=pts[etat.point];
-  set("[data-point-ville]",vp); set("[data-point-nom]",pt[0]); set("[data-point-detail]",TYPE_POINT[pt[1]]+" · "+pt[2]+" · "+pt[3]);
-  set("[data-point-refuse]",pts[etat.pointRefuse??0][0]); set("[data-benef2-nom]",p.benefs[1][0]+" "+p.benefs[1][1]);
-  const ptChoix=(x,i,nom="point")=>`<label><input type="radio" name="${nom}" value="${i}" ${i===etat.point?"checked":""}><svg width="22" height="22" style="color:var(--action)"><use href="#i-agence"/></svg><div class="milieu"><b>${x[0]}</b><span class="micro">${x[2]}</span><span class="horaires">${x[3]}</span></div><span class="type-point ${x[1]}">${x[1]==="agence"?"Agence":"Distributeur"}</span></label>`;
-  document.querySelectorAll('[data-points="choix"]').forEach(el=>el.innerHTML=pts.map((x,i)=>ptChoix(x,i)).join(""));
-  document.querySelectorAll('[data-points="autres"]').forEach(el=>el.innerHTML=pts.map((x,i)=>i===etat.pointRefuse?"":ptChoix(x,i,"point-autre")).join(""));
-  const vl=etat.villeL2||vp;
-  document.querySelectorAll("[data-villes]").forEach(el=>el.innerHTML=Object.keys(POINTS).map(v=>`<label><input type="radio" name="ville-l2" value="${v}" ${v===vl?"checked":""}>${v}</label>`).join(""));
-  document.querySelectorAll('[data-points="liste"]').forEach(el=>el.innerHTML=POINTS[vl].map(x=>`<div><svg width="22" height="22" style="color:var(--action)"><use href="#i-agence"/></svg><div class="milieu"><b>${x[0]}</b><span class="micro">${TYPE_POINT[x[1]]} · ${x[2]}</span><span class="horaires">${x[3]}</span></div></div>`).join(""));
+  set("[data-benef2-nom]",p.benefs[1][0]+" "+p.benefs[1][1]);
   // Listes
   const benefLigne=(x,i,lien)=>`<a href="${lien}" data-benef="${i}"><span class="avatar">${x[1][0]}${x[0][0]}</span><div class="milieu"><b>${x[0]} ${x[1]}</b><span class="micro">${x[2]} · ${x[3]}</span></div><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a>`;
-  document.querySelectorAll("[data-benef-choix]").forEach(el=>el.innerHTML=p.benefs.map((x,i)=>benefLigne(x,i,"#l1")).join(""));
+  document.querySelectorAll("[data-benef-choix]").forEach(el=>el.innerHTML=p.benefs.map((x,i)=>benefLigne(x,i,"#e4")).join(""));
   document.querySelectorAll("[data-benef-accueil]").forEach(el=>el.innerHTML=p.benefs.map((x,i)=>benefLigne(x,i,"#e1")).join(""));
   // Envois : [référence, bénéficiaire, montant reçu, statut, classe, lien, date, clé du détail S2, montant envoyé en GNF, bénéficiaire]
   // SFC-9A10-6634 (annulé) : envoi de démonstration ajouté le 19/10 pour montrer ce statut.
@@ -2284,9 +2282,11 @@ function remplir(){
   // Paiements
   document.querySelectorAll("[data-paiements]").forEach(el=>{
     const ouv=paiementsOuverts(),autres=PAIEMENTS.filter(x=>!ouv.includes(x));
-    el.innerHTML=[...ouv,...autres].map(x=>{const on=ouv.includes(x);x=[x[0],x[1],x[2],on?x[3]:(x[4].includes("GNF")?"Pour un envoi en francs guinéens":"Pour un envoi en euros ou en dollars"),on];return x}).map(x=>`<label class="${x[4]?"":"indispo"}"><input type="radio" name="paiement" value="${x[0]}" ${x[0]===etat.paiement?"checked":""} ${x[4]?"":"disabled"}><svg width="22" height="22" style="color:var(--action)"><use href="#${x[1]}"/></svg><div class="milieu"><b>${x[2]}</b><span class="micro">${x[3]}</span></div></label>`).join("");
+    el.innerHTML=[...ouv,...autres].map(x=>{const on=ouv.includes(x);x=[x[0],x[1],x[2],on?x[3]:(x[4].includes("GNF")?"Pour un envoi en francs guinéens":"Pour un envoi en euros ou en dollars"),on,x[5]||""];return x}).map(x=>`<label class="${x[4]?"":"indispo"}"><input type="radio" name="paiement" value="${x[0]}" ${x[0]===etat.paiement?"checked":""} ${x[4]?"":"disabled"}><svg width="22" height="22" style="color:var(--action)"><use href="#${x[1]}"/></svg><div class="milieu"><b>${x[2]}${x[5]}</b><span class="micro">${x[3]}</span></div></label>`).join("");
   });
-  const sp=document.querySelector("[data-suite-paiement]"); if(sp)sp.textContent=etat.paiement==="guichet"?"Obtenir ma référence de paiement":"Confirmer le paiement";
+  set("[data-paiement-attente]",ATTENTE[etat.paiement]); set("[data-paiement-nom]",PAIEMENTS.find(x=>x[0]===etat.paiement)[2]);
+  set("[data-sav-horaires]",SAV_HORAIRES);
+  majPaiement();
 }
 document.addEventListener("click",e=>{
   const ev=e.target.closest("[data-envoi]"); if(ev)etat.envoiSel=+ev.dataset.envoi; else if(e.target.closest('a[href="#s2"]'))etat.envoiSel=0;
@@ -2298,25 +2298,24 @@ function rendreS2(){
   const env=window._env;if(!env)return;
   const x=env[etat.envoiSel]&&env[etat.envoiSel][7]!=="verif"?env[etat.envoiSel]:env[0];
   const p=P(),c=calc(),k=x[7],bi=x[9]??0,bn=p.benefs[bi];
-  const pt=k==="dispo"?POINTS[villePoints()][etat.point][0]:(POINTS[bn[3]]||POINTS.Kankan)[0][0];
   const d=x[6],paye=k==="dispo"?fmt(c.total,c.devE):fmt(x[8]+FRAIS.GNF(x[8]),"GNF");
   const pas=(cl,t,m)=>`<div class="pas ${cl}"><span class="point"></span><div><b>${t}</b><span class="micro">${m}</span></div></div>`;
   const etapes={
-    dispo:[["fait","Paiement reçu","Aujourd'hui, 14:32"],["fait","Accepté par le point de retrait","Aujourd'hui, 14:32 · "+pt],["fait","Code envoyé à votre proche","Aujourd'hui, 14:33 · SMS"],["encours","Disponible au retrait","Jusqu'au 6 novembre 2026"],["","Retiré","Vous recevrez un SMS"]],
-    retire:[["fait","Paiement reçu",d+", 10:12"],["fait","Accepté par le point de retrait",d+" · "+pt],["fait","Code envoyé à votre proche",d+" · SMS"],["fait","Retiré","19 sept., 15:40 · "+pt]],
+    dispo:[["fait","Paiement reçu","Aujourd'hui, 14:32"],["fait","Code envoyé à votre proche","Aujourd'hui, 14:33 · SMS"],["encours","Disponible au retrait","Jusqu'au 6 novembre 2026"],["","Retiré","Vous recevrez un SMS"]],
+    retire:[["fait","Paiement reçu",d+", 10:12"],["fait","Code envoyé à votre proche",d+" · SMS"],["fait","Retiré","19 sept., 15:40"]],
     annule:[["fait","Paiement reçu",d+", 09:05"],["fait","Code envoyé à votre proche",d+" · SMS"],["fait","Annulation demandée","26 sept."],["fait","Annulé","27 sept. · "+paye+" rendus sur Orange Money, frais compris"]],
     rembourse:[["fait","Paiement reçu",d+", 16:20"],["fait","Code envoyé à votre proche",d+" · SMS"],["fait","Non retiré","Pendant 30 jours"],["fait","Remboursé","11 sept. · "+x[2]+" rendus sur Orange Money, sans les frais"]]}[k];
   const ref=x[0],mode=k==="dispo"?MODE_TXT[etat.mode]+" · "+c.pays:"Espèces dans le réseau";
-  const aide=`<button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi ${ref}. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service client</b><span class="micro">Sur WhatsApp, avec la référence ${ref}</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>`;
-  const actions=k==="dispo"?`<div class="carte plate"><div class="liste"><button class="bouton texte" style="justify-content:flex-start;padding:0" data-toast="SMS renvoyé au bénéficiaire.">Renvoyer le code à mon proche</button><a href="#r1"><span class="milieu fort">Voir le reçu</span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a><a href="#h2"><span class="milieu"><b>Une erreur sur le bénéficiaire ?</b><span class="micro">La correction se fait avec un conseiller. <span class="trancher" title="Q10 · Après le paiement, l'expéditeur peut-il corriger le bénéficiaire en ligne ?">Q10</span></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a></div></div>`:"";
+  const aide=`<button type="button" class="aide-wa" data-toast="WhatsApp s'ouvre avec le message : « Bonjour, ma question porte sur l'envoi ${ref}. »"><svg width="24" height="24" aria-hidden="true"><use href="#i-whatsapp"/></svg><span class="milieu"><b>Écrire au service après-vente</b><span class="micro">Sur WhatsApp, avec la référence ${ref}</span><span class="micro">${SAV_HORAIRES}</span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></button>`;
+  const actions=k==="dispo"?`<div class="carte plate"><div class="liste"><button class="bouton texte" style="justify-content:flex-start;padding:0" data-toast="SMS renvoyé au bénéficiaire.">Renvoyer le code à mon proche</button><button class="bouton texte" style="justify-content:flex-start;padding:0" data-toast="Demande envoyée. Un conseiller Safico vous contacte.">Demander une assistance pour le retrait</button><a href="#r1"><span class="milieu fort">Voir le reçu</span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a><a href="#h2"><span class="milieu"><b>Une erreur sur le bénéficiaire ?</b><span class="micro">La correction se fait avec un conseiller. <span class="trancher" title="Q10 · Après le paiement, l'expéditeur peut-il corriger le bénéficiaire en ligne ?">Q10</span></span></span><svg class="chevron" width="20" height="20"><use href="#i-chevron"/></svg></a></div></div>`:"";
   const sec=document.getElementById("s2");
   sec.querySelector("[data-s2-ref]").textContent=ref;
   sec.querySelector("[data-s2-contenu]").innerHTML=`<div class="carte"><span class="statut ${x[4]}" style="align-self:flex-start">${x[3]}</span><div class="montant">${x[2]}</div><div>${bn[1]} <span class="fort">${bn[0]}</span> · <span class="micro">${mode}</span></div></div>
     <div class="carte"><h2>Suivi</h2><div class="chrono">${etapes.map(e=>pas(...e)).join("")}</div></div>
-    <div class="carte"><div class="ligne"><span>Vous avez payé</span><span class="fort">${paye}</span></div>${k==="dispo"?`<div class="ligne"><span>Taux appliqué</span><span>${tauxTxt(c)}</span></div>`:""}<div class="ligne"><span>Point de retrait</span><span>${pt}</span></div></div>
+    <div class="carte"><div class="ligne"><span>Vous avez payé</span><span class="fort">${paye}</span></div>${k==="dispo"?`<div class="ligne"><span>Taux appliqué</span><span>${tauxTxt(c)}</span></div>`:""}</div>
     ${aide}${actions}`;
   const pied=sec.querySelector("[data-s2-pied]");
-  pied.innerHTML=k==="dispo"?`<a class="bouton danger" href="#s5">Demander l'annulation</a><a class="micro" href="#l3" style="text-align:center">Revue : le point de retrait refuse</a>`:"";
+  pied.innerHTML=k==="dispo"?`<a class="bouton danger" href="#s5">Demander l'annulation</a>`:"";
   pied.hidden=k!=="dispo";
 }
 function verifRequis(){const sec=document.querySelector(".ecran.visible"),b=sec&&sec.querySelector("[data-attend-requis]");if(!b)return;const ok=[...sec.querySelectorAll("[data-requis]")].every(s=>s.value);b.setAttribute("aria-disabled",ok?"false":"true")}
@@ -2347,8 +2346,6 @@ function afficher(){
   s.querySelector(".contenu")&&(s.querySelector(".contenu").scrollTop=0);
   verifRequis();
   if(s.id==="x3"){etat.cas.plafond="examen";rendreCas()}
-  if(s.id==="l3"&&etat.pointRefuse==null){etat.pointRefuse=etat.point;etat.point=etat.point===0?1:0;remplir()}
-  if(s.id!=="l3"&&s.id!=="s2")etat.pointRefuse=null;
   clearInterval(window._minuteur);
   const mn=s.querySelector("[data-minuteur]");if(mn){let r=600;mn.textContent="10:00";window._minuteur=setInterval(()=>{r=Math.max(0,r-1);mn.textContent=Math.floor(r/60)+":"+String(r%60).padStart(2,"0")},1000)}
   verifMdp();
