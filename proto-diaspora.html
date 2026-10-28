@@ -1,0 +1,1379 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Safico — Plateforme web diaspora (prototype lot 2)</title>
+<style>
+/* Plateforme web de la diaspora (lot 2) — démarrée le 28 oct. 2026. Déclinaison ordinateur de
+   l'espace client (proto-b2c.html), décidée à l'atelier 7 (15/10) : application mobile pour la
+   Guinée, plateforme web pour la diaspora. Mêmes jetons et mêmes noms que proto-b2c.html
+   (charte Safico, piste Connexion Afrique) ; voir CLAUDE-diaspora.md. */
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-400-normal.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-500-normal.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-600-normal.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-700-normal.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Montserrat Alternates';src:url('polices/montserrat-alternates-latin-600-normal.woff2') format('woff2');font-weight:600;font-display:swap}
+:root{
+  --fond-page:#F0F4F7; --fond-surface:#FFFFFF; --fond-sourd:#F8FAFC; --fond-marque:#0B3D91;
+  --fond-accent:#F0FDFA; --fond-action:#F1F8FF;
+  --trait-leger:#E1E7EC; --trait-net:#828E99;
+  --texte-principal:#151F2B; --texte-secondaire:#556270; --texte-desactive:#9AA6B2; --texte-inverse:#FFFFFF; --texte-lien:#005CC7;
+  --action:#005CC7; --action-survol:#014BAE; --accent-trait:#C3E0FE;
+  --marque:#0B3D91; --marque-vif:#2E9AFE; --marque-turquoise:#14B8A6; --marque-tete:#07766E;
+  --information:#0B3D91; --information-fond:#F1F8FF;
+  --attention:#935B00; --attention-fond:#FFF5DE;
+  --blocage:#B42318; --blocage-fond:#FDECEB;
+  --valide:#27762F; --valide-fond:#E4F6E4;
+  --en-attente:#3D4A59; --en-attente-fond:#F0F4F7;
+  --trancher:#5B4B8A; --trancher-fond:#EFECF8;
+  --ombre:0 1px 2px rgba(11,61,145,.06),0 1px 3px rgba(21,31,43,.06);
+  --ombre-haute:0 6px 16px rgba(11,61,145,.10),0 2px 4px rgba(21,31,43,.06);
+  --ombre-diffuse:0 18px 36px -18px rgba(11,61,145,.22),0 2px 6px -2px rgba(21,31,43,.06);
+  --bord-carte:inset 0 0 0 1px rgba(11,61,145,.05);
+  --rayon:16px; --rayon-petit:10px; --rayon-capsule:999px;
+  --h-standard:44px; --h-grand:52px;
+  --largeur:1200px; --entete:72px;
+  --ressort:cubic-bezier(.16,1,.3,1);
+  --police:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --police-marque:'Montserrat Alternates',var(--police);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{font:400 15px/22px var(--police);color:var(--texte-principal);background:var(--fond-page);font-variant-numeric:tabular-nums;min-height:100vh;display:flex;flex-direction:column}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--texte-lien)}
+
+/* ——— En-tête du site (gabarit, écrit une fois, rempli par afficher()) ——— */
+.entete{position:sticky;top:0;z-index:10;height:var(--entete);background:var(--fond-surface);border-bottom:1px solid var(--trait-leger)}
+.entete.marque{background:var(--fond-marque);border-bottom-color:transparent}
+.entete .cadre{height:100%;display:flex;align-items:center;gap:32px}
+.cadre{width:100%;max-width:var(--largeur);margin:0 auto;padding:0 32px}
+.logo{display:flex;align-items:center;gap:10px;font:600 24px/1 var(--police-marque);color:var(--marque);text-decoration:none;flex:none}
+.logo svg{width:30px;height:30px}
+.entete.marque .logo{color:#fff}
+.nav{display:flex;gap:4px;flex:1}
+.nav a{height:40px;display:flex;align-items:center;padding:0 14px;border-radius:var(--rayon-capsule);font-weight:600;font-size:14px;color:var(--texte-secondaire);text-decoration:none;transition:background-color .2s,color .2s}
+.nav a:hover{background:var(--fond-sourd);color:var(--texte-principal)}
+.nav a.actif{background:var(--fond-action);color:var(--action)}
+.entete-droite{display:flex;align-items:center;gap:8px;margin-left:auto}
+.icone-btn{width:40px;height:40px;border:0;border-radius:var(--rayon-capsule);background:none;display:grid;place-items:center;cursor:pointer;color:var(--texte-secondaire);text-decoration:none;position:relative}
+.icone-btn:hover{background:var(--fond-sourd);color:var(--texte-principal)}
+.icone-btn .badge{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--marque-turquoise);box-shadow:0 0 0 2px var(--fond-surface)}
+.agent{display:flex;align-items:center;gap:10px;padding:4px 12px 4px 4px;border-radius:var(--rayon-capsule);text-decoration:none;color:inherit}
+.agent:hover{background:var(--fond-sourd)}
+.agent b{font-weight:600;font-size:14px}
+.avatar{width:36px;height:36px;flex:none;border-radius:var(--rayon-capsule);background:var(--fond-action);color:var(--marque);display:grid;place-items:center;font-weight:700;font-size:13px}
+.avatar.grand{width:56px;height:56px;font-size:18px}
+.quitter{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;color:var(--texte-secondaire);text-decoration:none}
+.quitter:hover{color:var(--texte-principal)}
+
+/* Pas-à-pas de l'envoi (gabarit) */
+.pas-a-pas{display:flex;align-items:center;gap:8px;flex:1;justify-content:center;list-style:none}
+.pas-a-pas li{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--texte-desactive)}
+.pas-a-pas li+li::before{content:"";width:32px;height:2px;border-radius:1px;background:var(--trait-leger);margin-right:4px}
+.pas-a-pas .rond{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--trait-leger);font-size:12px;background:var(--fond-surface)}
+.pas-a-pas li.fait{color:var(--texte-secondaire)}
+.pas-a-pas li.fait .rond{background:var(--valide);border-color:var(--valide);color:#fff}
+.pas-a-pas li.fait+li::before{background:var(--valide)}
+.pas-a-pas li.actif{color:var(--marque)}
+.pas-a-pas li.actif .rond{border-color:var(--action);color:var(--action);box-shadow:0 0 0 4px var(--fond-action)}
+
+/* ——— Écran ——— */
+main{flex:1}
+.ecran{display:none}
+.ecran.visible{display:block;animation:monte .45s var(--ressort) backwards}
+@keyframes monte{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.page{padding:40px 0 64px}
+.page .cadre{display:flex;flex-direction:column;gap:24px}
+.titre-page{font:700 30px/36px var(--police);letter-spacing:-.02em;color:var(--marque)}
+.titre-page.moyen{font-size:24px;line-height:30px}
+.sous-titre{color:var(--texte-secondaire);font-size:16px;line-height:24px}
+.label{font:500 13px/18px var(--police);color:var(--texte-secondaire)}
+.micro{font:400 13px/18px var(--police);color:var(--texte-secondaire)}
+.montant{font:700 32px/38px var(--police);letter-spacing:-.02em}
+.montant-petit{font:700 20px/26px var(--police);letter-spacing:-.01em}
+.fort{font-weight:600}
+h2{font:700 18px/24px var(--police)}
+.rubrique{font:600 12px/16px var(--police);text-transform:uppercase;letter-spacing:.05em;color:var(--texte-secondaire)}
+
+/* Grilles */
+.grille{display:grid;gap:24px;align-items:start}
+.grille.deux{grid-template-columns:1fr 1fr}
+.grille.principal{grid-template-columns:minmax(0,1fr) 380px}
+.grille.tiers{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.colonne{display:flex;flex-direction:column;gap:24px;min-width:0}
+.collant{position:sticky;top:calc(var(--entete) + 24px)}
+
+/* Conteneurs */
+.carte{background:var(--fond-surface);border-radius:var(--rayon);box-shadow:var(--ombre),var(--bord-carte);padding:24px;display:flex;flex-direction:column;gap:16px}
+.carte.plate{box-shadow:none;border:1px solid var(--trait-leger)}
+.carte.accent{background:var(--fond-accent);box-shadow:none;border:1px solid #CCF2EC}
+.carte.serree{gap:10px}
+.carte-tete{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ligne{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.ligne>:last-child{text-align:right}
+.separateur{height:1px;background:var(--trait-leger)}
+.liste{display:flex;flex-direction:column}
+.liste>*{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--trait-leger);text-decoration:none;color:inherit}
+.liste>*:first-child{border-top:0;padding-top:0}
+.liste>*:last-child{padding-bottom:0}
+.liste>a{transition:background-color .2s;border-radius:6px}
+.liste>a:hover{background:var(--fond-sourd)}
+.liste .milieu{flex:1;min-width:0}
+.liste .milieu b{display:block;font-weight:600}
+.liste .valeur{color:var(--texte-secondaire);font-size:14px}
+.chevron{color:var(--texte-secondaire);flex:none}
+
+/* Tableau (Mes envois) */
+.tableau{width:100%;border-collapse:collapse;font-size:14px}
+.tableau th{text-align:left;font:600 12px/16px var(--police);text-transform:uppercase;letter-spacing:.05em;color:var(--texte-secondaire);padding:0 12px 12px;border-bottom:1px solid var(--trait-leger)}
+.tableau td{padding:14px 12px;border-bottom:1px solid var(--trait-leger);vertical-align:middle}
+.tableau tr:last-child td{border-bottom:0}
+.tableau .droite{text-align:right}
+.tableau tbody tr[data-cible]{cursor:pointer;transition:background-color .2s}
+.tableau tbody tr[data-cible]:hover{background:var(--fond-sourd)}
+.tableau tbody tr[data-cible]:focus-visible{outline:2px solid var(--action);outline-offset:-2px}
+.tableau b{font-weight:600}
+
+/* Actions */
+.bouton{height:var(--h-standard);border-radius:var(--rayon-capsule);border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 15px/20px var(--police);text-decoration:none;cursor:pointer;padding:0 22px;white-space:nowrap;transition:transform .18s var(--ressort),background-color .2s,border-color .2s,box-shadow .2s}
+.bouton:active{transform:scale(.98)}
+.bouton.grand{height:var(--h-grand);font-size:16px;padding:0 28px}
+.bouton.plein{width:100%}
+.bouton.primaire{background:var(--action);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 6px 14px -8px rgba(0,92,199,.55)}
+.bouton.primaire:hover{background:var(--action-survol)}
+.bouton.secondaire{background:var(--fond-surface);border-color:var(--trait-net);color:var(--texte-principal)}
+.bouton.secondaire:hover{background:var(--fond-action)}
+.bouton.inverse{background:#fff;color:var(--marque)}
+.bouton.inverse:hover{background:var(--fond-action)}
+.bouton.clair{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4);color:#fff}
+.bouton.clair:hover{background:rgba(255,255,255,.2)}
+.bouton.texte{background:none;color:var(--texte-lien);padding:0 8px}
+.bouton.danger{background:var(--fond-surface);border-color:var(--blocage);color:var(--blocage)}
+.bouton[aria-disabled="true"],.bouton:disabled{background:var(--fond-sourd);color:var(--texte-desactive);border-color:var(--trait-leger);box-shadow:none;pointer-events:none}
+.bouton svg{width:18px;height:18px;flex:none}
+.actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.actions .pousse{margin-left:auto}
+.lien{color:var(--texte-lien);font-weight:600;text-decoration:underline;cursor:pointer;background:none;border:0}
+.action-tete{display:inline-flex;align-items:center;gap:4px;min-height:34px;padding:0 12px;border-radius:var(--rayon-capsule);background:var(--fond-action);color:var(--action);font:600 13px/16px var(--police);text-decoration:none;white-space:nowrap;border:0;cursor:pointer}
+.action-tete:hover{background:var(--accent-trait)}
+.action-tete svg{width:16px;height:16px}
+
+/* Saisie */
+.champ{display:flex;flex-direction:column;gap:8px}
+.champ>label{font:500 14px/18px var(--police);color:var(--texte-secondaire)}
+.champ input,.champ select{height:var(--h-grand);border:1px solid var(--trait-net);border-radius:var(--rayon-petit);background:var(--fond-surface);padding:0 14px;width:100%;font-size:16px}
+.champ input:focus,.champ select:focus{outline:0;border-color:var(--action);box-shadow:0 0 0 3px var(--fond-action)}
+.champ .aide{font-size:13px;line-height:18px;color:var(--texte-secondaire)}
+.champs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.champs .large{grid-column:1/-1}
+.tel{display:flex;gap:8px}
+.tel .indicatif{flex:none;width:104px}
+.mdp{position:relative}
+.mdp input{padding-right:52px}
+.mdp .oeil{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;border-radius:var(--rayon-capsule);background:none;color:var(--texte-secondaire);display:grid;place-items:center;cursor:pointer}
+.mdp .oeil[aria-pressed="true"]{color:var(--action)}
+.case{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.case input{width:18px;height:18px;accent-color:var(--action);margin-top:2px;flex:none}
+.choix{display:flex;flex-direction:column;gap:10px}
+.choix.en-ligne{flex-direction:row}
+.choix.en-ligne>label{flex:1}
+.choix label{display:flex;align-items:center;gap:14px;min-height:var(--h-grand);padding:12px 16px;border:1px solid var(--trait-leger);border-radius:var(--rayon-petit);background:var(--fond-surface);cursor:pointer;transition:border-color .2s,background-color .2s}
+.choix label:hover{border-color:var(--trait-net)}
+.choix label:has(input:checked){border-color:var(--action);background:var(--fond-action);box-shadow:inset 0 0 0 1px var(--action)}
+.choix label.indispo{opacity:.55;cursor:not-allowed}
+.choix input{accent-color:var(--action);width:18px;height:18px;flex:none}
+.choix .milieu{flex:1;min-width:0}
+.choix .milieu b{display:block;font-weight:600}
+.choix .milieu .statut{margin-top:6px}
+
+/* Simulateur (déclinaison large de celui de l'application) */
+.simu{display:flex;flex-direction:column;border:1px solid var(--trait-leger);border-radius:var(--rayon);overflow:hidden;background:var(--fond-surface)}
+.simu .bloc{padding:14px 18px;display:flex;align-items:center;gap:14px;transition:box-shadow .2s}
+.simu .bloc:focus-within{box-shadow:inset 0 0 0 2px var(--action)}
+.simu .bloc .milieu{flex:1;min-width:0}
+.simu input{border:0;outline:0;width:100%;font:700 30px/36px var(--police);letter-spacing:-.02em;padding:0;background:none}
+.simu input:disabled{color:var(--texte-desactive)}
+.simu .devise{position:relative;flex:none;height:40px;padding:0 14px;border-radius:var(--rayon-capsule);background:var(--fond-sourd);border:1px solid var(--trait-leger);display:flex;align-items:center;gap:8px;font-weight:600;cursor:pointer}
+.simu .devise:hover{border-color:var(--trait-net)}
+.simu .devise select{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.simu .taux{background:var(--fond-accent);padding:10px 18px;font-size:14px;line-height:20px;display:flex;justify-content:space-between;gap:12px;border-block:1px solid #CCF2EC}
+.simu-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px}
+.drapeau{display:inline-block;width:22px;height:15px;border-radius:2px;flex:none;box-shadow:0 0 0 1px rgba(0,0,0,.06)}
+.ico-bas{width:16px;height:16px;flex:none;opacity:.7}
+
+/* Signaler */
+.bandeau{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:var(--rayon-petit);font-size:14px;line-height:20px}
+.bandeau svg{flex:none;width:20px;height:20px}
+.bandeau b{font-weight:600}
+.bandeau .texte{color:var(--texte-principal)}
+.bandeau.information{background:var(--information-fond);color:var(--information)}
+.bandeau.attention{background:var(--attention-fond);color:var(--attention)}
+.bandeau.valide{background:var(--valide-fond);color:var(--valide)}
+.bandeau.neutre{background:var(--fond-surface);border:1px solid var(--trait-leger);color:var(--texte-secondaire)}
+.statut{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--rayon-capsule);font:500 12px/18px var(--police);white-space:nowrap}
+.statut::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.statut.attente{background:var(--en-attente-fond);color:var(--en-attente)}
+.statut.dispo{background:var(--information-fond);color:var(--information)}
+.statut.valide{background:var(--valide-fond);color:var(--valide)}
+.statut.neutre{background:var(--fond-sourd);color:var(--texte-secondaire);border:1px solid var(--trait-leger)}
+.statut.neutre::before{display:none}
+.trancher{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:var(--rayon-capsule);background:var(--trancher-fond);color:var(--trancher);font:600 11px/14px var(--police);cursor:help;vertical-align:middle;white-space:nowrap}
+.trancher::before{content:"à trancher · "}
+.etiquette{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:var(--rayon-capsule);border:1px solid var(--trait-net);color:var(--texte-secondaire);font:600 11px/14px var(--police);cursor:help;vertical-align:middle;white-space:nowrap}
+
+/* Pictogramme de tête (confirmations) */
+.pictos{width:64px;height:64px;border-radius:20px;display:grid;place-items:center}
+.pictos svg{width:32px;height:32px}
+.pictos.valide{background:var(--valide-fond);color:var(--valide)}
+.pictos.attente{background:var(--fond-action);color:var(--action)}
+
+/* Code de retrait, référence, SMS */
+.reference{font:700 20px/26px var(--police);letter-spacing:.02em}
+.code-retrait{font:700 40px/48px var(--police);letter-spacing:.14em;text-align:center;padding:14px 0;border-radius:var(--rayon-petit);background:var(--fond-sourd);border:1px dashed var(--trait-net)}
+.bulle-sms{max-width:520px;padding:12px 14px;border-radius:14px 14px 14px 4px;background:var(--fond-sourd);border:1px solid var(--trait-leger);font-size:14px;line-height:20px}
+
+/* Chronologie (détail d'un envoi) */
+.chrono{display:flex;flex-direction:column}
+.chrono .pas{display:flex;gap:14px;position:relative;padding-bottom:18px}
+.chrono .pas:last-child{padding-bottom:0}
+.chrono .pas::before{content:"";position:absolute;left:9px;top:22px;bottom:2px;width:2px;background:var(--trait-leger)}
+.chrono .pas:last-child::before{display:none}
+.chrono .point{width:20px;height:20px;flex:none;border-radius:50%;border:2px solid var(--trait-net);background:var(--fond-surface)}
+.chrono .pas.fait .point{background:var(--valide);border-color:var(--valide)}
+.chrono .pas.fait::before{background:var(--valide)}
+.chrono .pas.encours .point{border-color:var(--action);box-shadow:0 0 0 4px var(--fond-action)}
+.chrono b{display:block;font-weight:600}
+
+/* Reçu */
+.recu{max-width:560px;background:var(--fond-surface);border-radius:var(--rayon);box-shadow:var(--ombre-diffuse),var(--bord-carte);padding:32px;display:flex;flex-direction:column;gap:12px}
+.recu .ligne{font-size:14px}
+.recu .ligne>:first-child{color:var(--texte-secondaire)}
+
+/* P0 : page d'accueil publique */
+.une{background:linear-gradient(160deg,#0B3D91 0,#0A4FB3 50%,#0E6E8C 100%);color:#fff;position:relative;overflow:hidden}
+.une .cadre{display:grid;grid-template-columns:minmax(0,1fr) 460px;gap:56px;align-items:center;padding-block:64px 72px;position:relative}
+.une-motif{position:absolute;right:-60px;top:-80px;width:520px;height:520px;opacity:.08;pointer-events:none}
+.une h1{font:700 52px/58px var(--police);letter-spacing:-.03em}
+.une .chapeau{font-size:19px;line-height:28px;color:#D6E3F5;max-width:520px;margin-top:16px}
+.atouts{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.atouts span{height:32px;display:inline-flex;align-items:center;gap:6px;padding:0 12px;border-radius:var(--rayon-capsule);background:rgba(255,255,255,.14);font:600 13px/16px var(--police)}
+.atouts svg{width:14px;height:14px;color:#7FE3D5}
+.une .carte{color:var(--texte-principal);box-shadow:0 30px 60px -20px rgba(0,0,0,.35)}
+.etapes-pub{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.etape-pub{display:flex;flex-direction:column;gap:10px}
+.etape-pub .num{width:40px;height:40px;border-radius:50%;background:var(--marque-tete);color:#fff;display:grid;place-items:center;font-weight:700}
+.etape-pub b{font-size:17px}
+.etape-pub span{color:var(--texte-secondaire)}
+.pied-site{border-top:1px solid var(--trait-leger);background:var(--fond-surface);padding:24px 0}
+.pied-site .cadre{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.pied-site a{color:var(--texte-secondaire);font-size:13px;text-decoration:none}
+.pied-site a:hover{color:var(--texte-principal)}
+
+/* Connexion : carte centrée */
+.centre-page{min-height:calc(100vh - var(--entete) - 80px);display:grid;place-items:center;padding:48px 16px}
+.centre-page .carte{width:100%;max-width:440px;padding:32px}
+
+/* Détail : en-tête d'envoi */
+.tete-envoi{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.retour-lien{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:14px;color:var(--texte-secondaire);text-decoration:none;align-self:flex-start}
+.retour-lien:hover{color:var(--texte-principal)}
+
+/* Fenêtre modale : code PIN et banque (3-D Secure) */
+.voile{position:fixed;inset:0;background:rgba(21,31,43,.45);backdrop-filter:blur(2px);z-index:30;display:grid;place-items:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s var(--ressort)}
+.voile.ouvert{opacity:1;pointer-events:auto}
+.fenetre{width:100%;max-width:420px;background:var(--fond-surface);border-radius:20px;box-shadow:var(--ombre-diffuse);padding:28px;display:flex;flex-direction:column;gap:16px;transform:translateY(12px) scale(.98);transition:transform .3s var(--ressort)}
+.voile.ouvert .fenetre{transform:none}
+.fenetre .tete{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.points-pin{display:flex;gap:12px;justify-content:center;padding:8px 0}
+.points-pin i{width:14px;height:14px;border-radius:50%;border:2px solid var(--trait-net);transition:background-color .15s,border-color .15s}
+.points-pin i.plein{background:var(--marque);border-color:var(--marque)}
+.points-pin.erreur{animation:secoue .4s var(--ressort)}
+.points-pin.erreur i{border-color:var(--blocage)}
+@keyframes secoue{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.pave{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pave button{height:52px;border:1px solid var(--trait-leger);border-radius:var(--rayon-petit);background:var(--fond-sourd);font:600 20px/1 var(--police);cursor:pointer;transition:background-color .15s,transform .08s}
+.pave button:hover{background:var(--fond-action)}
+.pave button:active{transform:scale(.95)}
+.pave button.fonction{background:none;border-color:transparent;font-size:15px;color:var(--texte-secondaire)}
+.banque{border:1px solid var(--trait-leger);border-radius:var(--rayon-petit);padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--fond-sourd)}
+
+/* Inscription (28/10) : code SMS en 6 cases, photos de la pièce, QR code, selfie à la caméra */
+.code-otp{display:flex;gap:10px}
+.code-otp input{width:52px;height:60px;text-align:center;font:700 24px/1 var(--police);border:1px solid var(--trait-net);border-radius:var(--rayon-petit);background:var(--fond-surface)}
+.code-otp input:focus{outline:0;border-color:var(--action);box-shadow:0 0 0 3px var(--fond-action)}
+.code-otp.valide input{border-color:var(--valide);color:var(--valide)}
+.captures{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.capture{min-height:150px;border:2px dashed var(--trait-net);border-radius:var(--rayon);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;color:var(--texte-secondaire);background:var(--fond-sourd);padding:16px;cursor:pointer;font:inherit;transition:border-color .2s,background-color .2s}
+.capture:hover{border-color:var(--action);background:var(--fond-action)}
+.capture svg{width:28px;height:28px}
+.capture b{color:var(--texte-principal);font-weight:600}
+.capture.faite{border-style:solid;border-color:var(--valide);background:var(--valide-fond);color:var(--valide)}
+.capture.faite b{color:var(--valide)}
+.qr-bloc{display:flex;gap:24px;align-items:center}
+.qr{width:148px;height:148px;flex:none;border-radius:12px;border:8px solid #fff;box-shadow:0 0 0 1px var(--trait-leger);background:
+  conic-gradient(from 90deg at 18% 18%,#151F2B 25%,transparent 0) 0 0/50% 50%,
+  repeating-conic-gradient(#151F2B 0 25%,#fff 0 50%) 0 0/18px 18px}
+.webcam{position:relative;aspect-ratio:4/3;max-width:520px;width:100%;border-radius:var(--rayon);background:#111;display:grid;place-items:center;overflow:hidden}
+.webcam .ovale{width:42%;aspect-ratio:3/4;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;transition:border-color .2s}
+.webcam .ovale svg{width:50%;height:50%;opacity:.3;color:#fff}
+.webcam.faite .ovale{border-color:#3DDC84}
+.webcam .consigne{position:absolute;left:0;right:0;bottom:16px;text-align:center;color:#fff;font-weight:600;font-size:14px}
+.webcam.flash::after{content:"";position:absolute;inset:0;background:#fff;animation:flash .35s ease-out forwards}
+@keyframes flash{from{opacity:.85}to{opacity:0}}
+.etat-code{display:flex;align-items:center;gap:10px}
+.etat-code .statut{margin-left:auto}
+.erreur-texte{color:var(--blocage);font-size:13px}
+.tuiles{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tuile{background:var(--fond-surface);border-radius:var(--rayon);box-shadow:var(--ombre),var(--bord-carte);padding:20px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;font-weight:600;transition:transform .18s var(--ressort),box-shadow .2s}
+.tuile:hover{box-shadow:var(--ombre-haute)}
+.tuile svg{width:24px;height:24px;color:var(--action)}
+.pictos.attention{background:var(--attention-fond);color:var(--attention)}
+@media (max-width:760px){.captures,.tuiles{grid-template-columns:1fr}.qr-bloc{flex-direction:column;align-items:flex-start}.code-otp{gap:6px}.code-otp input{width:44px;height:52px}}
+
+/* Panneau de notes (outil de revue) */
+.bascule-notes{position:fixed;right:20px;bottom:20px;z-index:40;height:40px;padding:0 16px;display:flex;align-items:center;gap:8px;border:0;border-radius:var(--rayon-capsule);background:var(--trancher);color:#fff;font-weight:600;font-size:13px;box-shadow:var(--ombre-haute);cursor:pointer}
+.notes{position:fixed;top:0;right:0;bottom:0;width:380px;z-index:35;background:var(--fond-page);border-left:1px solid var(--trait-leger);box-shadow:var(--ombre-diffuse);padding:16px 16px 76px;overflow:auto;display:flex;flex-direction:column;gap:12px;transform:translateX(105%);transition:transform .3s var(--ressort)}
+.notes.ouvert{transform:none}
+body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-site{margin-right:380px}
+.panneau{background:var(--fond-surface);border-radius:var(--rayon);box-shadow:var(--ombre);padding:16px 18px;font-size:14px;line-height:20px}
+.panneau h3{font:700 12px/16px var(--police);text-transform:uppercase;letter-spacing:.05em;color:var(--texte-secondaire);margin-bottom:8px}
+.panneau .code{font:600 12px/16px var(--police);color:var(--texte-secondaire)}
+.panneau .titre{font:700 18px/24px var(--police);margin:2px 0 6px}
+.panneau p+p{margin-top:6px}
+.q-liste{display:flex;flex-direction:column;gap:6px;list-style:none}
+.q-liste li{padding:8px 10px;border-radius:var(--rayon-petit);background:var(--trancher-fond);color:var(--trancher)}
+.q-liste b{font-weight:700}
+.sommaire{font-size:13px;line-height:20px}
+.sommaire a{display:flex;gap:8px;text-decoration:none;color:var(--texte-principal);padding:2px 0}
+.sommaire a b{width:34px;flex:none;color:var(--texte-secondaire);font-weight:600}
+.sommaire a.actif{color:var(--action);font-weight:600}
+.sommaire .groupe{font-weight:700;color:var(--texte-secondaire);margin:8px 0 2px;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+
+.toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);max-width:520px;background:var(--texte-principal);color:#fff;padding:12px 18px;border-radius:var(--rayon-petit);font-size:14px;box-shadow:var(--ombre-haute);z-index:50}
+.toast:not([hidden]){animation:monte .3s var(--ressort) backwards}
+
+/* Points de rupture : le poste de référence est un ordinateur (1440 px) ; sous 1000 px les colonnes s'empilent */
+@media (max-width:1400px){body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-site{margin-right:0}}
+@media (max-width:1000px){
+  .grille.deux,.grille.principal,.grille.tiers,.une .cadre{grid-template-columns:1fr}
+  .collant{position:static}
+  .une h1{font-size:40px;line-height:46px}
+  .etapes-pub{grid-template-columns:1fr}
+  .pas-a-pas .texte-pas{display:none}
+}
+@media (max-width:760px){
+  .cadre{padding:0 16px}
+  .entete .cadre{gap:12px}
+  .nav{overflow-x:auto;scrollbar-width:none}
+  .nav a{padding:0 10px}
+  .agent b{display:none}
+  .champs{grid-template-columns:1fr}
+  .notes{width:100%}
+  .tableau{min-width:640px}
+  .defile{overflow-x:auto}
+  .page{padding:24px 0 48px}
+  .carte{padding:18px}
+  .choix.en-ligne{flex-direction:column}
+  .pas-a-pas{gap:4px}
+  .pas-a-pas li+li::before{width:10px;margin-right:0}
+  .quitter span,.quitter{font-size:0;gap:0}
+  .entete-droite .bouton{height:36px;padding:0 12px;font-size:13px}
+  .une h1{font-size:34px;line-height:40px}
+  .une .cadre{padding-block:40px 48px;gap:32px}
+  .une .carte .carte-tete{flex-wrap:wrap}
+}
+@media (max-width:420px){.entete-droite .bouton.secondaire,.entete-droite .bouton.clair{display:none}.entete .logo{font-size:0;gap:0}.pas-a-pas .rond{width:24px;height:24px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-cadenas" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 017 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-bas" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-oeil" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-retour" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-envoyer" viewBox="0 0 24 24"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-personnes" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3.5 3.5 0 010 7M18 14c1.8.8 3 2.9 3 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-profil" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-aide" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .6-1.5 1.2-1.5 2.5M12 17h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.5h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-horloge" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-carte" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-mobile" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 18h2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-agence" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v9h14v-9M9 19v-5h6v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-recu" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 8h6M9 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-piece" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="11" r="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 16c.5-1.5 1.6-2 3-2s2.5.5 3 2M14 10h4M14 13h3" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
+  <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M4 20l1.3-4A8 8 0 1112 20a8 8 0 01-4-1.1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1c-1-.5-1.5-1-2-2l1-1-1-2z" fill="currentColor"/></symbol>
+  <symbol id="i-tel" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a1 1 0 01-1 1A16 16 0 014 5a1 1 0 011-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-photo" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-fermer" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-cloche" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1112 0v5l2 2H4zM10 21h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-copier" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V5a1 1 0 00-1-1H5a1 1 0 00-1 1v10a1 1 0 001 1h3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-symbole" viewBox="0 0 100 100"><line x1="35" y1="43" x2="66" y2="22" stroke="#2E9AFE" stroke-width="21" stroke-linecap="round"/><line x1="65" y1="57" x2="34" y2="78" stroke="#14B8A6" stroke-width="21" stroke-linecap="round"/><circle cx="18" cy="23" r="9.5" fill="#0B3D91"/><circle cx="82" cy="77" r="9.5" fill="#07766E"/></symbol>
+  <symbol id="i-symbole-inv" viewBox="0 0 100 100"><line x1="35" y1="43" x2="66" y2="22" stroke="#2E9AFE" stroke-width="21" stroke-linecap="round"/><line x1="65" y1="57" x2="34" y2="78" stroke="#14B8A6" stroke-width="21" stroke-linecap="round"/><circle cx="18" cy="23" r="9.5" fill="#FFFFFF"/><circle cx="82" cy="77" r="9.5" fill="#14B8A6"/></symbol>
+</svg>
+
+<!-- En-tête du site : rempli par afficher() selon data-gabarit de l'écran (public, connecte, envoi) -->
+<header class="entete" id="entete"><div class="cadre" id="entete-cadre"></div></header>
+
+<main id="ecrans">
+
+<!-- ═════════════ A. ENTRER DANS LE SERVICE ═════════════ -->
+
+<section class="ecran" id="p0" data-code="P0" data-groupe="A · Entrer dans le service" data-titre="Accueil public et simulateur" data-gabarit="public" data-entete="marque"
+  data-contexte="Déclinaison web de P0. La plateforme web sert la diaspora (atelier 7, 15/10 : application mobile pour la Guinée, plateforme web pour la diaspora ; une application web à installer est écartée). Contrairement à l'application, le simulateur est ouvert sans compte : « ok pour moi » (Issiaga Diallo, question 5 du doc de l'atelier 8, 21/10) ; Babacar Faye devait confirmer sous 72 h après l'atelier 7, sa réponse n'est pas dans nos sources. Le simulateur et l'accroche reprennent ceux de l'application (« Vos proches, plus près. »). Devise d'envoi : euro par défaut, dollar américain selon l'hypothèse de Q21 (GNF, EUR, USD : un taux par devise). Taux et frais de démonstration : 10 500 GNF pour 1 € (chiffre cité à l'atelier 1), 2,50 € de frais (règle de démonstration de l'application). Aucun plafond affiché : celui de 5 000 USD par jour ne vaut que pour les envois initiés depuis la Guinée (atelier 8, 22/10) ; pour un envoi depuis l'étranger, c'est la réglementation du pays d'envoi et le partenaire local (Q41). Pied de page : conditions et confidentialité, le RGPD s'appliquant aux utilisateurs situés dans l'Union européenne (atelier 7)."
+  data-q="Q21|Q41">
+  <div class="une">
+    <svg class="une-motif" aria-hidden="true"><use href="#i-symbole-inv"/></svg>
+    <div class="cadre">
+      <div>
+        <h1>Vos proches,<br>plus près.</h1>
+        <p class="chapeau">Envoyez de l'argent en Guinée depuis l'étranger, en quelques minutes. Votre proche retire en espèces dans tout le réseau Safico.</p>
+        <div class="atouts"><span><svg aria-hidden="true"><use href="#i-ok"/></svg>Frais affichés avant de payer</span><span><svg aria-hidden="true"><use href="#i-ok"/></svg>Taux du jour garanti</span><span><svg aria-hidden="true"><use href="#i-ok"/></svg>Code de retrait sur votre espace</span></div>
+        <div class="actions" style="margin-top:32px"><a class="bouton inverse grand" href="#p1">Créer mon compte</a><a class="bouton clair grand" href="#c1">Se connecter</a></div>
+      </div>
+      <div class="carte">
+        <div class="carte-tete"><h2>Combien voulez-vous envoyer ?</h2><span class="trancher" title="Q21 · Quelles devises d'envoi propose-t-on ?">Q21</span></div>
+        <div data-simu></div>
+        <a class="bouton primaire grand plein" href="#c1" data-toast="Connectez-vous pour envoyer : votre simulation est gardée.">Envoyer maintenant</a>
+        <p class="micro">Simulation sans engagement. Pour envoyer, il faut un compte vérifié. <span class="trancher" title="Q41 · Envois depuis l'étranger : quels montants minimum et maximum par envoi, et quels plafonds, fixés par Safico ou par son partenaire local du pays d'envoi ?">Q41</span></p>
+      </div>
+    </div>
+  </div>
+  <div class="page">
+    <div class="cadre">
+      <div class="rubrique">Comment ça marche</div>
+      <div class="etapes-pub">
+        <div class="etape-pub"><span class="num">1</span><b>Créez votre compte</b><span>Votre numéro de téléphone et une pièce d'identité suffisent. Nous vérifions votre identité avant votre premier envoi.</span></div>
+        <div class="etape-pub"><span class="num">2</span><b>Envoyez</b><span>Payez par carte bancaire. Vous voyez le montant reçu, les frais et le taux avant de payer.</span></div>
+        <div class="etape-pub"><span class="num">3</span><b>Votre proche retire</b><span>Avec le code de retrait que vous lui transmettez et sa pièce d'identité, en agence ou chez un distributeur.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ecran" id="c1" data-code="C1" data-groupe="A · Entrer dans le service" data-titre="Connexion" data-gabarit="public"
+  data-contexte="Déclinaison web de C1. Téléphone et mot de passe, comme dans l'application (point client du 15/10) ; le numéro est étranger (+33 dans la démonstration). Les applications de la diaspora identifient plutôt par e-mail (benchmark : WorldRemit, Remitly) : Q42. Pas de connexion biométrique sur ordinateur. Le code PIN ne sert pas à la connexion, seulement à valider un envoi (feuille du code PIN à l'étape du paiement). Mot de passe oublié et changement de numéro : écrans à décliner depuis l'application (C3 à C5, M3)."
+  data-q="Q42|Q23">
+  <div class="centre-page">
+    <div class="carte">
+      <div class="titre-page moyen">Se connecter</div>
+      <div class="champ"><label for="c1-tel">Numéro de téléphone</label><div class="tel"><select class="indicatif" aria-label="Indicatif"><option selected>+33</option><option>+32</option><option>+1</option><option>+44</option><option>+224</option></select><input id="c1-tel" inputmode="tel" data-persona-tel></div><span class="aide">Le numéro de votre compte Safico. <span class="trancher" title="Q42 · Sur la plateforme diaspora, le client s'identifie-t-il par son numéro de téléphone étranger (comme dans l'application) ou par son adresse e-mail ? Les codes SMS partent-ils vers tous les pays d'envoi ?">Q42</span></span></div>
+      <div class="champ"><label for="c1-mdp">Mot de passe</label><div class="mdp"><input id="c1-mdp" type="password" value="motdepasse" autocomplete="current-password"><button type="button" class="oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg width="22" height="22" aria-hidden="true"><use href="#i-oeil"/></svg></button></div></div>
+      <a class="lien" style="align-self:flex-start" href="#c1" data-toast="Mot de passe oublié : écrans à décliner depuis l'application (C3 à C5).">Mot de passe oublié</a>
+      <a class="bouton primaire grand plein" href="#a1" data-toast="Bienvenue, Mamadou Saliou.">Se connecter</a>
+      <div class="separateur"></div>
+      <p class="micro" style="text-align:center">Pas encore de compte ? <a href="#p1">Créer mon compte</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════ A. CRÉER UN COMPTE (28/10) ═════════════ -->
+
+<section class="ecran" id="p1" data-code="P1" data-groupe="A · Créer un compte" data-titre="Créer un compte · téléphone" data-gabarit="etapes" data-etapes="inscription" data-etape="1"
+  data-contexte="Déclinaison web de P1. Le téléphone est l'identifiant, comme dans l'application (point client du 15/10) ; ici, un numéro étranger (Q42 : l'e-mail est l'usage des applications de la diaspora). Le pays de résidence se choisit avec l'indicatif : il détermine le partenaire local par lequel passent les envois (atelier 8 : « les envois depuis l'étranger passeront par des partenaires locaux de SAFICO »). Les pays ouverts ne sont pas connus (Q45) : ceux de la démonstration reprennent les indicatifs de la connexion. Si le numéro a déjà un compte, on ne le dit qu'après le code SMS, comme dans l'application (P2c, à décliner). Le rattachement d'une fiche ouverte en agence (P2d, P2f, Q2 validée le 21/10) suppose le même numéro : un client de la diaspora a souvent changé de numéro, le cas n'est pas décliné ici. Colonne de droite : pourquoi Safico demande ces informations (atelier 7 : la Guinée exige de savoir qui envoie et qui reçoit ; le RGPD s'applique dans l'Union européenne)."
+  data-q="Q42|Q45">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div><div class="titre-page moyen">Votre numéro de téléphone</div><p class="sous-titre">Il sert à vous connecter. Nous y envoyons un code de vérification.</p></div>
+        <div class="carte">
+          <div class="champ"><label for="p1-pays">Pays où vous vivez</label><select id="p1-pays" data-pays-residence></select><span class="aide">Liste de démonstration. <span class="trancher" title="Q45 · Depuis quels pays la plateforme diaspora est-elle ouverte (un partenaire local par pays) ?">Q45</span></span></div>
+          <div class="champ"><label for="p1-tel">Numéro de téléphone</label><div class="tel"><select class="indicatif" aria-label="Indicatif" data-indicatif></select><input id="p1-tel" inputmode="tel" data-persona-tel data-requis></div><span class="aide">Le numéro doit être à votre nom. Un numéro, un compte. <span class="trancher" title="Q42 · Sur la plateforme diaspora, le client s'identifie-t-il par son numéro de téléphone étranger (comme dans l'application) ou par son adresse e-mail ? Les codes SMS partent-ils vers tous les pays d'envoi ?">Q42</span></span></div>
+          <p class="micro">En continuant, vous acceptez les <a href="#p1" data-toast="Conditions d'utilisation : écran à décliner (M4).">conditions d'utilisation</a> et la <a href="#p1" data-toast="Confidentialité : écran à décliner (M4).">politique de confidentialité</a>.</p>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#p0"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#p2" data-attend-requis>Recevoir le code</a></div>
+        <p class="micro">Vous avez déjà un compte ? <a href="#c1">Se connecter</a></p>
+      </div>
+      <aside class="collant" data-pourquoi></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="p2" data-code="P2" data-groupe="A · Créer un compte" data-titre="Créer un compte · code SMS" data-gabarit="etapes" data-etapes="inscription" data-etape="1"
+  data-contexte="Déclinaison web de P2. Code reçu par SMS, en 6 cases : sur ordinateur, on tape au clavier, la case suivante prend la main, un code collé se répartit dans les cases. Dès que le code est complet, on passe à la sécurité du compte, sans bouton « Continuer » (retour Alexie du 07/10). Le code SMS garde un clavier ordinaire : seul le code PIN a un pavé mélangé (Babacar Faye, 21/10). Prototype : tout code à 6 chiffres est accepté. Un SMS vers un numéro étranger : Q42."
+  data-q="Q42">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div><div class="titre-page moyen">Entrez le code reçu</div><p class="sous-titre">Envoyé par SMS au <b data-persona-tel-lu></b>.</p></div>
+        <div class="carte">
+          <div class="code-otp" data-otp data-vers="#p2e" role="group" aria-label="Code reçu par SMS"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 1"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 2"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 3"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 4"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 5"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 6"></div>
+          <p class="micro">Pas reçu ? <span class="fort">Renvoyer dans 0:42</span> · <a href="#p1">Modifier le numéro</a></p>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#p1"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a></div>
+      </div>
+      <aside class="collant" data-pourquoi></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="p2e" data-code="P2e" data-groupe="A · Créer un compte" data-titre="Créer un compte · mot de passe et code PIN" data-gabarit="etapes" data-etapes="inscription" data-etape="2"
+  data-contexte="Déclinaison web de P2e et P2b, réunis sur une page. Le mot de passe sert à la connexion, le code PIN à 6 chiffres à valider les envois et les opérations sensibles (point client du 15/10). Mot de passe saisi deux fois, avec l'œil pour l'afficher ; aucune règle de complexité n'est connue (Q23). Le code PIN se choisit dans la fenêtre du pavé mélangé, deux fois, et ne se tape pas au clavier : sur ordinateur, la saisie au clavier rendrait le mélange inutile (« Il faut prévoir un clavier dynamique pour le code à 6 chiffres pour des mesures de sécurité », Babacar Faye, 21/10). Pas de connexion biométrique sur ordinateur : P2g n'est pas décliné. « Continuer » attend deux mots de passe identiques et un code PIN choisi."
+  data-q="Q23">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div class="titre-page moyen">Sécurisez votre compte</div>
+        <div class="carte">
+          <h2>Mot de passe</h2>
+          <p class="micro" style="margin-top:-8px">Avec votre numéro de téléphone, il vous servira à vous connecter.</p>
+          <div class="champs">
+            <div class="champ"><label for="p2e-mdp1">Mot de passe</label><div class="mdp"><input id="p2e-mdp1" type="password" data-mdp autocomplete="new-password"><button type="button" class="oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg width="22" height="22" aria-hidden="true"><use href="#i-oeil"/></svg></button></div></div>
+            <div class="champ"><label for="p2e-mdp2">Confirmez le mot de passe</label><div class="mdp"><input id="p2e-mdp2" type="password" data-mdp autocomplete="new-password"><button type="button" class="oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg width="22" height="22" aria-hidden="true"><use href="#i-oeil"/></svg></button></div></div>
+          </div>
+          <p class="erreur-texte" data-mdp-erreur hidden>Les deux mots de passe ne sont pas identiques.</p>
+          <p class="micro">Règles du mot de passe à définir. <span class="trancher" title="Q23 · Règles du mot de passe (longueur, caractères)">Q23</span></p>
+        </div>
+        <div class="carte">
+          <h2>Code PIN</h2>
+          <p class="micro" style="margin-top:-8px">6 chiffres, demandés pour valider vos envois et les opérations sensibles. Vous les choisissez en cliquant sur un pavé dont les chiffres changent de place à chaque fois.</p>
+          <div class="etat-code"><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-mobile"/></svg><span class="fort">Code PIN</span><span class="statut neutre" data-pin-etat>Pas encore choisi</span></div>
+          <button type="button" class="bouton secondaire" style="align-self:flex-start" data-pin-choisir>Choisir mon code PIN</button>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#p2"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#p4" data-suite-securite aria-disabled="true">Continuer</a></div>
+      </div>
+      <aside class="collant" data-pourquoi></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="p4" data-code="P4" data-groupe="A · Créer un compte" data-titre="Vérification · pièce d'identité" data-gabarit="etapes" data-etapes="inscription" data-etape="3"
+  data-contexte="Déclinaison web de P4 et P4b, réunis. La vérification d'identité s'applique aussi à la diaspora (atelier 7, 15/10). La photo de la pièce vient d'abord, les informations en sont lues ensuite (atelier 8, 22/10). Pièces : l'hypothèse de Q3, encore à trancher (passeport guinéen ou étranger, carte consulaire, CNI guinéenne ; le titre de séjour en justificatif d'adresse seulement) ; le permis de conduire de l'application n'est pas repris. Un ordinateur n'a souvent pas de bonne caméra : deux façons, proposition Galadrim, que rien ne décide encore. Soit on continue sur son téléphone par un QR code (usage courant des services de vérification d'identité), soit on importe des photos déjà prises. Passeport : la page photo ; cartes : recto et verso. « Continuer » attend toutes les faces. Cas limite repris de l'application : 3 essais sans photo lisible, puis un conseiller rappelle (P4d)."
+  data-q="Q3" data-ajout="choix téléphone ou import des photos">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div><div class="titre-page moyen">Votre pièce d'identité</div><p class="sous-titre">Nous y lisons vos informations, puis vous prenez un selfie. Nous vérifions que c'est bien vous.</p></div>
+        <div class="carte">
+          <div class="carte-tete"><h2>Quelle pièce avez-vous ?</h2><span class="trancher" title="Q3 · Pièces acceptées pour la diaspora : titre de séjour, passeport étranger ?">Q3</span></div>
+          <div class="choix" data-pieces></div>
+        </div>
+        <div class="carte">
+          <div class="carte-tete"><h2>Comment voulez-vous la photographier ?</h2><span class="etiquette" title="Proposition Galadrim : continuer sur le téléphone ou importer des photos, aucune décision ne porte la forme.">proposition</span></div>
+          <div class="choix en-ligne">
+            <label><input type="radio" name="methode" value="telephone" checked><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-mobile"/></svg><div class="milieu"><b>Avec mon téléphone</b><span class="micro">Recommandé : sa caméra lit mieux la pièce.</span></div></label>
+            <label><input type="radio" name="methode" value="import"><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-photo"/></svg><div class="milieu"><b>Importer des photos</b><span class="micro">Déjà prises, nettes et en couleur.</span></div></label>
+          </div>
+          <div class="qr-bloc" data-si-methode="telephone">
+            <div class="qr" role="img" aria-label="QR code de démonstration"></div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <b>Scannez ce code avec l'appareil photo de votre téléphone</b>
+              <span class="micro">Une page s'ouvre sur votre téléphone pour photographier la pièce. Cette page-ci se met à jour toute seule.</span>
+              <button type="button" class="lien" style="align-self:flex-start" data-toast="Lien envoyé par SMS au +33 6 •• •• •• 90.">Recevoir le lien par SMS</button>
+              <button type="button" class="bouton secondaire" style="align-self:flex-start" data-captures-faites>Revue : photos prises sur le téléphone</button>
+            </div>
+          </div>
+          <div class="captures" data-si-methode="import" data-captures></div>
+          <p class="micro">Bonne lumière, pièce à plat, sans reflet ni doigt sur la pièce. <a href="#p4d">Revue : 3 essais sans photo lisible</a></p>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#p2e"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#p3" data-attend-requis aria-disabled="true">Continuer</a></div>
+      </div>
+      <aside class="collant" data-pourquoi></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="p4d" data-code="P4d" data-groupe="A · Créer un compte" data-titre="Vérification · trop d'essais" data-gabarit="etapes" data-etapes="inscription" data-etape="3"
+  data-contexte="Déclinaison web de P4d. Cas limite du parcours 2 (doc de parcours) : après 3 essais sans photo lisible, un conseiller rappelle le client. Le nombre d'essais vient de ce document ; il n'a pas été confirmé en atelier. Le rappel passe par la demande d'aide (atelier 8 : un seul bouton « Demander de l'aide », rappel par téléphone ou WhatsApp, aux horaires du service après-vente). Depuis l'étranger, l'appel vers un numéro étranger et les horaires de Conakry ne sont pas traités : Q37 reste ouverte sur les canaux."
+  data-q="Q37">
+  <div class="page"><div class="cadre" style="max-width:720px">
+    <div class="pictos attention"><svg aria-hidden="true"><use href="#i-photo"/></svg></div>
+    <div class="titre-page moyen">Nous n'arrivons pas à lire votre pièce</div>
+    <p class="sous-titre">Après 3 essais, un conseiller vous rappelle pour vous aider à terminer votre inscription.</p>
+    <div class="carte plate"><div class="liste"><div><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-aide"/></svg><div class="milieu"><b>Demander de l'aide</b><span class="micro">Nous vous rappelons par téléphone ou sur WhatsApp · <span data-sav-horaires></span> <span class="trancher" title="Q37 · Quels autres canaux du service après-vente afficher (téléphone, e-mail, numéros) ? Que voit le client en dehors des horaires ?">Q37</span></span></div></div></div></div>
+    <div class="actions"><a class="bouton primaire grand" href="#p5" data-toast="Un conseiller vous rappelle au +33 6 •• •• •• 90.">Être rappelé</a><a class="bouton texte" href="#p4">Réessayer</a></div>
+  </div></div>
+</section>
+
+<section class="ecran" id="p3" data-code="P3" data-groupe="A · Créer un compte" data-titre="Vérification · vos informations" data-gabarit="etapes" data-etapes="inscription" data-etape="4"
+  data-contexte="Déclinaison web de P3. Lecture automatique de la pièce (atelier 8, 22/10) : nom, prénom(s) et date de naissance s'affichent pré-remplis et restent modifiables ; faisabilité à confirmer par Galadrim (Surya), d'où l'étiquette « proposition ». Profil KYC de toute personne qui envoie (note d'Issiaga Diallo, atelier 5) : catégorie socioprofessionnelle, en 9 valeurs, et revenus nets mensuels, en 6 tranches, obligatoires. Les 9 catégories sont celles du lot 1 (B6, spec du 01/10) ; l'application affiche encore une liste de démonstration de 7 valeurs. Les tranches sont en francs guinéens, « paramétrables au siège » : pour un client payé en euros, l'équivalent au taux du jour est ajouté, calculé (Q44). Pays de résidence et adresse : la fiche client du guichet porte l'adresse (B5, B6) ; le pays fixe le partenaire local (atelier 8). Le justificatif de domicile n'est pas demandé : rien ne l'impose (le titre de séjour de Q3 n'y servirait que s'il l'est). La tranche fixe le plafond interne, jamais montré au client."
+  data-q="Q44|Q45">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div class="titre-page moyen">Vérifiez vos informations</div>
+        <div class="carte">
+          <div class="bandeau neutre"><svg aria-hidden="true"><use href="#i-piece"/></svg><span class="texte">Lu sur votre pièce, vérifiez et corrigez si besoin. <span class="etiquette" title="Lecture automatique : faisabilité technique à confirmer par Galadrim.">proposition</span></span></div>
+          <div class="champs">
+            <div class="champ"><label for="p3-nom">Nom</label><input id="p3-nom" data-persona-nom-champ data-requis></div>
+            <div class="champ"><label for="p3-prenom">Prénom(s)</label><input id="p3-prenom" data-persona-prenom-champ data-requis><span class="aide">Exactement comme sur votre pièce d'identité.</span></div>
+            <div class="champ"><label for="p3-naissance">Date de naissance</label><input id="p3-naissance" inputmode="numeric" value="12/05/1988" data-requis></div>
+          </div>
+        </div>
+        <div class="carte">
+          <h2>Où vivez-vous ?</h2>
+          <div class="champs">
+            <div class="champ"><label for="p3-pays">Pays de résidence</label><select id="p3-pays" data-pays-residence></select></div>
+            <div class="champ"><label for="p3-adresse">Adresse</label><input id="p3-adresse" value="75018 Paris" data-requis></div>
+          </div>
+        </div>
+        <div class="carte">
+          <h2>Votre situation</h2>
+          <p class="micro" style="margin-top:-8px">La loi nous demande de connaître nos clients. Vos réponses restent confidentielles.</p>
+          <div class="champs">
+            <div class="champ"><label for="p3-categorie">Catégorie socioprofessionnelle</label><select id="p3-categorie" data-categories data-requis></select></div>
+            <div class="champ"><label for="p3-revenus">Revenus nets mensuels</label><select id="p3-revenus" data-revenus data-requis></select><span class="aide">Tranches en francs guinéens, équivalent au taux du jour. <span class="trancher" title="Q44 · Revenus nets mensuels d'un client de la diaspora : tranches en francs guinéens (paramétrées au siège) ou tranches propres en euros et en dollars ?">Q44</span></span></div>
+          </div>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#p4"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#p4c" data-attend-requis aria-disabled="true">Continuer</a></div>
+      </div>
+      <aside class="collant" data-pourquoi></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="p4c" data-code="P4c" data-groupe="A · Créer un compte" data-titre="Vérification · selfie" data-gabarit="etapes" data-etapes="inscription" data-etape="5"
+  data-contexte="Déclinaison web de P4c. Le selfie est une hypothèse (Q5) : un selfie, comparé à la pièce par la conformité. Sur ordinateur, avec la caméra de l'ordinateur, après l'autorisation du navigateur ; ou sur le téléphone, comme pour la pièce (proposition). Prototype : « Prendre le selfie » simule une photo lisible, puis « Envoyer » mène à l'attente de vérification (P5)."
+  data-q="Q5" data-ajout="selfie sur le téléphone">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div><div class="titre-page moyen">Un selfie, pour finir <span class="trancher" title="Q5 · Selfie ou contrôle de présence demandé ?">Q5</span></div><p class="sous-titre">Placez votre visage dans l'ovale : visage dégagé, bonne lumière, sans lunettes.</p></div>
+        <div class="carte">
+          <div class="webcam" data-webcam><div class="ovale"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><circle cx="50" cy="38" r="18"/><path d="M18 92c4-18 18-28 32-28s28 10 32 28"/></svg></div><span class="consigne" data-webcam-consigne>Votre navigateur vous demande d'utiliser la caméra</span></div>
+          <div class="actions"><button type="button" class="bouton secondaire" data-selfie><svg aria-hidden="true"><use href="#i-photo"/></svg>Prendre le selfie</button><a class="lien" href="#p4c" data-toast="Lien envoyé par SMS au +33 6 •• •• •• 90 : prenez le selfie sur votre téléphone.">Le prendre sur mon téléphone</a><span class="etiquette" title="Proposition Galadrim : selfie sur le téléphone par un lien.">proposition</span></div>
+          <p class="micro">Vos photos restent confidentielles. Elles servent seulement à vérifier votre identité.</p>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#p3"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#p5" data-suite-selfie aria-disabled="true">Envoyer pour vérification</a></div>
+      </div>
+      <aside class="collant" data-pourquoi></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="p5" data-code="P5" data-groupe="A · Créer un compte" data-titre="Vérification en cours" data-gabarit="connecte"
+  data-contexte="Déclinaison web de P5. La conformité vérifie depuis le back-office ; aucun envoi n'est possible avant (atelier 7). Aucun délai n'est affiché au client (point client du 15/10, Q4 tranchée) : le délai relève d'une procédure interne de Safico (commentaire du 21/10). Pendant l'attente, hypothèse de Q7 : préparer un envoi, enregistrer des bénéficiaires ; le paiement attend la vérification. L'expéditeur est filtré sur les listes de sanctions dès l'inscription ; rien n'est affiché. Prévenu par SMS et, sur le web, par e-mail s'il en a donné un : l'e-mail n'est pas demandé à l'inscription (Q42)."
+  data-q="Q7|Q42">
+  <div class="page"><div class="cadre" style="max-width:820px">
+    <div class="tete-envoi"><div class="pictos attente"><svg aria-hidden="true"><use href="#i-horloge"/></svg></div><div><div class="titre-page moyen">Nous vérifions votre identité</div><p class="sous-titre">Nous vous prévenons par SMS au <b data-persona-tel-lu></b>.</p></div></div>
+    <div class="rubrique">En attendant, vous pouvez déjà <span class="trancher" title="Q7 · Pendant l'attente de vérification, que peut faire le client ?">Q7</span></div>
+    <div class="tuiles">
+      <a class="tuile" href="#e1"><svg aria-hidden="true"><use href="#i-envoyer"/></svg><span>Préparer un envoi</span><span class="micro" style="font-weight:400">Vous le paierez dès la vérification faite.</span></a>
+      <a class="tuile" href="#b1"><svg aria-hidden="true"><use href="#i-personnes"/></svg><span>Ajouter un bénéficiaire</span><span class="micro" style="font-weight:400">Pour envoyer sans attendre ensuite.</span></a>
+    </div>
+    <div class="actions"><a class="bouton secondaire" href="#p6">Revue : identité vérifiée</a><a class="bouton texte" href="#p7">Revue : pièce refusée</a></div>
+  </div></div>
+</section>
+
+<section class="ecran" id="p6" data-code="P6" data-groupe="A · Créer un compte" data-titre="Compte validé" data-gabarit="connecte"
+  data-contexte="Déclinaison web de P6. La conformité a validé l'identité depuis le back-office (compte rendu de l'atelier 7, 15/10) : les envois deviennent possibles. Le client en est prévenu par SMS."
+  data-q="">
+  <div class="page"><div class="cadre" style="max-width:820px">
+    <div class="tete-envoi"><div class="pictos valide"><svg aria-hidden="true"><use href="#i-ok"/></svg></div><div><div class="titre-page moyen">Votre identité est vérifiée</div><p class="sous-titre">Vous pouvez envoyer de l'argent dès maintenant.</p></div></div>
+    <div class="actions"><a class="bouton primaire grand" href="#e1"><svg aria-hidden="true"><use href="#i-envoyer"/></svg>Faire mon premier envoi</a><a class="bouton texte" href="#a1">Aller à l'accueil</a></div>
+  </div></div>
+</section>
+
+<section class="ecran" id="p7" data-code="P7" data-groupe="A · Créer un compte" data-titre="Pièce refusée" data-gabarit="connecte"
+  data-contexte="Déclinaison web de P7. La conformité ne valide pas les photos. Le motif dit au client et le nombre de nouvelles tentatives ne sont écrits nulle part (Q35) : on propose de reprendre les photos, sans motif détaillé."
+  data-q="Q35">
+  <div class="page"><div class="cadre" style="max-width:820px">
+    <div class="tete-envoi"><div class="pictos attention"><svg aria-hidden="true"><use href="#i-piece"/></svg></div><div><div class="titre-page moyen">Nous n'avons pas pu vérifier votre identité</div><p class="sous-titre">Les photos ne nous permettent pas de confirmer votre identité. Reprenez-les : pièce à plat, sans reflet, visage bien éclairé. <span class="trancher" title="Q35 · Pièce refusée par la conformité : quel motif dit-on au client, et combien de nouvelles tentatives ?">Q35</span></p></div></div>
+    <div class="actions"><a class="bouton primaire grand" href="#p4">Reprendre les photos</a><a class="bouton texte" href="#p7" data-toast="Demande d'aide : écran à décliner depuis l'application (H3).">Demander de l'aide</a></div>
+  </div></div>
+</section>
+
+<!-- ═════════════ ACCUEIL ═════════════ -->
+
+<section class="ecran" id="a1" data-code="A1" data-groupe="Accueil" data-titre="Accueil connecté" data-gabarit="connecte" data-nav="a1"
+  data-contexte="Déclinaison web de A1. Sur ordinateur, la barre du bas de l'application devient une barre de navigation en haut : Accueil · Envoyer · Mes envois · Mon compte. Le taux du jour en tête, comme au guichet (« c'est l'info que demande le client en arrivant », 22/09), avec un simulateur prêt à l'emploi : sur grand écran, l'envoi commence sur l'accueil. Derniers envois et bénéficiaires à droite. Le message réseau de l'application (BO29 étendu aux clients, proposition) n'est pas repris : rien ne dit que les Opérations publient pour la diaspora. Utilisateur de démonstration repris du profil « Diaspora · Paris » du prototype du 07/10, retiré de l'application le 15/10 : Mamadou Saliou DIALLO, Paris 18e."
+  data-q="">
+  <div class="page">
+    <div class="cadre">
+      <div><div class="titre-page">Bonjour <span data-persona-prenom></span></div><p class="sous-titre">Taux du jour : <b data-taux-jour></b> · mis à jour à 08:00.</p></div>
+      <div class="grille tiers">
+        <div class="carte">
+          <div class="carte-tete"><h2>Envoyer de l'argent</h2><a class="action-tete" href="#a1" data-toast="Taux du jour de toutes les destinations : écran à décliner depuis l'application (T1).">Tous les taux<svg aria-hidden="true"><use href="#i-chevron"/></svg></a></div>
+          <div data-simu></div>
+          <div class="actions"><a class="bouton primaire grand" href="#b1" data-suite-simu><svg aria-hidden="true"><use href="#i-envoyer"/></svg>Continuer</a><span class="micro">Prochaine étape : le bénéficiaire.</span></div>
+        </div>
+        <div class="colonne">
+          <div class="carte">
+            <div class="carte-tete"><h2>Derniers envois</h2><a href="#s1" class="action-tete">Tout voir<svg aria-hidden="true"><use href="#i-chevron"/></svg></a></div>
+            <div class="liste" data-derniers></div>
+          </div>
+          <div class="carte">
+            <div class="carte-tete"><h2>Vos bénéficiaires</h2></div>
+            <div class="liste" data-benef-accueil></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════ C. ENVOYER ═════════════ -->
+
+<section class="ecran" id="e1" data-code="E1" data-groupe="Envoyer" data-titre="Envoi · 1 Montant et réception" data-gabarit="envoi" data-etape="1" data-nav="e1"
+  data-contexte="Déclinaison web de E1. L'envoi garde les étapes de l'application (montant, bénéficiaire, récapitulatif) ; le pas-à-pas y ajoute le paiement, qui tient sur ordinateur dans le même en-tête. À droite, le résumé de l'envoi reste visible à toutes les étapes. Montant en euros (ou en dollars, Q21), dans les deux sens : « Vous envoyez » ↔ « Il reçoit » (Q11, tranchée le 07/10). Réception : seul le retrait en espèces est ouvert ; mobile money et compte bancaire « Bientôt disponible » (atelier 8, 22/10). Pas de minimum ni de maximum affichés : les valeurs de l'application (5 000 et 4 000 000 GNF) valent pour des envois en francs guinéens ; pour un envoi depuis l'étranger, aucune source ne les donne (Q41). Liberia : taux à charger, « Continuer » se désactive."
+  data-q="Q21|Q41">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div><div class="titre-page moyen">Combien voulez-vous envoyer ?</div></div>
+        <div class="carte"><div data-simu></div><p class="micro">Pas de minimum ni de maximum affichés pour un envoi depuis l'étranger. <span class="trancher" title="Q41 · Envois depuis l'étranger : quels montants minimum et maximum par envoi, et quels plafonds, fixés par Safico ou par son partenaire local du pays d'envoi ?">Q41</span></p></div>
+        <div class="carte">
+          <h2>Comment votre proche reçoit l'argent</h2>
+          <div class="choix en-ligne">
+            <label><input type="radio" name="mode" checked><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-agence"/></svg><div class="milieu"><b>Espèces dans le réseau</b><span class="micro">En agence Safico ou chez un distributeur, avec un code.</span></div></label>
+            <label class="indispo"><input type="radio" name="mode" disabled><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-mobile"/></svg><div class="milieu"><b>Mobile money</b><span class="micro">Crédité sur son compte mobile money.</span><span class="statut neutre">Bientôt disponible</span></div></label>
+            <label class="indispo"><input type="radio" name="mode" disabled><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-carte"/></svg><div class="milieu"><b>Compte bancaire</b><span class="micro">Selon la banque, sous 1 à 2 jours.</span><span class="statut neutre">Bientôt disponible</span></div></label>
+          </div>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#a1">Annuler</a><a class="bouton primaire grand pousse" href="#b1" data-suite-simu>Continuer</a></div>
+      </div>
+      <aside class="collant" data-resume></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="b1" data-code="B1" data-groupe="Envoyer" data-titre="Envoi · 2 Bénéficiaire" data-gabarit="envoi" data-etape="2" data-nav="e1"
+  data-contexte="Déclinaison web de B1 et B3, réunis : sur ordinateur, la liste des bénéficiaires et le formulaire d'un nouveau bénéficiaire tiennent sur la même page. Le nouveau bénéficiaire est repris dans le récapitulatif, ce que l'application ne fait pas encore. Règles reprises de B3 : téléphone obligatoire, champ le plus critique (atelier 1, compte rendu de l'atelier 7) ; nom et prénom(s) sur deux lignes, une inversion peut faire refuser le paiement (29/09) ; « exactement comme sur sa pièce » ; le bénéficiaire est filtré sur les listes de sanctions dès sa création, sans rien afficher au client (15/10). Bénéficiaires et valeurs du formulaire : démonstration (DIALLO Kadiatou et BAH Ousmane, profil du 07/10 ; SOUMAH Mariama, formulaire de l'application)."
+  data-q="Q9">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div class="titre-page moyen">À qui envoyez-vous ?</div>
+        <div class="carte">
+          <h2>Vos bénéficiaires</h2>
+          <div class="choix" data-benef-choix></div>
+        </div>
+        <div class="carte" data-si-nouveau hidden>
+          <h2>Nouveau bénéficiaire</h2>
+          <div class="bandeau information"><svg aria-hidden="true"><use href="#i-piece"/></svg><span class="texte">Écrivez le nom <b>exactement comme sur sa pièce d'identité</b>. Sinon, l'agence ne pourra pas payer.</span></div>
+          <div class="champs">
+            <div class="champ"><label for="nb-nom">Nom</label><input id="nb-nom" value="SOUMAH" data-nouveau="nom"></div>
+            <div class="champ"><label for="nb-prenom">Prénom(s)</label><input id="nb-prenom" value="Mariama" data-nouveau="prenom"></div>
+            <div class="champ"><label for="nb-tel">Son numéro de téléphone</label><div class="tel"><select class="indicatif" aria-label="Indicatif"><option>+224</option><option>+225</option><option>+221</option><option>+231</option></select><input id="nb-tel" inputmode="tel" value="664 21 08 55" data-nouveau="tel"></div><span class="aide">Obligatoire : il recevra un SMS. Vérifiez chaque chiffre.</span></div>
+            <div class="champ"><label for="nb-ville">Ville</label><input id="nb-ville" value="Kindia" data-nouveau="ville"><span class="aide">Facultatif.</span></div>
+          </div>
+          <label class="case"><input type="checkbox" checked id="nb-confirme"><span>Je confirme que le nom et le numéro sont exacts.</span></label>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#e1"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#e4" data-suite-benef>Continuer</a></div>
+      </div>
+      <aside class="collant" data-resume></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="e4" data-code="E4" data-groupe="Envoyer" data-titre="Envoi · 3 Récapitulatif" data-gabarit="envoi" data-etape="3" data-nav="e1"
+  data-contexte="Déclinaison web de E4 (ancre #e5 dans l'application). Tout ce qui engage, avant le paiement : ce que reçoit le bénéficiaire, le bénéficiaire (nom et prénom(s) séparés), montant, frais, taux, total. Motif du transfert facultatif (atelier 8, 22/10 : origine des fonds supprimée). « Code de retrait · Affiché après le paiement » : Q8 tranchée à l'atelier 8, l'expéditeur voit le code dans son espace, personnel et protégé, comme dans l'application. Annulation et remboursement écrits en clair, rendus sur la carte qui a payé (hypothèse de Q13). Taux garanti 15 minutes (Q16)."
+  data-q="Q16|Q13">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div class="titre-page moyen">Vérifiez votre envoi</div>
+        <div class="grille deux">
+          <div class="carte serree">
+            <div class="label">Votre proche reçoit</div>
+            <div class="montant" data-recu-montant></div>
+            <div class="micro">En espèces, dans toute agence ou chez tout distributeur Safico.</div>
+            <div class="separateur"></div>
+            <div class="ligne"><span>Code de retrait</span><span class="fort">Affiché après le paiement</span></div>
+          </div>
+          <div class="carte serree">
+            <div class="carte-tete"><span class="label">Bénéficiaire</span><a href="#b1" class="action-tete">Modifier</a></div>
+            <div class="ligne"><span class="micro">Nom</span><span class="fort" data-benef-nom></span></div>
+            <div class="ligne"><span class="micro">Prénom(s)</span><span data-benef-prenom></span></div>
+            <div class="ligne"><span class="micro">Téléphone</span><span data-benef-tel></span></div>
+          </div>
+        </div>
+        <div class="carte">
+          <div class="ligne"><span>Vous envoyez</span><span class="fort" data-recap-envoi></span></div>
+          <div class="ligne"><span>Frais</span><span data-recap-frais></span></div>
+          <div class="ligne"><span>Taux</span><span data-recap-taux></span></div>
+          <div class="separateur"></div>
+          <div class="ligne"><span class="fort">Total à payer</span><span class="montant-petit" data-recap-total></span></div>
+          <div class="micro">Taux garanti 15 minutes. <span class="trancher" title="Q16 · Le taux change entre la simulation et le paiement">Q16</span></div>
+        </div>
+        <div class="champ" style="max-width:420px"><label for="e4-motif">Motif du transfert (facultatif)</label><select id="e4-motif" data-motif><option value="">Choisir…</option><option>Assistance familiale</option><option>Frais médicaux</option><option>Frais scolaires</option><option>Œuvres et dons</option><option>Autre</option></select><span class="aide">Liste du prototype agence, à compléter par la conformité (G1).</span></div>
+        <div class="carte plate"><p class="micro"><b>Vous changez d'avis ?</b> Tant que l'argent n'est pas retiré, vous pouvez annuler : nous vous rendons le montant <b>et les frais</b>, sur la carte qui a payé. Non retiré après 30 jours, l'envoi vous est remboursé, sans les frais. <span class="trancher" title="Q13 · Annulation ou remboursement d'un envoi payé en ligne (Mobile Money ou carte) : les fonds reviennent-ils toujours au compte d'origine ? Quelle règle de frais ?">Q13</span></p></div>
+        <div class="actions"><a class="bouton texte" href="#b1"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#e5">Passer au paiement</a></div>
+      </div>
+      <aside class="collant" data-resume></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="e5" data-code="E5" data-groupe="Envoyer" data-titre="Paiement · carte bancaire" data-gabarit="envoi" data-etape="4" data-nav="e1"
+  data-contexte="Déclinaison web de E5 et E5g, réunis. La carte bancaire est le seul moyen de paiement de la plateforme diaspora : le mobile money des six opérateurs guinéens vaut pour l'application (atelier 8). « Pertinent pour la diaspora surtout » (commentaire d'Issiaga Diallo, 21/10). La carte est active (décision d'Alexie du 28/10, comme dans l'application), sous Q36, question 1 de l'atelier 9 : sans réponse, le document de travail prévoyait « bientôt disponible » sur la plateforme web, ce qui laisserait la diaspora sans moyen de payer. Saisie minimale reprise de E5g : numéro, expiration, cryptogramme, titulaire ; le bouton reste désactivé tant que les quatre champs ne sont pas remplis. « Payer » ouvre la validation par code PIN, puis la confirmation de la banque (E5h)."
+  data-q="Q36">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div class="titre-page moyen">Paiement par carte bancaire</div>
+        <div class="carte">
+          <div class="carte-tete"><h2>Votre carte</h2><span class="trancher" title="Q36 · Carte bancaire : dans l'application Guinée aussi, ou seulement sur la plateforme diaspora ? Quel prestataire de paiement, et 3-D Secure ?">Q36</span></div>
+          <div class="champs">
+            <div class="champ large"><label for="cb-numero">Numéro de la carte</label><input id="cb-numero" inputmode="numeric" data-requis autocomplete="off" placeholder="0000 0000 0000 0000"></div>
+            <div class="champ"><label for="cb-expiration">Date d'expiration</label><input id="cb-expiration" inputmode="numeric" placeholder="MM/AA" data-requis autocomplete="off"></div>
+            <div class="champ"><label for="cb-cryptogramme">Cryptogramme</label><input id="cb-cryptogramme" inputmode="numeric" data-requis autocomplete="off"><span class="aide">Les 3 chiffres au dos de la carte.</span></div>
+            <div class="champ large"><label for="cb-titulaire">Titulaire de la carte</label><input id="cb-titulaire" data-requis autocomplete="off"></div>
+          </div>
+          <p class="micro" style="display:flex;gap:8px;align-items:center"><svg width="16" height="16" aria-hidden="true"><use href="#i-cadenas"/></svg>Prestataire de paiement à choisir par Safico. Vos données de carte ne sont pas conservées par le prototype.</p>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#e4"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#e5h" data-pin-vers="#e5h" data-attend-requis aria-disabled="true">Payer <span data-recap-total></span></a></div>
+      </div>
+      <aside class="collant" data-resume></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="e5h" data-code="E5h" data-groupe="Envoyer" data-titre="Paiement · confirmation par la banque" data-gabarit="envoi" data-etape="4" data-nav="e1"
+  data-contexte="Écran nouveau, sans équivalent dans l'application. Dans l'Union européenne, un paiement par carte en ligne passe en règle générale par une authentification forte de la banque du porteur (3-D Secure, directive DSP2), et le benchmark cite l'échec 3-D Secure parmi les causes de transactions échouées (Taptap Send). Q36 demande si 3-D Secure s'applique : l'écran dessine l'hypothèse qu'il s'applique, en fenêtre générique « Votre banque », sans reprendre l'apparence d'aucune banque. Le code PIN Safico est demandé avant, comme dans l'application ; cumuler les deux est une question pour Q36. Les liens de revue montrent les deux issues : confirmé (E7), refusé (retour au paiement)."
+  data-q="Q36">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div class="titre-page moyen">Confirmez le paiement auprès de votre banque</div>
+        <div class="carte">
+          <div class="pictos attente"><svg aria-hidden="true"><use href="#i-mobile"/></svg></div>
+          <p class="sous-titre">Votre banque vous demande de confirmer le paiement de <b data-recap-total></b> à Safico, dans son application ou par un code reçu par SMS. <span class="trancher" title="Q36 · Carte bancaire : dans l'application Guinée aussi, ou seulement sur la plateforme diaspora ? Quel prestataire de paiement, et 3-D Secure ?">Q36</span></p>
+          <div class="banque">
+            <span class="label">Fenêtre de votre banque</span>
+            <div class="ligne"><span>Commerçant</span><span class="fort">Safico</span></div>
+            <div class="ligne"><span>Montant</span><span class="fort" data-recap-total></span></div>
+            <div class="ligne"><span>Carte</span><span>•••• 4821</span></div>
+            <span class="micro">Ouvrez l'application de votre banque pour valider.</span>
+          </div>
+          <p class="micro">Ne fermez pas cette page. Vous ne serez débité qu'une fois.</p>
+        </div>
+        <div class="actions"><a class="bouton secondaire" href="#e7">Revue : paiement confirmé</a><a class="bouton texte" href="#e5" data-toast="Votre banque a refusé le paiement. Rien n'a été débité : réessayez ou utilisez une autre carte.">Revue : refusé par la banque</a></div>
+      </div>
+      <aside class="collant" data-resume></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="e7" data-code="E7" data-groupe="Envoyer" data-titre="Envoi confirmé · informations de retrait" data-gabarit="connecte" data-nav="e1"
+  data-contexte="Déclinaison web de E7 (ancre #e8 dans l'application). Q8 tranchée à l'atelier 8 (22/10) : le code de retrait est affiché à l'expéditeur, qui le transmet lui-même (WhatsApp par exemple), avec « Copier » et « Partager sur WhatsApp » ; pas de renvoi de SMS. Contrairement au guichet, l'expéditeur connaît le code : son espace est personnel et protégé. Code et référence de démonstration, alphanumériques comme au lot 1 (atelier 6), propres à ce prototype. Le bénéficiaire reçoit quand même un SMS, dont le contenu est l'hypothèse de Q39. Retrait dans toute agence ou chez tout distributeur Safico, sans liste des points (Q27 tranchée le 21/10). Validité de 30 jours (lot 1)."
+  data-q="Q9|Q39">
+  <div class="page"><div class="cadre">
+    <div class="tete-envoi"><div class="pictos valide"><svg aria-hidden="true"><use href="#i-ok"/></svg></div><div><div class="titre-page">Envoi effectué</div><p class="sous-titre"><span data-benef-prenom></span> <span data-benef-nom></span> peut retirer <b data-recu-montant></b>.</p></div></div>
+    <div class="grille deux">
+      <div class="carte">
+        <div class="ligne"><span class="label">Référence de l'envoi</span><span class="reference" data-ref></span></div>
+        <div class="separateur"></div>
+        <div class="label">Code de retrait</div>
+        <div class="code-retrait" data-code-retrait></div>
+        <div class="actions"><button type="button" class="bouton secondaire" data-toast="Code de retrait copié."><svg aria-hidden="true"><use href="#i-copier"/></svg>Copier</button><button type="button" class="bouton secondaire" data-toast="WhatsApp Web s'ouvre avec le code de retrait et la référence de l'envoi."><svg aria-hidden="true"><use href="#i-whatsapp"/></svg>Partager sur WhatsApp</button></div>
+        <p class="micro">Transmettez-le à votre proche. Il le présente avec sa pièce d'identité, dans toute agence ou chez tout distributeur Safico.</p>
+      </div>
+      <div class="colonne">
+        <div class="carte accent">
+          <h2>Ce que votre proche doit apporter</h2>
+          <div class="liste">
+            <div><svg width="22" height="22" style="color:var(--marque-tete)" aria-hidden="true"><use href="#i-mobile"/></svg><div class="milieu">Le code de retrait que vous lui transmettez</div></div>
+            <div><svg width="22" height="22" style="color:var(--marque-tete)" aria-hidden="true"><use href="#i-piece"/></svg><div class="milieu">Sa pièce d'identité, au nom de <b data-benef-nom-complet></b></div></div>
+            <div><svg width="22" height="22" style="color:var(--marque-tete)" aria-hidden="true"><use href="#i-horloge"/></svg><div class="milieu">Avant le 27 novembre 2026 (30 jours)</div></div>
+          </div>
+        </div>
+        <div class="carte plate">
+          <h2>Ce que reçoit votre bénéficiaire <span class="trancher" title="Q39 · Ce que contient le SMS envoyé au bénéficiaire pour l'orienter, qui traite une demande d'assistance et sous quel délai, et ce qui est indiqué au bénéficiaire si le point où il se présente n'a pas les espèces.">Q39</span></h2>
+          <div class="bulle-sms">Safico : <span data-persona-prenom></span> <span data-persona-nom></span> vous envoie <span data-recu-montant></span>. Code de retrait : <span data-code-retrait></span>. Présentez-le avec votre pièce d'identité dans toute agence ou chez tout distributeur Safico. Aide sur WhatsApp : [numéro du service après-vente].</div>
+          <p class="micro">Par SMS au <span data-benef-tel></span>. S'il a un compte Safico, il reçoit aussi une notification dans l'application. <span class="trancher" title="Q9 · Le bénéficiaire a-t-il un espace de suivi, ou seulement des SMS ?">Q9</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="actions"><a class="bouton secondaire" href="#r1"><svg aria-hidden="true"><use href="#i-recu"/></svg>Voir le reçu</a><a class="bouton secondaire" href="#s2" data-envoi="0">Suivre l'envoi</a><a class="bouton texte pousse" href="#a1">Retour à l'accueil</a></div>
+  </div></div>
+</section>
+
+<!-- ═════════════ D. SUIVRE ET GÉRER ═════════════ -->
+
+<section class="ecran" id="s1" data-code="S1" data-groupe="Suivre et gérer" data-titre="Mes envois" data-gabarit="connecte" data-nav="s1"
+  data-contexte="Déclinaison web de S1 : sur ordinateur, la liste devient un tableau (date, bénéficiaire, montants, statut), chaque ligne ouvre le détail. Statuts : hypothèse de Q38, question 2 de l'atelier 9 (En attente de paiement · Disponible au retrait · Retiré, et selon le cas En vérification · Annulé · Remboursé). Les quatre envois sont des valeurs de démonstration, calculées au taux de démonstration ; le premier est celui qu'on vient de faire."
+  data-q="Q38">
+  <div class="page"><div class="cadre">
+    <div class="carte-tete"><div class="titre-page">Mes envois</div><span class="trancher" title="Q38 · Statuts de suivi : quelle liste retenir, et quel mot pour le versement au bénéficiaire ?">Q38</span></div>
+    <div class="carte defile">
+      <table class="tableau">
+        <thead><tr><th>Date</th><th>Bénéficiaire</th><th>Référence</th><th class="droite">Envoyé</th><th class="droite">Reçu</th><th>Statut</th><th></th></tr></thead>
+        <tbody data-envois></tbody>
+      </table>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="s2" data-code="S2" data-groupe="Suivre et gérer" data-titre="Détail d'un envoi" data-gabarit="connecte" data-nav="s1"
+  data-contexte="Déclinaison web de S2. Le détail suit l'envoi choisi dans « Mes envois ». Atelier 8 (22/10) : « Demander de l'aide » en action principale, « Demander l'annulation » en lien secondaire, « Corriger le nom du bénéficiaire » tant que l'envoi n'est pas retiré. Le code de retrait s'affiche tant que l'envoi n'est pas retiré. L'annulation est traitée par le back-office Safico (commentaire de Babacar Faye, 21/10) ; rendu sur la carte qui a payé (Q13). Les trois actions mènent à des écrans à décliner depuis l'application (H3, S7, S4) : un message le dit."
+  data-q="Q13|Q38">
+  <div class="page"><div class="cadre" data-s2></div></div>
+</section>
+
+<section class="ecran" id="r1" data-code="R1" data-groupe="Suivre et gérer" data-titre="Reçu" data-gabarit="connecte" data-nav="s1"
+  data-contexte="Déclinaison web de R1 : même contenu que le reçu du guichet (B11), nom et prénom(s) séparés, sans « taux bloqué » (Q26 de l'atelier 5), la ligne « Motif » seulement si un motif a été saisi. Sur ordinateur, le PDF passe en premier, le partage WhatsApp en second. Valeur d'un reçu électronique non signé : Q18. Le reçu est celui de l'envoi qu'on vient de faire."
+  data-q="Q18">
+  <div class="page"><div class="cadre">
+    <a class="retour-lien" href="#s2" data-envoi="0"><svg width="18" height="18" aria-hidden="true"><use href="#i-retour"/></svg>Détail de l'envoi</a>
+    <div class="grille tiers">
+      <div class="recu">
+        <div class="ligne"><span class="logo" style="font-size:20px"><svg style="width:24px;height:24px" aria-hidden="true"><use href="#i-symbole"/></svg>Safico</span><span class="micro">28/10/2026 · 14:32</span></div>
+        <div class="reference" data-ref></div>
+        <div class="separateur"></div>
+        <div class="label">Expéditeur</div>
+        <div class="ligne"><span>Nom</span><span data-persona-nom></span></div>
+        <div class="ligne"><span>Prénom(s)</span><span data-persona-prenom></span></div>
+        <div class="label">Bénéficiaire</div>
+        <div class="ligne"><span>Nom</span><span data-benef-nom></span></div>
+        <div class="ligne"><span>Prénom(s)</span><span data-benef-prenom></span></div>
+        <div class="ligne"><span>Téléphone</span><span data-benef-tel></span></div>
+        <div class="separateur"></div>
+        <div class="ligne"><span>Montant envoyé</span><span data-recap-envoi></span></div>
+        <div class="ligne"><span>Frais</span><span data-recap-frais></span></div>
+        <div class="ligne"><span>Taux appliqué à l'envoi</span><span data-recap-taux></span></div>
+        <div class="ligne"><span>Total payé</span><span class="fort" data-recap-total></span></div>
+        <div class="ligne"><span>Montant à retirer</span><span class="fort" data-recu-montant></span></div>
+        <div class="ligne"><span>Mode</span><span>Espèces dans le réseau</span></div>
+        <div class="ligne"><span>Paiement</span><span>Carte bancaire •••• 4821</span></div>
+        <div class="ligne" data-si-motif-saisi><span>Motif</span><span data-motif-lu></span></div>
+        <div class="separateur"></div>
+        <div class="micro">Reçu électronique horodaté. <span class="trancher" title="Q18 · Le reçu électronique fait-il foi sans signature ?">Q18</span></div>
+      </div>
+      <div class="colonne">
+        <div class="carte">
+          <h2>Garder le reçu</h2>
+          <button class="bouton primaire plein" data-toast="Reçu téléchargé (PDF)."><svg aria-hidden="true"><use href="#i-recu"/></svg>Télécharger le PDF</button>
+          <button class="bouton secondaire plein" data-toast="WhatsApp Web s'ouvre avec le reçu."><svg aria-hidden="true"><use href="#i-whatsapp"/></svg>Partager sur WhatsApp</button>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ═════════════ MON COMPTE ═════════════ -->
+
+<section class="ecran" id="m1" data-code="M1" data-groupe="Mon compte" data-titre="Mon compte" data-gabarit="connecte" data-nav="m1"
+  data-contexte="Déclinaison web de M1, en deux colonnes : profil et informations à gauche, sécurité et préférences à droite. Pièce d'identité : la liste des pièces de la diaspora n'est pas arrêtée (Q3 : passeport guinéen ou étranger, carte consulaire, CNI guinéenne ; titre de séjour en justificatif d'adresse seulement). Pas de « Mon plafond » : le plafond de 5 000 USD par jour ne vaut que pour les envois initiés depuis la Guinée (atelier 8) ; ce qui le remplace pour la diaspora est Q41. Pas de connexion biométrique sur ordinateur. Le nom et le prénom ne se modifient pas (règle D24). Les lignes mènent à des écrans à décliner depuis l'application (M2 à M5, B4, N2) : un message le dit."
+  data-q="Q3|Q41">
+  <div class="page"><div class="cadre">
+    <div class="titre-page">Mon compte</div>
+    <div class="grille deux">
+      <div class="colonne">
+        <div class="carte">
+          <div style="display:flex;gap:16px;align-items:center"><span class="avatar grand" data-persona-initiales></span><div style="flex:1;min-width:0"><div class="montant-petit"><span data-persona-prenom></span> <span data-persona-nom></span></div><div class="micro"><span data-persona-tel-lu></span> · <span data-persona-ville></span></div></div><span class="statut valide">Identité vérifiée</span></div>
+        </div>
+        <div class="rubrique">Mes informations</div>
+        <div class="carte"><div class="liste">
+          <a href="#m1" data-toast="Écran à décliner depuis l'application (M2)."><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-profil"/></svg><div class="milieu"><b>Informations personnelles</b><span class="micro">Coordonnées, adresse, profession, revenus</span></div><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+          <a href="#m1" data-toast="Écran à décliner depuis l'application (M5)."><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-piece"/></svg><div class="milieu"><b>Pièce d'identité</b><span class="micro">Passeport · expire le 14/03/2031 <span class="trancher" title="Q3 · Pièces acceptées pour la diaspora : titre de séjour, passeport étranger ?">Q3</span></span></div><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+          <a href="#m1" data-toast="Écran à décliner depuis l'application (B4)."><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-personnes"/></svg><div class="milieu"><b>Mes bénéficiaires</b><span class="micro" data-nb-benef></span></div><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+        </div></div>
+      </div>
+      <div class="colonne">
+        <div class="rubrique">Sécurité</div>
+        <div class="carte"><div class="liste">
+          <a href="#m1" data-toast="Écran à décliner depuis l'application (C3 à C5)."><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-cadenas"/></svg><div class="milieu"><b>Mot de passe</b><span class="micro">Pour vous connecter</span></div><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+          <a href="#m1" data-toast="Écran à décliner depuis l'application (C6, C7)."><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-mobile"/></svg><div class="milieu"><b>Code PIN</b><span class="micro">Pour valider vos envois</span></div><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+          <a href="#m1" data-toast="Écran à décliner depuis l'application (M3)."><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-tel"/></svg><div class="milieu"><b>Changer de numéro</b><span class="micro">Avec votre pièce d'identité</span></div><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+        </div></div>
+        <div class="rubrique">Préférences</div>
+        <div class="carte"><div class="liste">
+          <a href="#m1" data-toast="Écran à décliner depuis l'application (N2)."><div class="milieu"><b>Notifications</b><span class="micro">À l'envoi, au retrait, à l'annulation</span></div><span class="valeur">SMS et e-mail</span><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+          <a href="#m1" data-toast="Conditions d'utilisation : écran à décliner (M4)."><div class="milieu">Conditions d'utilisation</div><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+          <a href="#m1" data-toast="Confidentialité de mes données : écran à décliner (M4)."><div class="milieu">Confidentialité de mes données</div><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></a>
+        </div></div>
+        <a class="bouton danger" href="#p0" data-toast="Vous êtes déconnecté." style="align-self:flex-start">Se déconnecter</a>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+</main>
+
+<footer class="pied-site" id="pied-site"><div class="cadre"><span class="logo" style="font-size:18px"><svg style="width:22px;height:22px" aria-hidden="true"><use href="#i-symbole"/></svg>Safico</span><a href="#p0" data-toast="Conditions d'utilisation : écran à décliner (M4).">Conditions d'utilisation</a><a href="#p0" data-toast="Confidentialité : écran à décliner (M4).">Confidentialité et données personnelles</a><a href="#p0" data-toast="Aide : écran à décliner depuis l'application (H1).">Aide</a><span class="micro" style="margin-left:auto">Prototype · plateforme diaspora · rien n'est connecté</span></div></footer>
+
+<!-- Fenêtre du code PIN : pavé mélangé à chaque ouverture (commentaire de Babacar Faye, 21/10) -->
+<div class="voile" id="voile-pin" role="dialog" aria-modal="true" aria-labelledby="pin-titre">
+  <div class="fenetre">
+    <div class="tete"><div><h2 id="pin-titre">Confirmez avec votre code PIN</h2><p class="micro" style="margin-top:4px" id="pin-note"></p></div><button type="button" class="icone-btn" data-pin-fermer aria-label="Fermer"><svg width="20" height="20"><use href="#i-fermer"/></svg></button></div>
+    <div class="points-pin" id="points-pin"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="pave" id="pave"></div>
+    <a class="lien" id="pin-oublie" style="align-self:center;font-size:13px" href="#e5" data-pin-fermer data-toast="Code PIN oublié : écrans à décliner depuis l'application (C6, C7).">Code PIN oublié</a>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<!-- ═════════════ Panneau de notes (outil de revue) ═════════════ -->
+<aside class="notes" id="notes" aria-label="Notes et écrans">
+  <div class="panneau">
+    <h3>Utilisateur de démonstration</h3>
+    <p><b>Mamadou Saliou DIALLO</b> · Paris 18e · +33</p>
+    <p class="micro" style="margin-top:6px">Plateforme web de la diaspora (atelier 7, 15/10) : envois en euros, payés par carte bancaire, retrait en espèces dans le réseau Safico. Profil repris du prototype du 07/10. Taux, frais, références et codes de démonstration, sans valeur d'engagement.</p>
+  </div>
+  <div class="panneau">
+    <span class="code" id="n-code"></span>
+    <div class="titre" id="n-titre"></div>
+    <p id="n-contexte"></p>
+  </div>
+  <div class="panneau" id="n-q-bloc">
+    <h3>À trancher sur cet écran</h3>
+    <ul class="q-liste" id="n-q"></ul>
+  </div>
+  <div class="panneau">
+    <h3>Écrans</h3>
+    <nav class="sommaire" id="sommaire"></nav>
+  </div>
+  <p class="micro" style="padding:0 4px">Prototype lot 2 · plateforme diaspora, démarrée le 28 octobre 2026. Première passe : parcours principal. Questions Q1 à Q43 : « Parcours utilisateurs — Espace client B2C · v2 ».</p>
+</aside>
+<button class="bascule-notes" id="bascule-notes" aria-controls="notes" aria-expanded="false">Notes et écrans</button>
+
+<script>
+// Questions du doc de parcours (« Parcours utilisateurs — Espace client B2C · v2 »), [question, hypothèse dessinée].
+// Reprises de proto-b2c.html pour celles qui portent sur ces écrans ; Q41 à Q43 ajoutées le 28/10 avec la plateforme diaspora.
+const Q={
+  Q3:["Pièces acceptées pour la diaspora","Passeport (guinéen ou étranger), carte consulaire, CNI guinéenne."],
+  Q9:["Le bénéficiaire a-t-il un espace de suivi ?","SMS seulement au lot 2. Réponse partielle du 15/10 : le bénéficiaire qui a un compte reçoit aussi une notification dans l'application ; pas d'espace « envois reçus » dessiné."],
+  Q13:["Annulation ou remboursement d'un envoi payé en ligne (Mobile Money ou carte) : les fonds reviennent-ils toujours au compte d'origine ? Quelle règle de frais ?","Rendu sur le compte ou la carte qui a payé ; principal et frais à l'annulation, principal seul au remboursement à 30 jours (règle du lot 1)."],
+  Q16:["Taux qui change entre simulation et paiement","Taux garanti 15 min, puis nouveau récapitulatif."],
+  Q18:["Le reçu électronique fait-il foi sans signature ?","Oui, horodaté avec la référence ; signature électronique hors lot."],
+  Q21:["Devises d'envoi proposées","GNF, EUR et USD ; un taux par devise, fixé chaque jour par la finance. Sur la plateforme diaspora : EUR par défaut, USD au choix."],
+  Q23:["Règles du mot de passe (longueur, caractères)","Aucune règle dessinée : deux saisies identiques, case « Afficher »."],
+  Q36:["Carte bancaire : dans l'application Guinée aussi, ou seulement sur la plateforme diaspora ? Quel prestataire de paiement, et 3-D Secure ?","Carte active dans l'application dès le lot 2, à côté du mobile money ; prestataire à désigner. Plateforme diaspora (28/10) : la carte est son seul moyen de paiement, active ; 3-D Secure dessiné (E5h), après le code PIN Safico."],
+  Q38:["Statuts de suivi : liste du lot 1 ou liste d'Issiaga Diallo ? Que veut dire « Payé » ? (question 2 de l'atelier 9)","En attente de paiement · Disponible au retrait · Retiré, et selon le cas En vérification · Annulé · Remboursé. Le mot « Payé » disparaît des statuts."],
+  Q39:["Ce que contient le SMS envoyé au bénéficiaire pour l'orienter, qui traite une demande d'assistance et sous quel délai, et ce qui est indiqué au bénéficiaire si le point où il se présente n'a pas les espèces. (question 3 de l'atelier 9)","Un SMS avec le montant, le code, le rappel de la pièce d'identité et le numéro WhatsApp du service après-vente ; des demandes d'assistance traitées par les Opérations depuis le back-office, aux horaires du service après-vente ; en cas de manque d'espèces, le bénéficiaire est invité à contacter l'assistance, qui l'oriente vers un autre point."],
+  Q5:["Selfie ou contrôle de présence ?","Un selfie, comparé à la pièce par la conformité."],
+  Q7:["Que faire pendant l'attente de vérification ?","Simuler, enregistrer des bénéficiaires, préparer un envoi ; payer après vérification."],
+  Q35:["Pièce refusée par la conformité : quel motif dit-on au client, et combien de nouvelles tentatives ?","Pas de motif détaillé ; le client reprend ses photos, sans limite dessinée."],
+  Q37:["Quels autres canaux du service après-vente afficher (téléphone, e-mail, numéros) ? Que voit le client en dehors des horaires ?","Aucun canal affiché : un seul bouton « Demander de l'aide » (atelier 8, 22/10) ; rappel par téléphone ou sur WhatsApp, aux horaires du service après-vente."],
+  // Ajoutées le 28/10 avec la plateforme diaspora
+  Q41:["Envois depuis l'étranger : quels montants minimum et maximum par envoi, et quels plafonds, fixés par Safico ou par son partenaire local du pays d'envoi ? (le plafond de 5 000 USD par jour ne vaut que pour les envois initiés depuis la Guinée, atelier 8)","Aucune borne ni aucun plafond affichés au client ; le partenaire local applique la réglementation du pays d'envoi."],
+  Q42:["Sur la plateforme diaspora, le client s'identifie-t-il par son numéro de téléphone étranger (comme dans l'application) ou par son adresse e-mail ? Les codes SMS partent-ils vers tous les pays d'envoi ?","Téléphone et mot de passe, comme dans l'application ; numéro étranger accepté."],
+  Q44:["Revenus nets mensuels d'un client de la diaspora : tranches en francs guinéens (paramétrées au siège) ou tranches propres en euros et en dollars ?","Les 6 tranches du lot 1, en francs guinéens, avec l'équivalent en euros au taux du jour."],
+  Q45:["Depuis quels pays la plateforme diaspora est-elle ouverte (un partenaire local par pays) ?","Liste de démonstration : France, Belgique, États-Unis, Royaume-Uni, Canada (les indicatifs de la connexion)."],
+  Q43:["Un même client peut-il utiliser l'application (Guinée) et la plateforme web (diaspora) avec un seul compte ?","Non dessiné : un compte diaspora, sur la plateforme web seulement."]
+};
+
+// Utilisateur de démonstration : profil « Diaspora · Paris » du prototype du 07/10 (retiré de l'application le 15/10).
+const UTILISATEUR={prenom:"Mamadou Saliou",nom:"DIALLO",tel:"6 12 45 78 90",telLu:"+33 6 •• •• •• 90",ville:"Paris 18e",
+  benefs:[["DIALLO","Kadiatou","+224 622 •• •• 18","Labé"],["BAH","Ousmane","+224 657 •• •• 40","Conakry"]]};
+// Devises d'envoi (Q21) et destinations. Taux de démonstration repris de proto-b2c.html : 10 500 GNF pour 1 € (atelier 1),
+// parité fixe EUR/XOF, USD à 9 660 GNF. Liberia : taux à charger.
+const ENVOIS_DEV=[["EUR","FR","Euro"],["USD","US","Dollar américain"]];
+const DEST=[["GN","Guinée","GNF"],["CI","Côte d'Ivoire","XOF"],["SN","Sénégal","XOF"],["LR","Liberia","LRD"]];
+const TAUX={EUR:{GNF:10500,XOF:655.957,LRD:null},USD:{GNF:9660,XOF:603.48,LRD:null}};
+const FRAIS=m=>m<=0?0:2.5; // 2,50 forfaitaires en EUR ou USD (règle de démonstration de l'application)
+const DRAPEAU={FR:"linear-gradient(90deg,#002395 33%,#fff 33% 66%,#ED2939 66%)",US:"linear-gradient(#3C3B6E,#3C3B6E) 0 0/45% 55% no-repeat,repeating-linear-gradient(#B22234 0 2px,#fff 2px 4px)",GN:"linear-gradient(90deg,#CE1126 33%,#FCD116 33% 66%,#009460 66%)",CI:"linear-gradient(90deg,#F77F00 33%,#fff 33% 66%,#009E60 66%)",SN:"linear-gradient(90deg,#00853F 33%,#FDEF42 33% 66%,#E31B23 66%)",LR:"repeating-linear-gradient(#BF0A30 0 2px,#fff 2px 4px)"};
+// Envoi de la démonstration : référence et code inventés, propres à ce prototype.
+const REF="SFC-9B04-5126", CODE_RETRAIT="7RM3Q8";
+// Envois passés de démonstration [date, bénéficiaire (index), référence, montant EUR, statut]
+const PASSES=[["14/10/2026",1,"SFC-9A63-0412",150,"retire"],["21/09/2026",0,"SFC-8F90-2275",200,"retire"],["02/09/2026",0,"SFC-8F51-6630",100,"annule"]];
+const STATUTS={dispo:["dispo","Disponible au retrait"],retire:["valide","Retiré"],annule:["attente","Annulé"]};
+const ETAPES=["Montant","Bénéficiaire","Récapitulatif","Paiement"];
+// Inscription (28/10) : les étapes de l'application (téléphone, sécurité, pièce, informations), le selfie à part sur ordinateur
+const ETAPES_INSCRIPTION=["Téléphone","Sécurité","Pièce d'identité","Informations","Selfie"];
+// Pays de résidence de démonstration (Q45) : [pays, indicatif]
+const PAYS=[["France","+33"],["Belgique","+32"],["États-Unis","+1"],["Royaume-Uni","+44"],["Canada","+1"]];
+// Pièces de la diaspora : hypothèse de Q3. [libellé, précision, faces]
+const PIECES=[["Passeport guinéen","Page avec votre photo",["Page avec votre photo"]],["Passeport étranger","Page avec votre photo",["Page avec votre photo"]],["Carte consulaire","Recto et verso",["Recto","Verso"]],["Carte d'identité guinéenne","Recto et verso",["Recto","Verso"]]];
+// Profil KYC (note d'Issiaga Diallo, atelier 5) : 9 catégories et 6 tranches du lot 1 (spec B01-B06, B6), tranches en GNF
+const CATEGORIES=["Agriculteur","Artisan, commerçant, chef d'entreprise","Fonctionnaire","Cadre et professions intellectuelles supérieures","Professions intermédiaires","Employé","Ouvrier","Retraité","Autre (sans activité professionnelle)"];
+const TRANCHES=[[0,3],[3,8],[8,15],[15,30],[30,50],[50,null]]; // en millions de GNF
+const SAV_HORAIRES="Du lundi au vendredi de 8 h à 17 h, le samedi de 8 h à 13 h";
+
+const etat={pays:0,piece:0,methode:"telephone",captures:{},selfie:false,pinChoisi:false,categorie:"Employé",revenus:2,dev:0,dest:0,envoi:200,benef:0,nouveau:{nom:"SOUMAH",prenom:"Mariama",tel:"+224 664 21 08 55"},motif:"",envoiSel:0};
+
+const nb=s=>s.replace(/ /g," ");
+const fmt=(n,d)=>{if(n==null||isNaN(n))return "—";const dec=d==="EUR"||d==="USD"?2:0;const s=nb(n.toLocaleString("fr-FR",{minimumFractionDigits:dec,maximumFractionDigits:dec}));return s+" "+(d==="EUR"?"€":d==="USD"?"$":d)};
+const nombre=(n,d)=>fmt(n,d).replace(/ \S+$/,"");
+function calc(){const e=ENVOIS_DEV[etat.dev][0],d=DEST[etat.dest],t=TAUX[e][d[2]],f=FRAIS(etat.envoi);
+  return{t,f,devE:e,drapE:ENVOIS_DEV[etat.dev][1],devR:d[2],pays:d[1],code:d[0],recu:t==null?null:Math.floor(etat.envoi*t),total:etat.envoi+f}}
+const tauxTxt=c=>c.t==null?"Taux à charger":"1 "+(c.devE==="EUR"?"€":"$")+" = "+fmt(c.t,c.devR);
+const benef=()=>etat.benef==="nouveau"?[etat.nouveau.nom,etat.nouveau.prenom,etat.nouveau.tel]:UTILISATEUR.benefs[etat.benef];
+
+// Simulateur : écrit une fois par hôte [data-simu], puis mis à jour sans réécrire les champs (le curseur reste en place).
+function construireSimu(){
+  const optE=ENVOIS_DEV.map((x,i)=>`<option value="${i}">${x[2]} · ${x[0]}</option>`).join("");
+  const optD=DEST.map((x,i)=>`<option value="${i}">${x[1]} · ${x[2]}</option>`).join("");
+  document.querySelectorAll("[data-simu]").forEach(el=>{el.innerHTML=`<div class="simu">
+    <div class="bloc"><div class="milieu"><label class="label">Vous envoyez</label><input data-in="envoi" inputmode="decimal" aria-label="Montant envoyé"></div>
+      <label class="devise"><span class="drapeau" data-s-drap-e></span><span data-s-dev-e></span><svg class="ico-bas" aria-hidden="true"><use href="#i-bas"/></svg><select data-in="dev" aria-label="Devise d'envoi">${optE}</select></label></div>
+    <div class="taux"><span data-s-taux></span><span>Frais : <b data-s-frais></b></span></div>
+    <div class="bloc"><div class="milieu"><label class="label">Il reçoit</label><input data-in="recu" inputmode="numeric" aria-label="Montant reçu"></div>
+      <label class="devise"><span class="drapeau" data-s-drap-r></span><span data-s-dev-r></span><svg class="ico-bas" aria-hidden="true"><use href="#i-bas"/></svg><select data-in="dest" aria-label="Pays de réception">${optD}</select></label></div>
+  </div>
+  <div class="simu-total"><span class="sous-titre">Total à payer</span><span class="montant-petit" data-s-total></span></div>
+  <div class="micro" data-s-note></div>`});
+}
+function majSimu(sauf){
+  const c=calc();
+  document.querySelectorAll("[data-simu]").forEach(el=>{
+    const e=el.querySelector("[data-in=envoi]"),r=el.querySelector("[data-in=recu]");
+    if(e!==sauf)e.value=etat.envoi?nombre(etat.envoi,c.devE):"";
+    if(r!==sauf){r.disabled=c.recu==null;r.value=c.recu==null?"":nombre(c.recu,c.devR);r.placeholder=c.recu==null?"—":""}
+    el.querySelector("[data-in=dev]").value=etat.dev; el.querySelector("[data-in=dest]").value=etat.dest;
+    el.querySelector("[data-s-drap-e]").style.background=DRAPEAU[c.drapE]; el.querySelector("[data-s-dev-e]").textContent=c.devE;
+    el.querySelector("[data-s-drap-r]").style.background=DRAPEAU[c.code]; el.querySelector("[data-s-dev-r]").textContent=c.devR;
+    el.querySelector("[data-s-taux]").textContent=tauxTxt(c); el.querySelector("[data-s-frais]").textContent=fmt(c.f,c.devE);
+    el.querySelector("[data-s-total]").textContent=fmt(c.total,c.devE);
+    el.querySelector("[data-s-note]").textContent="Vers "+c.pays+". "+(c.t==null?"Corridor à ouvrir : taux non chargé.":"Disponible au retrait en quelques minutes.");
+  });
+  const ok=c.t!=null&&etat.envoi>0;
+  document.querySelectorAll("[data-suite-simu]").forEach(b=>b.setAttribute("aria-disabled",ok?"false":"true"));
+}
+document.addEventListener("input",e=>{
+  const k=e.target.dataset.in;
+  if(k==="envoi"||k==="recu"){
+    const v=parseFloat(e.target.value.replace(/[^\d,.]/g,"").replace(",","."))||0, c=calc();
+    if(k==="envoi")etat.envoi=Math.round(v*100)/100;
+    if(k==="recu"&&c.t)etat.envoi=Math.ceil(v/c.t*100)/100;
+    majSimu(e.target); remplir(); return;
+  }
+  if(e.target.matches("[data-nouveau]")){etat.nouveau[e.target.dataset.nouveau]=e.target.dataset.nouveau==="tel"?"+224 "+e.target.value:e.target.value;remplir();}
+  if(e.target.matches("[data-requis]"))verifRequis();
+});
+document.addEventListener("change",e=>{
+  const k=e.target.dataset.in;
+  if(k==="dev"){etat.dev=+e.target.value;majSimu();remplir();}
+  if(k==="dest"){etat.dest=+e.target.value;majSimu();remplir();}
+  if(e.target.name==="benef"){etat.benef=e.target.value==="nouveau"?"nouveau":+e.target.value;remplir();}
+  if(e.target.matches("[data-motif]")){etat.motif=e.target.value;remplir();}
+  if(e.target.id==="nb-confirme")remplir();
+});
+document.addEventListener("focusout",e=>{if(e.target.dataset&&(e.target.dataset.in==="envoi"||e.target.dataset.in==="recu"))majSimu();});
+
+function verifRequis(){
+  const s=document.querySelector(".ecran.visible"); if(!s)return;
+  let manque=[...s.querySelectorAll("[data-requis]")].some(i=>!i.closest("[hidden]")&&!i.value.trim());
+  if(s.id==="p4")manque=manque||!PIECES[etat.piece][2].every(f=>etat.captures[f]);
+  s.querySelectorAll("[data-attend-requis]").forEach(b=>b.setAttribute("aria-disabled",manque?"true":"false"));
+}
+
+// Remplissage des attributs data-… depuis le profil et l'état (jamais de texte en dur)
+const fixer=(sel,txt)=>document.querySelectorAll(sel).forEach(el=>el.textContent=txt);
+function remplir(){
+  const p=UTILISATEUR,c=calc(),b=benef();
+  fixer("[data-persona-prenom]",p.prenom); fixer("[data-persona-nom]",p.nom); fixer("[data-persona-tel-lu]",p.telLu); fixer("[data-persona-ville]",p.ville);
+  fixer("[data-persona-initiales]",p.prenom[0]+p.nom[0]);
+  document.querySelectorAll("[data-persona-tel]").forEach(i=>i.value=p.tel);
+  fixer("[data-taux-jour]","1 € = "+fmt(TAUX.EUR.GNF,"GNF"));
+  fixer("[data-benef-nom]",b[0]); fixer("[data-benef-prenom]",b[1]); fixer("[data-benef-tel]",b[2]); fixer("[data-benef-nom-complet]",b[0]+" "+b[1]);
+  fixer("[data-recap-envoi]",fmt(etat.envoi,c.devE)); fixer("[data-recap-frais]",fmt(c.f,c.devE)); fixer("[data-recap-taux]",tauxTxt(c));
+  fixer("[data-recap-total]",fmt(c.total,c.devE)); fixer("[data-recu-montant]",fmt(c.recu,c.devR));
+  fixer("[data-ref]",REF); fixer("[data-code-retrait]",CODE_RETRAIT); fixer("[data-motif-lu]",etat.motif);
+  fixer("[data-nb-benef]",p.benefs.length+" enregistrés");
+  document.querySelectorAll("[data-si-motif-saisi]").forEach(el=>el.hidden=!etat.motif);
+  document.querySelectorAll("[data-si-nouveau]").forEach(el=>el.hidden=etat.benef!=="nouveau");
+  // Bénéficiaire obligatoire et complet pour continuer (téléphone critique, nom et prénom(s) séparés)
+  const nv=etat.nouveau, okB=etat.benef!=="nouveau"||(nv.nom.trim()&&nv.prenom.trim()&&nv.tel.replace(/\D/g,"").length>6&&document.getElementById("nb-confirme").checked);
+  document.querySelectorAll("[data-suite-benef]").forEach(x=>x.setAttribute("aria-disabled",okB?"false":"true"));
+  // Résumé de l'envoi (colonne de droite des étapes)
+  const etape=+(document.querySelector(".ecran.visible")?.dataset.etape||0);
+  const resume=`<div class="carte serree"><h2>Votre envoi</h2>
+    <div class="ligne"><span>Vous envoyez</span><span class="fort">${fmt(etat.envoi,c.devE)}</span></div>
+    <div class="ligne"><span>Frais</span><span>${fmt(c.f,c.devE)}</span></div>
+    <div class="ligne"><span>Taux</span><span>${tauxTxt(c)}</span></div>
+    <div class="separateur"></div>
+    <div class="ligne"><span class="fort">Total à payer</span><span class="montant-petit">${fmt(c.total,c.devE)}</span></div>
+    <div class="carte accent" style="padding:14px;gap:4px"><span class="label">Votre proche reçoit</span><span class="montant-petit">${fmt(c.recu,c.devR)}</span><span class="micro">En espèces · ${c.pays}</span></div>
+    ${etape>=2?`<div class="separateur"></div><span class="label">Bénéficiaire</span><div><div class="fort">${b[0]}</div><div>${b[1]}</div><div class="micro">${b[2]}</div></div>`:""}
+  </div>`;
+  document.querySelectorAll("[data-resume]").forEach(el=>el.innerHTML=resume);
+  // Bénéficiaires : choix (B1) et accueil (A1)
+  const choix=document.querySelector("[data-benef-choix]");
+  if(choix&&!choix.dataset.fait){choix.dataset.fait=1;choix.innerHTML=p.benefs.map((x,i)=>`<label><input type="radio" name="benef" value="${i}" ${etat.benef===i?"checked":""}><span class="avatar">${x[1][0]}${x[0][0]}</span><div class="milieu"><b>${x[1]} ${x[0]}</b><span class="micro">${x[2]} · ${x[3]}</span></div></label>`).join("")+`<label><input type="radio" name="benef" value="nouveau" ${etat.benef==="nouveau"?"checked":""}><span class="avatar"><svg width="18" height="18" aria-hidden="true"><use href="#i-plus"/></svg></span><div class="milieu"><b>Nouveau bénéficiaire</b><span class="micro">Ajouté à vos bénéficiaires après l'envoi.</span></div></label>`}
+  fixer_html("[data-benef-accueil]",p.benefs.map((x,i)=>`<a href="#e1" data-benef-rapide="${i}"><span class="avatar">${x[1][0]}${x[0][0]}</span><div class="milieu"><b>${x[1]} ${x[0]}</b><span class="micro">${x[2]} · ${x[3]}</span></div><span class="action-tete">Envoyer</span></a>`).join(""));
+  // Envois : le premier est celui de la démonstration (montant et bénéficiaire courants)
+  const lignes=envois();
+  fixer_html("[data-derniers]",lignes.slice(0,3).map((x,i)=>`<a href="#s2" data-envoi="${i}"><span class="avatar">${x.b[1][0]}${x.b[0][0]}</span><div class="milieu"><b>${x.b[1]} ${x.b[0]}</b><span class="micro">${x.date} · ${x.envoye}</span></div><span class="statut ${STATUTS[x.statut][0]}">${STATUTS[x.statut][1]}</span></a>`).join(""));
+  fixer_html("[data-envois]",lignes.map((x,i)=>`<tr data-cible="#s2" data-envoi="${i}" tabindex="0"><td>${x.date}</td><td><b>${x.b[0]}</b> ${x.b[1]}</td><td class="micro">${x.ref}</td><td class="droite">${x.envoye}</td><td class="droite fort">${x.recu}</td><td><span class="statut ${STATUTS[x.statut][0]}">${STATUTS[x.statut][1]}</span></td><td><svg class="chevron" width="18" height="18" aria-hidden="true"><use href="#i-chevron"/></svg></td></tr>`).join(""));
+  rendreS2(); remplirInscription();
+}
+function remplirInscription(){
+  const une=(sel,f)=>document.querySelectorAll(sel).forEach(el=>{if(!el.dataset.fait){el.dataset.fait=1;f(el)}});
+  une("[data-persona-nom-champ]",i=>i.value=UTILISATEUR.nom); une("[data-persona-prenom-champ]",i=>i.value=UTILISATEUR.prenom);
+  une("[data-categories]",el=>el.innerHTML='<option value="">Choisir…</option>'+CATEGORIES.map(c=>`<option ${c===etat.categorie?"selected":""}>${c}</option>`).join(""));
+  const eur=m=>nb((Math.round(m*1e6/TAUX.EUR.GNF/10)*10).toLocaleString("fr-FR"))+"\u00a0€";
+  une("[data-revenus]",el=>el.innerHTML='<option value="">Choisir…</option>'+TRANCHES.map((t,i)=>`<option value="${i}" ${i===etat.revenus?"selected":""}>${t[0]===0?`${t[1]} M GNF ou moins (≈ ${eur(t[1])} ou moins)`:t[1]==null?`Plus de ${t[0]} M GNF (≈ plus de ${eur(t[0])})`:`De ${t[0]} à ${t[1]} M GNF (≈ ${eur(t[0])} à ${eur(t[1])})`}</option>`).join(""));
+  une("[data-pieces]",el=>el.innerHTML=PIECES.map((x,i)=>`<label><input type="radio" name="piece" value="${i}" ${i===etat.piece?"checked":""}><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-piece"/></svg><div class="milieu"><b>${x[0]}</b><span class="micro">${x[1]}</span></div></label>`).join(""));
+  document.querySelectorAll("[data-pays-residence]").forEach(el=>{el.innerHTML=PAYS.map((x,i)=>`<option value="${i}">${x[0]}</option>`).join("");el.value=etat.pays});
+  document.querySelectorAll("[data-indicatif]").forEach(el=>{el.innerHTML=[...new Set(PAYS.map(x=>x[1]))].map(x=>`<option>${x}</option>`).join("");el.value=PAYS[etat.pays][1]});
+  fixer("[data-sav-horaires]",SAV_HORAIRES);
+  fixer_html("[data-captures]",PIECES[etat.piece][2].map(f=>`<button type="button" class="capture${etat.captures[f]?" faite":""}" data-capture="${f}"><svg aria-hidden="true"><use href="#${etat.captures[f]?"i-ok":"i-photo"}"/></svg><b>${f}</b><span class="micro">${etat.captures[f]?"Photo importée · lisible":"Glissez la photo ici ou cliquez pour la choisir"}</span></button>`).join(""));
+  document.querySelectorAll("[data-si-methode]").forEach(el=>el.hidden=el.dataset.siMethode!==etat.methode);
+  fixer_html("[data-pourquoi]",`<div class="carte accent"><h2>Pourquoi ces informations ?</h2><div class="liste">
+    <div><svg width="22" height="22" style="color:var(--marque-tete)" aria-hidden="true"><use href="#i-piece"/></svg><div class="milieu">La Guinée exige de savoir qui envoie et qui reçoit l'argent.</div></div>
+    <div><svg width="22" height="22" style="color:var(--marque-tete)" aria-hidden="true"><use href="#i-cadenas"/></svg><div class="milieu">Vos données sont protégées, selon le règlement européen sur les données personnelles (RGPD).</div></div>
+    <div><svg width="22" height="22" style="color:var(--marque-tete)" aria-hidden="true"><use href="#i-horloge"/></svg><div class="milieu">Notre équipe conformité vérifie votre identité avant votre premier envoi.</div></div></div></div>`);
+  // Mot de passe identique et code PIN choisi (P2e)
+  const m=[...document.querySelectorAll("#p2e [data-mdp]")].map(i=>i.value), diff=m[0]&&m[1]&&m[0]!==m[1];
+  const err=document.querySelector("#p2e [data-mdp-erreur]"); if(err)err.hidden=!diff;
+  document.querySelectorAll("[data-pin-etat]").forEach(el=>{el.textContent=etat.pinChoisi?"Choisi":"Pas encore choisi";el.className="statut "+(etat.pinChoisi?"valide":"neutre")});
+  document.querySelectorAll("[data-pin-choisir]").forEach(b=>b.textContent=etat.pinChoisi?"Changer de code PIN":"Choisir mon code PIN");
+  document.querySelectorAll("[data-suite-securite]").forEach(b=>b.setAttribute("aria-disabled",m[0]&&m[0]===m[1]&&etat.pinChoisi?"false":"true"));
+  document.querySelectorAll("[data-suite-selfie]").forEach(b=>b.setAttribute("aria-disabled",etat.selfie?"false":"true"));
+  document.querySelectorAll("[data-webcam]").forEach(w=>{w.classList.toggle("faite",etat.selfie);w.querySelector("[data-webcam-consigne]").textContent=etat.selfie?"Selfie pris · visage bien visible":"Votre navigateur vous demande d'utiliser la caméra"});
+  verifRequis();
+}
+const fixer_html=(sel,h)=>document.querySelectorAll(sel).forEach(el=>el.innerHTML=h);
+function envois(){
+  const c=calc();
+  return [{date:"28/10/2026 · 14:32",b:benef(),ref:REF,envoye:fmt(etat.envoi,c.devE),recu:fmt(c.recu,c.devR),statut:"dispo",total:fmt(c.total,c.devE)},
+    ...PASSES.map(x=>({date:x[0],b:UTILISATEUR.benefs[x[1]],ref:x[2],envoye:fmt(x[3],"EUR"),recu:fmt(x[3]*TAUX.EUR.GNF,"GNF"),statut:x[4],total:fmt(x[3]+2.5,"EUR")}))];
+}
+function rendreS2(){
+  const hote=document.querySelector("[data-s2]"); if(!hote)return;
+  const x=envois()[etat.envoiSel], dispo=x.statut==="dispo";
+  const pas=x.statut==="annule"
+    ?`<div class="pas fait"><span class="point"></span><div><b>Paiement reçu</b><span class="micro">${x.date} · ${x.total}</span></div></div><div class="pas fait"><span class="point"></span><div><b>Annulé</b><span class="micro">Montant et frais rendus sur la carte qui a payé.</span></div></div>`
+    :`<div class="pas fait"><span class="point"></span><div><b>Paiement reçu</b><span class="micro">${x.date} · ${x.total} · carte •••• 4821</span></div></div><div class="pas fait"><span class="point"></span><div><b>Disponible au retrait</b><span class="micro">Dans toute agence ou chez tout distributeur Safico</span></div></div><div class="pas ${dispo?"encours":"fait"}"><span class="point"></span><div><b>Retiré</b><span class="micro">${dispo?"En attente du bénéficiaire, jusqu'au 27/11/2026":"Par le bénéficiaire, avec sa pièce d'identité"}</span></div></div>`;
+  hote.innerHTML=`<a class="retour-lien" href="#s1"><svg width="18" height="18" aria-hidden="true"><use href="#i-retour"/></svg>Mes envois</a>
+    <div class="tete-envoi"><div class="titre-page moyen">${x.ref}</div><span class="statut ${STATUTS[x.statut][0]}">${STATUTS[x.statut][1]}</span><span class="trancher" title="Q38 · Statuts de suivi : quelle liste retenir, et quel mot pour le versement au bénéficiaire ?">Q38</span></div>
+    <div class="grille tiers">
+      <div class="colonne">
+        <div class="carte"><div class="grille deux" style="gap:16px">
+          <div><span class="label">Votre proche reçoit</span><div class="montant">${x.recu}</div><span class="micro">En espèces dans le réseau</span></div>
+          <div><span class="label">Bénéficiaire</span><div class="fort">${x.b[0]}</div><div>${x.b[1]}</div><div class="micro">${x.b[2]}</div></div>
+        </div>
+        <div class="separateur"></div>
+        <div class="ligne"><span>Vous avez envoyé</span><span>${x.envoye}</span></div><div class="ligne"><span>Total payé</span><span class="fort">${x.total}</span></div>
+        ${etat.envoiSel===0&&etat.motif?`<div class="ligne"><span>Motif</span><span>${etat.motif}</span></div>`:""}</div>
+        ${dispo?`<div class="carte"><div class="label">Code de retrait</div><div class="code-retrait">${CODE_RETRAIT}</div><div class="actions"><button type="button" class="bouton secondaire" data-toast="Code de retrait copié."><svg aria-hidden="true"><use href="#i-copier"/></svg>Copier</button><button type="button" class="bouton secondaire" data-toast="WhatsApp Web s'ouvre avec le code de retrait et la référence de l'envoi."><svg aria-hidden="true"><use href="#i-whatsapp"/></svg>Partager sur WhatsApp</button></div></div>`:""}
+        <div class="carte"><h2>Suivi</h2><div class="chrono">${pas}</div></div>
+      </div>
+      <div class="colonne">
+        <div class="carte">
+          <h2>Un problème ?</h2>
+          <a class="bouton primaire plein" href="#s2" data-toast="Demande d'aide : écran à décliner depuis l'application (H3), envoi ${x.ref} pré-rempli."><svg aria-hidden="true"><use href="#i-aide"/></svg>Demander de l'aide</a>
+          ${dispo?`<a class="bouton secondaire plein" href="#s2" data-toast="Correction du nom : écran à décliner depuis l'application (S7).">Corriger le nom du bénéficiaire</a>
+          <a class="lien" style="align-self:center;font-size:14px" href="#s2" data-toast="Demande d'annulation : écran à décliner depuis l'application (S4).">Demander l'annulation</a>
+          <p class="micro">Tant que l'argent n'est pas retiré. L'annulation rend le montant et les frais, sur la carte qui a payé. <span class="trancher" title="Q13 · Annulation ou remboursement d'un envoi payé en ligne : les fonds reviennent-ils toujours au compte d'origine ? Quelle règle de frais ?">Q13</span></p>`:""}
+        </div>
+        ${etat.envoiSel===0?`<a class="bouton secondaire" href="#r1" style="align-self:flex-start"><svg aria-hidden="true"><use href="#i-recu"/></svg>Voir le reçu</a>`:""}
+      </div>
+    </div>`;
+}
+
+// Inscription : pièce, façon de la photographier, pays, profil, mot de passe
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.name==="piece"){etat.piece=+t.value;etat.captures={};remplir()}
+  if(t.name==="methode"){etat.methode=t.value;remplir()}
+  if(t.matches("[data-pays-residence]")){etat.pays=+t.value;remplir()}
+  if(t.matches("[data-categories]"))etat.categorie=t.value;
+  if(t.matches("[data-revenus]"))etat.revenus=t.value===""?null:+t.value;
+});
+document.addEventListener("input",e=>{if(e.target.matches("[data-mdp]"))remplir()});
+document.addEventListener("click",e=>{
+  const c=e.target.closest("[data-capture]"); if(c){etat.captures[c.dataset.capture]=true;remplir();return}
+  if(e.target.closest("[data-captures-faites]")){PIECES[etat.piece][2].forEach(f=>etat.captures[f]=true);toast("Photos reçues du téléphone : "+PIECES[etat.piece][2].join(" et ").toLowerCase()+".");remplir();return}
+  if(e.target.closest("[data-pin-choisir]")){ouvrirPin(null,"choix");return}
+  if(e.target.closest("[data-selfie]")){const w=document.querySelector(".ecran.visible [data-webcam]");w.classList.add("flash");setTimeout(()=>w.classList.remove("flash"),400);etat.selfie=true;remplir()}
+});
+// Code SMS en 6 cases : case suivante à la frappe, retour à l'effacement, code collé réparti
+function otp(cases,depuis,texte){
+  const ch=texte.replace(/\D/g,"").split("");let k=depuis;ch.forEach(c=>{if(k<6)cases[k++].value=c});
+  (cases[Math.min(k,5)]).focus();
+  const g=cases[0].parentElement;
+  if(cases.every(i=>i.value)){g.classList.add("valide");setTimeout(()=>{g.classList.remove("valide");cases.forEach(i=>i.value="");location.hash=g.dataset.vers},450)}
+}
+document.addEventListener("input",e=>{const g=e.target.closest("[data-otp]");if(!g)return;const cases=[...g.querySelectorAll("input")],i=cases.indexOf(e.target),v=e.target.value.replace(/\D/g,"");e.target.value="";otp(cases,i,v)});
+document.addEventListener("paste",e=>{const g=e.target.closest("[data-otp]");if(!g)return;e.preventDefault();const cases=[...g.querySelectorAll("input")];otp(cases,cases.indexOf(e.target),e.clipboardData.getData("text"))});
+document.addEventListener("keydown",e=>{const g=e.target.closest&&e.target.closest("[data-otp]");if(!g||e.key!=="Backspace"||e.target.value)return;const cases=[...g.querySelectorAll("input")],i=cases.indexOf(e.target);if(i>0){cases[i-1].value="";cases[i-1].focus()}});
+
+// En-tête du site, selon le gabarit de l'écran
+function entete(s){
+  const g=s.dataset.gabarit, h=document.getElementById("entete"), cadre=document.getElementById("entete-cadre");
+  h.classList.toggle("marque",s.dataset.entete==="marque");
+  const logo=`<a class="logo" href="${g==="public"||g==="etapes"?"#p0":"#a1"}"><svg aria-hidden="true"><use href="#${s.dataset.entete==="marque"?"i-symbole-inv":"i-symbole"}"/></svg>Safico</a>`;
+  if(g==="public"){cadre.innerHTML=logo+`<span class="entete-droite">${s.id==="c1"?"":`<a class="bouton ${s.dataset.entete==="marque"?"clair":"secondaire"}" href="#c1">Se connecter</a>`}<a class="bouton ${s.dataset.entete==="marque"?"inverse":"primaire"}" href="#p1">Créer mon compte</a></span>`;}
+  else if(g==="envoi"||g==="etapes"){const n=+s.dataset.etape,insc=s.dataset.etapes==="inscription";cadre.innerHTML=logo+`<ol class="pas-a-pas">${(insc?ETAPES_INSCRIPTION:ETAPES).map((t,i)=>`<li class="${i+1<n?"fait":i+1===n?"actif":""}"><span class="rond">${i+1<n?"✓":i+1}</span><span class="texte-pas">${t}</span></li>`).join("")}</ol><a class="quitter" href="${insc?"#p0":"#a1"}"><svg width="18" height="18" aria-hidden="true"><use href="#i-fermer"/></svg>Quitter</a>`;}
+  else{const p=UTILISATEUR,nav=s.dataset.nav;cadre.innerHTML=logo+`<nav class="nav">${[["a1","Accueil"],["e1","Envoyer"],["s1","Mes envois"],["m1","Mon compte"]].map(x=>`<a href="#${x[0]}" class="${x[0]===nav?"actif":""}">${x[1]}</a>`).join("")}</nav><span class="entete-droite"><a class="icone-btn" href="#${s.id}" aria-label="Aide" data-toast="Aide : écran à décliner depuis l'application (H1)."><svg width="22" height="22"><use href="#i-aide"/></svg></a><a class="icone-btn" href="#${s.id}" aria-label="Notifications, 1 non lue" data-toast="Notifications : écran à décliner depuis l'application (N1)."><svg width="22" height="22"><use href="#i-cloche"/></svg><span class="badge"></span></a><a class="agent" href="#m1"><span class="avatar">${p.prenom[0]+p.nom[0]}</span><b>${p.prenom}</b></a></span>`;}
+}
+
+// Panneau de notes et sommaire
+const sections=[...document.querySelectorAll(".ecran")];
+let som="",grp="";
+sections.forEach(s=>{if(s.dataset.groupe!==grp){grp=s.dataset.groupe;som+=`<div class="groupe">${grp}</div>`}som+=`<a href="#${s.id}" data-lien="${s.id}"><b>${s.dataset.code}</b>${s.dataset.titre}</a>`});
+document.getElementById("sommaire").innerHTML=som;
+
+function afficher(){
+  const id=location.hash.slice(1), s=document.getElementById(id)?.classList.contains("ecran")?document.getElementById(id):document.getElementById("p0");
+  sections.forEach(x=>x.classList.toggle("visible",x===s));
+  entete(s);
+  document.getElementById("pied-site").hidden=s.dataset.gabarit==="envoi"||s.dataset.gabarit==="etapes";
+  document.getElementById("n-code").textContent=s.dataset.code+" · déclinaison web";
+  document.getElementById("n-titre").textContent=s.dataset.titre;
+  document.getElementById("n-contexte").textContent=s.dataset.contexte;
+  const qs=(s.dataset.q||"").split("|").filter(Boolean);
+  document.getElementById("n-q-bloc").hidden=!qs.length;
+  document.getElementById("n-q").innerHTML=qs.map(q=>`<li><b>${q}</b> · ${Q[q][0]}<br><span class="micro" style="color:inherit">Dessiné : ${Q[q][1]}</span></li>`).join("");
+  document.querySelectorAll("#sommaire a").forEach(a=>a.classList.toggle("actif",a.dataset.lien===s.id));
+  document.title=s.dataset.titre+" — Safico diaspora (prototype)";
+  fermerPin(); remplir(); verifRequis(); window.scrollTo(0,0);
+  const premiere=s.querySelector("[data-otp] input"); if(premiere)setTimeout(()=>premiere.focus(),50);
+}
+window.addEventListener("hashchange",afficher);
+
+// Messages de retour, envoi choisi, bénéficiaire rapide, lignes de tableau
+let minuteurToast;
+function toast(t){const el=document.getElementById("toast");el.textContent=t;el.hidden=false;clearTimeout(minuteurToast);minuteurToast=setTimeout(()=>el.hidden=true,3200)}
+document.addEventListener("click",e=>{
+  const a=e.target.closest("a,button,tr[data-cible]"); if(!a)return;
+  if(a.getAttribute("aria-disabled")==="true"){e.preventDefault();return}
+  if(a.dataset.envoi!=null)etat.envoiSel=+a.dataset.envoi;
+  if(a.dataset.benefRapide!=null){etat.benef=+a.dataset.benefRapide;const r=document.querySelector(`[name=benef][value="${etat.benef}"]`);if(r)r.checked=true}
+  if(a.matches(".oeil")){const i=a.parentElement.querySelector("input"),v=i.type==="password";i.type=v?"text":"password";a.setAttribute("aria-pressed",v)}
+  if(a.matches("[data-pin-vers]")){e.preventDefault();ouvrirPin(a.dataset.pinVers);return}
+  if(a.matches("[data-pin-fermer]"))fermerPin();
+  if(a.matches("[data-pin-touche]")){touchePin(a.dataset.pinTouche);return}
+  if(a.matches("tr[data-cible]")){if(location.hash!==a.dataset.cible)location.hash=a.dataset.cible;else afficher()}
+  if(a.dataset.toast)toast(a.dataset.toast);
+  if(a.getAttribute("href")===location.hash&&a.dataset.envoi!=null)rendreS2();
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&e.target.matches("tr[data-cible]"))e.target.click();
+  if(document.getElementById("voile-pin").classList.contains("ouvert")){
+    if(e.key==="Escape")fermerPin(); // pas de saisie au clavier : elle rendrait le pavé mélangé inutile
+  }
+});
+
+// Code PIN : pavé mélangé à chaque ouverture, effacement fixe. Tout code à 6 chiffres est accepté.
+let pin="",pinVers="",pinMode="valider",pinPremier="";
+function textesPin(erreur){
+  const t=document.getElementById("pin-titre"),n=document.getElementById("pin-note");
+  if(pinMode==="choix"){t.textContent=pinPremier?"Confirmez votre code PIN":"Choisissez votre code PIN";n.innerHTML=erreur?'<span class="erreur-texte">Les deux codes ne sont pas identiques. Choisissez votre code PIN à nouveau.</span>':(pinPremier?"Cliquez à nouveau sur les mêmes 6 chiffres.":"Cliquez sur 6 chiffres. Ils changent de place à chaque fois.")}
+  else{t.textContent="Confirmez avec votre code PIN";n.innerHTML="Paiement de <b>"+fmt(calc().total,calc().devE)+"</b>. Cliquez sur vos 6 chiffres : ils changent de place à chaque fois."}
+  document.getElementById("pin-oublie").hidden=pinMode==="choix";
+}
+function melanger(){
+  const ch=[..."0123456789"].sort(()=>Math.random()-.5);
+  document.getElementById("pave").innerHTML=ch.slice(0,9).map(d=>`<button type="button" data-pin-touche="${d}">${d}</button>`).join("")+`<span></span><button type="button" data-pin-touche="${ch[9]}">${ch[9]}</button><button type="button" class="fonction" data-pin-touche="x" aria-label="Effacer">Effacer</button>`;
+}
+function ouvrirPin(vers,mode){
+  pin="";pinVers=vers;pinMode=mode||"valider";pinPremier="";textesPin();
+  melanger(); majPin(); document.getElementById("voile-pin").classList.add("ouvert");
+}
+function fermerPin(){document.getElementById("voile-pin").classList.remove("ouvert")}
+function majPin(){document.querySelectorAll("#points-pin i").forEach((i,k)=>i.classList.toggle("plein",k<pin.length))}
+function touchePin(t){
+  if(t==="x")pin=pin.slice(0,-1); else if(pin.length<6)pin+=t;
+  majPin();
+  if(pin.length<6)return;
+  if(pinMode==="valider"){setTimeout(()=>{fermerPin();location.hash=pinVers},250);return}
+  // Choix du code PIN (inscription) : deux saisies identiques
+  if(!pinPremier){pinPremier=pin;setTimeout(()=>{pin="";melanger();majPin();textesPin()},250);return}
+  if(pin===pinPremier){setTimeout(()=>{fermerPin();etat.pinChoisi=true;remplir();toast("Code PIN choisi.")},250);return}
+  const pts=document.getElementById("points-pin");pts.classList.add("erreur");
+  setTimeout(()=>{pts.classList.remove("erreur");pin="";pinPremier="";melanger();majPin();textesPin(true)},450);
+}
+
+// Panneau de notes : ouvert d'office sur un écran large
+const notes=document.getElementById("notes"),bascule=document.getElementById("bascule-notes");
+function basculer(ouvert){notes.classList.toggle("ouvert",ouvert);document.body.classList.toggle("notes-ouvertes",ouvert);bascule.setAttribute("aria-expanded",ouvert);bascule.textContent=ouvert?"Fermer les notes":"Notes et écrans"}
+bascule.addEventListener("click",()=>basculer(!notes.classList.contains("ouvert")));
+basculer(window.innerWidth>=1760);
+
+construireSimu(); majSimu(); afficher();
+</script>
+</body>
+</html>

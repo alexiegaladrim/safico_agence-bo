@@ -386,6 +386,14 @@ th .etiquette.trancher,td .etiquette.trancher,.bloc>span .etiquette.trancher,.ch
 .tableau .nombre{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 /* Tableau de valeurs courtes : seule la première colonne se coupe. */
 .tableau.sans-coupure td:not(:first-child){white-space:nowrap}
+/* Cellule qui ne se coupe pas dans un tableau dont d'autres cellules passent à la ligne (BO60). */
+.tableau .insecable{white-space:nowrap}
+/* Photos d'une pièce et selfie (BO58) : cadres légendés, jamais une fausse photo. */
+.cadres-photo{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.cadre-photo{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;aspect-ratio:3/2;
+  border:1px dashed var(--trait-net);border-radius:var(--rayon-petit);background:var(--fond-sourd);color:var(--texte-secondaire);text-align:center;padding:8px}
+.cadre-photo b{font:600 13px/18px var(--police);color:var(--texte-principal)}
+.liste.controles li.ecart{color:var(--attention)}
 .tableau .aucune td{color:var(--texte-secondaire);text-align:center;padding:18px 0}
 .tableau tr.choisie{background:var(--accent-fond)}
 .tableau tr.choisie td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
@@ -684,6 +692,9 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
   <symbol id="i-rejet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></symbol>
   <symbol id="i-valider" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 10"/></symbol>
   <symbol id="i-agence" viewBox="0 0 24 24"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/><path d="M3 21h18"/></symbol>
+  <symbol id="i-mobile" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></symbol>
+  <symbol id="i-identite" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4"/><path d="M14.5 10h4M14.5 13.5h4"/></symbol>
+  <symbol id="i-aide" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M19 20c0 1.2-1.5 2-3.5 2H13"/></symbol>
   <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 10v4h3l6 4V6L7 10z"/><path d="M16.5 9a4 4 0 0 1 0 6"/></symbol>
   <symbol id="i-journee" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
   <symbol id="i-balance" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10M5 8h14"/><path d="m5 8-3 6h6zM19 8l-3 6h6z"/></symbol>
@@ -1130,7 +1141,7 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
             </div>
             <div class="bandeau attention" data-si-decision="justificatif" data-si-issue="aucune justificatif">
               <strong>L'alerte reste ouverte</strong>
-              <span>L'opération reste en vérification au guichet, sans motif.</span>
+              <span>L'opération reste en vérification au guichet, sans motif. Pour un envoi payé dans l'application, la demande s'affiche dans le suivi de l'envoi et le client dépose le justificatif lui-même ; il arrive ici, « Déposé par le client · application ».</span>
             </div>
             <div class="bandeau blocage" data-si-decision="soupcon" data-si-issue="aucune soupcon">
               <strong>L'opération reste en vérification</strong>
@@ -1320,6 +1331,16 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
               </table>
             </div>
           </section>
+          <!-- Demandes faites dans l'application client (28/10, spec/BO-clients-en-ligne.md). -->
+          <section class="carte" data-fc="demandes-carte">
+            <h2>Demandes en ligne</h2>
+            <div class="defilant">
+              <table class="tableau dense">
+                <thead><tr><th>Demande</th><th>Objet</th><th>Reçue</th><th>État</th></tr></thead>
+                <tbody data-fc="demandes"></tbody>
+              </table>
+            </div>
+          </section>
           <section class="carte">
             <h2>Historique des alertes</h2>
             <ul class="journal" data-fc="alertes"></ul>
@@ -1327,6 +1348,10 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
         </div>
 
         <div class="colonne collante" style="--part:440">
+          <section class="carte">
+            <h2>Compte en ligne <span class="etiquette trancher" data-decision="q" title="CL12 — Suspendre un compte en ligne et bloquer un client, est-ce la même mesure ? Par défaut : non, la suspension ne ferme que l'application ; le blocage ferme tous les canaux, agence comprise."></span></h2>
+            <div data-fc="compte-ligne"></div>
+          </section>
           <section class="carte">
             <h2>Blocage</h2>
             <div data-fc="blocage"></div>
@@ -1337,6 +1362,29 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
             <p class="mention">Double validation : les Opérations initient, avec une justification ; la conformité valide ou refuse au regard du profil KYC, du risque et des règles LBC/FT.</p>
           </section>
         </div>
+      </div>
+
+      <div class="tiroir-voile" data-tiroir="suspension-compte" hidden>
+        <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-suspension-compte">
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-suspension-compte" data-fc="suspension-titre">Suspendre le compte en ligne</h2><p data-fc="suspension-client"></p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
+            <div class="bandeau neutre" data-fc="suspension-effet"><strong>Ce que voit le client</strong><span></span></div>
+            <div class="champ">
+              <label for="bo40-suspension-motif">Motif</label>
+              <textarea id="bo40-suspension-motif" placeholder="Ce qui fonde la décision"></textarea>
+              <span class="aide">Obligatoire · conservé au journal d'audit · jamais communiqué au client</span>
+            </div>
+            <div class="reauth"></div>
+            <p class="mention">Suspendre ne ferme que l'application : le client reste servi en agence. Pour fermer tous les canaux, bloquer le client.</p>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
+            <button class="bouton primaire" type="button" data-soumettre="suspension-compte" data-fc="suspension-bouton" data-exige="#bo40-suspension-motif [data-code-perso]" disabled>Suspendre le compte</button>
+          </footer>
+        </aside>
       </div>
 
       <div class="tiroir-voile" data-tiroir="seuils-client" hidden>
@@ -1358,6 +1406,212 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
           <footer class="tiroir-pied">
             <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
             <button class="bouton primaire" type="button" data-soumettre="seuils-client" data-exige="#bo40-justification [data-code-perso]" disabled>Soumettre à la conformité</button>
+          </footer>
+        </aside>
+      </div>
+    </section>
+
+    <!-- BO57 · Comptes à vérifier (spec/BO-clients-en-ligne.md, 28/10, proposition avant décision
+         du client). Ce que l'application client envoie à la conformité : inscription (P5, Q4
+         tranchée le 15/10 : revue par la conformité, aucun délai affiché au client), rattachement
+         à une fiche agence (P2d, P2f), pièce renouvelée (M5), changement de numéro (M3). Clients
+         inventés. Liste rendue depuis COMPTES_A_VERIFIER ; une décision en BO58 retire la ligne. -->
+    <section class="ecran" id="bo57" data-code="BO57" data-nom="Comptes à vérifier" data-espace="conformite" data-menu="Comptes à vérifier" data-titre="Comptes à vérifier" data-contexte="Application client · inscriptions, rattachements et pièces à vérifier" data-fait="oui" data-trancher="Clients et demandes inventés. CL3 · CL4.">
+      <div class="ligne compteurs" data-comptes-compteurs></div>
+      <section class="carte">
+        <div class="carte-tete">
+          <h2>Demandes en attente</h2>
+          <div class="filtre">
+            <div class="champ">
+              <label for="bo57-type">Type</label>
+              <select id="bo57-type" data-filtre="type">
+                <option value="">Tous</option>
+                <option value="inscription">Inscription</option>
+                <option value="rattachement">Rattachement à une fiche agence</option>
+                <option value="piece">Pièce renouvelée</option>
+                <option value="numero">Changement de numéro</option>
+              </select>
+            </div>
+            <div class="champ">
+              <label for="bo57-recherche">Recherche</label>
+              <input id="bo57-recherche" type="search" data-filtre-texte placeholder="Nom du client">
+            </div>
+          </div>
+        </div>
+        <div class="defilant">
+          <table class="tableau dense" data-filtrable data-unite="demandes">
+            <thead><tr><th>Client</th><th>Téléphone</th><th>Type</th><th>Pièce</th><th>Lecture automatique</th><th>Filtrage sanctions</th><th>Reçue</th>
+              <th>En attente depuis <span class="etiquette trancher" data-decision="q" title="CL3 — Quel délai interne pour vérifier un compte, même s'il n'est pas affiché au client ? Par défaut : l'ancienneté est affichée, en alerte au-delà de 24 h."></span></th></tr></thead>
+            <tbody data-comptes-liste></tbody>
+          </table>
+        </div>
+        <p class="pied secondaire" data-compte></p>
+        <p class="pied">Le client voit « Nous vérifions votre identité » et n'a aucun délai annoncé ; il est prévenu par SMS de la décision. Une correspondance sur une liste de sanctions ouvre une alerte dans la file d'alertes : la vérification attend qu'elle soit examinée. La lecture automatique de la pièce est une <span class="etiquette">proposition</span> dans l'application : faisabilité à confirmer.</p>
+      </section>
+      <section class="carte" data-comptes-decides-carte hidden>
+        <h2>Décidées aujourd'hui</h2>
+        <div class="defilant">
+          <table class="tableau dense">
+            <thead><tr><th>Client</th><th>Type</th><th>Décision</th><th>Le</th><th>Par</th></tr></thead>
+            <tbody data-comptes-decides></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- BO58 · Vérifier une identité (détail de BO57). Rendu depuis COMPTES_A_VERIFIER[SEL.compteClient].
+         Décision : valider, refuser les photos (le client les reprend, P7, aucun motif dit : Q35),
+         bloquer le client (rejoint BO35) ; pour un changement de numéro : rattacher ou refuser.
+         Motif interne et code personnel. Photos : cadres légendés, jamais une fausse photo. -->
+    <section class="ecran" id="bo58" data-parent="bo57" data-code="BO58" data-nom="Vérifier une identité" data-espace="conformite" data-menu="Vérifier une identité" data-titre="Vérifier une identité" data-contexte="Application client" data-fait="oui" data-trancher="CL4 · Q35.">
+      <div class="ligne align-haut">
+        <div class="colonne" style="--part:820">
+          <div class="bandeau attention" data-cv="alerte" hidden>
+            <strong>Correspondance possible sur une liste de sanctions</strong>
+            <span>Une alerte est ouverte. La vérification du compte attend qu'elle soit examinée. <a class="sommaire-lien" href="#bo1">File d'alertes ›</a></span>
+          </div>
+          <section class="carte">
+            <h2 data-cv="titre-photos">Pièce et selfie</h2>
+            <div class="cadres-photo" data-cv="photos"></div>
+            <p class="pied" data-cv="pied-photos"></p>
+          </section>
+          <section class="carte" data-cv="infos-carte">
+            <h2>Informations déclarées</h2>
+            <div data-cv="infos"></div>
+            <p class="pied">Profession et revenus ne figurent pas sur la pièce : le client les déclare, comme au guichet.</p>
+          </section>
+          <section class="carte" data-cv="numero-carte">
+            <h2>Changement de numéro <span class="etiquette trancher" data-decision="q" title="CL4 — Le changement de numéro (M3) est-il vérifié par la conformité, comme une inscription, ou par le service après-vente ? Par défaut : la conformité, dans les comptes à vérifier."></span></h2>
+            <div data-cv="numero"></div>
+            <p class="pied">Un numéro, un compte : le changement passe par la pièce d'identité et une vérification, jamais par un simple SMS.</p>
+          </section>
+          <section class="carte" data-cv="fiche-carte">
+            <h2 data-cv="fiche-titre">Fiche agence rattachée</h2>
+            <div data-cv="fiche"></div>
+          </section>
+          <section class="carte">
+            <h2>Contrôles</h2>
+            <ul class="liste controles" data-cv="controles"></ul>
+          </section>
+        </div>
+
+        <div class="colonne collante" style="--part:440">
+          <section class="carte" data-decision-carte>
+            <h2>Décision</h2>
+            <div data-cv="formulaire">
+              <div class="champs">
+                <div class="champ">
+                  <span class="libelle" id="bo58-decision">Décision</span>
+                  <div class="segmente empile" data-choix="decision" role="group" aria-labelledby="bo58-decision">
+                    <button data-valeur="valider" data-si-compte-type="inscription rattachement piece">Valider le compte</button>
+                    <button data-valeur="rattacher" data-si-compte-type="numero">Rattacher au nouveau numéro</button>
+                    <button data-valeur="refuser" data-si-compte-type="inscription rattachement piece">Refuser les photos</button>
+                    <button data-valeur="refuser-numero" data-si-compte-type="numero">Refuser le changement</button>
+                    <button data-valeur="bloquer">Bloquer le client</button>
+                  </div>
+                </div>
+                <p class="pied" data-si-decision="valider">Le client est prévenu par SMS et peut payer ses envois.</p>
+                <p class="pied" data-si-decision="refuser">Le client reprend ses photos. Aucun motif ne lui est dit. <span class="etiquette trancher" data-decision="q" title="Q35 (application client) — Pièce refusée par la conformité : quel motif dit-on au client, et combien de nouvelles tentatives ? Par défaut : pas de motif détaillé, le client reprend ses photos, sans limite."></span></p>
+                <p class="pied" data-si-decision="rattacher">Le compte passe au nouveau numéro ; le client est prévenu par SMS au nouveau numéro.</p>
+                <p class="pied" data-si-decision="refuser-numero">Le compte reste attaché à l'ancien numéro.</p>
+                <p class="pied" data-si-decision="bloquer">Effet immédiat, sur tout le réseau, agence comprise. Le client rejoint les clients bloqués.</p>
+                <div class="champ">
+                  <label for="bo58-motif">Motif interne</label>
+                  <textarea id="bo58-motif" placeholder="Ce qui fonde la décision"></textarea>
+                  <span class="aide">Obligatoire · conservé au journal d'audit · jamais communiqué au client</span>
+                </div>
+              </div>
+              <div class="reauth"></div>
+              <div class="actions">
+                <button class="bouton primaire" type="button" data-compte-decider data-exige="@decision #bo58-motif [data-code-perso]" disabled>Enregistrer la décision</button>
+              </div>
+            </div>
+            <div data-cv="attente" hidden>
+              <p class="secondaire">La décision attend l'examen de l'alerte sanctions.</p>
+            </div>
+            <div data-cv="trace" hidden></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- BO59 · Demandes de plafond (spec/BO-clients-en-ligne.md, 28/10, proposition avant décision du
+         client). Demandes faites dans l'application (X2) : la conformité décide, les Opérations
+         valident un relèvement (atelier 7, 15/10 : « validée par la conformité et les Opérations »),
+         dans le circuit des seuils de BO40 (déduit). Justificatif facultatif mais pouvant être demandé
+         (Q26). Ce que relève la demande : le plafond interne (défaut de CL6). Demandes inventées, sauf
+         BALDÉ Fatoumata (profil du B2C). Rendu depuis DEMANDES_PLAFOND ; détail en panneau. -->
+    <section class="ecran" id="bo59" data-code="BO59" data-nom="Demandes de plafond" data-espace="conformite" data-menu="Demandes de plafond" data-titre="Demandes de plafond" data-contexte="Application client · relèvement du plafond interne · double validation avec les Opérations" data-fait="oui" data-trancher="Demandes inventées, sauf BALDÉ Fatoumata. CL5 · CL6.">
+      <span class="etiquette trancher" data-decision="q" data-entete title="CL6 — Que relève une demande de plafond, puisque le plafond réglementaire ne se lève pas ? Par défaut : le plafond interne du client, calculé depuis sa tranche de revenus, comme les seuils de la fiche client."></span>
+      <div class="bandeau neutre">
+        <strong>Ce que relève une demande</strong>
+        <span>Le plafond interne du client, calculé depuis sa tranche de revenus et jamais montré dans l'application. Le plafond réglementaire de 5 000 USD par jour ne se lève pas.</span>
+      </div>
+      <div class="ligne compteurs" data-plafonds-compteurs></div>
+      <section class="carte">
+        <div class="carte-tete">
+          <h2>Demandes</h2>
+          <div class="filtre">
+            <div class="champ">
+              <label for="bo59-recherche">Recherche</label>
+              <input id="bo59-recherche" type="search" data-filtre-texte placeholder="Nom du client">
+            </div>
+          </div>
+        </div>
+        <div class="defilant">
+          <table class="tableau dense" data-filtrable data-unite="demandes">
+            <thead><tr><th>Client</th><th class="nombre">Plafond interne actuel</th><th class="nombre">Montant souhaité</th><th>Motif</th><th>Justificatif</th><th>Reçue</th><th>État</th></tr></thead>
+            <tbody data-plafonds-liste></tbody>
+          </table>
+        </div>
+        <p class="pied secondaire" data-compte></p>
+        <p class="pied">Chaque ligne s'ouvre en panneau. La conformité décide ; un relèvement est ensuite validé par les Opérations, dans leurs validations. <span class="etiquette trancher" data-decision="q" title="CL5 — Demande de plafond : qui décide, qui valide ? La conformité puis les Opérations, ou l'inverse ? Par défaut : la conformité décide, les Opérations valident."></span></p>
+      </section>
+
+      <div class="tiroir-voile" data-tiroir="plafond" hidden>
+        <aside class="tiroir large" role="dialog" aria-modal="true" aria-labelledby="tiroir-plafond">
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-plafond" data-pl="titre">Demande de plafond</h2><p data-pl="sous-titre"></p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
+            <h3 class="sous-bloc">Le client</h3>
+            <div data-pl="client"></div>
+            <div class="separateur"></div>
+            <h3 class="sous-bloc">La demande</h3>
+            <div data-pl="demande"></div>
+            <div class="separateur"></div>
+            <div data-pl="formulaire">
+              <div class="champs">
+                <div class="champ">
+                  <span class="libelle" id="bo59-decision">Décision</span>
+                  <div class="segmente empile" data-choix="decision" role="group" aria-labelledby="bo59-decision">
+                    <button data-valeur="relever">Relever le plafond</button>
+                    <button data-valeur="justificatif">Demander un justificatif</button>
+                    <button data-valeur="refuser">Refuser</button>
+                  </div>
+                </div>
+                <div class="champ" data-si-decision="relever">
+                  <label for="bo59-montant">Nouveau plafond interne par jour</label>
+                  <input id="bo59-montant" data-montant="GNF" inputmode="numeric">
+                  <span class="aide">Proposé : le montant souhaité par le client</span>
+                </div>
+                <p class="pied" data-si-decision="relever">Soumis aux Opérations pour validation. Le client voit « Demande en cours d'examen » jusqu'à leur décision.</p>
+                <p class="pied" data-si-decision="justificatif">Le client voit « Un justificatif est demandé » et le dépose dans l'application.</p>
+                <p class="pied" data-si-decision="refuser">Le client voit « Demande refusée » ; son plafond reste le même.</p>
+                <div class="champ">
+                  <label for="bo59-motif">Motif interne</label>
+                  <textarea id="bo59-motif" placeholder="Ce qui fonde la décision"></textarea>
+                  <span class="aide">Obligatoire · conservé au journal d'audit · jamais communiqué au client</span>
+                </div>
+              </div>
+              <div class="reauth"></div>
+            </div>
+            <div data-pl="trace" hidden></div>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Fermer</button>
+            <button class="bouton primaire" type="button" data-pl="bouton" data-plafond-decider data-exige="@decision #bo59-montant #bo59-motif [data-code-perso]" disabled>Enregistrer la décision</button>
           </footer>
         </aside>
       </div>
@@ -1925,14 +2179,25 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
             <h2>Opération</h2>
             <div data-r="infos"></div>
           </section>
-          <section class="carte">
+          <!-- Variante « demande du client » (28/10, spec/BO-clients-en-ligne.md) : clé remb-source. -->
+          <section class="carte" data-si-remb-source="application">
+            <h2>Demande du client</h2>
+            <div data-r="demande"></div>
+            <p class="pied">Faite dans l'application, depuis le détail de l'envoi, et confirmée par le code PIN du client.</p>
+          </section>
+          <section class="carte" data-si-remb-source="application">
+            <h2>Restitution <span class="etiquette trancher" data-decision="q" title="Q13 (application client) — Annuler un envoi payé en ligne : les fonds reviennent-ils toujours au compte d'origine ? Quelle règle de frais ? Par défaut : montant et frais rendus sur le moyen qui a payé."></span></h2>
+            <div data-r="restitution"></div>
+            <p class="pied">Un envoi payé en ligne n'a pas d'agence d'origine où rendre des espèces : seule l'annulation s'applique, sur le moyen qui a payé. <span class="etiquette trancher" data-decision="q" title="CL10 — Qui rembourse un paiement en ligne (annulation, refus, débit après abandon), et comment : API de l'opérateur ou virement manuel ? Par défaut : la Finance, sans préciser le mode."></span></p>
+          </section>
+          <section class="carte" data-si-remb-source="agence">
             <h2>Consulter l'expéditeur <span class="etiquette trancher" data-decision="q" title="Q9 — Qui appelle l'expéditeur pour le consulter, et avec quelle formule ?"></span></h2>
             <div class="info"><span>Téléphone</span><span data-r="telephone"></span></div>
             <div class="info"><span>SMS</span><span data-r="sms"></span></div>
             <label class="case" style="margin-top:8px"><input type="checkbox" id="bo25-appele">Expéditeur consulté</label>
           </section>
           <!-- Les deux définitions (atelier 5, 01/10). -->
-          <section class="carte">
+          <section class="carte" data-si-remb-source="agence">
             <h2>Annuler ou rembourser <span class="etiquette trancher" data-decision="q" title="Quel critère fait choisir l'annulation plutôt que le remboursement ?"></span></h2>
             <div class="info"><span>Annuler</span><span>La transaction est supprimée tant qu'elle n'a pas été payée ; le principal et la totalité des frais sont restitués à l'agence d'origine.</span></div>
             <div class="info"><span>Rembourser</span><span>Comme un paiement dont l'expéditeur devient le bénéficiaire, dans toute agence ou chez un distributeur : le principal seul ; les frais sont consommés et entrent dans le partage des commissions.</span></div>
@@ -1945,13 +2210,22 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
           <section class="carte" data-decision-carte>
             <h2>Décision</h2>
             <div class="champs">
-              <div class="champ">
+              <div class="champ" data-si-remb-source="agence">
                 <span class="libelle" id="bo25-decision">Suite de l'envoi <span class="etiquette trancher" data-r="q8" data-decision="5" title="Q8 — Un envoi décliné parce que le taux a évolué pendant une coupure : annulation ou remboursement ? Par défaut : l'annulation intégrale, frais compris, puisque le refus vient de SAFICO."></span></span>
                 <div class="segmente" data-choix="decision" role="group" aria-labelledby="bo25-decision">
                   <button data-valeur="annuler">Annuler</button>
                   <button data-valeur="rembourser">Rembourser</button>
                 </div>
               </div>
+              <div class="champ" data-si-remb-source="application">
+                <span class="libelle" id="bo25-decision-client">Demande d'annulation</span>
+                <div class="segmente" data-choix="decision" role="group" aria-labelledby="bo25-decision-client">
+                  <button data-valeur="accepter">Accepter</button>
+                  <button data-valeur="refuser-annulation">Refuser</button>
+                </div>
+              </div>
+              <p class="mention" data-si-remb-source="application" data-si-decision="accepter" data-r="accepter"></p>
+              <p class="mention" data-si-remb-source="application" data-si-decision="refuser-annulation">L'envoi redevient disponible au retrait ; le client est prévenu dans l'application.</p>
               <p class="mention" data-si-decision="annuler" data-r="annuler"></p>
               <p class="mention" data-si-decision="rembourser" data-r="rembourser"></p>
               <div class="champ">
@@ -1965,6 +2239,14 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
               <strong>Opération annulée</strong>
               <span data-r="annule"></span>
             </div>
+            <div class="bandeau valide" data-si-issue="accepter">
+              <strong>Annulation acceptée</strong>
+              <span data-r="accepte"></span>
+            </div>
+            <div class="bandeau neutre" data-si-issue="refuser-annulation">
+              <strong>Annulation refusée</strong>
+              <span>L'envoi redevient disponible au retrait. Le client voit « Annulation refusée » dans l'application.</span>
+            </div>
             <div class="bandeau valide" data-si-issue="rembourser">
               <strong>Remboursement ouvert</strong>
               <span data-r="rembourse"></span>
@@ -1972,8 +2254,11 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
             <div class="actions">
               <button class="bouton primaire" data-enregistrer data-si-decision="annuler" data-fait-libelle="Opération annulée" data-exige="@decision #bo25-motif [data-code-perso]" disabled>Annuler l'opération</button>
               <button class="bouton primaire" data-enregistrer data-si-decision="rembourser" data-fait-libelle="Remboursement ouvert" data-exige="@decision #bo25-motif [data-code-perso]" disabled>Rembourser l'expéditeur</button>
+              <button class="bouton primaire" data-enregistrer data-si-decision="accepter" data-fait-libelle="Annulation acceptée" data-exige="@decision #bo25-motif [data-code-perso]" disabled>Accepter l'annulation</button>
+              <button class="bouton primaire" data-enregistrer data-si-decision="refuser-annulation" data-fait-libelle="Annulation refusée" data-exige="@decision #bo25-motif [data-code-perso]" disabled>Refuser l'annulation</button>
             </div>
-            <p class="mention">Décision des Opérations ou du chef d'agence, après consultation du client ; réauthentification exigée.</p>
+            <p class="mention" data-si-remb-source="agence">Décision des Opérations ou du chef d'agence, après consultation du client ; réauthentification exigée.</p>
+            <p class="mention" data-si-remb-source="application">Décision des Opérations : les annulations des envois payés en ligne sont traitées par le back-office Safico, pour éviter la fraude dans le réseau. Réauthentification exigée.</p>
           </section>
         </div>
       </div>
@@ -2214,6 +2499,8 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
               <div class="cases">
                 <label class="case"><input type="checkbox" data-destinataire="Caissiers" checked>Caissiers</label>
                 <label class="case"><input type="checkbox" data-destinataire="Chefs d'agence" checked>Chefs d'agence</label>
+                <!-- 28/10 (spec/BO-clients-en-ligne.md) : les clients de l'application, sur tout le réseau seulement (déduit). -->
+                <label class="case" data-si-cible-message="reseau"><input type="checkbox" data-destinataire="Clients de l'application">Clients de l'application <span class="etiquette">proposition</span> <span class="etiquette trancher" data-decision="q" title="CL13 — Les messages du jour s'adressent-ils aussi aux clients de l'application ? Par défaut : oui, en proposition ; affiché sur l'accueil de l'application, pour tout le réseau seulement."></span></label>
               </div>
             </div>
             <div class="paire">
@@ -2239,6 +2526,209 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
           </footer>
         </aside>
       </div>
+    </section>
+
+    <!-- BO60 · Demandes d'aide (spec/BO-clients-en-ligne.md, 28/10, proposition avant décision du
+         client). Le bouton « Demander de l'aide » de l'application client (H3, atelier 8, 22/10)
+         remonte ici : catégorie, envoi et message facultatifs, informations du client, écran d'où
+         il vient. Service après-vente = les Opérations (hypothèse de Q39, CL1). Demandes,
+         clients autres que BALDÉ Fatoumata et messages : inventés. Liste rendue depuis
+         DEMANDES_AIDE ; le choix « À traiter · Mes demandes · Closes » (clé aide) la reconstruit. -->
+    <section class="ecran" id="bo60" data-code="BO60" data-nom="Demandes d'aide" data-espace="operations" data-menu="Demandes d'aide" data-titre="Demandes d'aide" data-contexte="Application client · le service après-vente rappelle par téléphone ou sur WhatsApp" data-fait="oui" data-trancher="Demandes et clients inventés (sauf BALDÉ Fatoumata, profil du B2C). CL1 · CL2 · CL8.">
+      <span class="etiquette trancher" data-decision="q" data-entete title="CL1 — Le service après-vente, ce sont les Opérations du siège, ou une équipe à part, avec son propre profil dans le back-office ? Par défaut : les Opérations (hypothèse de Q39)."></span>
+      <div class="bandeau neutre">
+        <strong>Service après-vente ouvert</strong>
+        <span>Du lundi au vendredi de 8 h à 17 h, le samedi de 8 h à 13 h. Une demande reçue en dehors de ces horaires porte la mention « Reçue hors horaires ».</span>
+      </div>
+      <div class="ligne compteurs" data-aide-compteurs></div>
+      <section class="carte">
+        <div class="carte-tete">
+          <div class="segmente" data-choix="aide" role="group" aria-label="Demandes affichées">
+            <button class="actif" data-valeur="traiter">À traiter<span class="nb" data-aide-nb="traiter"></span></button>
+            <button data-valeur="miennes">Mes demandes<span class="nb" data-aide-nb="miennes"></span></button>
+            <button data-valeur="closes">Closes<span class="nb" data-aide-nb="closes"></span></button>
+          </div>
+          <div class="filtre">
+            <div class="champ">
+              <label for="bo60-categorie">Catégorie</label>
+              <select id="bo60-categorie" data-filtre="categorie">
+                <option value="">Toutes</option>
+                <option value="retrait">Assistance au retrait</option>
+                <option value="question">Une question</option>
+                <option value="annulation">Annulation</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+            <div class="champ">
+              <label for="bo60-recherche">Recherche</label>
+              <input id="bo60-recherche" type="search" data-filtre-texte placeholder="Client ou référence">
+            </div>
+          </div>
+        </div>
+        <div class="defilant">
+          <table class="tableau dense" data-filtrable data-unite="demandes">
+            <thead><tr><th>Reçue</th><th>Client</th><th>Catégorie</th><th>Envoi</th><th>Depuis l'écran</th><th>Message</th><th>État</th><th>Pris en charge par</th></tr></thead>
+            <tbody data-aide-liste></tbody>
+          </table>
+        </div>
+        <p class="pied secondaire" data-compte></p>
+        <p class="pied">L'assistance au retrait passe en tête : un bénéficiaire attend au point de retrait. Puis la plus ancienne. Aucun délai de rappel n'est affiché au client. <span class="etiquette trancher" data-decision="q" title="CL2 — Sous quel délai une demande d'aide doit-elle être rappelée ? Que devient une demande reçue hors horaires ? Faut-il une priorité par catégorie ? Par défaut : aucun délai affiché, mention « Reçue hors horaires », assistance au retrait en tête."></span></p>
+      </section>
+    </section>
+
+    <!-- BO61 · Demande d'aide (détail de BO60). Rendu depuis DEMANDES_AIDE[SEL.aide] et
+         ENVOIS_EN_LIGNE. Prendre en charge, noter un contact (panneau), clore (panneau). Pas de
+         réauthentification : rien ici ne bouge l'argent ni les données du client (déduit). -->
+    <section class="ecran" id="bo61" data-parent="bo60" data-code="BO61" data-nom="Demande d'aide" data-espace="operations" data-menu="Demande d'aide" data-titre="Demande d'aide" data-contexte="Service après-vente" data-fait="oui" data-trancher="CL7 · CL8 · CL10 · Q39.">
+      <div class="ligne align-haut">
+        <div class="colonne" style="--part:820">
+          <div class="bandeau attention" data-aide="confidentialite" hidden>
+            <strong>Envoi en vérification</strong>
+            <span>Ne dites jamais au client le motif d'une vérification. Vous pouvez lui dire : « Nous procédons à une vérification complémentaire de votre transfert. C'est une étape habituelle. »</span>
+          </div>
+          <div class="ligne align-haut">
+            <section class="carte">
+              <h2>Demande</h2>
+              <div data-aide="demande"></div>
+            </section>
+            <section class="carte">
+              <h2>Client</h2>
+              <div data-aide="client"></div>
+            </section>
+          </div>
+          <section class="carte" data-aide="envoi-carte">
+            <h2>Envoi concerné</h2>
+            <div data-aide="envoi"></div>
+          </section>
+          <section class="carte">
+            <h2>Contacts</h2>
+            <ul class="journal" data-aide="journal"></ul>
+            <p class="pied">Chaque appel et chaque message est horodaté, avec son canal et son issue, et conservé au journal d'audit.</p>
+          </section>
+        </div>
+        <div class="colonne collante" style="--part:440">
+          <section class="carte">
+            <h2>Suivi</h2>
+            <div data-aide="suivi"></div>
+          </section>
+          <section class="carte">
+            <h2>Suite</h2>
+            <div data-aide="actions"></div>
+            <!-- Selon la catégorie (clé aide-cat, posée par rendreDemandeAide). -->
+            <p class="pied" data-si-aide-cat="retrait">Pour orienter le bénéficiaire vers un autre point de retrait : <a class="sommaire-lien" href="#bo33">Agences et distributeurs ›</a> <span class="etiquette trancher" data-decision="q" title="Q39 — Le service après-vente sait-il quels points de retrait ont des espèces ? Par défaut : il consulte la liste des agences et distributeurs et oriente le bénéficiaire vers un autre point."></span></p>
+            <p class="pied" data-si-aide-cat="annulation">Le client peut demander l'annulation lui-même, depuis le détail de son envoi : la demande arrive au siège avec son motif, confirmée par son code PIN. Rappelez-le pour l'y guider ; elle arrive ensuite dans les <a class="sommaire-lien" href="#bo62">annulations demandées ›</a> <span class="etiquette trancher" data-decision="q" title="CL8 — La catégorie « Annulation » de la demande d'aide fait doublon avec la demande d'annulation d'un envoi (S4). On la retire de l'application ? Par défaut : gardée, le service après-vente guide le client vers la demande d'annulation."></span></p>
+            <div data-si-aide-cat="finance">
+              <p class="pied">Un débit validé après l'abandon du paiement n'est traité par aucune source (Q28). La Finance vérifie avec l'opérateur, puis rembourse le client ou rattache le paiement à l'envoi. <span class="etiquette trancher" data-decision="q" title="CL10 — Qui rembourse un paiement en ligne (annulation, refus, débit après abandon), et comment : API de l'opérateur ou virement manuel ? Par défaut : la Finance, sans préciser le mode."></span></p>
+              <div class="actions" data-si-aide-signale="non"><button class="bouton secondaire" type="button" data-aide-finance>Signaler à la Finance</button></div>
+              <div class="bandeau valide" data-si-aide-signale="oui"><strong>Signalé à la Finance</strong><span>Débit à vérifier avec l'opérateur.</span></div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="tiroir-voile" data-tiroir="contact" hidden>
+        <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-contact">
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-contact">Noter un contact</h2><p data-aide="contact-objet"></p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
+            <div class="champ">
+              <label for="bo61-canal">Canal</label>
+              <select id="bo61-canal">
+                <option value="">Choisir</option>
+                <option>Téléphone</option>
+                <option>WhatsApp</option>
+              </select>
+            </div>
+            <div class="champ">
+              <label for="bo61-issue">Issue</label>
+              <select id="bo61-issue">
+                <option value="">Choisir</option>
+                <option>Client joint</option>
+                <option>Sans réponse</option>
+              </select>
+            </div>
+            <div class="champ">
+              <label for="bo61-compte-rendu">Compte rendu</label>
+              <textarea id="bo61-compte-rendu" placeholder="Ce qui a été dit ou fait"></textarea>
+              <span class="aide">Obligatoire · conservé au journal d'audit</span>
+            </div>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
+            <button class="bouton primaire" type="button" data-soumettre="contact" data-exige="#bo61-canal #bo61-issue #bo61-compte-rendu" disabled>Enregistrer le contact</button>
+          </footer>
+        </aside>
+      </div>
+
+      <div class="tiroir-voile" data-tiroir="cloture" hidden>
+        <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-cloture">
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-cloture">Clore la demande <span class="etiquette trancher" data-decision="q" title="CL7 — Le client est-il prévenu quand sa demande d'aide est close ? Par défaut : non, rien n'est dessiné dans l'application."></span></h2><p data-aide="cloture-objet"></p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
+            <div class="champ">
+              <label for="bo61-cloture-issue">Issue</label>
+              <select id="bo61-cloture-issue">
+                <option value="">Choisir</option>
+                <option>Résolue</option>
+                <option>Réorientée</option>
+                <option>Sans suite</option>
+              </select>
+              <span class="aide">Réorientée : vers une agence, la conformité ou la Finance</span>
+            </div>
+            <div class="champ">
+              <label for="bo61-cloture-cr">Compte rendu</label>
+              <textarea id="bo61-cloture-cr" placeholder="Ce qui a été fait pour le client"></textarea>
+              <span class="aide">Obligatoire · conservé au journal d'audit</span>
+            </div>
+            <p class="mention">Le client n'est pas prévenu dans l'application : rien n'est dessiné côté client.</p>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
+            <button class="bouton primaire" type="button" data-soumettre="cloture" data-exige="#bo61-cloture-issue #bo61-cloture-cr" disabled>Clore la demande</button>
+          </footer>
+        </aside>
+      </div>
+    </section>
+
+    <!-- BO62 · Annulations demandées (spec/BO-clients-en-ligne.md, 28/10, proposition avant décision
+         du client). Demandes d'annulation faites par le client dans l'application (S4, motif et code
+         PIN) : traitées par le back-office Safico pour éviter la fraude dans le réseau (21/10), retrait
+         suspendu pendant l'examen (hypothèse de Q32). Envois et clients inventés, sauf BANGOURA Hawa,
+         reprise de BO60. Chaque ligne ouvre BO25 en variante « demande du client ». -->
+    <section class="ecran" id="bo62" data-code="BO62" data-nom="Annulations demandées" data-espace="operations" data-menu="Annulations demandées" data-titre="Annulations demandées" data-contexte="Application client · le retrait est suspendu pendant l'examen" data-fait="oui" data-trancher="Envois et clients inventés. Q13 · Q32 · CL9.">
+      <div class="ligne compteurs" data-annulations-compteurs></div>
+      <section class="carte">
+        <div class="carte-tete">
+          <h2>Demandes à examiner</h2>
+          <div class="filtre">
+            <div class="champ">
+              <label for="bo62-recherche">Recherche</label>
+              <input id="bo62-recherche" type="search" data-filtre-texte placeholder="Client ou référence">
+            </div>
+          </div>
+        </div>
+        <div class="defilant">
+          <table class="tableau dense" data-filtrable data-unite="demandes">
+            <thead><tr><th>Référence</th><th>Client</th><th>Bénéficiaire</th><th class="nombre">Montant</th><th class="nombre">Frais</th><th>Payé par</th><th>Motif du client</th><th>Demandée</th><th>Retrait suspendu depuis <span class="etiquette trancher" data-decision="q" title="Q32 (application client) — Pendant l'examen d'une demande d'annulation, le retrait est-il suspendu ? Par défaut : oui, le bénéficiaire ne peut pas retirer tant que les Opérations n'ont pas décidé."></span></th></tr></thead>
+            <tbody data-annulations-liste></tbody>
+          </table>
+        </div>
+        <p class="pied secondaire" data-compte></p>
+        <p class="pied">La demande est confirmée par le code PIN du client. Annuler rend le montant et les frais, tant que l'envoi n'est pas retiré. La correction du nom du bénéficiaire, faite par le client lui-même, ne passe pas ici : elle figure au journal de l'opération. <span class="etiquette trancher" data-decision="q" title="CL9 — Les Opérations doivent-elles voir, ou valider, une correction du nom du bénéficiaire faite par le client dans l'application ? Par défaut : ni l'un ni l'autre, elle figure au journal de l'opération."></span></p>
+      </section>
+      <section class="carte" data-annulations-decidees-carte hidden>
+        <h2>Décidées aujourd'hui</h2>
+        <div class="defilant">
+          <table class="tableau dense">
+            <thead><tr><th>Référence</th><th>Client</th><th>Décision</th><th>Le</th><th>Par</th></tr></thead>
+            <tbody data-annulations-decidees></tbody>
+          </table>
+        </div>
+      </section>
     </section>
 
     <!-- BO36 · Détail d'une opération (déduit, point 2 des parcours manquants du 29/09) : un
@@ -2728,6 +3218,65 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
          onglet-odoo) : échanges, ventilation comptable, journaux d'export, rejets (« Relancer »).
          Comptes du plan SYSCOHADA, références et volumes : démonstration (déduit). Rejets rendus
          depuis REJETS_ODOO (deux opérations de distributeurs déjà connues de BO30). -->
+    <!-- BO63 · Paiements en ligne à régulariser (spec/BO-clients-en-ligne.md, 28/10, proposition avant
+         décision du client). Ce qui ne s'est pas réglé seul : débit validé après l'abandon des 10
+         minutes (E5d, Q28), paiement « en cours de confirmation » (E6), remboursement à émettre après
+         une annulation acceptée (BO62) ou un envoi refusé (S5, Q31). Rattachement à la Finance :
+         déduit (CL10). Aucun partenariat signé : l'écran montre la forme. Lignes inventées, sauf
+         SFC-9A23-0871 (BO60) et les annulations acceptées en séance. -->
+    <section class="ecran" id="bo63" data-code="BO63" data-nom="Paiements en ligne à régulariser" data-espace="finance" data-menu="Paiements en ligne" data-titre="Paiements en ligne à régulariser" data-contexte="Mobile money et carte bancaire · ce qui ne s'est pas réglé seul" data-fait="oui" data-trancher="Lignes inventées. CL10 · Q28 · Q31.">
+      <span class="etiquette trancher" data-decision="q" data-entete title="CL10 — Qui rembourse un paiement en ligne (annulation, refus, débit après abandon), et comment : API de l'opérateur ou virement manuel ? Par défaut : la Finance, dans cet écran, sans préciser le mode."></span>
+      <div class="bandeau neutre">
+        <strong>Démonstration</strong>
+        <span>Aucun accord n'est signé avec un opérateur de mobile money ni avec un prestataire de carte : l'écran montre la forme du suivi, pas un rapprochement réel.</span>
+      </div>
+      <div class="ligne compteurs" data-paiements-compteurs></div>
+      <section class="carte">
+        <div class="carte-tete">
+          <div class="segmente" data-choix="paiements" role="group" aria-label="File affichée">
+            <button class="actif" data-valeur="debits">Débits sans envoi<span class="nb" data-paiements-nb="debits"></span></button>
+            <button data-valeur="confirmations">Confirmations en attente<span class="nb" data-paiements-nb="confirmations"></span></button>
+            <button data-valeur="remboursements">Remboursements à émettre<span class="nb" data-paiements-nb="remboursements"></span></button>
+          </div>
+        </div>
+        <div class="defilant">
+          <table class="tableau dense">
+            <thead data-paiements-tete></thead>
+            <tbody data-paiements-liste></tbody>
+          </table>
+        </div>
+        <p class="pied" data-si-paiements="debits">L'opérateur a confirmé le débit après l'abandon du paiement dans l'application (10 minutes) : l'envoi n'est pas parti. On rend l'argent au client, ou on rattache le paiement à l'envoi. <span class="etiquette trancher" data-decision="q" title="Q28 (application client) — Un débit validé après l'abandon des 10 minutes : comment le client est-il remboursé, et par qui ? Par défaut : la Finance rembourse sur le moyen d'origine, ou rattache le paiement à l'envoi."></span></p>
+        <p class="pied" data-si-paiements="confirmations">Paiements que l'opérateur n'a pas encore confirmés. Le client voit « en cours de confirmation », jamais « échec ». Au-delà de 10 minutes, l'application abandonne le paiement ; une confirmation tardive arrive dans « Débits sans envoi ».</p>
+        <p class="pied" data-si-paiements="remboursements">Montant et frais à rendre sur le moyen qui a payé, après une annulation acceptée ou un envoi refusé par la conformité. <span class="etiquette trancher" data-decision="q" title="Q31 (application client) — Envoi refusé après vérification : quel montant rend-on (avec ou sans frais), sous quel délai ? Par défaut : montant et frais, sur le moyen qui a payé, sans délai affiché."></span></p>
+      </section>
+      <section class="carte">
+        <h2>Régularisations du jour</h2>
+        <ul class="journal" data-paiements-journal></ul>
+      </section>
+
+      <div class="tiroir-voile" data-tiroir="regularisation" hidden>
+        <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-regularisation">
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-regularisation" data-pm="titre">Régulariser</h2><p data-pm="objet"></p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
+            <div class="bandeau neutre" data-pm="effet"><strong>Effet</strong><span></span></div>
+            <div class="champ">
+              <label for="bo63-commentaire">Commentaire</label>
+              <textarea id="bo63-commentaire" placeholder="Vérification faite avec l'opérateur, référence de l'opération…"></textarea>
+              <span class="aide">Obligatoire · conservé au journal d'audit</span>
+            </div>
+            <div class="reauth"></div>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
+            <button class="bouton primaire" type="button" data-soumettre="regularisation" data-pm="bouton" data-exige="#bo63-commentaire [data-code-perso]" disabled>Confirmer</button>
+          </footer>
+        </aside>
+      </div>
+    </section>
+
     <section class="ecran" id="bo11" data-profils="administration" data-code="BO11" data-nom="Synchronisation Odoo" data-espace="finance" data-menu="Synchronisation Odoo" data-titre="Synchronisation Odoo" data-contexte="Odoo 19 · journaux de trésorerie · écritures en temps réel · administrateur et finance" data-fait="oui">
       <div class="bandeau trancher">
         <strong>Proposition technique Galadrim <span class="etiquette trancher" data-decision="7" title="Proposition technique Galadrim, à valider avec Alhassane Sow"></span></strong>
@@ -3924,6 +4473,49 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
     <!-- BO46 · Paramètres : vue consolidée, en lecture, de tous les paramètres (rendue depuis les
          tables du JS), avec leur responsable métier, leur valeur, leur dernière modification et un
          lien vers leur écran ; l'historique est consolidé. -->
+    <!-- BO64 · Réglages de l'application (spec/BO-clients-en-ligne.md, 28/10, proposition avant
+         décision du client). Ce que le B2C dit paramétrable : montants (atelier 8, Q25), opérateurs et
+         leur ordre (27/10), carte bancaire (Q36), modes de réception (atelier 8), taxes locales
+         (atelier 8), délai d'abandon (E5d), horaires du service après-vente (21/10), version minimale
+         (Z8), questions fréquentes (H2). Valeurs : celles du B2C. Responsable : l'Administration par
+         défaut (CL11). Rendu depuis REGLAGES_APP ; chaque ligne se modifie en panneau. -->
+    <section class="ecran" id="bo64" data-code="BO64" data-nom="Réglages de l'application" data-espace="administration" data-menu="Application client" data-titre="Réglages de l'application" data-contexte="Application client · valeurs lues par l'application à son ouverture · chaque modification historisée" data-fait="oui" data-trancher="Valeurs de démonstration du B2C. CL11 · Q36 · Q40.">
+      <span class="etiquette trancher" data-decision="q" data-entete title="CL11 — Qui modifie les réglages de l'application (montants, opérateurs, taxes, questions fréquentes) ? Par défaut : l'Administration, avec le responsable métier affiché sur chaque ligne."></span>
+      <div data-reglages-app></div>
+      <section class="carte">
+        <h2>Historique</h2>
+        <ul class="journal" data-reglages-historique></ul>
+      </section>
+
+      <div class="tiroir-voile" data-tiroir="reglage-app" hidden>
+        <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-reglage-app">
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-reglage-app" data-ra="titre">Modifier un réglage</h2><p data-ra="groupe"></p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
+            <div class="info"><span>Valeur actuelle</span><span data-ra="actuelle"></span></div>
+            <div class="champ">
+              <label for="bo64-valeur">Nouvelle valeur</label>
+              <input id="bo64-valeur" type="text">
+              <span class="aide" data-ra="aide"></span>
+            </div>
+            <div class="champ">
+              <label for="bo64-motif">Justification</label>
+              <textarea id="bo64-motif" placeholder="Pourquoi ce réglage change"></textarea>
+              <span class="aide">Obligatoire · conservée au journal d'audit</span>
+            </div>
+            <div class="reauth"></div>
+            <p class="mention">L'application lit la nouvelle valeur à sa prochaine ouverture, sans mise à jour.</p>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
+            <button class="bouton primaire" type="button" data-soumettre="reglage-app" data-exige="#bo64-valeur #bo64-motif [data-code-perso]" disabled>Enregistrer</button>
+          </footer>
+        </aside>
+      </div>
+    </section>
+
     <section class="ecran" id="bo46" data-code="BO46" data-nom="Paramètres" data-espace="administration" data-menu="Paramètres" data-titre="Paramètres" data-contexte="Vue consolidée, en lecture · chaque paramètre se modifie dans l'espace de son responsable" data-fait="oui">
       <span class="etiquette trancher" data-entete data-decision="h" title="Hypothèse Galadrim : oui, la vue répond à la demande de supervision centralisée, telle que dessinée. (Registre B11 · la vue « Paramètres » répond-elle à la demande de supervision centralisée ?)"></span>
       <div class="ligne align-haut">
@@ -4382,6 +4974,7 @@ const PROFILS = [
     ['Accueil', [['bo51', 'i-sommaire']]],
     ['Surveillance', [['bo1', 'i-alerte'], ['bo21', 'i-hors-ligne'], ['bo6', 'i-valider']]],
     ['Clients', [['bo35', 'i-client']]],
+    ['Clients en ligne', [['bo57', 'i-identite'], ['bo59', 'i-graphique']]],
     ['Réseau', [['bo27', 'i-hors-ligne']]],
     ['Réglages', [['bo23', 'i-reglages']]],
     ['Rapports', [['bo7', 'i-document']]],
@@ -4389,6 +4982,7 @@ const PROFILS = [
   { cle: 'operations', espace: 'operations', agent: 'Mamadou Sow|Opérations · Siège', menu: [
     ['Accueil', [['bo52', 'i-sommaire']]],
     ['Suivi des opérations', [['bo24', 'i-pause'], ['bo26', 'i-rejet'], ['bo6', 'i-valider'], ['bo9', 'i-balance']]],
+    ['Service après-vente', [['bo60', 'i-aide'], ['bo62', 'i-rejet']]],
     ['Solde virtuel', [['bo41', 'i-finance'], ['bo43', 'i-balance']]],
     ['Conformité', [['bo1', 'i-alerte', 'Alertes conformité'], ['bo23', 'i-reglages']]],
     ['Réseau', [['bo33', 'i-agence'], ['bo27', 'i-hors-ligne'], ['bo29', 'i-message']]],
@@ -4396,6 +4990,7 @@ const PROFILS = [
   { cle: 'finance', espace: 'finance', agent: 'Fatoumata Camara|Responsable financier · Siège', menu: [
     ['Accueil', [['bo53', 'i-sommaire']]],
     ['Journée', [['bo8', 'i-journee'], ['bo9', 'i-balance']]],
+    ['Paiements en ligne', [['bo63', 'i-mobile']]],
     ['Solde virtuel', [['bo41', 'i-finance'], ['bo30', 'i-document'], ['bo42', 'i-caisse'], ['bo43', 'i-balance']]],
     ['Comptabilité', [['bo11', 'i-synchro'], ['bo13', 'i-graphique']]],
     ['Contrôle', [['bo6', 'i-valider'], ['bo44', 'i-taux']]],
@@ -4412,7 +5007,7 @@ const PROFILS = [
     ['Accueil', [['bo54', 'i-sommaire']]],
     ['Accès', [['bo14', 'i-utilisateurs']]],
     ['Réseau', [['bo33', 'i-agence'], ['bo45', 'i-carte'], ['bo27', 'i-hors-ligne']]],
-    ['Paramétrage', [['bo44', 'i-taux'], ['bo31', 'i-horloge'], ['bo50', 'i-valider'], ['bo46', 'i-reglages']]],
+    ['Paramétrage', [['bo44', 'i-taux'], ['bo31', 'i-horloge'], ['bo50', 'i-valider'], ['bo64', 'i-mobile'], ['bo46', 'i-reglages']]],
     ['Sécurité', [['bo49', 'i-conformite'], ['bo47', 'i-alerte'], ['bo48', 'i-synchro'], ['bo18', 'i-document']]],
     ['Comptabilité', [['bo11', 'i-synchro']]],
   ] },
@@ -4502,6 +5097,8 @@ const GRILLE = [
   ['Mouvements comptables et Odoo', 'aucun', 'aucun', 'complet bo11', 'complet', 'agrege', 'aucun'],
   ['Historique des taux', 'complet', 'complet', 'complet bo12', 'complet', 'complet', 'aucun'],
   ['Journal des actions des utilisateurs', 'etat', 'aucun', 'aucun', 'complet bo18', 'aucun', 'aucun'],
+  // 28/10 (spec/BO-clients-en-ligne.md, déduit) : demandes d'aide de l'application client.
+  ['Demande d\'aide (application client)', 'complet', 'complet bo60', 'aucun', 'complet', 'agrege', 'aucun'],
 ];
 
 /*
@@ -4541,6 +5138,12 @@ const CLES = {
   journal: 'recherche',      // BO18 : recherche · utilisateur (actions d'un utilisateur, atelier 5)
   acces: 'aucune',           // BO38 : suspendre · reactiver · desactiver
   profil: 'conformite',      // profil courant (BO33, BO34 : administration · operations)
+  aide: 'traiter',           // BO60 (28/10) : traiter · miennes · closes
+  'aide-cat': 'retrait',     // BO61 : suite selon la catégorie · retrait · question · annulation · autre · finance · close
+  'aide-signale': 'non',     // BO61 : débit signalé à la Finance · non · oui
+  paiements: 'debits',       // BO63 (28/10) : debits · confirmations · remboursements
+  'remb-source': 'agence',   // BO25 (28/10) : agence · application (annulation demandée dans l'application, BO62)
+  'compte-type': 'inscription', // BO58 (28/10) : inscription · rattachement · piece · numero, posée par rendreCompteClient()
 };
 
 const HORODATAGE = '01/10/2026 à 10:42';
@@ -4707,6 +5310,11 @@ const BADGES = {
   bo26: () => (DEMANDES.find((x) => x.id === 'relance-6d40').etat === 'attente' && !TRAITES.has('op:SFC-6D40-5528') ? 1 : 0) + (TRAITES.has('op:SFC-6D41-0017') ? 0 : 1),
   bo41: () => APPROS.filter((x) => x.etat === 'attente').length,
   bo42: () => RETRAITS.filter((x) => x.etat === 'attente').length,
+  bo60: () => DEMANDES_AIDE.filter((d) => d.etat === 'nouvelle').length,
+  bo57: () => COMPTES_A_VERIFIER.filter((c) => !c.decision).length,
+  bo62: () => ANNULATIONS_EN_LIGNE.filter((a) => !a.decision).length,
+  bo59: () => DEMANDES_PLAFOND.filter((x) => x.etat === 'attente').length,
+  bo63: () => aRegulariser(),
 };
 function compteur(ecran) {
   if (BADGES[ecran.id]) return BADGES[ecran.id]();
@@ -5101,7 +5709,7 @@ function ajouterMembre() {
 
 // Sélection courante : posée par data-choisir="clé:valeur;clé:valeur" sur la ligne ou le lien cliqué.
 const SEL = { match: 'bah', fract: 'soumah', remb: '7c88', operation: 'SFC-9A03-5518', demande: 'activation-kankan', ecart: '0', client: 'f-soumah',
-  utilisateur: 'A. Diallo|Caissier|Kaloum|Activé|01/10 · 07:58', compte: 'a-diallo', caisse: 'kaloum:2',
+  utilisateur: 'A. Diallo|Caissier|Kaloum|Activé|01/10 · 07:58', compte: 'a-diallo', caisse: 'kaloum:2', aide: 'balde-retrait', compteClient: 'kante-rattachement',
   tiroir: '' }; // tiroir : panneau à ouvrir à l'arrivée, consommé par afficher()
 // Écrans dont la liste d'origine varie (data-origine-variable) : la liste d'où l'on vient.
 const origines = {};
@@ -5290,7 +5898,49 @@ const DOSSIERS_REMBOURSEMENT = {
 
 // Opération passée aux Opérations par la conformité (suite-ops) : son dossier se construit depuis
 // OPERATIONS. Téléphone : celui du client connu, sinon « — ». Aucune option présélectionnée.
+/* BO62 (28/10) : annulations demandées dans l'application client (S4). Envois et clients inventés,
+   sauf BANGOURA Hawa (reprise de BO60). La décision se prend dans BO25, variante « application ». */
+const ANNULATIONS_EN_LIGNE = [
+  { ref: 'SFC-9A24-1156', client: 'BANGOURA Hawa', tel: '+224 628 77 41 05', benef: 'BANGOURA Ibrahima', dest: 'Kindia · Guinée', montant: '2 500 000 GNF', frais: '25 000 GNF', total: '2 525 000 GNF',
+    paye: 'Wave', payeLe: '30/09 à 17:48', motif: 'Erreur sur le montant', demandee: '01/10 · 10:02' },
+  { ref: 'SFC-9A19-4083', client: 'TOLNO Christine', tel: '+224 622 05 61 39', benef: 'TOLNO Paul', dest: 'Nzérékoré · Guinée', montant: '400 000 GNF', frais: '5 000 GNF', total: '405 000 GNF',
+    paye: 'Orange Money', payeLe: '30/09 à 11:20', motif: 'Je n\'ai plus besoin d\'envoyer', demandee: '01/10 · 09:15' },
+  { ref: 'SFC-9A22-7710', client: 'SAMOURA Fodé', tel: '+224 664 70 28 13', benef: 'SAMOURA Aïcha', dest: 'Dakar · Sénégal', montant: '1 800 000 GNF', frais: '18 000 GNF', total: '1 818 000 GNF',
+    paye: 'Carte bancaire', payeLe: '30/09 à 19:05', motif: 'Erreur sur le bénéficiaire', demandee: '30/09 · 19:40' },
+];
+const DECISIONS_ANNULATION = { accepter: 'Annulation acceptée', 'refuser-annulation': 'Annulation refusée' };
+const annulationEnLigne = (ref) => ANNULATIONS_EN_LIGNE.find((a) => a.ref === ref);
+const sur = (a) => (a.paye === 'Carte bancaire' ? 'sur la carte qui a payé' : `sur le compte ${a.paye} qui a payé`);
+
+function rendreAnnulations() {
+  const hote = contenu.querySelector('[data-annulations-liste]');
+  if (!hote) return;
+  const attente = ANNULATIONS_EN_LIGNE.filter((a) => !a.decision).sort((x, y) => minutesDepuis(y.demandee) - minutesDepuis(x.demandee));
+  hote.innerHTML = '<tr class="aucune" data-aucune hidden><td colspan="9">Aucune demande ne correspond.</td></tr>'
+    + attente.map((a) => `<tr class="ouvrable" tabindex="0" data-ligne data-cible="bo25" data-choisir="remb:${a.ref}">`
+      + `<td class="insecable">${a.ref}</td><td>${a.client}</td><td>${a.benef}<br><span class="micro secondaire">${a.dest}</span></td>`
+      + `<td class="nombre">${a.montant}</td><td class="nombre">${a.frais}</td><td>${a.paye}</td><td>${a.motif}</td>`
+      + `<td class="insecable">${a.demandee}</td><td class="insecable">${enHeures(minutesDepuis(a.demandee))}</td></tr>`).join('');
+  const decidees = ANNULATIONS_EN_LIGNE.filter((a) => a.decision);
+  contenu.querySelector('[data-annulations-compteurs]').innerHTML = [
+    ['À examiner · retrait suspendu', attente.length, 'attention'], ['Acceptées aujourd\'hui', decidees.filter((a) => a.decision === 'accepter').length, ''], ['Refusées aujourd\'hui', decidees.filter((a) => a.decision !== 'accepter').length, ''],
+  ].map(([libelle, v, ton]) => `<section class="carte compteur${v && ton ? ` ${ton}` : ''}"><span class="secondaire">${libelle}</span><b class="montant">${v}</b></section>`).join('');
+  contenu.querySelector('[data-annulations-decidees-carte]').hidden = !decidees.length;
+  contenu.querySelector('[data-annulations-decidees]').innerHTML = decidees.map((a) => `<tr><td class="insecable">${a.ref}</td><td>${a.client}</td><td>${DECISIONS_ANNULATION[a.decision]}</td><td>01/10 · 10:42</td><td>M. Sow</td></tr>`).join('');
+}
+
 function dossierRemb(cle) {
+  const a = annulationEnLigne(cle);
+  if (a) {
+    return { source: 'application', ref: a.ref, titre: `${a.ref} · ${a.client}`, contexte: `Annulation demandée dans l'application le ${a.demandee.replace(' · ', ' à ')} · retrait suspendu pendant l'examen`, defaut: null, etiquetteQ8: false,
+      infos: [['Expéditeur', a.client], ['Bénéficiaire', a.benef], ['Destination', a.dest], ['Montant', a.montant], ['Frais', a.frais], ['Payé par', `${a.paye} · le ${a.payeLe}`],
+        ['Statut', 'Disponible au retrait · retrait suspendu'], ['Code de retrait', 'Affiché au client · inutilisable pendant l\'examen']],
+      demande: [['Motif choisi par le client', a.motif], ['Confirmée par', 'Code PIN du client'], ['Demandée le', a.demandee.replace(' · ', ' à ')], ['Téléphone du client', a.tel]],
+      restitution: [['À rendre', `${a.total} · montant et frais`], ['Sur', sur(a).replace(/^sur /, '')], ['Bénéficiaire', 'Prévenu par SMS si l\'annulation est acceptée ; son code ne fonctionne plus']],
+      accepter: `${a.total}, montant et frais, rendus ${sur(a)}. Le code de retrait cesse de fonctionner ; le bénéficiaire est prévenu par SMS.`,
+      accepte: `${a.total} à rendre ${sur(a)} · statut Annulée · le client et le bénéficiaire sont prévenus.`,
+      telephone: a.tel, sms: '—', annuler: '', rembourser: '', annule: '', rembourse: '' };
+  }
   if (DOSSIERS_REMBOURSEMENT[cle]) return DOSSIERS_REMBOURSEMENT[cle];
   const o = OPERATIONS[cle];
   if (!o) return DOSSIERS_REMBOURSEMENT['7c88'];
@@ -5316,6 +5966,12 @@ function rendreRemboursement() {
   q('rembourser').textContent = d.rembourser;
   q('annule').textContent = d.annule;
   q('rembourse').textContent = d.rembourse;
+  // Variante « demande du client » (BO62, 28/10).
+  etats['remb-source'] = d.source || 'agence';
+  q('demande').innerHTML = d.demande ? infosHtml(d.demande) : '';
+  q('restitution').innerHTML = d.restitution ? infosHtml(d.restitution) : '';
+  q('accepter').textContent = d.accepter || '';
+  q('accepte').textContent = d.accepte || '';
   // Défaut de la décision 5 : « Annuler » présélectionné pour l'envoi décliné (Q8) seulement.
   q('q8').hidden = !d.etiquetteQ8;
   for (const b of contenu.querySelectorAll('[data-choix="decision"] [data-valeur]')) b.classList.toggle('actif', b.dataset.valeur === d.defaut);
@@ -5366,6 +6022,24 @@ function rendrePerteAcces() {
 /* ---------- BO36 · détail d'une opération ---------- */
 // j : [quand, quoi, qui, réservé] — réservé = true : entrée visible de la conformité et de l'audit seulement.
 const OPERATIONS = {
+  // Envois payés dans l'application client (28/10, spec/BO-clients-en-ligne.md) : canal, pas de
+  // caissier. SFC-9A21-3307 et SFC-9A18-0412 viennent du B2C ; la correction de nom et les trois
+  // annulations demandées (BO62) sont inventées.
+  'SFC-9A21-3307': { canal: 'Application · Orange Money', date: '30/09 · 14:32', agence: 'Application client', caissier: '—', exp: 'BALDÉ Fatoumata', benef: 'CAMARA Aïssata', dest: 'Kankan · Guinée', mode: 'Espèces', montant: '1 000 000 GNF', frais: '10 000 GNF',
+    statut: ['attente', 'En attente de retrait'], blocage: null, echeance: '30/10',
+    j: [['30/09 · 14:22', 'Envoi préparé dans l\'application', 'BALDÉ Fatoumata · application'], ['30/09 · 14:32', 'Paiement confirmé par Orange Money', 'Système'], ['30/09 · 14:32', 'Code de retrait affiché au client', 'Système'],
+      ['30/09 · 15:05', 'Nom du bénéficiaire corrigé par le client : CAMARA Aïsata → CAMARA Aïssata · confirmé par son code PIN', 'BALDÉ Fatoumata · application']] },
+  'SFC-9A18-0412': { canal: 'Application · Orange Money', date: '29/09 · 16:05', agence: 'Application client', caissier: '—', exp: 'BALDÉ Fatoumata', benef: 'DIALLO Kadiatou', dest: 'Guinée', mode: 'Espèces', montant: '1 500 000 GNF', frais: '15 000 GNF',
+    statut: ['attente', 'En vérification'], blocage: { type: 'alerte', motif: 'Origine des fonds à justifier · justificatif demandé au client' }, echeance: '29/10',
+    j: [['29/09 · 16:05', 'Paiement confirmé par Orange Money', 'Système'], ['29/09 · 16:05', 'Alerte · origine des fonds à justifier', 'Système', true],
+      ['29/09 · 16:40', 'Justificatif demandé au client, dans l\'application', 'A. Kourouma · Conformité', true], ['29/09 · 16:40', 'Statut affiché au client : En vérification', 'Système']] },
+  ...Object.fromEntries([
+    ['SFC-9A24-1156', 'Wave', '30/09 · 17:48', 'BANGOURA Hawa', 'BANGOURA Ibrahima', 'Kindia · Guinée', '2 500 000 GNF', '25 000 GNF', 'Erreur sur le montant', '01/10 · 10:02'],
+    ['SFC-9A19-4083', 'Orange Money', '30/09 · 11:20', 'TOLNO Christine', 'TOLNO Paul', 'Nzérékoré · Guinée', '400 000 GNF', '5 000 GNF', 'Je n\'ai plus besoin d\'envoyer', '01/10 · 09:15'],
+    ['SFC-9A22-7710', 'Carte bancaire', '30/09 · 19:05', 'SAMOURA Fodé', 'SAMOURA Aïcha', 'Dakar · Sénégal', '1 800 000 GNF', '18 000 GNF', 'Erreur sur le bénéficiaire', '30/09 · 19:40'],
+  ].map(([ref, paye, date, exp, benef, dest, montant, frais, motif, demandee]) => [ref, { canal: `Application · ${paye}`, date, agence: 'Application client', caissier: '—', exp, benef, dest, mode: 'Espèces', montant, frais,
+    statut: ['attention', 'Annulation demandée'], blocage: null, echeance: '—',
+    j: [[date, `Paiement confirmé · ${paye}`, 'Système'], [demandee, `Annulation demandée par le client · « ${motif} » · confirmée par son code PIN`, `${exp} · application`], [demandee, 'Retrait suspendu pendant l\'examen', 'Système']] }])),
   'SFC-9A03-5518': { date: '01/10 · 10:34', agence: 'Kaloum', caissier: 'M. Camara · poste KAL-P3', exp: 'BAH Thierno Ousmane', benef: '—', dest: 'Côte d\'Ivoire', mode: '—', montant: '45 000 000 GNF', frais: '—',
     statut: ['attente', 'En vérification'], blocage: { type: 'alerte', motif: 'Match PPE · score 91 · liste PEP v2026.09.30', match: 'bah' }, echeance: '31/10',
     j: [['01/10 · 10:34', 'Envoi saisi', 'M. Camara · Caissier · Kaloum · poste KAL-P3'], ['01/10 · 10:36', 'Alerte critique · match PPE · score 91 · liste PEP v2026.09.30', 'Système', true], ['01/10 · 10:36', 'Statut guichet : En vérification', 'Système']] },
@@ -5425,7 +6099,7 @@ function rendreOperation() {
   retitrer(`Opération ${ref}`, `${o.agence} → ${o.dest} · ${o.date}`, `BO36 · ${ref}`);
   const cleExp = complet && cleClientDe(o.exp);
   const exp = cleExp ? `${o.exp} · <a class="sommaire-lien" href="#bo40" data-choisir="client:${cleExp}">fiche client</a>` : o.exp;
-  hote.innerHTML = infosHtml([['Référence', ref], ['Date', o.date], ['Agence d\'envoi', o.agence], ['Caissier', o.caissier], ['Expéditeur', exp], ['Bénéficiaire', o.benef],
+  hote.innerHTML = infosHtml([['Référence', ref], ['Date', o.date], ['Canal', o.canal || 'Agence'], ['Agence d\'envoi', o.agence], ['Caissier', o.caissier], ['Expéditeur', exp], ['Bénéficiaire', o.benef],
     ['Destination', o.dest], ['Mode de réception', o.mode], ['Montant', o.montant], ['Frais', o.frais]]);
   // Motif : complet pour la conformité, les Opérations et l'audit ; jamais pour la Finance ni
   // l'administrateur (grille de visibilité revue le 01/10).
@@ -5435,6 +6109,15 @@ function rendreOperation() {
   const lignes = o.j.filter((l) => !l[3] || complet);
   contenu.querySelector('[data-op="journal"]').innerHTML = journalHtml(lignes);
   contenu.querySelector('[data-op="journal-note"]').textContent = lignes.length < o.j.length ? 'Les étapes de la vérification conformité ne sont visibles que de la conformité, des Opérations et de l\'audit.' : '';
+  contenu.querySelector('[data-op="reprise-objet"]').textContent = `${ref} · ${o.agence} · ${o.exp}`;
+  // Envoi payé dans l'application (28/10) : pas de chef d'agence à remplacer ; l'annulation vient du client (BO62).
+  if (o.canal) {
+    const a = annulationEnLigne(ref);
+    contenu.querySelector('[data-op="actions"]').innerHTML = o.clos ? `<p class="secondaire">Aucune action : l'opération est ${o.statut[1].toLowerCase()}.</p>`
+      : a && !a.decision && p === 'operations' ? `<p class="secondaire" style="margin-bottom:10px">Annulation demandée par le client le ${a.demandee.replace(' · ', ' à ')}.</p><a class="bouton primaire" href="#bo25" data-choisir="remb:${ref}">Examiner la demande</a>`
+        : '<p class="secondaire">Envoi payé dans l\'application : c\'est le client qui demande une annulation, depuis le suivi de son envoi ; elle arrive dans les annulations demandées.</p>';
+    return;
+  }
   let suite = '<p class="secondaire">Lecture seule.</p>';
   if (o.clos) suite = `<p class="secondaire">Aucune action : l'opération est ${o.statut[1].toLowerCase()}.</p>`;
   else if (p === 'operations' && o.blocage && !surveillance) {
@@ -5471,6 +6154,8 @@ const FICHES_KYC = {
   diallo: { csp: 'Salarié du secteur privé', tranche: 1, jour: 1850000, mois: 1850000 },
   keita: { csp: 'Étudiant', tranche: 0, jour: 900000, mois: 900000 },
   traore: { csp: 'Commerçant', tranche: 1, jour: 480000, mois: 480000 },
+  // Cliente de l'application (28/10) : tranche du profil B2C, envois en ligne du 29 et du 30/09.
+  'balde-f': { csp: 'Employé', tranche: 1, jour: 0, mois: 2500000 },
   'f-soumah': { csp: 'Salarié du secteur privé', tranche: 0, jour: 4300000, mois: 4300000 },
   'f-cisse': { csp: 'Commerçant', tranche: 1, jour: 400000, mois: 400000 },
   toure: { csp: 'Commerçant', tranche: 3, jour: 0, mois: 0 },
@@ -5530,6 +6215,30 @@ function rendreFicheClient() {
     : '<tr class="aucune"><td colspan="4">Aucun justificatif rattaché.</td></tr>';
   const alertes = alertesClient(cle);
   q('alertes').innerHTML = alertes.length ? journalHtml(alertes) : '<li><b>—</b><span class="secondaire">Aucune alerte</span><em></em></li>';
+  // Compte en ligne et demandes faites dans l'application (28/10).
+  const enLigne = COMPTES_EN_LIGNE[cle];
+  const peut = profil.cle === 'operations' || profil.cle === 'conformite';
+  q('compte-ligne').innerHTML = !enLigne ? infosHtml([['Compte', 'Aucun compte en ligne']]) + '<p class="pied">Client servi en agence seulement.</p>'
+    : infosHtml([['Statut', enLigne.etat === 'actif' ? pastille('valide', 'Actif') : pastille('blocage', 'Suspendu')], ['Inscrit le', enLigne.inscrit], ['Rattaché à la fiche agence', enLigne.rattache],
+      ['Appareil', enLigne.appareil], ['Empreinte ou visage', enLigne.biometrie], ['Code PIN', enLigne.pin]])
+      + (enLigne.journal.length ? `<ul class="journal">${journalHtml(enLigne.journal)}</ul>` : '')
+      + (peut ? `<div class="actions"><button class="bouton secondaire" type="button" data-ouvrir-tiroir="suspension-compte">${enLigne.etat === 'actif' ? 'Suspendre le compte' : 'Réactiver le compte'}</button>`
+        + (enLigne.etat === 'actif' && !enLigne.appareil.startsWith('Aucun') ? '<button class="bouton discret" type="button" data-compte-deconnecter>Déconnecter l\'appareil</button>' : '') + '</div>' : '');
+  if (enLigne) {
+    const actif = enLigne.etat === 'actif';
+    q('suspension-titre').textContent = actif ? 'Suspendre le compte en ligne' : 'Réactiver le compte en ligne';
+    q('suspension-client').textContent = `${c.nom} · ${c.tel}`;
+    q('suspension-effet').querySelector('span').textContent = actif
+      ? '« Votre compte est suspendu » : il ne peut plus envoyer depuis l\'application. Le motif n\'est pas dit. Le sort de ses envois en cours n\'est pas écrit.'
+      : 'Le client retrouve l\'accès à l\'application ; il est prévenu par SMS.';
+    q('suspension-bouton').textContent = actif ? 'Suspendre le compte' : 'Réactiver le compte';
+  }
+  const demandes = [
+    ...DEMANDES_AIDE.filter((d) => nomDemandeur(d) === c.nom).map((d) => [`<a class="sommaire-lien" href="#bo61" data-choisir="aide:${d.id}">Demande d'aide</a>`, `${CATEGORIES_AIDE[d.cat]}${d.envoi ? ` · ${d.envoi}` : ''}`, d.recue, pastilleAide(d), 'bo61']),
+    ...ANNULATIONS_EN_LIGNE.filter((a) => a.client === c.nom).map((a) => [`<a class="sommaire-lien" href="#bo25" data-choisir="remb:${a.ref}">Annulation</a>`, a.ref, a.demandee, a.decision ? DECISIONS_ANNULATION[a.decision] : pastille('attention', 'À examiner'), 'bo25']),
+  ].map(([lien, objet, recue, etat, ecran]) => [accessible(ecran) ? lien : lien.replace(/<[^>]+>/g, ''), objet, recue, etat]);
+  q('demandes-carte').hidden = !enLigne && !demandes.length;
+  q('demandes').innerHTML = demandes.length ? demandes.map((l) => `<tr>${l.map((x) => `<td>${x}</td>`).join('')}</tr>`).join('') : '<tr class="aucune"><td colspan="4">Aucune demande faite dans l\'application.</td></tr>';
   // Blocage : l'état, et le renvoi à l'écran de blocage (BO5) pour qui peut l'ouvrir.
   const b = CLIENTS_BLOQUES[cle];
   q('blocage').innerHTML = b
@@ -5626,6 +6335,12 @@ function rendreDemande() {
 // (BO3), déclaration CENTIF (BO22). Effet immédiat (déduit) : la liste maker-checker ne cite
 // que le déblocage. Téléphone et pièce de SOUMAH, CISSÉ Kadiatou et TOURÉ Sékou : démonstration.
 const CLIENT_BO22 = { nom: 'TOURÉ Sékou', tel: '+225 05 61 22 48', piece: 'Passeport · CI-1187 405', agence: 'Adjamé' };
+// Cliente de l'application (profil de démonstration du B2C), aussi cliente de l'agence Kaloum (28/10).
+const CLIENT_BALDE_F = { nom: 'BALDÉ Fatoumata', tel: '+224 622 14 33 07', piece: 'Passeport · GN-P 0127 5590', agence: 'Kaloum' };
+// Comptes de l'application client (28/10, carte « Compte en ligne » de BO40). Démonstration (déduit).
+const COMPTES_EN_LIGNE = {
+  'balde-f': { etat: 'actif', inscrit: '12/09/2026', rattache: 'Oui · fiche agence Kaloum', appareil: 'Android · dernière connexion le 01/10 à 10:04', biometrie: 'Activée', pin: 'Actif', journal: [] },
+};
 const CLIENT_BO4 = { nom: 'BARRY Ibrahima', tel: '+224 625 38 90 14', piece: 'CNI · GN-2267840', agence: 'Matam' };
 function clientDuMatch(d) {
   const lire = (libelle) => d.client.find(([l]) => l === libelle)?.[1] || '—';
@@ -5638,6 +6353,7 @@ const clientsConnus = () => [
   ...Object.entries(DOSSIERS_FRACTIONNEMENT).map(([cle, d]) => [`f-${cle}`, d.client]),
   ['toure', CLIENT_BO22],
   ['barry', CLIENT_BO4],
+  ['balde-f', CLIENT_BALDE_F],
 ];
 const MOTIFS_MATCH = { sanction: 'Match sanctions confirmé', ppe: 'Match PPE confirmé', pays: 'Transfert refusé · pays à risque' };
 // Client de l'écran de décision courant : [clé, identité, motif du blocage, alerte d'origine, nature].
@@ -6208,6 +6924,7 @@ function rendreParametres() {
     ['Seuil minimum du solde virtuel', 'Finance', `${montantDe(SEUILS_MINIMUM.GNF)} · ${montantDe(SEUILS_MINIMUM.XOF, 'XOF')}`, '—', 'bo41'],
     ['Zones', 'Administrateur', `${ZONES_NOMS().length} zones`, '—', 'bo45'],
     ['Politique de sécurité', 'Administrateur', 'À définir', '—', 'bo49'],
+    ['Réglages de l\'application client', 'Administrateur', `${REGLAGES_APP.flatMap(([, l]) => l).length} réglages · montants, paiement, réception, taxes, service après-vente`, HISTORIQUE_APP[0]?.[0] || '—', 'bo64'],
   ];
   hote.innerHTML = lignes.map(([nom, resp, valeur, quand, id]) => `<tr><td>${nom}</td><td>${resp}</td><td>${valeur}</td><td>${quand}</td>`
     + `<td class="nombre">${accessible(id) ? `<a class="sommaire-lien" href="#${id}">${ecranPar(id).dataset.code} ›</a>` : ecranPar(id).dataset.code}</td></tr>`).join('');
@@ -6874,6 +7591,9 @@ const TABLEAUX = {
     return {
       afaire: [
         { n: alertes.length, libelle: 'Alertes ouvertes', detail: `${prio('critique')} critiques · ${prio('elevee')} élevées · ${prio('moyenne')} moyennes · ${prio('faible')} faibles`, ton: prio('critique') ? 'blocage' : '', min: anc(alertes), cible: 'bo1' },
+        { n: COMPTES_A_VERIFIER.filter((c) => !c.decision).length, libelle: 'Comptes à vérifier', detail: 'application client · inscriptions, rattachements, pièces, numéros',
+          ton: COMPTES_A_VERIFIER.some((c) => !c.decision && minutesDepuis(c.recue) > 1440) ? 'attention' : '', min: plusAncien(COMPTES_A_VERIFIER.filter((c) => !c.decision).map((c) => minutesDepuis(c.recue))), cible: 'bo57' },
+        { n: DEMANDES_PLAFOND.filter((x) => x.etat === 'attente').length, libelle: 'Demandes de plafond', detail: 'application client · relèvement du plafond interne', min: plusAncien(DEMANDES_PLAFOND.filter((x) => x.etat === 'attente').map((x) => minutesDepuis(x.recue))), cible: 'bo59' },
         { n: matchs.length, libelle: 'Correspondances sanctions et PEP en attente', detail: retard ? `dont ${retard} hors délai` : 'dans les délais', ton: retard ? 'attention' : '', min: anc(matchs), cible: 'bo1' },
         { n: centif.length, libelle: 'Déclarations CENTIF à valider', detail: 'opérations de 150 000 000 GNF ou plus', min: anc(centif), cible: 'bo4' },
       ],
@@ -6893,9 +7613,13 @@ const TABLEAUX = {
     const proches = verif.filter((r) => /sous/.test(OPERATIONS[r].echeance)).length;
     const demandes = demandesDe('operations', 'moi').filter((d) => d.auteur !== 'operations');
     const enLigne = Object.values(AGENCES).filter((a) => a.genre === 'agence' && a.connexion[0] !== 'activation');
+    const nouvellesAide = DEMANDES_AIDE.filter((d) => d.etat === 'nouvelle');
+    const horsHoraires = nouvellesAide.filter((d) => d.horsHoraires).length;
     return {
       afaire: [
         { n: verif.length, libelle: 'Opérations bloquées', detail: proches ? `dont ${proches} à l'échéance des 30 jours sous 7 jours` : 'en vérification', ton: proches ? 'attention' : '', min: anc(verif), cible: 'bo24' },
+        { n: nouvellesAide.length, libelle: 'Demandes d\'aide', detail: `nouvelles · application client${horsHoraires ? ` · dont ${horsHoraires} reçue hors horaires` : ''}`, min: plusAncien(nouvellesAide.map((d) => minutesDepuis(d.recue))), cible: 'bo60' },
+        { n: ANNULATIONS_EN_LIGNE.filter((a) => !a.decision).length, libelle: 'Annulations demandées', detail: 'application client · retrait suspendu pendant l\'examen', min: plusAncien(ANNULATIONS_EN_LIGNE.filter((a) => !a.decision).map((a) => minutesDepuis(a.demandee))), cible: 'bo62' },
         { n: aValider('operations'), libelle: 'Secondes validations en attente', detail: 'à valider par les Opérations', min: plusAncien(demandes.map((d) => minutesDuree(d.depuis))), cible: 'bo6' },
         { n: HORS_LIGNE.length, libelle: 'Agences hors ligne', detail: HORS_LIGNE.map((h) => `${AGENCES[h.cle].nom} · ${enHeures(h.depuis)} sur 2 h`).join(' · ') || 'toutes en ligne', ton: tonHorsLigne(HORS_LIGNE), min: plusAncien(HORS_LIGNE.map((h) => h.depuis)), cible: 'bo27' },
         { n: echoues.length, libelle: 'Versements échoués et rejets partenaires', detail: 'relancer ou annuler', min: anc(echoues), cible: 'bo26' },
@@ -6921,6 +7645,7 @@ const TABLEAUX = {
         ...(raf ? [{ n: aPublier.length, libelle: 'Taux du jour à publier', detail: aPublier.length ? `${aPublier.join(' et ')} au taux d'hier` : 'tous publiés', ton: aPublier.length ? 'attention' : '', min: aPublier.length ? minutesDepuis('01/10 · 07:00') : 0, cible: 'bo12' }] : []),
         { n: appros.length, libelle: 'Demandes d\'approvisionnement en solde virtuel', detail: appros.some((x) => /Rupture/.test(x.motif)) ? 'dont une agence en rupture' : 'agences et distributeurs', ton: appros.some((x) => /Rupture/.test(x.motif)) ? 'attention' : '', min: plusAncien(appros.map((x) => minutesDepuis(x.recue))), cible: 'bo41' },
         { n: ecarts.length, libelle: 'Écarts de caisse à régulariser', detail: ecarts.map((e) => `${e.agence} · ${e.ecart}`).join(' · ') || 'aucun', min: plusAncien(ecarts.map(() => minutesDuree(DEMANDES.find((d) => d.id === 'ecart-kaloum')?.depuis))), cible: 'bo9' },
+        { n: aRegulariser(), libelle: 'Paiements en ligne à régulariser', detail: 'débits sans envoi et remboursements à émettre', ton: aRegulariser() ? 'attention' : '', min: plusAncien([...PAIEMENTS_EN_LIGNE.debits, ...remboursementsEnLigne()].filter((x) => x.etat === 'a-traiter').map((x) => minutesDepuis(x.quand))), cible: 'bo63' },
         { n: rejetsOdoo(), libelle: 'Rejets d\'export Odoo', detail: 'écritures de distributeurs', min: rejetsOdoo() ? minutesDepuis('01/10 · 10:30') : 0, cible: 'bo11' },
       ],
       indicateurs: [
@@ -7122,7 +7847,16 @@ function apresDecision(ecranId, issue) {
       TRAITES.add('op:KIN-P2-0043');
     }
   }
-  if (ecranId === 'bo25') {
+  const annulationLigne = ecranId === 'bo25' && annulationEnLigne(SEL.remb);
+  if (annulationLigne) {
+    annulationLigne.decision = issue;
+    const op = OPERATIONS[annulationLigne.ref];
+    const accepte = issue === 'accepter';
+    op.statut = accepte ? ['', 'Annulée'] : ['attente', 'En attente de retrait'];
+    op.clos = accepte;
+    op.j.push(['01/10 · 10:42', accepte ? 'Annulation acceptée · montant et frais à rendre sur le moyen qui a payé' : 'Annulation refusée · retrait de nouveau possible', 'M. Sow · Opérations']);
+  }
+  if (ecranId === 'bo25' && !annulationLigne) {
     const d = dossierRemb(SEL.remb);
     const o = OPERATIONS[d.ref];
     if (o) {
@@ -7177,6 +7911,12 @@ function apresDecision(ecranId, issue) {
     if (genre === 'seuil' && ok) SEUILS_MODIFIES[cle] = valeur;
     if (['seuil', 'pays'].includes(genre)) HISTORIQUE_SEUILS.unshift(['01/10/2026 · 10:42', `${d.pour}${genre === 'seuil' ? ` · ${valeur}` : ''} · ${ok ? 'validé' : 'refusé'}`, `${d.demandeur.split(' · ')[0]} · ${ok ? 'validé' : 'refusé'} par A. Kourouma`]);
     if (genre === 'seuils-client' && ok && FICHES_KYC[cle]) FICHES_KYC[cle].seuils = valeur;
+    // Demande de plafond de l'application client (BO59, 28/10).
+    if (genre === 'plafond-ligne') {
+      const x = DEMANDES_PLAFOND.find((y) => y.id === cle);
+      x.etat = ok ? 'releve' : 'refusee';
+      x.journal.push(['01/10 · 10:42', ok ? 'Relèvement validé par les Opérations' : 'Relèvement refusé par les Opérations', 'M. Sow · Opérations']);
+    }
     if (genre === 'role' && ok && !ROLES.includes(cle)) ROLES.push(cle);
     if (genre === 'frais') {
       const [, type, partenaire, corridor, nouveau] = d.effet;
@@ -7225,6 +7965,468 @@ function retitrer(titre, contexte, onglet) {
   for (const e of etiquettes) h1.append(' ', e);
   tete.querySelector('p').textContent = contexte;
   document.title = `${onglet} — SAFICO back-office`;
+}
+
+/* ---------- BO60 · BO61 · Demandes d'aide (service après-vente, 28/10) ----------
+  spec/BO-clients-en-ligne.md, proposition avant décision du client. Les demandes viennent du
+  bouton « Demander de l'aide » de l'application client (H3, atelier 8). BALDÉ Fatoumata et ses
+  deux envois viennent du B2C ; les autres clients, les messages et SFC-9A23-0871 sont inventés.
+  Une action (prise en charge, contact, clôture) modifie DEMANDES_AIDE pour la séance. */
+const AGENT_SAV = 'M. Sow';
+const HEURE_SAV = '01/10 · 10:42';
+const CATEGORIES_AIDE = { retrait: 'Assistance au retrait', question: 'Une question', annulation: 'Annulation', autre: 'Autre' };
+const ETATS_AIDE = { nouvelle: ['Nouvelle', 'attente'], prise: ['Prise en charge', ''], 'sans-reponse': ['Rappel sans réponse', 'attention'], close: ['Close', 'valide'] };
+const ENVOIS_EN_LIGNE = {
+  'SFC-9A21-3307': { statut: ['Disponible au retrait', 'attente'], montant: '1 000 000 GNF', frais: '10 000 GNF', benef: 'CAMARA Aïssata · Kankan', paiement: 'Orange Money · 30/09 à 14:32', code: 'Affiché au client dans l\'application' },
+  'SFC-9A18-0412': { statut: ['En vérification', 'attente'], verif: 'Justificatif d\'origine des fonds demandé par la conformité', montant: '1 500 000 GNF', frais: '15 000 GNF', benef: 'DIALLO Kadiatou', paiement: 'Orange Money · 29/09 à 16:05', code: 'Pas encore affiché : l\'envoi est en vérification' },
+  'SFC-9A23-0871': { statut: ['Non parti · paiement non confirmé', 'blocage'], montant: '600 000 GNF', frais: '6 000 GNF', benef: 'CONTÉ Mariama · Labé', paiement: 'Orange Money · abandonné au bout de 10 minutes, 01/10 à 10:14', code: 'Aucun : l\'envoi n\'est pas parti' },
+};
+const DEMANDES_AIDE = [
+  { id: 'balde-retrait', recue: '01/10 · 10:05', client: ['BALDÉ', 'Fatoumata'], tel: '+224 622 14 33 07', compte: 'Actif · rattaché à sa fiche agence (Kaloum)', kyc: 'Vérifiée', cat: 'retrait', envoi: 'SFC-9A21-3307', ecran: 'Détail d\'un envoi (S2)',
+    message: 'Ma sœur est à Kankan, le point de retrait n\'a pas les espèces.', etat: 'nouvelle', par: '', contacts: [] },
+  { id: 'balde-verif', recue: '30/09 · 18:12', horsHoraires: true, client: ['BALDÉ', 'Fatoumata'], tel: '+224 622 14 33 07', compte: 'Actif · rattaché à sa fiche agence (Kaloum)', kyc: 'Vérifiée', cat: 'question', envoi: 'SFC-9A18-0412', ecran: 'Envoi en vérification (S3)',
+    message: 'Quel document dois-je envoyer ? Je n\'ai pas de bulletin de salaire.', etat: 'nouvelle', par: '', contacts: [] },
+  { id: 'conte-debit', recue: '01/10 · 10:31', client: ['CONTÉ', 'Aboubacar'], tel: '+224 655 30 12 48', compte: 'Actif · inscrit le 03/09', kyc: 'Vérifiée', cat: 'question', envoi: 'SFC-9A23-0871', ecran: 'Paiement non confirmé (E5d)', finance: true,
+    message: 'Mon compte Orange Money a été débité mais l\'envoi n\'est pas parti.', etat: 'nouvelle', par: '', contacts: [] },
+  { id: 'bangoura-annulation', recue: '01/10 · 09:58', client: ['BANGOURA', 'Hawa'], tel: '+224 628 77 41 05', compte: 'Actif · inscrite le 21/09', kyc: 'Vérifiée', cat: 'annulation', envoi: '', ecran: 'Aide et contact (H1)',
+    message: 'Je me suis trompée de montant sur mon envoi d\'hier.', etat: 'nouvelle', par: '', contacts: [] },
+  { id: 'fofana-suspendu', recue: '01/10 · 09:20', client: ['FOFANA', 'Ibrahima'], tel: '+224 621 08 93 66', compte: 'Suspendu depuis le 30/09', kyc: 'Vérifiée', cat: 'autre', envoi: '', ecran: 'Compte suspendu (Z4)',
+    message: '', etat: 'prise', par: 'A. Kaba', contacts: [['01/10 · 09:24', 'Prise en charge', 'A. Kaba · Opérations']] },
+  { id: 'camara-piece', recue: '01/10 · 08:55', client: ['CAMARA', 'Néné'], tel: '+224 664 52 19 30', compte: 'En vérification', kyc: 'Photos refusées le 30/09', cat: 'question', envoi: '', ecran: 'Pièce refusée (P7)',
+    message: 'Pourquoi ma pièce est refusée ? Elle est encore valide.', etat: 'sans-reponse', par: 'M. Sow',
+    contacts: [['01/10 · 09:02', 'Prise en charge', 'M. Sow · Opérations'], ['01/10 · 09:40', 'WhatsApp · sans réponse — message laissé', 'M. Sow · Opérations']] },
+  { id: 'kouyate-retrait', recue: '01/10 · 08:12', client: ['KOUYATÉ', 'Sékou'], tel: '+224 657 14 60 22', compte: 'Actif · inscrit le 15/09', kyc: 'Vérifiée', cat: 'retrait', envoi: '', ecran: 'Détail d\'un envoi (S2)',
+    message: 'Mon frère n\'a pas reçu le SMS.', etat: 'close', par: 'M. Sow', issue: 'Résolue',
+    contacts: [['01/10 · 08:20', 'Prise en charge', 'M. Sow · Opérations'], ['01/10 · 08:24', 'Téléphone · client joint — le client retrouve le code de retrait dans l\'application et le transmet à son frère.', 'M. Sow · Opérations'], ['01/10 · 08:26', 'Close · résolue', 'M. Sow · Opérations']] },
+];
+const demandeAide = () => DEMANDES_AIDE.find((d) => d.id === SEL.aide) || DEMANDES_AIDE[0];
+const nomDemandeur = (d) => `${d.client[0]} ${d.client[1]}`;
+const vueAide = (d, vue) => (vue === 'closes' ? d.etat === 'close' : d.etat !== 'close' && (vue === 'traiter' || d.par === AGENT_SAV));
+// L'assistance au retrait en tête (un bénéficiaire attend au point de retrait), puis la plus ancienne.
+const trierAide = (a, b) => (b.cat === 'retrait') - (a.cat === 'retrait') || minutesDepuis(b.recue) - minutesDepuis(a.recue);
+const pastilleAide = (d) => { const [libelle, ton] = ETATS_AIDE[d.etat]; return `<span class="statut${ton ? ` ${ton}` : ''}">${libelle}</span>`; };
+const infoAide = (libelle, valeur) => `<div class="info"><span>${libelle}</span><span>${valeur}</span></div>`;
+
+function rendreDemandesAide() {
+  const hote = contenu.querySelector('[data-aide-liste]');
+  if (!hote) return;
+  const vue = etats.aide;
+  for (const nb of contenu.querySelectorAll('[data-aide-nb]')) nb.textContent = DEMANDES_AIDE.filter((d) => vueAide(d, nb.dataset.aideNb)).length;
+  const lignes = DEMANDES_AIDE.filter((d) => vueAide(d, vue))
+    .sort(vue === 'closes' ? (a, b) => minutesDepuis(a.recue) - minutesDepuis(b.recue) : trierAide);
+  hote.innerHTML = '<tr class="aucune" data-aucune hidden><td colspan="8">Aucune demande ne correspond.</td></tr>'
+    + lignes.map((d) => `<tr class="ouvrable" tabindex="0" data-ligne data-categorie="${d.cat}" data-cible="bo61" data-choisir="aide:${d.id}">`
+      + `<td class="insecable">${d.recue}${d.horsHoraires ? '<br><span class="micro secondaire">Reçue hors horaires</span>' : ''}</td>`
+      + `<td>${nomDemandeur(d)}</td><td>${CATEGORIES_AIDE[d.cat]}</td><td class="insecable">${d.envoi || '—'}</td><td>${d.ecran}</td>`
+      + `<td>${d.message ? echapper(d.message) : '<span class="secondaire">—</span>'}</td>`
+      + `<td class="insecable">${pastilleAide(d)}${d.issue ? `<br><span class="micro secondaire">${d.issue}</span>` : ''}</td><td class="insecable">${d.par || '—'}</td></tr>`).join('');
+  const n = (etat) => DEMANDES_AIDE.filter((d) => d.etat === etat).length;
+  contenu.querySelector('[data-aide-compteurs]').innerHTML = [
+    ['Nouvelles', n('nouvelle'), 'attention'], ['Prises en charge', n('prise'), ''], ['Rappels sans réponse', n('sans-reponse'), 'attention'], ['Closes aujourd\'hui', n('close'), ''],
+  ].map(([libelle, v, ton]) => `<section class="carte compteur${v && ton ? ` ${ton}` : ''}"><span class="secondaire">${libelle}</span><b class="montant">${v}</b></section>`).join('');
+}
+
+function rendreDemandeAide() {
+  const q = (k) => contenu.querySelector(`[data-aide="${k}"]`);
+  if (!q('demande')) return;
+  const d = demandeAide();
+  const e = ENVOIS_EN_LIGNE[d.envoi];
+  const close = d.etat === 'close';
+  retitrer(`${nomDemandeur(d)} · ${CATEGORIES_AIDE[d.cat]}`, `Reçue le ${d.recue.replace(' · ', ' à ')}${d.horsHoraires ? ', hors horaires' : ''} · depuis l'écran ${d.ecran}`, `BO61 · ${nomDemandeur(d)}`);
+  q('demande').innerHTML = infoAide('Catégorie', CATEGORIES_AIDE[d.cat])
+    + infoAide('Message', d.message ? `« ${echapper(d.message)} »` : '<span class="secondaire">Aucun message</span>')
+    + infoAide('Reçue', `${d.recue}${d.horsHoraires ? ' · hors horaires' : ''}`) + infoAide('Depuis l\'écran', d.ecran);
+  const cleFiche = cleClientDe(nomDemandeur(d));
+  q('client').innerHTML = infoAide('Nom', d.client[0]) + infoAide('Prénom(s)', d.client[1]) + infoAide('Téléphone', d.tel)
+    + infoAide('Compte en ligne', d.compte) + infoAide('Identité', d.kyc)
+    + (cleFiche ? `<div class="actions"><a class="sommaire-lien" href="#bo40" data-choisir="client:${cleFiche}">Fiche client ›</a></div>` : '');
+  q('envoi-carte').hidden = !e;
+  if (e) {
+    q('envoi').innerHTML = infoAide('Référence', d.envoi) + infoAide('Statut', `<span class="statut ${e.statut[1]}">${e.statut[0]}</span>`)
+      + (e.verif ? infoAide('Motif de la vérification', `${e.verif}<br><span class="micro secondaire">Visible des Opérations, jamais du client</span>`) : '')
+      + infoAide('Montant', e.montant) + infoAide('Frais', e.frais) + infoAide('Bénéficiaire', e.benef) + infoAide('Paiement', e.paiement) + infoAide('Code de retrait', e.code)
+      + (OPERATIONS[d.envoi] ? `<div class="actions"><a class="sommaire-lien" href="#bo36" data-choisir="operation:${d.envoi}">Voir l'opération ›</a></div>` : '');
+  }
+  q('confidentialite').hidden = !e?.verif || close;
+  q('journal').innerHTML = d.contacts.length ? journalHtml(d.contacts) : '<li><b>—</b><span class="secondaire">Aucun contact pour l\'instant</span><em></em></li>';
+  q('suivi').innerHTML = infoAide('État', pastilleAide(d))
+    + infoAide('Pris en charge par', d.par ? `${d.par}${d.par === AGENT_SAV ? ' (vous)' : ''}` : '—') + (d.issue ? infoAide('Issue', d.issue) : '');
+  const moi = d.par === AGENT_SAV;
+  q('actions').innerHTML = close ? '<p class="secondaire">Demande close. Aucune action.</p>'
+    : '<div class="actions empilees">'
+      + (moi ? '' : `<button class="bouton primaire" type="button" data-aide-prendre>${d.par ? 'Reprendre la demande' : 'Prendre en charge'}</button>`)
+      + `<button class="bouton ${moi ? 'primaire' : 'secondaire'}" type="button" data-ouvrir-tiroir="contact">Noter un contact</button>`
+      + '<button class="bouton secondaire" type="button" data-ouvrir-tiroir="cloture">Clore la demande</button></div>';
+  for (const k of ['contact-objet', 'cloture-objet']) q(k).textContent = `${nomDemandeur(d)} · ${d.tel}`;
+  etats['aide-cat'] = close ? 'close' : d.finance ? 'finance' : d.cat;
+  etats['aide-signale'] = d.signale ? 'oui' : 'non';
+}
+
+function noterAide(d, quoi) { d.contacts.push([HEURE_SAV, quoi, `${AGENT_SAV} · Opérations`]); }
+function apresAide(titre, texte) {
+  rendreDemandeAide();
+  menu(ecranCourant);
+  rafraichir();
+  notifier(titre, texte);
+}
+function prendreAide() {
+  const d = demandeAide();
+  const avant = d.par;
+  d.par = AGENT_SAV;
+  if (d.etat === 'nouvelle') d.etat = 'prise';
+  noterAide(d, avant ? `Reprise de la demande (prise en charge par ${avant})` : 'Prise en charge');
+  apresAide('Demande prise en charge', `${nomDemandeur(d)} · à votre nom.`);
+}
+function signalerFinance() {
+  const d = demandeAide();
+  d.signale = true;
+  const debit = PAIEMENTS_EN_LIGNE.debits.find((x) => x.ref === d.envoi);
+  if (debit) debit.signale = true;
+  noterAide(d, 'Signalé à la Finance · débit à vérifier avec l\'opérateur');
+  apresAide('Signalé à la Finance', `${d.envoi} · débit à vérifier avec l'opérateur · tracé au journal d'audit.`);
+}
+
+/* ---------- BO57 · BO58 · Comptes à vérifier (application client, 28/10) ----------
+  spec/BO-clients-en-ligne.md, proposition avant décision du client. Six demandes inventées :
+  inscriptions (P5), rattachement à une fiche agence (P2d, P2f), pièce renouvelée (M5),
+  changement de numéro (M3). Une décision est gardée pour la séance ; « Bloquer » ajoute le
+  client à CLIENTS_BLOQUES (BO35). */
+const TYPES_COMPTE = { inscription: 'Inscription', rattachement: 'Rattachement à une fiche agence', piece: 'Pièce renouvelée', numero: 'Changement de numéro' };
+const DECISIONS_COMPTE = {
+  valider: ['Compte validé', 'le client est prévenu par SMS et peut payer ses envois.', 'valide'],
+  refuser: ['Photos refusées', 'le client reprend ses photos, sans motif communiqué.', 'neutre'],
+  rattacher: ['Compte rattaché au nouveau numéro', 'le client est prévenu par SMS au nouveau numéro.', 'valide'],
+  'refuser-numero': ['Changement de numéro refusé', 'le compte reste attaché à l\'ancien numéro.', 'neutre'],
+  bloquer: ['Client bloqué', 'effet immédiat sur tout le réseau ; il rejoint les clients bloqués.', 'blocage'],
+};
+const COMPTES_A_VERIFIER = [
+  { id: 'kante-rattachement', type: 'rattachement', agence: 'Kaloum', nom: 'KANTÉ', prenoms: 'Oumou', tel: '+224 622 90 41 18', naissance: '04/06/1988', piece: ['Passeport', 'GN-P 0418 2273', '11/2030'],
+    csp: 'Artisan, commerçant, chef d\'entreprise', revenus: '3 à 8 M GNF', lecture: 'lue', modifs: {}, sanctions: 'aucun', recue: '01/10 · 09:12',
+    fiche: [['Client de l\'agence', 'Kaloum · depuis mars 2025'], ['Pièce enregistrée', 'Passeport · GN-P 0418 2273 · valide jusqu\'en 11/2030'], ['Dernière opération', 'Envoi · 12/09 · 850 000 GNF'], ['Confirmation', 'Numéro de la pièce saisi après le code SMS']] },
+  { id: 'diakite-inscription', type: 'inscription', nom: 'DIAKITÉ', prenoms: 'Mariam', tel: '+224 625 11 70 84', naissance: '14/02/1990', piece: ['Carte d\'identité', 'GN-C 7731 0952', '08/2029'],
+    csp: 'Employé', revenus: '≤ 3 M GNF', lecture: 'lue', modifs: { naissance: '14/02/1996' }, sanctions: 'aucun', recue: '01/10 · 08:47' },
+  { id: 'lamah-inscription', type: 'inscription', nom: 'LAMAH', prenoms: 'Joseph', tel: '+224 669 02 38 51', naissance: '22/09/1975', piece: ['Passeport', 'GN-P 0290 6614', '03/2031'],
+    csp: 'Cadre et professions intellectuelles supérieures', revenus: '15 à 30 M GNF', lecture: 'lue', modifs: {}, sanctions: 'correspondance', recue: '01/10 · 10:20' },
+  { id: 'souare-piece', type: 'piece', nom: 'SOUARÉ', prenoms: 'Aminata', tel: '+224 631 47 25 09', naissance: '30/11/1983', piece: ['Carte d\'identité', 'GN-C 9012 4478', '09/2036'],
+    csp: 'Fonctionnaire', revenus: '8 à 15 M GNF', lecture: 'lue', modifs: {}, sanctions: 'aucun', recue: '01/10 · 07:55',
+    fiche: [['Pièce précédente', 'Carte d\'identité · GN-C 5520 1187'], ['Expirée le', '28/09/2026'], ['Envois', 'Suspendus jusqu\'à la vérification de la nouvelle pièce']] },
+  { id: 'guilavogui-numero', type: 'numero', nom: 'GUILAVOGUI', prenoms: 'Pierre', tel: '+224 664 18 22 07', nouveau: '+224 610 45 77 31', naissance: '17/05/1979', piece: ['Passeport', 'GN-P 0533 1906', '06/2028'],
+    csp: 'Agriculteur', revenus: '≤ 3 M GNF', lecture: '', modifs: {}, sanctions: 'aucun', recue: '30/09 · 15:40' },
+  { id: 'millimono-inscription', type: 'inscription', nom: 'MILLIMONO', prenoms: 'Sia', tel: '+224 620 83 16 42', naissance: '09/01/1994', piece: ['Carte d\'identité', 'GN-C 3378 2205', '12/2027'],
+    csp: 'Professions intermédiaires', revenus: '3 à 8 M GNF', lecture: 'non-lue', modifs: {}, sanctions: 'aucun', recue: '30/09 · 08:30' },
+];
+const compteClient = () => COMPTES_A_VERIFIER.find((c) => c.id === SEL.compteClient) || COMPTES_A_VERIFIER[0];
+const nomCompte = (c) => `${c.nom} ${c.prenoms}`;
+const typeCompte = (c) => (c.type === 'rattachement' ? `${TYPES_COMPTE.rattachement} (${c.agence})` : TYPES_COMPTE[c.type]);
+const attenteCompte = (c) => minutesDepuis(c.recue);
+const lectureCompte = (c) => (c.type === 'numero' ? '—' : c.lecture === 'non-lue' ? '<span class="ecart">Non lue · saisie manuelle</span>'
+  : Object.keys(c.modifs).length ? `<span class="ecart">Lue · ${pluriel(Object.keys(c.modifs).length, 'champ modifié', 'champs modifiés')}</span>` : 'Lue');
+const sanctionsCompte = (c) => (c.sanctions === 'correspondance' ? '<span class="statut attention">Correspondance possible</span>' : 'Aucun résultat');
+
+function rendreComptes() {
+  const hote = contenu.querySelector('[data-comptes-liste]');
+  if (!hote) return;
+  const attente = COMPTES_A_VERIFIER.filter((c) => !c.decision).sort((a, b) => attenteCompte(b) - attenteCompte(a));
+  hote.innerHTML = '<tr class="aucune" data-aucune hidden><td colspan="8">Aucune demande ne correspond.</td></tr>'
+    + attente.map((c) => {
+      const m = attenteCompte(c);
+      return `<tr class="ouvrable" tabindex="0" data-ligne data-type="${c.type}" data-cible="bo58" data-choisir="compteClient:${c.id}">`
+        + `<td>${nomCompte(c)}</td><td class="insecable">${c.tel}</td><td>${typeCompte(c)}</td><td>${c.piece[0]}</td><td>${lectureCompte(c)}</td><td class="insecable">${sanctionsCompte(c)}</td>`
+        + `<td class="insecable">${c.recue}</td><td class="insecable${m > 1440 ? ' ecart' : ''}">${enHeures(m)}</td></tr>`;
+    }).join('');
+  const n = (type) => attente.filter((c) => c.type === type).length;
+  const vieux = attente.filter((c) => attenteCompte(c) > 1440).length;
+  contenu.querySelector('[data-comptes-compteurs]').innerHTML = [
+    ['Inscriptions', n('inscription'), ''], ['Rattachements', n('rattachement'), ''], ['Pièces renouvelées', n('piece'), ''], ['Changements de numéro', n('numero'), ''], ['En attente depuis plus de 24 h', vieux, 'attention'],
+  ].map(([libelle, v, ton]) => `<section class="carte compteur${v && ton ? ` ${ton}` : ''}"><span class="secondaire">${libelle}</span><b class="montant">${v}</b></section>`).join('');
+  const decides = COMPTES_A_VERIFIER.filter((c) => c.decision);
+  contenu.querySelector('[data-comptes-decides-carte]').hidden = !decides.length;
+  contenu.querySelector('[data-comptes-decides]').innerHTML = decides.map((c) => `<tr class="ouvrable" tabindex="0" data-cible="bo58" data-choisir="compteClient:${c.id}">`
+    + `<td>${nomCompte(c)}</td><td>${typeCompte(c)}</td><td>${DECISIONS_COMPTE[c.decision.valeur][0]}</td><td>${c.decision.le}</td><td>A. Kourouma</td></tr>`).join('');
+}
+
+function rendreCompteClient() {
+  const q = (k) => contenu.querySelector(`[data-cv="${k}"]`);
+  if (!q('photos')) return;
+  const c = compteClient();
+  const numero = c.type === 'numero';
+  etats['compte-type'] = c.type;
+  retitrer(nomCompte(c), `${typeCompte(c)} · reçu le ${c.recue.replace(' · ', ' à ')}`, `BO58 · ${nomCompte(c)}`);
+  q('alerte').hidden = c.sanctions !== 'correspondance' || !!c.decision;
+  const cotes = c.piece[0] === 'Passeport' ? ['Pièce · page d\'identité'] : ['Pièce · recto', 'Pièce · verso'];
+  q('titre-photos').textContent = numero ? 'Pièce d\'identité' : 'Pièce et selfie';
+  q('photos').innerHTML = cotes.map((l) => `<div class="cadre-photo"><b>${l}</b><span class="micro">${c.piece[0]} · ${c.piece[1]}</span></div>`).join('')
+    + (numero ? '' : '<div class="cadre-photo selfie"><b>Selfie</b><span class="micro">Pris dans l\'application</span></div>');
+  q('pied-photos').textContent = `Envoyées depuis l'application le ${c.recue.replace(' · ', ' à ')}. Le prototype ne montre pas de photo.`;
+  const lu = (champ, valeur) => (c.modifs[champ] ? `${valeur}<br><span class="micro ecart">Lu sur la pièce : ${c.modifs[champ]}</span>` : valeur);
+  q('infos-carte').hidden = numero;
+  q('infos').innerHTML = [['Nom', c.nom], ['Prénom(s)', c.prenoms], ['Date de naissance', lu('naissance', c.naissance)], ['Type de pièce', c.piece[0]], ['Numéro de la pièce', c.piece[1]],
+    ['Date de validité', c.piece[2]], ['Catégorie socioprofessionnelle', c.csp], ['Revenus nets mensuels', c.revenus], ['Téléphone', c.tel]].map(([l, v]) => infoAide(l, v)).join('');
+  q('numero-carte').hidden = !numero;
+  q('numero').innerHTML = [['Titulaire', nomCompte(c)], ['Ancien numéro', c.tel], ['Nouveau numéro', c.nouveau || '—'], ['Pièce du compte', `${c.piece[0]} · ${c.piece[1]}`], ['Demandé depuis', 'Changer de numéro (M3)']].map(([l, v]) => infoAide(l, v)).join('');
+  q('fiche-carte').hidden = !c.fiche;
+  q('fiche-titre').textContent = c.type === 'piece' ? 'Pièce précédente' : 'Fiche agence rattachée';
+  if (c.fiche) q('fiche').innerHTML = c.fiche.map(([l, v]) => infoAide(l, v)).join('');
+  const ok = (t) => `<li>✓ ${t}</li>`;
+  const ko = (t) => `<li class="ecart">! ${t}</li>`;
+  const nModifs = Object.keys(c.modifs).length;
+  q('controles').innerHTML = (c.sanctions === 'correspondance' ? ko('Correspondance possible sur une liste de sanctions') : ok('Aucun résultat sur les listes de sanctions'))
+    + ok(`Pièce en cours de validité (jusqu'en ${c.piece[2]})`)
+    + (numero ? ok('Pièce identique à celle du compte')
+      : c.lecture === 'non-lue' ? ko('Pièce non lue automatiquement : informations saisies par le client')
+        : nModifs ? ko(`${pluriel(nModifs, 'information modifiée', 'informations modifiées')} par le client après la lecture de la pièce`) : ok('Informations lues sur la pièce, non modifiées par le client'))
+    + (c.type === 'rattachement' ? ok('Numéro de pièce identique à la fiche agence') : '')
+    + (c.type === 'piece' ? ok('Même titulaire que la pièce précédente : nom, prénom(s), date de naissance') : '');
+  const d = c.decision;
+  q('formulaire').hidden = !!d || c.sanctions === 'correspondance';
+  q('attente').hidden = !!d || c.sanctions !== 'correspondance';
+  q('trace').hidden = !d;
+  if (d) {
+    const [libelle, effet, ton] = DECISIONS_COMPTE[d.valeur];
+    q('trace').innerHTML = `<div class="bandeau ${ton}"><strong>${libelle}</strong><span>${effet.charAt(0).toUpperCase()}${effet.slice(1)}</span></div>`
+      + infoAide('Décideur', 'Aïssatou Kourouma · Responsable conformité') + infoAide('Horodatage', HORODATAGE) + infoAide('Motif interne', echapper(d.motif))
+      + '<div class="actions"><a class="bouton discret" href="#bo57">Retour aux comptes à vérifier</a></div>';
+  }
+}
+
+function deciderCompte() {
+  const c = compteClient();
+  const valeur = contenu.querySelector('[data-choix="decision"] .actif').dataset.valeur;
+  c.decision = { valeur, motif: lireChamp('#bo58-motif'), le: '01/10 · 10:42' };
+  if (valeur === 'bloquer') {
+    bloquerClient(c.id, { nom: nomCompte(c), tel: c.tel, piece: `${c.piece[0]} · ${c.piece[1]}`, agence: c.agence || 'Application client' }, 'Autre', null, c.decision.motif);
+  }
+  rendreCompteClient();
+  menu(ecranCourant);
+  rafraichir();
+  notifier(DECISIONS_COMPTE[valeur][0], `${nomCompte(c)} · ${DECISIONS_COMPTE[valeur][1]} Tracé au journal d'audit.`);
+}
+
+/* ---------- BO59 · Demandes de plafond (application client, 28/10) ----------
+  spec/BO-clients-en-ligne.md, proposition avant décision du client. La conformité décide ; un
+  relèvement devient une demande « Plafond d'un client en ligne » validée par les Opérations
+  (BO6, BO37, effet plafond-ligne). Demandes inventées, sauf BALDÉ Fatoumata (profil du B2C). */
+const DEMANDES_PLAFOND = [
+  { id: 'balde-plafond', client: 'BALDÉ Fatoumata', cle: 'balde-f', tel: '+224 622 14 33 07', csp: 'Employé', tranche: 1, cumul30: '2 500 000 GNF', montant: 8000000,
+    motif: 'Frais médicaux', justificatif: '', recue: '01/10 · 09:40', etat: 'attente', journal: [] },
+  { id: 'soumaoro-plafond', client: 'SOUMAORO Ibrahima', tel: '+224 627 33 18 90', csp: 'Artisan, commerçant, chef d\'entreprise', tranche: 0, cumul30: '5 600 000 GNF', montant: 6000000,
+    motif: 'Assistance familiale', justificatif: 'Relevé bancaire · septembre 2026', recue: '30/09 · 17:20', etat: 'attente', journal: [] },
+  { id: 'koivogui-plafond', client: 'KOÏVOGUI Marie', tel: '+224 669 81 04 57', csp: 'Cadre et professions intellectuelles supérieures', tranche: 2, cumul30: '18 000 000 GNF', montant: 25000000,
+    motif: 'Frais scolaires', justificatif: '', recue: '29/09 · 10:15', etat: 'justificatif', journal: [['30/09 · 11:00', 'Justificatif demandé au client, dans l\'application', 'A. Kourouma · Conformité']] },
+  { id: 'doumbia-plafond', client: 'DOUMBIA Aminata', tel: '+224 620 47 92 11', csp: 'Professions intermédiaires', tranche: 1, cumul30: '9 200 000 GNF', montant: 7000000,
+    motif: 'Œuvres et dons', justificatif: 'Facture · association', recue: '30/09 · 14:05', etat: 'seconde', nouveau: 7000000,
+    journal: [['30/09 · 15:30', 'Relèvement décidé à 7 000 000 GNF par jour · soumis aux Opérations', 'A. Kourouma · Conformité']] },
+];
+const ETATS_PLAFOND = { attente: ['attention', 'À examiner'], justificatif: ['', 'Justificatif demandé'], seconde: ['attente', 'En seconde validation'], releve: ['valide', 'Relevé'], refusee: ['', 'Refusée'] };
+const plafondJour = (x) => plafondsDe(x.tranche)?.jour || 0;
+const detailsPlafond = (x, nouveau, motif) => [['Client', x.client], ['Revenus déclarés', TRANCHES[x.tranche][0]], ['Plafond interne actuel', `${gnf(plafondJour(x))} par jour`],
+  ['Nouveau plafond interne', `${gnf(nouveau)} par jour`], ['Motif du client', x.motif], ['Justificatif', x.justificatif || 'Aucun'], ['Motif de la conformité', motif]];
+// La demande de DOUMBIA Aminata attend déjà la validation des Opérations.
+DEMANDES.push({ id: 'plafond-doumbia', type: 'Plafond d\'un client en ligne', demandeur: 'A. Kourouma · Conformité', auteur: 'conformite', agence: '—', pour: 'DOUMBIA Aminata', depuis: '19 h 12',
+  valideur: 'operations', effet: ['plafond-ligne', 'doumbia-plafond'], etat: 'attente',
+  // Montants écrits en clair : grouper() n'est pas encore défini au chargement.
+  details: [['Client', 'DOUMBIA Aminata'], ['Revenus déclarés', '3 à 8 M GNF'], ['Plafond interne actuel', '5 333 333 GNF par jour'], ['Nouveau plafond interne', '7 000 000 GNF par jour'],
+    ['Motif du client', 'Œuvres et dons'], ['Justificatif', 'Facture · association'], ['Motif de la conformité', 'Dons réguliers à une association, facture jointe ; revenus cohérents avec la tranche déclarée.']] });
+let plafondCourant = 'balde-plafond';
+
+function rendrePlafonds() {
+  const hote = contenu.querySelector('[data-plafonds-liste]');
+  if (!hote) return;
+  const rang = (x) => (x.etat === 'attente' ? 0 : x.etat === 'justificatif' ? 1 : x.etat === 'seconde' ? 2 : 3);
+  const lignes = [...DEMANDES_PLAFOND].sort((a, b) => rang(a) - rang(b) || minutesDepuis(b.recue) - minutesDepuis(a.recue));
+  hote.innerHTML = '<tr class="aucune" data-aucune hidden><td colspan="7">Aucune demande ne correspond.</td></tr>'
+    + lignes.map((x) => `<tr class="ouvrable" tabindex="0" data-ligne data-plafond="${x.id}"><td>${x.client}</td><td class="nombre">${gnf(plafondJour(x))}</td><td class="nombre">${gnf(x.montant)}</td>`
+      + `<td>${x.motif}</td><td>${x.justificatif ? 'Joint' : '<span class="secondaire">Aucun</span>'}</td><td class="insecable">${x.recue}</td><td class="insecable">${pastille(...ETATS_PLAFOND[x.etat])}</td></tr>`).join('');
+  const n = (etat) => DEMANDES_PLAFOND.filter((x) => x.etat === etat).length;
+  contenu.querySelector('[data-plafonds-compteurs]').innerHTML = [
+    ['À examiner', n('attente'), 'attention'], ['Justificatif demandé', n('justificatif'), ''], ['En seconde validation', n('seconde'), ''], ['Relevées ou refusées', n('releve') + n('refusee'), ''],
+  ].map(([libelle, v, ton]) => `<section class="carte compteur${v && ton ? ` ${ton}` : ''}"><span class="secondaire">${libelle}</span><b class="montant">${v}</b></section>`).join('');
+}
+
+function ouvrirPlafond(id) {
+  plafondCourant = id;
+  const x = DEMANDES_PLAFOND.find((d) => d.id === id);
+  const voile = contenu.querySelector('[data-tiroir="plafond"]');
+  viderTiroir(voile);
+  const q = (k) => voile.querySelector(`[data-pl="${k}"]`);
+  q('titre').textContent = `Demande de plafond · ${x.client}`;
+  q('sous-titre').textContent = `Reçue le ${x.recue.replace(' · ', ' à ')} · depuis l'application`;
+  q('client').innerHTML = infosHtml([['Client', x.client], ['Téléphone', x.tel], ['Catégorie socioprofessionnelle', x.csp], ['Revenus nets mensuels déclarés', TRANCHES[x.tranche][0]],
+    ['Plafond interne actuel', `${gnf(plafondJour(x))} par jour`], ['Cumul des 30 derniers jours', x.cumul30]])
+    + (x.cle && accessible('bo40') ? `<p class="pied"><a class="sommaire-lien" href="#bo40" data-choisir="client:${x.cle}">Fiche client ›</a></p>` : '');
+  q('demande').innerHTML = infosHtml([['Montant souhaité', `${gnf(x.montant)} par jour`], ['Motif', x.motif], ['Justificatif', x.justificatif || 'Aucun · facultatif, peut être demandé'], ['État', pastille(...ETATS_PLAFOND[x.etat])]])
+    + (x.justificatif ? '<div class="actions"><button class="bouton secondaire petit" type="button">Voir le justificatif</button></div>' : '')
+    + (x.journal.length ? `<ul class="journal">${journalHtml(x.journal)}</ul>` : '');
+  const ouverte = x.etat === 'attente';
+  q('formulaire').hidden = !ouverte;
+  q('bouton').hidden = !ouverte;
+  q('trace').hidden = ouverte;
+  q('trace').innerHTML = ouverte ? '' : bandeauHtml({ justificatif: ['attention', 'Justificatif demandé', 'La demande reprend quand le client dépose le document dans l\'application.'],
+    seconde: ['neutre', 'En seconde validation', 'Relèvement décidé par la conformité, en attente de la validation des Opérations.'],
+    releve: ['valide', 'Plafond relevé', `Nouveau plafond interne : ${gnf(x.nouveau || x.montant)} par jour. Le client voit « Votre plafond est relevé ».`],
+    refusee: ['neutre', 'Demande refusée', 'Le client voit « Demande refusée » ; son plafond reste le même.'] }[x.etat]);
+  for (const b of voile.querySelectorAll('[data-choix="decision"] [data-valeur]')) b.classList.remove('actif');
+  etats.decision = 'aucune';
+  voile.querySelector('#bo59-montant').value = grouper(String(x.montant));
+  ouvrirTiroir('plafond');
+}
+
+function deciderPlafond() {
+  const x = DEMANDES_PLAFOND.find((d) => d.id === plafondCourant);
+  const valeur = contenu.querySelector('[data-tiroir="plafond"] [data-choix="decision"] .actif').dataset.valeur;
+  const motif = lireChamp('#bo59-motif');
+  if (valeur === 'relever') {
+    x.nouveau = Number(lireChamp('#bo59-montant').replace(/\D/g, ''));
+    x.etat = 'seconde';
+    x.journal.push(['01/10 · 10:42', `Relèvement décidé à ${gnf(x.nouveau)} par jour · soumis aux Opérations`, 'A. Kourouma · Conformité']);
+    nouvelleDemande({ type: 'Plafond d\'un client en ligne', demandeur: 'A. Kourouma · Conformité', auteur: 'conformite', pour: x.client, valideur: 'operations',
+      effet: ['plafond-ligne', x.id], details: detailsPlafond(x, x.nouveau, echapper(motif)) });
+  } else {
+    x.etat = valeur === 'justificatif' ? 'justificatif' : 'refusee';
+    x.journal.push(['01/10 · 10:42', valeur === 'justificatif' ? 'Justificatif demandé au client, dans l\'application' : 'Demande refusée', 'A. Kourouma · Conformité']);
+  }
+  fermerTiroir();
+  rendrePlafonds();
+  menu(ecranCourant);
+  rafraichir();
+  notifier({ relever: 'Relèvement soumis aux Opérations', justificatif: 'Justificatif demandé', refuser: 'Demande refusée' }[valeur],
+    `${x.client} · ${valeur === 'relever' ? `${gnf(x.nouveau)} par jour, à valider par les Opérations` : valeur === 'justificatif' ? 'le client le dépose dans l\'application' : 'son plafond reste le même'} · tracé au journal d'audit.`);
+}
+
+/* ---------- BO63 · Paiements en ligne à régulariser (application client, 28/10) ----------
+  Trois files : débits sans envoi (Q28), confirmations en attente (E6), remboursements à émettre
+  (annulations acceptées en BO62, envoi refusé S5). Lignes inventées, sauf SFC-9A23-0871 (BO60). */
+const PAIEMENTS_EN_LIGNE = {
+  debits: [
+    { id: 'd-0871', ref: 'SFC-9A23-0871', client: 'CONTÉ Aboubacar', paye: 'Orange Money', montant: '606 000 GNF', quand: '01/10 · 10:19', origine: 'Confirmé par l\'opérateur 5 min après l\'abandon', etat: 'a-traiter' },
+    { id: 'd-5512', ref: 'SFC-9A20-5512', client: 'LOUA Pascal', paye: 'Wave', montant: '205 000 GNF', quand: '30/09 · 21:03', origine: 'Confirmé par l\'opérateur 7 min après l\'abandon', etat: 'a-traiter' },
+  ],
+  confirmations: [
+    { ref: 'SFC-9A25-0034', client: 'DIOUBATÉ Lansana', paye: 'Orange Money', montant: '1 010 000 GNF', quand: '01/10 · 10:27' },
+    { ref: 'SFC-9A25-0041', client: 'HABA Rose', paye: 'Carte bancaire', montant: '3 030 000 GNF', quand: '01/10 · 10:29' },
+  ],
+  remboursements: [
+    { id: 'r-0391', ref: 'SFC-9A15-0391', client: 'DIABATÉ Moussa', paye: 'Orange Money', montant: '1 515 000 GNF', cause: 'Envoi refusé par la conformité', quand: '30/09 · 16:50', etat: 'a-traiter' },
+  ],
+};
+const ETATS_REMB_ANNULATION = {};
+const JOURNAL_PAIEMENTS = [];
+const ETATS_REGULARISATION = { 'a-traiter': ['attention', 'À traiter'], rembourse: ['valide', 'Remboursé'], rattache: ['valide', 'Rattaché à l\'envoi'] };
+// Remboursements : la liste fixe, plus les annulations acceptées pendant la séance (BO62).
+const remboursementsEnLigne = () => [...PAIEMENTS_EN_LIGNE.remboursements,
+  ...ANNULATIONS_EN_LIGNE.filter((a) => a.decision === 'accepter').map((a) => ({ id: `a-${a.ref}`, ref: a.ref, client: a.client, paye: a.paye, montant: a.total, cause: 'Annulation acceptée par les Opérations', quand: '01/10 · 10:42', etat: ETATS_REMB_ANNULATION[a.ref] || 'a-traiter' }))];
+const aRegulariser = () => PAIEMENTS_EN_LIGNE.debits.filter((x) => x.etat === 'a-traiter').length + remboursementsEnLigne().filter((x) => x.etat === 'a-traiter').length;
+let regularisationCourante = null;
+
+function rendrePaiements() {
+  const hote = contenu.querySelector('[data-paiements-liste]');
+  if (!hote) return;
+  const vue = etats.paiements;
+  const remb = remboursementsEnLigne();
+  const nb = { debits: PAIEMENTS_EN_LIGNE.debits.filter((x) => x.etat === 'a-traiter').length, confirmations: PAIEMENTS_EN_LIGNE.confirmations.length, remboursements: remb.filter((x) => x.etat === 'a-traiter').length };
+  for (const el of contenu.querySelectorAll('[data-paiements-nb]')) el.textContent = nb[el.dataset.paiementsNb];
+  contenu.querySelector('[data-paiements-compteurs]').innerHTML = [
+    ['Débits sans envoi', nb.debits, 'attention'], ['Confirmations en attente', nb.confirmations, ''], ['Remboursements à émettre', nb.remboursements, 'attention'], ['Régularisés aujourd\'hui', JOURNAL_PAIEMENTS.length, ''],
+  ].map(([libelle, v, ton]) => `<section class="carte compteur${v && ton ? ` ${ton}` : ''}"><span class="secondaire">${libelle}</span><b class="montant">${v}</b></section>`).join('');
+  const etat = (x) => `<td class="insecable">${pastille(...ETATS_REGULARISATION[x.etat])}</td>`;
+  const tete = contenu.querySelector('[data-paiements-tete]');
+  if (vue === 'debits') {
+    tete.innerHTML = '<tr><th>Référence</th><th>Client</th><th>Payé par</th><th class="nombre">Montant débité</th><th>Débit confirmé</th><th>Origine</th><th>État</th><th></th></tr>';
+    hote.innerHTML = PAIEMENTS_EN_LIGNE.debits.map((x) => `<tr><td class="insecable">${x.ref}</td><td>${x.client}</td><td>${x.paye}</td><td class="nombre">${x.montant}</td><td class="insecable">${x.quand}</td>`
+      + `<td>${x.origine}${x.signale ? '<br><span class="micro secondaire">Signalé aussi par le service après-vente</span>' : ''}</td>${etat(x)}`
+      + `<td class="nombre insecable">${x.etat === 'a-traiter' ? `<button class="bouton secondaire petit" type="button" data-regulariser="rembourser:${x.id}">Rembourser</button> <button class="bouton discret petit" type="button" data-regulariser="rattacher:${x.id}">Rattacher à l'envoi</button>` : ''}</td></tr>`).join('');
+  } else if (vue === 'confirmations') {
+    tete.innerHTML = '<tr><th>Référence</th><th>Client</th><th>Payé par</th><th class="nombre">Montant</th><th>Paiement lancé</th><th>En attente depuis</th></tr>';
+    hote.innerHTML = PAIEMENTS_EN_LIGNE.confirmations.map((x) => `<tr><td class="insecable">${x.ref}</td><td>${x.client}</td><td>${x.paye}</td><td class="nombre">${x.montant}</td><td class="insecable">${x.quand}</td>`
+      + `<td class="insecable${minutesDepuis(x.quand) >= 10 ? ' ecart' : ''}">${enHeures(minutesDepuis(x.quand))}</td></tr>`).join('');
+  } else {
+    tete.innerHTML = '<tr><th>Référence</th><th>Client</th><th>À rendre sur</th><th class="nombre">Montant et frais</th><th>Cause</th><th>Depuis</th><th>État</th><th></th></tr>';
+    hote.innerHTML = remb.map((x) => `<tr><td class="insecable">${x.ref}</td><td>${x.client}</td><td>${x.paye}</td><td class="nombre">${x.montant}</td><td>${x.cause}</td><td class="insecable">${x.quand}</td>${etat(x)}`
+      + `<td class="nombre">${x.etat === 'a-traiter' ? `<button class="bouton secondaire petit" type="button" data-regulariser="rembourse:${x.id}">Marquer remboursé</button>` : ''}</td></tr>`).join('');
+  }
+  contenu.querySelector('[data-paiements-journal]').innerHTML = JOURNAL_PAIEMENTS.length ? journalHtml(JOURNAL_PAIEMENTS)
+    : '<li><b>—</b><span class="secondaire">Aucune régularisation aujourd\'hui</span><em></em></li>';
+}
+
+function ligneRegularisation(id) {
+  return PAIEMENTS_EN_LIGNE.debits.find((x) => x.id === id) || remboursementsEnLigne().find((x) => x.id === id);
+}
+function ouvrirRegularisation(valeur) {
+  const [action, id] = valeur.split(':');
+  regularisationCourante = [action, id];
+  const x = ligneRegularisation(id);
+  const voile = contenu.querySelector('[data-tiroir="regularisation"]');
+  viderTiroir(voile);
+  const q = (k) => voile.querySelector(`[data-pm="${k}"]`);
+  const sur = x.paye === 'Carte bancaire' ? 'la carte qui a payé' : `le compte ${x.paye} qui a payé`;
+  q('titre').textContent = { rembourser: 'Rembourser le client', rattacher: 'Rattacher le paiement à l\'envoi', rembourse: 'Marquer comme remboursé' }[action];
+  q('objet').textContent = `${x.ref} · ${x.client} · ${x.montant}`;
+  q('effet').querySelector('span').textContent = {
+    rembourser: `${x.montant} rendus sur ${sur}. L'envoi ne part pas ; le client est prévenu.`,
+    rattacher: 'Le paiement est rattaché à l\'envoi, qui part comme s\'il avait été payé à temps ; le client est prévenu.',
+    rembourse: `${x.montant} rendus sur ${sur}. La ligne quitte les remboursements à émettre.`,
+  }[action];
+  q('bouton').textContent = { rembourser: 'Rembourser', rattacher: 'Rattacher', rembourse: 'Marquer remboursé' }[action];
+  ouvrirTiroir('regularisation');
+}
+
+/* ---------- BO64 · Réglages de l'application (application client, 28/10) ----------
+  Valeurs du B2C (proto-b2c.html) ; responsable : l'Administration par défaut (CL11). */
+const REGLAGES_APP = [
+  ['Montants et paiement', [
+    { id: 'min', libelle: 'Montant minimum par envoi', valeur: '5 000 GNF', aide: 'Paramétrable, valeur de démonstration (atelier 8)' },
+    { id: 'max', libelle: 'Montant maximum par envoi', valeur: '4 000 000 GNF', aide: 'Paramétrable, valeur de démonstration (atelier 8). Le plafond réglementaire s\'applique en plus.' },
+    { id: 'abandon', libelle: 'Abandon d\'un paiement non confirmé', valeur: '10 minutes', aide: 'Au-delà, l\'envoi ne part pas et le client peut réessayer' },
+  ]],
+  ['Moyens de paiement · dans l\'ordre de l\'écran de paiement', [
+    ...['Orange Money', 'Wave', 'Pay-Card', 'Kulu', 'Soutra Money', 'KS Pay'].map((nom, i) => ({ id: `op-${i}`, libelle: `${i + 1}. ${nom}`, valeur: 'Actif', aide: 'Actif ou Inactif',
+      q: nom === 'Pay-Card' ? 'Q40 (application client) — Pay-Card : portefeuille de mobile money ou carte prépayée ?' : '' })),
+    { id: 'carte', libelle: 'Carte bancaire', valeur: 'Actif', aide: 'Actif ou Inactif', q: 'Q36 (application client) — Carte bancaire : dans l\'application Guinée aussi, ou seulement sur la plateforme diaspora ? Quel prestataire, et 3-D Secure ?' },
+  ]],
+  ['Modes de réception · toutes destinations', [
+    { id: 'especes', libelle: 'Espèces dans le réseau', valeur: 'Ouvert', aide: 'Ouvert, Bientôt disponible ou Fermé' },
+    { id: 'mobile', libelle: 'Mobile money', valeur: 'Bientôt disponible', aide: 'Ouvert, Bientôt disponible ou Fermé' },
+    { id: 'banque', libelle: 'Compte bancaire', valeur: 'Bientôt disponible', aide: 'Ouvert, Bientôt disponible ou Fermé' },
+  ]],
+  ['Taxes locales · par destination', [
+    { id: 'taxe-gh', libelle: 'Ghana · taxe locale', valeur: '1 % du montant envoyé', aide: 'Valeur fictive du prototype. S\'ajoute aux frais et au total.' },
+  ]],
+  ['Service après-vente', [
+    { id: 'horaires', libelle: 'Horaires', valeur: 'Du lundi au vendredi de 8 h à 17 h, le samedi de 8 h à 13 h', aide: 'Affichés dans l\'aide et sous chaque demande d\'aide' },
+    ...['Mon proche n\'a pas reçu le code', 'Que faire si le nom ne correspond pas à sa pièce ?', 'Annuler ou se faire rembourser : quelle différence ?'].map((question, i) => ({ id: `faq-${i}`, libelle: `Question fréquente · ${question}`, valeur: 'Publiée', aide: 'Publiée ou Retirée' })),
+  ]],
+  ['Application', [
+    { id: 'version', libelle: 'Version minimale', valeur: 'À définir', aide: 'En dessous, l\'application demande une mise à jour obligatoire' },
+  ]],
+];
+for (const [, lignes] of REGLAGES_APP) for (const r of lignes) Object.assign(r, { resp: 'Administration', modif: '—' });
+const HISTORIQUE_APP = [];
+let reglageAppCourant = null;
+const reglageApp = (id) => REGLAGES_APP.flatMap(([, lignes]) => lignes).find((r) => r.id === id);
+
+function rendreReglagesApp() {
+  const hote = contenu.querySelector('[data-reglages-app]');
+  if (!hote) return;
+  hote.innerHTML = REGLAGES_APP.map(([groupe, lignes]) => `<section class="carte"><h2>${groupe}</h2><div class="defilant"><table class="tableau dense">`
+    + '<thead><tr><th>Réglage</th><th>Valeur</th><th>Responsable</th><th>Dernière modification</th><th></th></tr></thead><tbody>'
+    + lignes.map((r) => `<tr><td>${r.libelle}${r.q ? ` <span class="etiquette trancher" data-decision="q" title="${echapper(r.q)}"></span>` : ''}</td><td>${echapper(r.valeur)}</td><td>${r.resp}</td><td class="insecable">${r.modif}</td>`
+      + `<td class="nombre"><button class="bouton discret petit" type="button" data-reglage-app="${r.id}">Modifier</button></td></tr>`).join('')
+    + '</tbody></table></div></section>').join('');
+  contenu.querySelector('[data-reglages-historique]').innerHTML = HISTORIQUE_APP.length ? journalHtml(HISTORIQUE_APP)
+    : '<li><b>—</b><span class="secondaire">Aucune modification</span><em></em></li>';
+}
+function ouvrirReglageApp(id) {
+  reglageAppCourant = id;
+  const r = reglageApp(id);
+  const voile = contenu.querySelector('[data-tiroir="reglage-app"]');
+  viderTiroir(voile);
+  const q = (k) => voile.querySelector(`[data-ra="${k}"]`);
+  q('titre').textContent = r.libelle;
+  q('groupe').textContent = REGLAGES_APP.find(([, lignes]) => lignes.includes(r))[0];
+  q('actuelle').textContent = r.valeur;
+  q('aide').textContent = r.aide || '';
+  voile.querySelector('#bo64-valeur').value = r.valeur;
+  ouvrirTiroir('reglage-app');
 }
 
 /*
@@ -7326,6 +8528,62 @@ function ouvrirPlage(cle) {
 }
 
 const SOUMISSIONS = {
+  // BO63 (28/10) : régulariser un paiement en ligne.
+  regularisation() {
+    const [action, id] = regularisationCourante;
+    const x = ligneRegularisation(id);
+    const etat = action === 'rattacher' ? 'rattache' : 'rembourse';
+    if (id.startsWith('a-')) ETATS_REMB_ANNULATION[x.ref] = etat;
+    else x.etat = etat;
+    const quoi = { rembourser: 'Débit remboursé au client', rattacher: 'Paiement rattaché à l\'envoi', rembourse: 'Remboursement émis' }[action];
+    JOURNAL_PAIEMENTS.unshift(['01/10 · 10:42', `${x.ref} · ${quoi} · ${x.montant} · ${echapper(lireChamp('#bo63-commentaire'))}`, 'F. Camara · Finance']);
+    rendrePaiements();
+    menu(ecranCourant);
+    return [quoi, `${x.ref} · ${x.client} · tracé au journal d'audit.`];
+  },
+  // BO64 (28/10) : modifier un réglage de l'application.
+  'reglage-app'() {
+    const r = reglageApp(reglageAppCourant);
+    const avant = r.valeur;
+    r.valeur = lireChamp('#bo64-valeur');
+    r.modif = '01/10 · 10:42 · L. Condé';
+    HISTORIQUE_APP.unshift(['01/10/2026 · 10:42', `${r.libelle} · ${echapper(avant)} → ${echapper(r.valeur)} · ${echapper(lireChamp('#bo64-motif'))}`, 'L. Condé · Administrateur']);
+    rendreReglagesApp();
+    return ['Réglage modifié', `${r.libelle} · lu par l'application à sa prochaine ouverture · tracé au journal d'audit.`];
+  },
+  // BO40 (28/10) : suspendre ou réactiver un compte en ligne.
+  'suspension-compte'() {
+    const cle = identiteClient(SEL.client) ? SEL.client : 'f-soumah';
+    const e = COMPTES_EN_LIGNE[cle];
+    const actif = e.etat === 'actif';
+    e.etat = actif ? 'suspendu' : 'actif';
+    e.journal.unshift(['01/10 · 10:42', `${actif ? 'Compte suspendu' : 'Compte réactivé'} · ${echapper(lireChamp('#bo40-suspension-motif'))}`, profil.cle === 'operations' ? 'M. Sow · Opérations' : 'A. Kourouma · Conformité']);
+    rendreFicheClient();
+    return [actif ? 'Compte en ligne suspendu' : 'Compte en ligne réactivé', `${identiteClient(cle).nom} · ${actif ? 'l\'application lui est fermée, l\'agence reste ouverte' : 'il retrouve l\'accès à l\'application'} · tracé au journal d'audit.`];
+  },
+  // BO61 (28/10) : un contact noté, une demande close.
+  contact() {
+    const d = demandeAide();
+    const canal = lireChamp('#bo61-canal');
+    const joint = lireChamp('#bo61-issue') === 'Client joint';
+    noterAide(d, `${canal} · ${joint ? 'client joint' : 'sans réponse'} — ${echapper(lireChamp('#bo61-compte-rendu'))}`);
+    d.par ||= AGENT_SAV;
+    d.etat = joint ? 'prise' : 'sans-reponse';
+    rendreDemandeAide();
+    menu(ecranCourant);
+    return [joint ? 'Contact enregistré' : 'Rappel sans réponse enregistré', `${nomDemandeur(d)} · ${canal} · tracé au journal d'audit.`];
+  },
+  cloture() {
+    const d = demandeAide();
+    const issue = lireChamp('#bo61-cloture-issue');
+    d.par ||= AGENT_SAV;
+    d.etat = 'close';
+    d.issue = issue;
+    noterAide(d, `Close · ${issue.toLowerCase()} — ${echapper(lireChamp('#bo61-cloture-cr'))}`);
+    rendreDemandeAide();
+    menu(ecranCourant);
+    return ['Demande close', `${nomDemandeur(d)} · ${issue.toLowerCase()} · tracée au journal d'audit.`];
+  },
   plage() {
     const ouverture = lireChamp('#plage-ouverture');
     const fermeture = lireChamp('#plage-fermeture');
@@ -7691,6 +8949,14 @@ function afficher(code = location.hash.replace('#', '')) {
   rendreEcarts();
   rendrePerteAcces();
   rendreOperation();
+  rendreDemandesAide();
+  rendreDemandeAide();
+  rendreComptes();
+  rendreCompteClient();
+  rendreAnnulations();
+  rendrePlafonds();
+  rendrePaiements();
+  rendreReglagesApp();
   rendreFicheClient();
   rendreDemande();
   preparerBlocage();
@@ -7750,6 +9016,8 @@ function montrer(cle, valeur) {
   // BO44 (atelier 6) : un autre mode de versement ramène à son premier partenaire.
   if (cle === 'type-frais') { etats.partenaire = Object.keys(FRAIS[valeur])[0]; rendreFrais(); }
   if (cle === 'partenaire') rendreFrais();
+  if (cle === 'aide') rendreDemandesAide();
+  if (cle === 'paiements') rendrePaiements();
   rafraichir();
 }
 
@@ -7832,7 +9100,8 @@ const CONDITIONS = {
 };
 
 // Destinataires cochés d'un message du jour (BO29), en toutes lettres.
-const destinataires = () => [...contenu.querySelectorAll('[data-destinataire]:checked')].map((c) => c.dataset.destinataire);
+// Une case masquée (« Clients de l'application » hors « Tout le réseau ») ne compte pas.
+const destinataires = () => [...contenu.querySelectorAll('[data-destinataire]:checked')].filter((c) => !c.closest('[hidden]')).map((c) => c.dataset.destinataire);
 
 function rempli(selecteur, racine = contenu) {
   if (selecteur.startsWith('@')) return CONDITIONS[selecteur.slice(1)]();
@@ -7993,6 +9262,30 @@ contenu.addEventListener('click', (e) => {
   if (segment && !segment.disabled) return choisirSegment(segment);
   const bouton = e.target.closest('[data-enregistrer]');
   if (bouton) return bouton.disabled || enregistrer(bouton);
+  // Service après-vente (BO61, 28/10).
+  if (e.target.closest('[data-aide-prendre]')) return prendreAide();
+  if (e.target.closest('[data-aide-finance]')) return signalerFinance();
+  // Compte en ligne (BO40, 28/10) : déconnecter l'appareil associé.
+  if (e.target.closest('[data-compte-deconnecter]')) {
+    const cle = identiteClient(SEL.client) ? SEL.client : 'f-soumah';
+    const compteEnLigne = COMPTES_EN_LIGNE[cle];
+    compteEnLigne.appareil = 'Aucun appareil associé';
+    compteEnLigne.journal.unshift(['01/10 · 10:42', 'Appareil déconnecté · nouvelle connexion par code SMS', profil.cle === 'operations' ? 'M. Sow · Opérations' : 'A. Kourouma · Conformité']);
+    rendreFicheClient();
+    return notifier('Appareil déconnecté', `${identiteClient(cle).nom} · il se reconnectera par un code reçu par SMS · tracé au journal d'audit.`);
+  }
+  // Demandes de plafond (BO59), paiements en ligne (BO63), réglages de l'application (BO64), 28/10.
+  const plafond = e.target.closest('[data-plafond]');
+  if (plafond) return ouvrirPlafond(plafond.dataset.plafond);
+  const deciderPl = e.target.closest('[data-plafond-decider]');
+  if (deciderPl) return deciderPl.disabled || deciderPlafond();
+  const regulariser = e.target.closest('[data-regulariser]');
+  if (regulariser) return ouvrirRegularisation(regulariser.dataset.regulariser);
+  const reglage = e.target.closest('[data-reglage-app]');
+  if (reglage) return ouvrirReglageApp(reglage.dataset.reglageApp);
+  // Comptes à vérifier (BO58, 28/10).
+  const decision = e.target.closest('[data-compte-decider]');
+  if (decision) return decision.disabled || deciderCompte();
   // Solde virtuel (atelier 5) : demandes, découvert, décisions.
   const debloquer = e.target.closest('[data-debloquer]');
   if (debloquer) {
@@ -8090,6 +9383,7 @@ contenu.addEventListener('click', (e) => {
 
 contenu.addEventListener('keydown', (e) => {
   if (e.key !== 'Enter' || !e.target.matches('tr')) return;
+  if (e.target.matches('[data-plafond]')) return ouvrirPlafond(e.target.dataset.plafond);
   choisir(e.target);
   if (e.target.matches('[data-selection-ecart]')) { SEL.ecart = e.target.dataset.selectionEcart; SEL.tiroir = 'ecart'; return afficher(ecranCourant.id); }
   if (e.target.matches('[data-deplier]')) return deplier(e.target);
@@ -8111,9 +9405,9 @@ contenu.addEventListener('input', (e) => {
   }
   if (t.matches('[data-role-choix]')) roles();
   if (t.matches('[data-destinataire]')) {
-    const noms = destinataires().map((d) => (d === 'Caissiers' ? 'des caissiers' : 'des chefs d\'agence'));
+    const noms = destinataires().map((d) => ({ Caissiers: 'des caissiers', 'Clients de l\'application': 'de l\'application client' }[d] || 'des chefs d\'agence'));
     contenu.querySelector('[data-apercu-destinataires]').textContent =
-      noms.length ? `accueil ${noms.join(' et ')}` : 'aucun destinataire';
+      noms.length ? `accueil ${noms.length > 1 ? `${noms.slice(0, -1).join(', ')} et ${noms.at(-1)}` : noms[0]}` : 'aucun destinataire';
   }
   rafraichir();
 });
