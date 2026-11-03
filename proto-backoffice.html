@@ -672,6 +672,22 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
 .case input.interrupteur:checked::before{transform:translateX(16px)}
 .case input.interrupteur:focus-visible{outline:none;box-shadow:0 0 0 3px var(--accent-trait)}
 .case input.interrupteur:disabled{cursor:default;opacity:.6}
+
+/* B2B (03/11) : compteurs cliquables de BO65, frise de BO66, aperçu du justificatif. */
+button.carte.compteur{font:inherit;color:inherit;text-align:left;cursor:pointer;border:1px solid var(--trait-leger)}
+button.carte.compteur:hover{border-color:var(--trait-net)}
+button.carte.compteur.actif{border-color:var(--accent);box-shadow:var(--anneau)}
+.pas-a-pas.frise{margin-bottom:16px}
+.pas-a-pas .etape.arret{color:var(--blocage);font-weight:600}
+.pas-a-pas .etape.arret .num{background:var(--blocage-fond);color:var(--blocage)}
+.revue-b2b{flex-wrap:wrap;margin-bottom:12px}
+.revue-b2b .segmente{flex-wrap:wrap;max-width:100%;height:auto}
+.revue-b2b .segmente button{white-space:nowrap}
+.revue-b2b .actions{margin:0;gap:6px}
+.apercu-pdf{display:flex;align-items:center;gap:12px;margin-top:10px;padding:10px 12px;border:1px solid var(--trait-leger);border-radius:var(--rayon-petit);background:var(--fond-sourd)}
+.apercu-pdf .feuille{width:34px;height:44px;flex:none;display:grid;place-items:center;border:1px solid var(--trait-net);border-radius:3px;background:var(--fond-surface);font:700 9px/1 var(--police);color:var(--blocage)}
+.apercu-pdf .nom{flex:1;min-width:0;overflow-wrap:anywhere}
+/* /B2B */
 </style>
 </head>
 <body>
@@ -692,6 +708,7 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
   <symbol id="i-rejet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></symbol>
   <symbol id="i-valider" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 10"/></symbol>
   <symbol id="i-agence" viewBox="0 0 24 24"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/><path d="M3 21h18"/></symbol>
+  <symbol id="i-entreprise" viewBox="0 0 24 24"><rect x="4" y="3" width="11" height="18" rx="1"/><path d="M15 9h5v12"/><path d="M7.5 7h4M7.5 11h4M7.5 15h4"/><path d="M2.5 21h19"/></symbol><!-- B2B -->
   <symbol id="i-mobile" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></symbol>
   <symbol id="i-identite" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.2"/><path d="M5.8 16c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4"/><path d="M14.5 10h4M14.5 13.5h4"/></symbol>
   <symbol id="i-aide" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/><path d="M19 20c0 1.2-1.5 2-3.5 2H13"/></symbol>
@@ -2096,7 +2113,7 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
         <section class="carte compteur"><span class="secondaire">En vérification</span><b class="montant" data-nb-bo24="verif"></b></section>
         <section class="carte compteur attention"><span class="secondaire">À décider par les Opérations</span><b class="montant" data-nb-bo24="decider"></b></section>
         <section class="carte compteur"><span class="secondaire">Déclinées</span><b class="montant" data-nb-bo24="declinee"></b></section>
-        <section class="carte compteur"><span class="secondaire">Échoués · rejet d'un partenaire</span><b class="montant" data-nb-bo24="rejet"></b></section>
+        <section class="carte compteur"><span class="secondaire">Échouées · rejet d'un partenaire</span><b class="montant" data-nb-bo24="rejet"></b></section>
         <section class="carte compteur attention"><span class="secondaire">Échéance des 30 jours sous 7 jours</span><b class="montant">1</b></section>
       </div>
       <!-- La colonne Motif illustre la grille de visibilité revue le 01/10 (décision 2) : les
@@ -2128,8 +2145,8 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
               <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-5E02-7710" data-traite-par="op:SFC-5E02-7710"><td>SFC-5E02-7710</td><td>Matam</td><td>SYLLA Fanta</td><td class="nombre">22 500 000 GNF</td><td><span class="statut attente">En vérification</span></td><td class="motif-reserve">Réservé à la conformité</td><td>04/09</td><td class="ecart"><b>04/10 · sous 3 jours</b></td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:KIN-P2-0043" data-traite-par="op:KIN-P2-0043"><td>KIN-P2-0043</td><td>Kindia</td><td>SOW Hawa</td><td class="nombre">12 000 000 GNF</td><td><span class="statut attente">En vérification</span></td><td class="motif-reserve">Réservé à la conformité</td><td>01/10</td><td>31/10</td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-7C88-3301" data-traite-par="op:SFC-7C88-3301"><td>SFC-7C88-3301</td><td>Labé</td><td>BALDÉ Fatou</td><td class="nombre">3 200 000 GNF</td><td><span class="statut blocage">Déclinée</span></td><td>Taux défavorable après coupure</td><td>30/09</td><td>30/10</td></tr>
-              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D40-5528" data-traite-par="op:SFC-6D40-5528"><td>SFC-6D40-5528</td><td>Kaloum</td><td>CAMARA Oumou</td><td class="nombre">1 200 000 GNF</td><td><span class="statut blocage">Échoué</span></td><td>Orange Money : numéro inconnu</td><td>01/10</td><td>—</td></tr>
-              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D41-0017" data-traite-par="op:SFC-6D41-0017"><td>SFC-6D41-0017</td><td>Matam</td><td>DIALLO Aïcha</td><td class="nombre">8 000 000 GNF</td><td><span class="statut blocage">Échoué</span></td><td>Ecobank : RIB invalide</td><td>01/10</td><td>—</td></tr>
+              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D40-5528" data-traite-par="op:SFC-6D40-5528"><td>SFC-6D40-5528</td><td>Kaloum</td><td>CAMARA Oumou</td><td class="nombre">1 200 000 GNF</td><td><span class="statut blocage">Échouée</span></td><td>Orange Money : numéro inconnu</td><td>01/10</td><td>—</td></tr>
+              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D41-0017" data-traite-par="op:SFC-6D41-0017"><td>SFC-6D41-0017</td><td>Matam</td><td>DIALLO Aïcha</td><td class="nombre">8 000 000 GNF</td><td><span class="statut blocage">Échouée</span></td><td>Ecobank : RIB invalide</td><td>01/10</td><td>—</td></tr>
             </tbody>
           </table>
         </div>
@@ -2266,7 +2283,7 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
 
     <section class="ecran" id="bo26" data-badge="2" data-code="BO26" data-nom="Rejets des partenaires wallet et banque" data-espace="operations" data-menu="Rejets partenaires" data-titre="Rejets des partenaires" data-contexte="Retour API avec motif · 2 rejets aujourd'hui" data-fait="oui">
       <!-- Atelier 6 (12/10, lot 1) : un versement wallet ou banque refusé par le partenaire prend le
-           statut « Échoué » (jetons Blocage). Toute opération échouée peut être annulée par les
+           statut « Échouée » (jetons Blocage). Toute opération échouée peut être annulée par les
            Opérations (ou le chef d'agence, côté agence), avec le code personnel : « Annuler » mène à
            la décision d'annuler ou de rembourser (BO25), qui exige la réauthentification. -->
       <div class="bandeau neutre">
@@ -2279,9 +2296,9 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
           <table class="tableau dense sans-coupure">
             <thead><tr><th>Référence</th><th>Statut</th><th>Partenaire</th><th>Motif du partenaire</th><th>Nature</th><th>Suite</th><th></th></tr></thead>
             <tbody>
-              <tr class="ouvrable" tabindex="0" data-ouvrir-tiroir="relance" data-relance data-traite-par="op:SFC-6D40-5528"><td>SFC-6D40-5528</td><td><span class="statut blocage">Échoué</span></td><td>Orange Money</td><td>Numéro inconnu</td><td><span class="statut attention">Récupérable</span></td><td>Relance soumise par K. Bah</td>
+              <tr class="ouvrable" tabindex="0" data-ouvrir-tiroir="relance" data-relance data-traite-par="op:SFC-6D40-5528"><td>SFC-6D40-5528</td><td><span class="statut blocage">Échouée</span></td><td>Orange Money</td><td>Numéro inconnu</td><td><span class="statut attention">Récupérable</span></td><td>Relance soumise par K. Bah</td>
                 <td class="nombre"><a class="bouton discret petit" href="#bo25" data-choisir="remb:SFC-6D40-5528">Annuler</a></td></tr>
-              <tr class="ouvrable" tabindex="0" data-cible="bo25" data-choisir="remb:6d41" data-traite-par="op:SFC-6D41-0017"><td>SFC-6D41-0017</td><td><span class="statut blocage">Échoué</span></td><td>Ecobank</td><td>RIB invalide</td><td><span class="statut blocage">Non récupérable</span></td><td>À annuler et rembourser</td>
+              <tr class="ouvrable" tabindex="0" data-cible="bo25" data-choisir="remb:6d41" data-traite-par="op:SFC-6D41-0017"><td>SFC-6D41-0017</td><td><span class="statut blocage">Échouée</span></td><td>Ecobank</td><td>RIB invalide</td><td><span class="statut blocage">Non récupérable</span></td><td>À annuler et rembourser</td>
                 <td class="nombre"><a class="bouton discret petit" href="#bo25" data-choisir="remb:6d41">Annuler</a></td></tr>
             </tbody>
           </table>
@@ -2531,14 +2548,17 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
     <!-- BO60 · Demandes d'aide (spec/BO-clients-en-ligne.md, 28/10, proposition avant décision du
          client). Le bouton « Demander de l'aide » de l'application client (H3, atelier 8, 22/10)
          remonte ici : catégorie, envoi et message facultatifs, informations du client, écran d'où
-         il vient. Service après-vente = les Opérations (hypothèse de Q39, CL1). Demandes,
+         il vient. Service après-vente = les Opérations (Q39 tranchée à l'atelier 9, 29/10 ; CL1 en découle, son étiquette est retirée). Demandes,
          clients autres que BALDÉ Fatoumata et messages : inventés. Liste rendue depuis
          DEMANDES_AIDE ; le choix « À traiter · Mes demandes · Closes » (clé aide) la reconstruit. -->
-    <section class="ecran" id="bo60" data-code="BO60" data-nom="Demandes d'aide" data-espace="operations" data-menu="Demandes d'aide" data-titre="Demandes d'aide" data-contexte="Application client · le service après-vente rappelle par téléphone ou sur WhatsApp" data-fait="oui" data-trancher="Demandes et clients inventés (sauf BALDÉ Fatoumata, profil du B2C). CL1 · CL2 · CL8.">
-      <span class="etiquette trancher" data-decision="q" data-entete title="CL1 — Le service après-vente, ce sont les Opérations du siège, ou une équipe à part, avec son propre profil dans le back-office ? Par défaut : les Opérations (hypothèse de Q39)."></span>
+    <section class="ecran" id="bo60" data-code="BO60" data-nom="Demandes d'aide" data-espace="operations" data-menu="Demandes d'aide" data-titre="Demandes d'aide" data-contexte="Application client · le service après-vente rappelle par téléphone ou sur WhatsApp" data-fait="oui" data-trancher="Demandes et clients inventés (sauf BALDÉ Fatoumata, profil du B2C). CL2 · CL8.">
       <div class="bandeau neutre">
         <strong>Service après-vente ouvert</strong>
         <span>Du lundi au vendredi de 8 h à 17 h, le samedi de 8 h à 13 h. Une demande reçue en dehors de ces horaires porte la mention « Reçue hors horaires ».</span>
+      </div>
+      <div class="bandeau neutre">
+        <strong>Alertes e-mail</strong>
+        <span>Une alerte e-mail part aux Opérations pour chaque nouvelle transaction de l'application et de la plateforme web, pour une prise en charge rapide (atelier 9, 29/10). Les demandes d'assistance sont traitées par les Opérations. La disponibilité en espèces d'un point n'est jamais montrée au client : vérifiez-la avant d'y orienter le client.</span>
       </div>
       <div class="ligne compteurs" data-aide-compteurs></div>
       <section class="carte">
@@ -2579,7 +2599,7 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
     <!-- BO61 · Demande d'aide (détail de BO60). Rendu depuis DEMANDES_AIDE[SEL.aide] et
          ENVOIS_EN_LIGNE. Prendre en charge, noter un contact (panneau), clore (panneau). Pas de
          réauthentification : rien ici ne bouge l'argent ni les données du client (déduit). -->
-    <section class="ecran" id="bo61" data-parent="bo60" data-code="BO61" data-nom="Demande d'aide" data-espace="operations" data-menu="Demande d'aide" data-titre="Demande d'aide" data-contexte="Service après-vente" data-fait="oui" data-trancher="CL7 · CL8 · CL10 · Q39.">
+    <section class="ecran" id="bo61" data-parent="bo60" data-code="BO61" data-nom="Demande d'aide" data-espace="operations" data-menu="Demande d'aide" data-titre="Demande d'aide" data-contexte="Service après-vente" data-fait="oui" data-trancher="CL7 · CL8 · CL10.">
       <div class="ligne align-haut">
         <div class="colonne" style="--part:820">
           <div class="bandeau attention" data-aide="confidentialite" hidden>
@@ -2615,7 +2635,7 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
             <h2>Suite</h2>
             <div data-aide="actions"></div>
             <!-- Selon la catégorie (clé aide-cat, posée par rendreDemandeAide). -->
-            <p class="pied" data-si-aide-cat="retrait">Pour orienter le bénéficiaire vers un autre point de retrait : <a class="sommaire-lien" href="#bo33">Agences et distributeurs ›</a> <span class="etiquette trancher" data-decision="q" title="Q39 — Le service après-vente sait-il quels points de retrait ont des espèces ? Par défaut : il consulte la liste des agences et distributeurs et oriente le bénéficiaire vers un autre point."></span></p>
+            <p class="pied" data-si-aide-cat="retrait">Pour orienter le bénéficiaire vers un autre point de retrait : <a class="sommaire-lien" href="#bo33">Agences et distributeurs ›</a> · vérifiez que le point a les espèces avant d'y orienter le bénéficiaire : la disponibilité n'est jamais montrée au client (atelier 9, 29/10).</p>
             <p class="pied" data-si-aide-cat="annulation">Le client peut demander l'annulation lui-même, depuis le détail de son envoi : la demande arrive au siège avec son motif, confirmée par son code PIN. Rappelez-le pour l'y guider ; elle arrive ensuite dans les <a class="sommaire-lien" href="#bo62">annulations demandées ›</a> <span class="etiquette trancher" data-decision="q" title="CL8 — La catégorie « Annulation » de la demande d'aide fait doublon avec la demande d'annulation d'un envoi (S4). On la retire de l'application ? Par défaut : gardée, le service après-vente guide le client vers la demande d'annulation."></span></p>
             <div data-si-aide-cat="finance">
               <p class="pied">Un débit validé après l'abandon du paiement n'est traité par aucune source (Q28). La Finance vérifie avec l'opérateur, puis rembourse le client ou rattache le paiement à l'envoi. <span class="etiquette trancher" data-decision="q" title="CL10 — Qui rembourse un paiement en ligne (annulation, refus, débit après abandon), et comment : API de l'opérateur ou virement manuel ? Par défaut : la Finance, sans préciser le mode."></span></p>
@@ -3451,7 +3471,8 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
           <div class="champ"><label for="bo13-du">Du</label><input id="bo13-du" type="text" value="01/10/2026"></div>
           <div class="champ"><label for="bo13-au">Au</label><input id="bo13-au" type="text" value="01/10/2026"></div>
           <div class="champ"><label for="bo13-montant">Montant</label><input id="bo13-montant" type="text" inputmode="numeric" data-montant="GNF" placeholder="0 GNF"></div>
-          <div class="champ"><label for="bo13-statut">Statut</label><select id="bo13-statut"><option>Tous</option><option>En attente de retrait</option><option>Payée</option><option>En vérification</option><option>Déclinée</option><option>Échoué</option><option>Annulée</option><option>Remboursée</option><option>Expirée</option></select></div>
+          <div class="champ"><label for="bo13-statut">Statut</label><select id="bo13-statut"><option>Tous</option><optgroup label="Espèces"><option>En cours · disponible au retrait</option><option>Payée</option><option>Annulée</option><option>Remboursée</option></optgroup><optgroup label="Mobile money et compte bancaire"><option>En cours · traitement ou transmission</option><option>Validée · chez le partenaire</option><option>Échouée</option><option>Payée</option></optgroup><optgroup label="Autres états"><option>En vérification</option><option>Déclinée</option><option>Expirée</option></optgroup></select></div>
+          <div class="champ"><label for="bo13-mode">Réception</label><select id="bo13-mode"><option>Tous</option><option>Espèces</option><option>Mobile money</option><option>Compte bancaire</option></select></div>
           <button class="bouton primaire" type="button">Rechercher</button>
         </div>
       </section>
@@ -3465,9 +3486,9 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
           <table class="tableau dense">
             <thead><tr><th>Référence</th><th>Date</th><th>Agence</th><th class="nombre">Montant</th><th>Statut</th><th>Motif</th></tr></thead>
             <tbody>
-              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-9A04-0112"><td>SFC-9A04-0112</td><td>01/10 · 10:41</td><td>Kaloum</td><td class="nombre">2 500 000 GNF</td><td><span class="statut attente">En attente de retrait</span></td><td>—</td></tr>
+              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-9A04-0112"><td>SFC-9A04-0112</td><td>01/10 · 10:41</td><td>Kaloum</td><td class="nombre">2 500 000 GNF</td><td><span class="statut attente">En cours</span></td><td>—</td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-9A03-5518"><td>SFC-9A03-5518</td><td>01/10 · 10:34</td><td>Kaloum</td><td class="nombre">45 000 000 GNF</td><td><span class="statut attente">En vérification</span></td><td>—</td></tr>
-              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D40-5528"><td>SFC-6D40-5528</td><td>01/10 · 09:12</td><td>Kaloum</td><td class="nombre">1 200 000 GNF</td><td><span class="statut blocage">Échoué</span></td><td>—</td></tr>
+              <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-6D40-5528"><td>SFC-6D40-5528</td><td>01/10 · 09:12</td><td>Kaloum</td><td class="nombre">1 200 000 GNF</td><td><span class="statut blocage">Échouée</span></td><td>—</td></tr>
               <tr class="ouvrable" tabindex="0" data-cible="bo36" data-choisir="operation:SFC-7C88-3301"><td>SFC-7C88-3301</td><td>30/09 · 16:40</td><td>Labé</td><td class="nombre">3 200 000 GNF</td><td><span class="statut blocage">Déclinée</span></td><td>—</td></tr>
             </tbody>
           </table>
@@ -4438,6 +4459,22 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
             <p class="mention" data-si-valideur="distinct" style="margin-top:12px">Le maker n'est jamais son propre checker : un autre habilité de même niveau valide.</p>
             <div class="bandeau attention" data-si-valideur="tolere" style="margin-top:12px"><strong>Exception tracée</strong><span>Chaque demande validée par son auteur est inscrite au journal d'audit et signalée à l'audit interne.</span></div>
           </section>
+          <!-- B2B · seuil de double validation des transferts entreprises (spec/BO-entreprises.md) : ici
+               plutôt que dans BO46, qui est la vue consolidée en lecture ; BO46 le reprend. -->
+          <section class="carte">
+            <h2>Transferts entreprises (B2B) <span class="etiquette trancher" data-decision="q" title="À partir de quel montant un transfert est-il « haute valeur », qui valide au-delà et dans quel ordre ? (atelier 10, Q2) Par défaut : 300 000 USD ; au-delà, la conformité puis la direction."></span></h2>
+            <div class="champ"><label for="bo50-seuil-b2b">Seuil de double validation <span class="etiquette trancher" data-decision="q" title="Un seuil de double validation commun à toutes les entreprises, ou propre à chacune ? Par défaut : un seuil commun."></span></label><input id="bo50-seuil-b2b" type="text" inputmode="numeric" data-montant="USD" value="300000"><span class="aide">Contre-valeur de l'ordre, en équivalent USD au taux du jour</span></div>
+            <div class="champ">
+              <span class="libelle" id="bo50-niveaux-b2b">Au-delà du seuil</span>
+              <div class="segmente empile" data-choix="niveaux-b2b" role="group" aria-labelledby="bo50-niveaux-b2b">
+                <button data-valeur="conformite">Conformité seule</button>
+                <button class="actif" data-valeur="direction">Conformité puis direction</button>
+              </div>
+            </div>
+            <div class="info"><span>En dessous du seuil</span><span>Conformité</span></div>
+            <div class="info"><span>Plafond par opération</span><span>Propre à chaque entreprise, réglé par la conformité</span></div>
+            <p class="mention" style="margin-top:12px">Au-delà du seuil, le second signataire de l'entreprise valide aussi. Celui qui saisit un ordre ne le valide jamais.</p>
+          </section>
           <section class="carte">
             <h2>Historique</h2>
             <ul class="journal" data-historique-seconde></ul>
@@ -4479,7 +4516,7 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
          (atelier 8), délai d'abandon (E5d), horaires du service après-vente (21/10), version minimale
          (Z8), questions fréquentes (H2). Valeurs : celles du B2C. Responsable : l'Administration par
          défaut (CL11). Rendu depuis REGLAGES_APP ; chaque ligne se modifie en panneau. -->
-    <section class="ecran" id="bo64" data-code="BO64" data-nom="Réglages de l'application" data-espace="administration" data-menu="Application client" data-titre="Réglages de l'application" data-contexte="Application client · valeurs lues par l'application à son ouverture · chaque modification historisée" data-fait="oui" data-trancher="Valeurs de démonstration du B2C. CL11 · Q36 · Q40.">
+    <section class="ecran" id="bo64" data-code="BO64" data-nom="Réglages de l'application" data-espace="administration" data-menu="Application client" data-titre="Réglages de l'application" data-contexte="Application client · valeurs lues par l'application à son ouverture · chaque modification historisée" data-fait="oui" data-trancher="Valeurs de démonstration du B2C et de la plateforme diaspora. CL11 · Q36 · Q40. Atelier 9 (29/10) : moyens de paiement par plateforme (un moyen désactivé disparaît côté client), simulateur de la plateforme web désactivable, alertes e-mail.">
       <span class="etiquette trancher" data-decision="q" data-entete title="CL11 — Qui modifie les réglages de l'application (montants, opérateurs, taxes, questions fréquentes) ? Par défaut : l'Administration, avec le responsable métier affiché sur chaque ligne."></span>
       <div data-reglages-app></div>
       <section class="carte">
@@ -4515,6 +4552,234 @@ a.compteur.attention{border-color:var(--attention-fond);box-shadow:inset 3px 0 0
         </aside>
       </div>
     </section>
+
+    <!-- B2B ======================================================================================
+         Bloc 3 (lot 3) · l'ordre de transfert haute valeur, côté siège (spec/BO-entreprises.md,
+         03/11, avant l'atelier 10 du 05/11 : tout est hypothèse). BO65 à BO68, rendus depuis
+         ENTREPRISES, FOURNISSEURS_B2B et ORDRES_B2B du JS (// B2B). Profil « Chargé de compte
+         entreprises » et espace « Entreprises » : proposition Galadrim (déduit). -->
+
+    <!-- B2B · BO65 · Transferts entreprises : liste du chargé de compte, qui lui tient lieu de
+         tableau de bord (compteurs cliquables, clé suivi). Finance et Audit en lecture. -->
+    <section class="ecran" id="bo65" data-profils="finance audit" data-code="BO65" data-nom="Transferts entreprises" data-espace="entreprises" data-menu="Transferts entreprises" data-titre="Transferts entreprises" data-contexte="Ordres de transfert haute valeur · saisis pour le compte des entreprises" data-fait="oui" data-ajout="Profil chargé de compte, espace Entreprises, liste des ordres B2B" data-trancher="Hypothèse de l'atelier 10 (05/11), rien n'est décidé : Q1 (qui saisit), Q2 (seuils, validations, justificatif), Q3 (financement, taux), Q5 (statuts). Données inventées.">
+      <span class="etiquette trancher" data-entete data-decision="q" title="Qui saisit un transfert B2B : chargé de compte, entreprise, agence ? (atelier 10, Q1) Par défaut : le chargé de compte SAFICO, dans un sixième espace « Entreprises » ; l'espace web de l'entreprise viendra ensuite."></span>
+      <div class="ligne compteurs" data-choix="suivi" role="group" aria-label="Filtrer les ordres par suivi">
+        <button class="carte compteur actif" type="button" data-valeur="toutes"><span class="secondaire">Tous les ordres</span><b class="montant" data-b2b-nb="toutes"></b></button>
+        <button class="carte compteur" type="button" data-valeur="completer"><span class="secondaire">À compléter</span><b class="montant" data-b2b-nb="completer"></b></button>
+        <button class="carte compteur" type="button" data-valeur="validation"><span class="secondaire">En validation</span><b class="montant" data-b2b-nb="validation"></b></button>
+        <button class="carte compteur attention" type="button" data-valeur="financement"><span class="secondaire">Solde insuffisant</span><b class="montant" data-b2b-nb="financement"></b></button>
+        <button class="carte compteur attention" type="button" data-valeur="rejet"><span class="secondaire">Rejets du partenaire</span><b class="montant" data-b2b-nb="rejet"></b></button>
+      </div>
+      <section class="carte">
+        <div class="carte-tete">
+          <h2>Ordres de transfert</h2>
+          <button class="bouton primaire petit" type="button" data-ouvrir-tiroir="bo67">Nouvel ordre</button>
+        </div>
+        <div class="filtre">
+          <div class="champ"><label for="bo65-statut">Statut</label>
+            <select id="bo65-statut" data-filtre="statut">
+              <option value="">Tous</option>
+              <option value="brouillon">Brouillon</option>
+              <option value="signataire">À valider · second signataire</option>
+              <option value="conformite">À valider · conformité</option>
+              <option value="direction">À valider · direction</option>
+              <option value="refusee">Refusée</option>
+              <option value="financement">En attente de financement</option>
+              <option value="en-cours">En cours</option>
+              <option value="validee">Validée</option>
+              <option value="echouee">Échouée</option>
+              <option value="payee">Payée</option>
+              <option value="annulee">Annulée</option>
+            </select>
+          </div>
+          <div class="champ"><label for="bo65-entreprise">Entreprise</label>
+            <select id="bo65-entreprise" data-filtre="entreprise">
+              <option value="">Toutes</option>
+              <option value="kaloum-agro">Kaloum Agro-Import SARL</option>
+              <option value="fouta">Constructions du Fouta SA</option>
+              <option value="matam-equip">Matam Équipements SARL</option>
+            </select>
+          </div>
+          <div class="champ"><label for="bo65-devise">Devise</label>
+            <select id="bo65-devise" data-filtre="devise">
+              <option value="">Toutes</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="XOF">XOF</option>
+            </select>
+          </div>
+          <div class="champ"><label for="bo65-texte">Recherche</label><input id="bo65-texte" type="search" data-filtre-texte placeholder="Référence ou fournisseur"></div>
+        </div>
+        <div class="defilant">
+          <table class="tableau dense" data-filtrable="suivi" data-unite="ordres">
+            <thead><tr><th>Date</th><th>Entreprise</th><th>Fournisseur et pays</th><th class="nombre">Montant</th><th>Statut</th><th>Prochaine étape</th></tr></thead>
+            <tbody data-ordres-b2b></tbody>
+          </table>
+        </div>
+        <p class="pied"><span data-compte></span> · Contre-valeur au taux du jour (BO12), ou au taux fixé à la validation. Statuts d'avant la transmission au partenaire : déduits. <span class="etiquette trancher" data-decision="q" title="Les statuts d'un transfert vers un compte bancaire (En cours, Validée, Échouée, Payée) conviennent-ils au B2B, et faut-il les états d'avant la transmission (Brouillon, À valider, En attente de financement, Refusée) ? (atelier 10, Q5) Par défaut : les quatre statuts de l'atelier 9, précédés des quatre états déduits."></span></p>
+      </section>
+    </section>
+
+    <!-- B2B · BO66 · Ordre de transfert : l'écran central, partagé (conformité, direction, finance,
+         audit). Rempli selon l'ordre ouvert (SEL.ordre ; par son ancre : OT-2026-0147). Clé
+         ordre-b2b : outil de revue qui fait parcourir les états d'un même ordre. -->
+    <section class="ecran" id="bo66" data-parent="bo65" data-origine-variable data-profils="conformite direction finance audit" data-code="BO66" data-nom="Ordre de transfert" data-espace="entreprises" data-menu="Ordre de transfert" data-titre="Ordre de transfert" data-contexte="Ordre de transfert haute valeur" data-fait="oui" data-ajout="Fiche de l'ordre B2B : frise des 8 étapes, contrôles, chaîne de validation, taux fixé, suivi partenaire" data-trancher="Hypothèse de l'atelier 10 : étapes, double validation (conformité puis direction), taux fixé à la validation, pas d'avance. Frais de 0,5 %, solde en GNF et annulation par le chargé de compte : déduits.">
+      <div data-ordre-revue></div>
+      <div data-ordre-frise></div>
+      <div class="ligne align-haut">
+        <div class="colonne" style="--part:820" data-ordre-gauche></div>
+        <div class="colonne collante" style="--part:440" data-ordre-droite></div>
+      </div>
+      <div class="actions a-droite" data-ordre-actions></div>
+      <div class="tiroir-voile" data-tiroir="annulation-b2b" hidden>
+        <aside class="tiroir" role="dialog" aria-modal="true" aria-labelledby="tiroir-annulation-b2b">
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-annulation-b2b">Annuler l'ordre</h2><p data-annul-b2b="ref"></p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
+            <div class="bandeau attention"><strong>Annulation possible en « En cours » ou « Échouée » seulement</strong><span data-annul-b2b="effet"></span></div>
+            <div class="champ"><label for="bo66-annul-motif">Motif de l'annulation</label><textarea id="bo66-annul-motif" placeholder="Demande de l'entreprise, rejet du partenaire…"></textarea><span class="aide">Obligatoire · tracé au journal d'audit</span></div>
+            <div class="reauth"></div>
+            <p class="mention">Le solde de l'entreprise est recrédité du montant et des frais. <span class="etiquette trancher" data-decision="q" title="Qui annule un ordre B2B : chargé de compte, Opérations ? Les frais sont-ils restitués ? Par défaut : le chargé de compte, avec le code personnel, frais restitués."></span></p>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Fermer</button>
+            <button class="bouton primaire" type="button" data-soumettre="annulation-b2b" data-exige="#bo66-annul-motif [data-code-perso]" disabled>Annuler l'ordre</button>
+          </footer>
+        </aside>
+      </div>
+    </section>
+
+    <!-- B2B · BO67 · Nouvel ordre de transfert : panneau large sur BO65. Bloque un dossier non
+         vérifié ; contrôles en direct (plafond, solde, seuil de double validation, CENTIF).
+         « Soumettre » ajoute l'ordre à ORDRES_B2B (en tête de BO65, file de la conformité). -->
+    <section class="ecran" id="bo67" data-parent="bo65" data-tiroir-de="bo65" data-code="BO67" data-nom="Nouvel ordre de transfert" data-espace="entreprises" data-menu="Nouvel ordre" data-titre="Nouvel ordre de transfert" data-contexte="Panneau sur la liste des transferts entreprises" data-fait="oui" data-ajout="Saisie d'un ordre B2B par le chargé de compte" data-trancher="Justificatif obligatoire pour chaque transfert (Q2). Motif « Paiement fournisseur » : déduit. Second signataire : ordre signé joint (déduit).">
+      <div class="tiroir-voile" data-tiroir="bo67" hidden>
+        <aside class="tiroir large" role="dialog" aria-modal="true" aria-labelledby="tiroir-bo67">
+          <header class="tiroir-tete">
+            <div><h2 id="tiroir-bo67">Nouvel ordre de transfert</h2><p>Saisi pour le compte de l'entreprise</p></div>
+            <button class="icone-bouton" type="button" data-fermer-tiroir aria-label="Fermer" title="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-fermer"/></svg></button>
+          </header>
+          <div class="tiroir-corps">
+            <h3 class="sous-bloc">1 · Entreprise</h3>
+            <div class="champ"><label for="bo67-entreprise">Entreprise</label>
+              <select id="bo67-entreprise">
+                <option value="">Choisir une entreprise</option>
+                <option value="kaloum-agro">Kaloum Agro-Import SARL</option>
+                <option value="fouta">Constructions du Fouta SA</option>
+                <option value="matam-equip">Matam Équipements SARL</option>
+              </select>
+            </div>
+            <div data-no="entreprise"></div>
+            <div data-no="suite" hidden>
+              <div class="separateur"></div>
+              <h3 class="sous-bloc">2 · Fournisseur</h3>
+              <div class="segmente" data-choix="fournisseur" role="group" aria-label="Fournisseur">
+                <button class="actif" data-valeur="enregistre">Fournisseur enregistré</button>
+                <button data-valeur="nouveau">Nouveau fournisseur</button>
+              </div>
+              <div data-si-fournisseur="enregistre">
+                <div class="champ"><label for="bo67-fournisseur">Fournisseur</label><select id="bo67-fournisseur"></select></div>
+                <div data-no="fournisseur"></div>
+              </div>
+              <div class="champs" data-si-fournisseur="nouveau">
+                <div class="champ"><label for="bo67-four-nom">Raison sociale</label><input id="bo67-four-nom" type="text"></div>
+                <div class="paire">
+                  <div class="champ"><label for="bo67-four-pays">Pays <span class="etiquette trancher" data-decision="q" title="Corridors et devises : atelier 12. Par défaut : Côte d'Ivoire et Sénégal (corridors prioritaires), plus les Émirats arabes unis pour l'exemple de Dubaï."></span></label>
+                    <select id="bo67-four-pays"><option>Côte d'Ivoire</option><option>Sénégal</option><option>Émirats arabes unis</option></select></div>
+                  <div class="champ"><label for="bo67-four-banque">Banque</label><input id="bo67-four-banque" type="text" placeholder="Banque du bénéficiaire"></div>
+                </div>
+                <div class="champ"><label for="bo67-four-iban">IBAN</label><input id="bo67-four-iban" type="text" placeholder="CI00 …"></div>
+                <div class="champ"><label for="bo67-four-adresse">Adresse</label><input id="bo67-four-adresse" type="text"></div>
+                <p class="mention">Le fournisseur est contrôlé sur les listes de sanctions à la soumission.</p>
+              </div>
+              <div class="separateur"></div>
+              <h3 class="sous-bloc">3 · Montant</h3>
+              <div class="paire">
+                <div class="champ"><span class="libelle" id="bo67-devise">Devise</span>
+                  <div class="segmente" data-choix="devise-b2b" role="group" aria-labelledby="bo67-devise">
+                    <button class="actif" data-valeur="USD">USD</button>
+                    <button data-valeur="EUR">EUR</button>
+                    <button data-valeur="XOF">XOF</button>
+                  </div>
+                </div>
+                <div class="champ"><label for="bo67-montant">Montant <span data-no="devise">USD</span></label><input id="bo67-montant" type="text" inputmode="numeric" data-montant="" placeholder="0"></div>
+              </div>
+              <div data-no="calcul"></div>
+              <div class="separateur"></div>
+              <h3 class="sous-bloc">4 · Motif</h3>
+              <div class="champ"><label for="bo67-motif">Motif du transfert</label>
+                <select id="bo67-motif">
+                  <option>Paiement fournisseur</option>
+                  <option>Assistance familiale</option>
+                  <option>Frais médicaux</option>
+                  <option>Frais scolaires</option>
+                  <option>Construction et loyer</option>
+                  <option>Frais de voyage et transports</option>
+                  <option>Investissement</option>
+                  <option>Dette ou prêt personnel</option>
+                  <option>Œuvres et dons</option>
+                  <option>Autre</option>
+                </select>
+                <span class="aide">« Paiement fournisseur » : ajouté pour le B2B (déduit) ; le reste est la liste de l'atelier 9.</span>
+              </div>
+              <div class="champ" data-no="motif-autre" hidden><label for="bo67-motif-autre">Préciser</label><input id="bo67-motif-autre" type="text"></div>
+              <div class="separateur"></div>
+              <h3 class="sous-bloc">5 · Justificatif</h3>
+              <div class="paire">
+                <div class="champ"><label for="bo67-type">Type de pièce</label><select id="bo67-type"><option>Facture</option><option>Contrat</option><option>Bon de commande</option></select></div>
+                <div class="champ"><label for="bo67-fichier">Fichier</label><input id="bo67-fichier" type="text" readonly placeholder="Aucun fichier déposé"></div>
+              </div>
+              <button class="bouton secondaire petit" type="button" data-no-deposer>Déposer un fichier</button>
+              <p class="mention">Obligatoire pour chaque transfert (hypothèse de l'atelier 10, Q2). Dépôt simulé : le prototype ne garde aucun fichier.</p>
+              <div data-no="signataire" hidden>
+                <div class="separateur"></div>
+                <h3 class="sous-bloc">6 · Second signataire</h3>
+                <div class="champ"><label for="bo67-signataire">Second signataire de l'entreprise</label><select id="bo67-signataire"></select></div>
+                <label class="case"><input type="checkbox" id="bo67-signe">Ordre signé par les deux représentants joint <span class="etiquette trancher" data-decision="q" title="Quand le chargé de compte saisit l'ordre, comment le second signataire de l'entreprise valide-t-il : ordre signé joint, ou validation dans l'espace web ? (atelier 10, Q1, Q2) Par défaut : le chargé de compte joint l'ordre signé des deux représentants."></span></label>
+              </div>
+              <div data-no="controles"></div>
+            </div>
+          </div>
+          <footer class="tiroir-pied">
+            <button class="bouton discret" type="button" data-fermer-tiroir>Annuler</button>
+            <div class="actions">
+              <button class="bouton secondaire" type="button" data-soumettre="brouillon-b2b" data-exige="#bo67-entreprise @b2b-verifie @b2b-fournisseur #bo67-montant" disabled>Enregistrer le brouillon</button>
+              <button class="bouton primaire" type="button" data-soumettre="ordre-b2b" data-exige="#bo67-entreprise @b2b-verifie @b2b-fournisseur #bo67-montant @b2b-plafond #bo67-motif-autre #bo67-fichier #bo67-signe" disabled>Soumettre</button>
+            </div>
+          </footer>
+        </aside>
+      </div>
+    </section>
+
+    <!-- B2B · BO68 · Transferts entreprises à valider : la file partagée de la conformité et de
+         la direction ; chaque profil n'y voit que le niveau qui l'attend. La décision se prend
+         sur BO66 ; l'ordre quitte alors la file (son statut change). -->
+    <section class="ecran" id="bo68" data-profils="direction" data-code="BO68" data-nom="Transferts entreprises à valider" data-espace="conformite" data-menu="Transferts entreprises" data-titre="Transferts entreprises à valider" data-contexte="Ce qui attend votre validation · par priorité, puis ancienneté" data-fait="oui" data-ajout="File de validation des ordres B2B, conformité et direction" data-trancher="Double validation conformité puis direction au-delà d'un seuil réglable (hypothèse de l'atelier 10, Q2). Règle de priorité : déduite.">
+      <section class="carte">
+        <div class="carte-tete">
+          <h2>Ordres à valider <span class="etiquette trancher" data-decision="q" title="Quel délai de validation pour un ordre B2B, et qui relance au-delà ? (atelier 10, Q1 : délai cible) Par défaut : priorité critique à partir de 1 000 000 USD ou de 48 h d'attente, élevée à partir de 300 000 USD ou de 24 h."></span></h2>
+          <span class="secondaire" data-file-b2b="niveau"></span>
+        </div>
+        <div class="defilant">
+          <table class="tableau dense">
+            <thead><tr><th>Priorité</th><th>Reçu</th><th>Entreprise</th><th>Fournisseur et pays</th><th class="nombre">Montant</th><th>Contrôles</th><th>CENTIF</th></tr></thead>
+            <tbody data-file-b2b="lignes"></tbody>
+          </table>
+        </div>
+        <p class="pied">Chaque ligne ouvre l'ordre : la décision s'y prend, avec le code personnel. Celui qui saisit un ordre ne le valide jamais.</p>
+      </section>
+    </section>
+
+    <!-- B2B · hors de cette passe (dessinés après les réponses de l'atelier 10 et les ateliers 11 et 12). -->
+    <div class="non-dessine" data-code="—" data-nom="Espace web de l'entreprise (saisie, second signataire, suivi)" data-espace="entreprises" data-etat="Non dessiné · atelier 10, Q1"></div>
+    <div class="non-dessine" data-code="—" data-nom="Ouverture et vérification d'un compte entreprise" data-espace="entreprises" data-etat="Non dessiné · atelier 10, Q4"></div>
+    <div class="non-dessine" data-code="—" data-nom="Alimentation du solde entreprise (virement, dépôt en agence)" data-espace="entreprises" data-etat="Non dessiné · atelier 10, Q3"></div>
+    <div class="non-dessine" data-code="—" data-nom="Relevé mensuel de l'entreprise (PDF, Excel)" data-espace="entreprises" data-etat="Non dessiné · atelier 10, Q5"></div>
+    <div class="non-dessine" data-code="—" data-nom="Relation commerciale, migration des clients B2B existants, franchise" data-espace="entreprises" data-etat="Non dessiné · atelier 11 (12/11)"></div>
+    <div class="non-dessine" data-code="—" data-nom="Corridors, devises, multilingue" data-espace="entreprises" data-etat="Non dessiné · atelier 12 (19/11)"></div>
+    <!-- /B2B -->
 
     <section class="ecran" id="bo46" data-code="BO46" data-nom="Paramètres" data-espace="administration" data-menu="Paramètres" data-titre="Paramètres" data-contexte="Vue consolidée, en lecture · chaque paramètre se modifie dans l'espace de son responsable" data-fait="oui">
       <span class="etiquette trancher" data-entete data-decision="h" title="Hypothèse Galadrim : oui, la vue répond à la demande de supervision centralisée, telle que dessinée. (Registre B11 · la vue « Paramètres » répond-elle à la demande de supervision centralisée ?)"></span>
@@ -4959,6 +5224,8 @@ const ESPACES = [
   { cle: 'conformite', nom: 'Conformité', ico: 'i-conformite', agent: 'Aïssatou Kourouma|Responsable conformité · Siège' },
   { cle: 'operations', nom: 'Opérations', ico: 'i-operations', agent: 'Mamadou Sow|Opérations · Siège' },
   { cle: 'finance', nom: 'Finance', ico: 'i-finance', agent: 'Fatoumata Camara|Responsable financier · Siège' },
+  // B2B (03/11) : sixième espace, proposé avant l'atelier 10 (l'atelier 5 en a validé cinq).
+  { cle: 'entreprises', nom: 'Entreprises', ico: 'i-entreprise', agent: 'Djénabou Sangaré|Chargée de compte entreprises · Siège' },
   { cle: 'administration', nom: 'Administration', ico: 'i-administration', agent: 'Lansana Condé|Administrateur · Siège' },
   { cle: 'consultation', nom: 'Consultation', ico: 'i-consultation', agent: 'Mariama Diallo|Audit interne' },
 ];
@@ -4975,6 +5242,7 @@ const PROFILS = [
     ['Surveillance', [['bo1', 'i-alerte'], ['bo21', 'i-hors-ligne'], ['bo6', 'i-valider']]],
     ['Clients', [['bo35', 'i-client']]],
     ['Clients en ligne', [['bo57', 'i-identite'], ['bo59', 'i-graphique']]],
+    ['Entreprises', [['bo68', 'i-entreprise']]], // B2B
     ['Réseau', [['bo27', 'i-hors-ligne']]],
     ['Réglages', [['bo23', 'i-reglages']]],
     ['Rapports', [['bo7', 'i-document']]],
@@ -4994,6 +5262,7 @@ const PROFILS = [
     ['Solde virtuel', [['bo41', 'i-finance'], ['bo30', 'i-document'], ['bo42', 'i-caisse'], ['bo43', 'i-balance']]],
     ['Comptabilité', [['bo11', 'i-synchro'], ['bo13', 'i-graphique']]],
     ['Contrôle', [['bo6', 'i-valider'], ['bo44', 'i-taux']]],
+    ['Entreprises', [['bo65', 'i-entreprise']]], // B2B, en lecture
   ] },
   { cle: 'raf', espace: 'finance', agent: 'Ousmane Baldé|RAF · Siège', menu: [
     ['Accueil', [['bo53', 'i-sommaire']]],
@@ -5002,6 +5271,10 @@ const PROFILS = [
     ['Solde virtuel', [['bo41', 'i-finance'], ['bo30', 'i-document'], ['bo42', 'i-caisse'], ['bo43', 'i-balance']]],
     ['Comptabilité', [['bo11', 'i-synchro'], ['bo13', 'i-graphique']]],
     ['Contrôle', [['bo44', 'i-taux']]],
+  ] },
+  // B2B (03/11) : dixième profil, proposé avant l'atelier 10 (Q1). BO65 lui tient lieu de tableau de bord.
+  { cle: 'charge', espace: 'entreprises', agent: 'Djénabou Sangaré|Chargée de compte entreprises · Siège', menu: [
+    ['Transferts', [['bo65', 'i-entreprise']]],
   ] },
   { cle: 'administration', espace: 'administration', agent: 'Lansana Condé|Administrateur · Siège', menu: [
     ['Accueil', [['bo54', 'i-sommaire']]],
@@ -5017,10 +5290,11 @@ const PROFILS = [
     ['Conformité', [['bo1', 'i-alerte'], ['bo21', 'i-hors-ligne'], ['bo35', 'i-client']]],
     ['Opérations', [['bo24', 'i-pause'], ['bo27', 'i-hors-ligne']]],
     ['Finance', [['bo9', 'i-balance']]],
+    ['Entreprises', [['bo65', 'i-entreprise']]], // B2B
   ] },
   { cle: 'direction', espace: 'consultation', agent: 'Alpha Barry|Direction générale', menu: [
     ['Accueil', [['bo20', 'i-sommaire', 'Tableau de bord']]],
-    ['Décisions', [['bo6', 'i-valider']]],
+    ['Décisions', [['bo6', 'i-valider'], ['bo68', 'i-entreprise']]], // B2B : BO68
   ] },
   { cle: 'zone', espace: 'consultation', agent: 'Ibrahima Touré|Responsable de zone · Basse-Guinée', menu: [
     ['Accueil', [['bo56', 'i-sommaire']]],
@@ -5143,6 +5417,12 @@ const CLES = {
   'aide-signale': 'non',     // BO61 : débit signalé à la Finance · non · oui
   paiements: 'debits',       // BO63 (28/10) : debits · confirmations · remboursements
   'remb-source': 'agence',   // BO25 (28/10) : agence · application (annulation demandée dans l'application, BO62)
+  // B2B (03/11)
+  'ordre-b2b': 'reel',       // BO66 : état montré (outil de revue) · reel · brouillon · signataire · conformite · direction · financement · refusee · en-cours · validee · echouee · payee · annulee
+  suivi: 'toutes',           // BO65 : compteurs · toutes · completer · validation · financement · rejet
+  fournisseur: 'enregistre', // BO67 : enregistre · nouveau
+  'devise-b2b': 'USD',       // BO67 : USD · EUR · XOF
+  'niveaux-b2b': 'direction', // BO50 : au-delà du seuil · conformite · direction
   'compte-type': 'inscription', // BO58 (28/10) : inscription · rattachement · piece · numero, posée par rendreCompteClient()
 };
 
@@ -5315,6 +5595,9 @@ const BADGES = {
   bo62: () => ANNULATIONS_EN_LIGNE.filter((a) => !a.decision).length,
   bo59: () => DEMANDES_PLAFOND.filter((x) => x.etat === 'attente').length,
   bo63: () => aRegulariser(),
+  // B2B : ce qui attend le chargé de compte ; la file du niveau du profil (conformité ou direction).
+  bo65: () => ORDRES_B2B.filter((o) => ['brouillon', 'signataire', 'echouee'].includes(o.statut)).length,
+  bo68: () => ORDRES_B2B.filter((o) => o.statut === niveauB2B()).length,
 };
 function compteur(ecran) {
   if (BADGES[ecran.id]) return BADGES[ecran.id]();
@@ -5423,9 +5706,9 @@ const AGENCES = {
       { nom: 'K. Bah', role: 'Chef d\'agence', caisse: '—', facteur: 'Activé', connexion: '01/10 · 07:45', etat: 'Actif' },
     ],
     transactions: [
-      ['SFC-9A04-0112', '01/10 · 10:41', '—', '2 500 000 GNF', 'En attente de retrait', 'attente', '—'],
+      ['SFC-9A04-0112', '01/10 · 10:41', '—', '2 500 000 GNF', 'En cours', 'attente', '—'],
       ['SFC-9A03-5518', '01/10 · 10:34', 'BAH Thierno Ousmane', '45 000 000 GNF', 'En vérification', 'attente', null, 'bo25'],
-      ['SFC-6D40-5528', '01/10 · 09:12', 'CAMARA Oumou', '1 200 000 GNF', 'Échoué', 'blocage', 'Orange Money : numéro inconnu', 'bo26'],
+      ['SFC-6D40-5528', '01/10 · 09:12', 'CAMARA Oumou', '1 200 000 GNF', 'Échouée', 'blocage', 'Orange Money : numéro inconnu', 'bo26'],
     ],
     caisses: [
       ['Caisse 1', 'A. Diallo', 'Ouverte', '72 400 000', '40 100 000', '32 300 000', '—'],
@@ -5440,7 +5723,7 @@ const AGENCES = {
       { nom: 'M. Keïta', role: 'Caissier', caisse: '—', facteur: 'Non activé', connexion: '—', etat: 'En attente de validation' },
     ],
     transactions: [
-      ['SFC-6D41-0017', '01/10', 'DIALLO Aïcha', '8 000 000 GNF', 'Échoué', 'blocage', 'Ecobank : RIB invalide', 'bo26'],
+      ['SFC-6D41-0017', '01/10', 'DIALLO Aïcha', '8 000 000 GNF', 'Échouée', 'blocage', 'Ecobank : RIB invalide', 'bo26'],
       ['SFC-5E02-7710', '04/09', 'SYLLA Fanta', '22 500 000 GNF', 'En vérification', 'attente', null, 'bo25'],
     ],
     caisses: [
@@ -5710,6 +5993,7 @@ function ajouterMembre() {
 // Sélection courante : posée par data-choisir="clé:valeur;clé:valeur" sur la ligne ou le lien cliqué.
 const SEL = { match: 'bah', fract: 'soumah', remb: '7c88', operation: 'SFC-9A03-5518', demande: 'activation-kankan', ecart: '0', client: 'f-soumah',
   utilisateur: 'A. Diallo|Caissier|Kaloum|Activé|01/10 · 07:58', compte: 'a-diallo', caisse: 'kaloum:2', aide: 'balde-retrait', compteClient: 'kante-rattachement',
+  ordre: 'OT-2026-0147', // B2B : ordre ouvert en BO66
   tiroir: '' }; // tiroir : panneau à ouvrir à l'arrivée, consommé par afficher()
 // Écrans dont la liste d'origine varie (data-origine-variable) : la liste d'où l'on vient.
 const origines = {};
@@ -5767,7 +6051,7 @@ const DOSSIERS_MATCH = {
     note: 'Pays sous surveillance (liste grise du GAFI) : le transfert déclenche une alerte et relève le score de risque du client, sans blocage. L\'opération suit son cours.',
     client: [['Identifiant', 'C-231450'], ['Nom', 'DIALLO Mamadou'], ['Téléphone', '+224 657 20 44 91'], ['Agence d\'enregistrement', 'Labé'], ['Client depuis', 'janvier 2026'], ['Statut', 'Occasionnel']],
     risque: 'Relevé · élevé', antecedents: [],
-    historique: [['01/10 10:20', 'SFC-9A04-0019', 'Envoi', 'Pays D', '1 850 000 GNF', ['attente', 'En attente de retrait']]] },
+    historique: [['01/10 10:20', 'SFC-9A04-0019', 'Envoi', 'Pays D', '1 850 000 GNF', ['attente', 'En cours']]] },
   keita: { genre: 'ppe', titre: 'Match PPE · KEÏTA Aminata', contexte: 'Alerte faible · ouverte à 09:42 · opération SFC-9A04-0006 suspendue en agence Kaloum',
     operation: 'SFC-9A04-0006', nom: 'KEÏTA Aminata', trace: '58 / 100 · v2026.09.30',
     blocs: [['Score', '58 / 100'], ['Type', 'Proche', 'Sanction · PPE · Proche · Associé'], ['Liste source', 'Liste PEP', 'Fournisseur de filtrage à désigner'], ['Version de la liste', 'v2026.09.30', 'Filtrage du 01/10/2026 à 09:42']],
@@ -5934,7 +6218,7 @@ function dossierRemb(cle) {
   if (a) {
     return { source: 'application', ref: a.ref, titre: `${a.ref} · ${a.client}`, contexte: `Annulation demandée dans l'application le ${a.demandee.replace(' · ', ' à ')} · retrait suspendu pendant l'examen`, defaut: null, etiquetteQ8: false,
       infos: [['Expéditeur', a.client], ['Bénéficiaire', a.benef], ['Destination', a.dest], ['Montant', a.montant], ['Frais', a.frais], ['Payé par', `${a.paye} · le ${a.payeLe}`],
-        ['Statut', 'Disponible au retrait · retrait suspendu'], ['Code de retrait', 'Affiché au client · inutilisable pendant l\'examen']],
+        ['Statut', 'En cours · disponible au retrait · retrait suspendu'], ['Code de retrait', 'Affiché au client · inutilisable pendant l\'examen']],
       demande: [['Motif choisi par le client', a.motif], ['Confirmée par', 'Code PIN du client'], ['Demandée le', a.demandee.replace(' · ', ' à ')], ['Téléphone du client', a.tel]],
       restitution: [['À rendre', `${a.total} · montant et frais`], ['Sur', sur(a).replace(/^sur /, '')], ['Bénéficiaire', 'Prévenu par SMS si l\'annulation est acceptée ; son code ne fonctionne plus']],
       accepter: `${a.total}, montant et frais, rendus ${sur(a)}. Le code de retrait cesse de fonctionner ; le bénéficiaire est prévenu par SMS.`,
@@ -6020,24 +6304,32 @@ function rendrePerteAcces() {
 }
 
 /* ---------- BO36 · détail d'une opération ---------- */
+// Statuts selon le type de transaction (atelier 9, 29/10, proposition de Babacar Amallah Faye ; Q38 de l'application client) :
+// espèces : En cours (disponible au retrait) · Remboursée · Annulée · Payée ; mobile money : En cours (en cours de traitement) ·
+// Validée (en traitement chez le partenaire) · Échouée (rejetée par le partenaire, avec la raison) · Payée ; compte bancaire :
+// En cours (en cours de transmission au partenaire) · Validée · Échouée · Payée. Seuls « En cours » et « Échouée » permettent une annulation.
+const modeDe = (o) => /wallet|mobile/i.test(o.mode) ? 'mobile' : /virement|banc/i.test(o.mode) ? 'banque' : 'especes';
+const STATUT_EN_COURS = { especes: 'disponible au retrait', mobile: 'en cours de traitement', banque: 'en cours de transmission au partenaire' };
+const annulable = (o) => ['En cours', 'Échouée'].includes(o.statut[1]);
 // j : [quand, quoi, qui, réservé] — réservé = true : entrée visible de la conformité et de l'audit seulement.
 const OPERATIONS = {
   // Envois payés dans l'application client (28/10, spec/BO-clients-en-ligne.md) : canal, pas de
   // caissier. SFC-9A21-3307 et SFC-9A18-0412 viennent du B2C ; la correction de nom et les trois
   // annulations demandées (BO62) sont inventées.
-  'SFC-9A21-3307': { canal: 'Application · Orange Money', date: '30/09 · 14:32', agence: 'Application client', caissier: '—', exp: 'BALDÉ Fatoumata', benef: 'CAMARA Aïssata', dest: 'Kankan · Guinée', mode: 'Espèces', montant: '1 000 000 GNF', frais: '10 000 GNF',
-    statut: ['attente', 'En attente de retrait'], blocage: null, echeance: '30/10',
+  // Motifs du transfert (atelier 9, 29/10) : valeurs de démonstration, reprises du B2C pour ses deux envois, inventées pour les autres.
+  'SFC-9A21-3307': { canal: 'Application · Orange Money', motifTransfert: 'Assistance familiale', date: '30/09 · 14:32', agence: 'Application client', caissier: '—', exp: 'BALDÉ Fatoumata', benef: 'CAMARA Aïssata', dest: 'Kankan · Guinée', mode: 'Espèces', montant: '1 000 000 GNF', frais: '10 000 GNF',
+    statut: ['attente', 'En cours'], blocage: null, echeance: '30/10',
     j: [['30/09 · 14:22', 'Envoi préparé dans l\'application', 'BALDÉ Fatoumata · application'], ['30/09 · 14:32', 'Paiement confirmé par Orange Money', 'Système'], ['30/09 · 14:32', 'Code de retrait affiché au client', 'Système'],
       ['30/09 · 15:05', 'Nom du bénéficiaire corrigé par le client : CAMARA Aïsata → CAMARA Aïssata · confirmé par son code PIN', 'BALDÉ Fatoumata · application']] },
-  'SFC-9A18-0412': { canal: 'Application · Orange Money', date: '29/09 · 16:05', agence: 'Application client', caissier: '—', exp: 'BALDÉ Fatoumata', benef: 'DIALLO Kadiatou', dest: 'Guinée', mode: 'Espèces', montant: '1 500 000 GNF', frais: '15 000 GNF',
+  'SFC-9A18-0412': { canal: 'Application · Orange Money', motifTransfert: 'Construction et loyer', date: '29/09 · 16:05', agence: 'Application client', caissier: '—', exp: 'BALDÉ Fatoumata', benef: 'DIALLO Kadiatou', dest: 'Guinée', mode: 'Espèces', montant: '1 500 000 GNF', frais: '15 000 GNF',
     statut: ['attente', 'En vérification'], blocage: { type: 'alerte', motif: 'Origine des fonds à justifier · justificatif demandé au client' }, echeance: '29/10',
     j: [['29/09 · 16:05', 'Paiement confirmé par Orange Money', 'Système'], ['29/09 · 16:05', 'Alerte · origine des fonds à justifier', 'Système', true],
       ['29/09 · 16:40', 'Justificatif demandé au client, dans l\'application', 'A. Kourouma · Conformité', true], ['29/09 · 16:40', 'Statut affiché au client : En vérification', 'Système']] },
   ...Object.fromEntries([
-    ['SFC-9A24-1156', 'Wave', '30/09 · 17:48', 'BANGOURA Hawa', 'BANGOURA Ibrahima', 'Kindia · Guinée', '2 500 000 GNF', '25 000 GNF', 'Erreur sur le montant', '01/10 · 10:02'],
-    ['SFC-9A19-4083', 'Orange Money', '30/09 · 11:20', 'TOLNO Christine', 'TOLNO Paul', 'Nzérékoré · Guinée', '400 000 GNF', '5 000 GNF', 'Je n\'ai plus besoin d\'envoyer', '01/10 · 09:15'],
-    ['SFC-9A22-7710', 'Carte bancaire', '30/09 · 19:05', 'SAMOURA Fodé', 'SAMOURA Aïcha', 'Dakar · Sénégal', '1 800 000 GNF', '18 000 GNF', 'Erreur sur le bénéficiaire', '30/09 · 19:40'],
-  ].map(([ref, paye, date, exp, benef, dest, montant, frais, motif, demandee]) => [ref, { canal: `Application · ${paye}`, date, agence: 'Application client', caissier: '—', exp, benef, dest, mode: 'Espèces', montant, frais,
+    ['SFC-9A24-1156', 'Wave', '30/09 · 17:48', 'BANGOURA Hawa', 'BANGOURA Ibrahima', 'Kindia · Guinée', '2 500 000 GNF', '25 000 GNF', 'Erreur sur le montant', '01/10 · 10:02', 'Investissement'],
+    ['SFC-9A19-4083', 'Orange Money', '30/09 · 11:20', 'TOLNO Christine', 'TOLNO Paul', 'Nzérékoré · Guinée', '400 000 GNF', '5 000 GNF', 'Je n\'ai plus besoin d\'envoyer', '01/10 · 09:15', 'Frais scolaires'],
+    ['SFC-9A22-7710', 'Carte bancaire', '30/09 · 19:05', 'SAMOURA Fodé', 'SAMOURA Aïcha', 'Dakar · Sénégal', '1 800 000 GNF', '18 000 GNF', 'Erreur sur le bénéficiaire', '30/09 · 19:40', 'Autre · Achat de marchandises'],
+  ].map(([ref, paye, date, exp, benef, dest, montant, frais, motif, demandee, motifTransfert]) => [ref, { canal: `Application · ${paye}`, motifTransfert, date, agence: 'Application client', caissier: '—', exp, benef, dest, mode: 'Espèces', montant, frais,
     statut: ['attention', 'Annulation demandée'], blocage: null, echeance: '—',
     j: [[date, `Paiement confirmé · ${paye}`, 'Système'], [demandee, `Annulation demandée par le client · « ${motif} » · confirmée par son code PIN`, `${exp} · application`], [demandee, 'Retrait suspendu pendant l\'examen', 'Système']] }])),
   'SFC-9A03-5518': { date: '01/10 · 10:34', agence: 'Kaloum', caissier: 'M. Camara · poste KAL-P3', exp: 'BAH Thierno Ousmane', benef: '—', dest: 'Côte d\'Ivoire', mode: '—', montant: '45 000 000 GNF', frais: '—',
@@ -6054,7 +6346,7 @@ const OPERATIONS = {
     j: [['04/09 · 08:37', 'Envoi saisi', 'Agence Matam'], ['04/09 · 08:37', 'Alerte élevée · match PPE · score 86', 'Système', true], ['04/09 · 08:37', 'Statut guichet : En vérification', 'Système']] },
   // Pays sous surveillance (atelier 5) : alerte sans blocage, l'opération suit son cours.
   'SFC-9A04-0019': { date: '01/10 · 10:20', agence: 'Labé', caissier: 'S. Barry', exp: 'DIALLO Mamadou', benef: '—', dest: 'Pays D', mode: '—', montant: '1 850 000 GNF', frais: '—',
-    statut: ['attente', 'En attente de retrait'], blocage: { type: 'surveillance', motif: 'Pays sous surveillance · liste grise GAFI · score de risque relevé, sans blocage', match: 'diallo' }, echeance: '—',
+    statut: ['attente', 'En cours'], blocage: { type: 'surveillance', motif: 'Pays sous surveillance · liste grise GAFI · score de risque relevé, sans blocage', match: 'diallo' }, echeance: '—',
     j: [['01/10 · 10:20', 'Envoi saisi', 'S. Barry · Caissier · Labé'], ['01/10 · 10:20', 'Alerte moyenne · pays sous surveillance · liste grise GAFI · score de risque relevé', 'Système', true]] },
   'SFC-9A04-0006': { date: '01/10 · 09:42', agence: 'Kaloum', caissier: '—', exp: 'KEÏTA Aminata', benef: '—', dest: 'Sénégal', mode: '—', montant: '900 000 GNF', frais: '—',
     statut: ['attente', 'En vérification'], blocage: { type: 'alerte', motif: 'Match PPE (proche) · score 58', match: 'keita' }, echeance: '31/10',
@@ -6072,13 +6364,13 @@ const OPERATIONS = {
     statut: ['blocage', 'Déclinée'], blocage: { type: 'declinee', motif: 'Taux défavorable après coupure · 1 XOF = 14,35 → 14,62 GNF', remb: '7c88' }, echeance: '30/10',
     j: [['30/09 · 16:40', 'Envoi encaissé hors ligne', 'S. Barry · Caissier · Labé'], ['01/10 · 08:05', 'Envoi rejoué · taux défavorable', 'Système'], ['01/10 · 08:05', 'Envoi décliné', 'Système'], ['01/10 · 10:12', 'SMS d\'invitation envoyé à l\'expéditeur', 'Système']] },
   'SFC-6D40-5528': { date: '01/10 · 09:12', agence: 'Kaloum', caissier: '—', exp: 'CAMARA Oumou', benef: 'Orange Money · +224 620 00 11 2', dest: 'Guinée', mode: 'Wallet', montant: '1 200 000 GNF', frais: '—',
-    statut: ['blocage', 'Échoué'], blocage: { type: 'rejet', motif: 'Orange Money : numéro inconnu · récupérable', cible: 'bo26', tiroir: 'relance' }, echeance: '—',
+    statut: ['blocage', 'Échouée'], blocage: { type: 'rejet', motif: 'Orange Money : numéro inconnu · récupérable', cible: 'bo26', tiroir: 'relance' }, echeance: '—',
     j: [['01/10 · 09:12', 'Envoi saisi', 'Agence Kaloum'], ['01/10 · 09:14', 'Rejet du partenaire · numéro inconnu', 'Orange Money'], ['01/10 · 10:04', 'Relance soumise', 'K. Bah · Chef d\'agence']] },
   'SFC-6D41-0017': { date: '01/10 · 08:55', agence: 'Matam', caissier: '—', exp: 'DIALLO Aïcha', benef: 'SANGARÉ Mohamed · compte Ecobank', dest: 'Guinée', mode: 'Virement bancaire', montant: '8 000 000 GNF', frais: '160 000 GNF',
-    statut: ['blocage', 'Échoué'], blocage: { type: 'rejet', motif: 'Ecobank : RIB invalide · non récupérable', remb: '6d41' }, echeance: '—',
+    statut: ['blocage', 'Échouée'], blocage: { type: 'rejet', motif: 'Ecobank : RIB invalide · non récupérable', remb: '6d41' }, echeance: '—',
     j: [['01/10 · 08:55', 'Envoi saisi', 'Agence Matam'], ['01/10 · 09:20', 'Rejet du partenaire · RIB invalide', 'Ecobank'], ['01/10 · 09:40', 'SMS à l\'expéditeur', 'Système']] },
   'SFC-9A04-0112': { date: '01/10 · 10:41', agence: 'Kaloum', caissier: '—', exp: '—', benef: '—', dest: '—', mode: '—', montant: '2 500 000 GNF', frais: '—',
-    statut: ['attente', 'En attente de retrait'], blocage: null, echeance: '—', j: [['01/10 · 10:41', 'Envoi saisi', 'Agence Kaloum'], ['01/10 · 10:41:52', 'Écriture synchronisée avec Odoo', 'Système']] },
+    statut: ['attente', 'En cours'], blocage: null, echeance: '—', j: [['01/10 · 10:41', 'Envoi saisi', 'Agence Kaloum'], ['01/10 · 10:41:52', 'Écriture synchronisée avec Odoo', 'Système']] },
   'SFC-6C10-4471': { date: '27/09', agence: 'Adjamé', caissier: '—', exp: 'TOURÉ Sékou', benef: '—', dest: 'Guinée', mode: 'Espèces', montant: '3 400 000 XOF', frais: '—',
     statut: ['valide', 'Payée'], blocage: null, echeance: '—',
     j: [['27/09', 'Envoi saisi', 'Agence Adjamé'], ['28/09', 'Payée', 'Agence Kaloum'], ['01/10 · 06:00', 'Nouveau match sanctions après paiement', 'Système', true]] },
@@ -6100,12 +6392,14 @@ function rendreOperation() {
   const cleExp = complet && cleClientDe(o.exp);
   const exp = cleExp ? `${o.exp} · <a class="sommaire-lien" href="#bo40" data-choisir="client:${cleExp}">fiche client</a>` : o.exp;
   hote.innerHTML = infosHtml([['Référence', ref], ['Date', o.date], ['Canal', o.canal || 'Agence'], ['Agence d\'envoi', o.agence], ['Caissier', o.caissier], ['Expéditeur', exp], ['Bénéficiaire', o.benef],
-    ['Destination', o.dest], ['Mode de réception', o.mode], ['Montant', o.montant], ['Frais', o.frais]]);
+    ['Destination', o.dest], ['Mode de réception', o.mode], ['Montant', o.montant], ['Frais', o.frais],
+    // Motif du transfert (atelier 9, 29/10) : obligatoire dans l'application et sur la plateforme web, jamais bloquant ; « Autre » : le texte du client.
+    ...(o.motifTransfert ? [['Motif du transfert', o.motifTransfert]] : [])]);
   // Motif : complet pour la conformité, les Opérations et l'audit ; jamais pour la Finance ni
   // l'administrateur (grille de visibilité revue le 01/10).
   let motif = '—';
   if (o.blocage) motif = complet ? o.blocage.motif : (reserve ? '<span class="motif-reserve">Réservé à la conformité et aux Opérations</span>' : '<span class="motif-reserve">Réservé aux Opérations</span>');
-  contenu.querySelector('[data-op="statut"]').innerHTML = infosHtml([['Statut', pastille(...o.statut)], [surveillance ? 'Alerte' : 'Motif', motif], ...(o.blocage && !surveillance ? [['Échéance des 30 jours', o.echeance, o.echeance.includes('sous') ? 'ecart' : '']] : [])]);
+  contenu.querySelector('[data-op="statut"]').innerHTML = infosHtml([['Statut', pastille(...o.statut) + (o.statut[1] === 'En cours' ? ` <span class="secondaire">· ${STATUT_EN_COURS[modeDe(o)] || ''}</span>` : '')], [surveillance ? 'Alerte' : 'Motif', motif], ...(o.blocage && !surveillance ? [['Échéance des 30 jours', o.echeance, o.echeance.includes('sous') ? 'ecart' : '']] : [])]);
   const lignes = o.j.filter((l) => !l[3] || complet);
   contenu.querySelector('[data-op="journal"]').innerHTML = journalHtml(lignes);
   contenu.querySelector('[data-op="journal-note"]').textContent = lignes.length < o.j.length ? 'Les étapes de la vérification conformité ne sont visibles que de la conformité, des Opérations et de l\'audit.' : '';
@@ -6134,7 +6428,8 @@ function rendreOperation() {
   if (p === 'operations' && !o.clos) {
     suite = o.reprise
       ? bandeauHtml(['valide', 'Reprise par les Opérations', `${o.reprise} · vous traitez l'opération à la place du chef d'agence.`])
-        + (o.blocage && !surveillance ? suite : `<div class="actions"><a class="bouton primaire" href="#bo25" data-choisir="remb:${ref}">Annuler ou rembourser</a></div>`)
+        + (o.blocage && !surveillance ? suite : annulable(o) ? `<div class="actions"><a class="bouton primaire" href="#bo25" data-choisir="remb:${ref}">Annuler ou rembourser</a></div>`
+          : `<p class="secondaire">Annulation possible seulement pour une opération « En cours » ou « Échouée » (atelier 9, 29/10).</p>`)
       : `${suite}<div class="separateur"></div><p class="secondaire">Les Opérations peuvent reprendre la main sur n'importe quelle transaction du réseau, à la place du chef d'agence.</p>`
         + '<div class="actions"><button class="bouton secondaire" type="button" data-ouvrir-tiroir="reprise">Reprendre la main</button></div>';
   }
@@ -6559,7 +6854,7 @@ function passerAuxOperations(ref, origine, qui = 'A. Kourouma · Conformité') {
 }
 const refsBo24 = () => [...ecranPar('bo24').querySelectorAll('tr[data-choisir]')].map((t) => t.dataset.choisir.split(':')[1])
   .concat(Object.keys(OPERATIONS).filter((r) => OPERATIONS[r].ajoutBo24)).filter((r) => !TRAITES.has(`op:${r}`));
-const GENRES_BO24 = { 'En vérification': 'verif', 'À décider': 'decider', Déclinée: 'declinee', Échoué: 'rejet' };
+const GENRES_BO24 = { 'En vérification': 'verif', 'À décider': 'decider', Déclinée: 'declinee', Échouée: 'rejet' };
 function operationsBloquees() {
   const hote = contenu.querySelector('[data-bo24]');
   if (!hote) return;
@@ -6596,7 +6891,9 @@ const LECTURE = {
   // BO46 (atelier 5) : l'administrateur consulte les paramètres des autres espaces.
   administration: { si: (e) => enConsultation(e), titre: 'Consultation · Administrateur', texte: 'Paramètre en lecture : il se modifie dans l\'espace de son responsable.' },
   // BO44 (atelier 5) : la grille des frais, en lecture ; la finance en valide les modifications.
-  finance: { si: (e) => e.id === 'bo44', titre: 'Consultation · Finance', texte: 'Grille saisie par l\'administrateur : vous en validez les modifications dans « Validations ».' },
+  // B2B : la finance suit les transferts entreprises en lecture (BO65, BO66).
+  finance: { si: (e) => ['bo44', 'bo65', 'bo66'].includes(e.id), titre: 'Consultation · Finance',
+    texte: (e) => (e.id === 'bo44' ? 'Grille saisie par l\'administrateur : vous en validez les modifications dans « Validations ».' : 'Transferts entreprises en lecture : la finance suit le financement ; la conformité et la direction valident.') },
   raf: { si: (e) => e.id === 'bo44', titre: 'Consultation · Finance', texte: 'Grille saisie par l\'administrateur : la finance en valide les modifications dans « Validations ».' },
   // BO41 (atelier 5) : les Opérations voient toutes les demandes d'approvisionnement.
   operations: { si: (e) => (e.dataset.espace === 'conformite' && !['bo21', 'bo23', 'bo40'].includes(e.id)) || ['bo9', 'bo41'].includes(e.id), titre: 'Consultation · Opérations',
@@ -6919,12 +7216,13 @@ function rendreParametres() {
     ['Plage de saisie des taux', 'Administrateur', `${PLAGE_TAUX[0]}–${PLAGE_TAUX[1]}`, '—', 'bo31'],
     ['Session et réauthentification', 'Administrateur', '15 min par défaut · de 5 à 15 min par profil', '01/10/2026', 'bo31'],
     ['Opérations soumises à seconde validation', 'Administrateur', `${nbSecondes()} sur ${nbOperationsSeconde()} · ${VALIDEURS_SECONDE[SECONDE_VALIDATION.valideur].toLowerCase()}`, HISTORIQUE_SECONDE[0][0], 'bo50'],
+    ['Transferts entreprises · seuil de double validation', 'Administrateur · hypothèse de l\'atelier 10', `${montantDe(B2B_PARAMS.seuil, 'USD')} · au-delà : ${NIVEAUX_B2B[B2B_PARAMS.niveaux]}`, HISTORIQUE_SECONDE[0][0], 'bo50'], // B2B
     ['Taux du jour', 'RAF', 'USD · XOF · LRD', `01/10/2026 · ${HISTORIQUE_TAUX[0][0]}`, 'bo12'],
     ['Délai avant « hors ligne »', 'Opérations', '15 min sans signal', '01/10/2026', 'bo27'],
     ['Seuil minimum du solde virtuel', 'Finance', `${montantDe(SEUILS_MINIMUM.GNF)} · ${montantDe(SEUILS_MINIMUM.XOF, 'XOF')}`, '—', 'bo41'],
     ['Zones', 'Administrateur', `${ZONES_NOMS().length} zones`, '—', 'bo45'],
     ['Politique de sécurité', 'Administrateur', 'À définir', '—', 'bo49'],
-    ['Réglages de l\'application client', 'Administrateur', `${REGLAGES_APP.flatMap(([, l]) => l).length} réglages · montants, paiement, réception, taxes, service après-vente`, HISTORIQUE_APP[0]?.[0] || '—', 'bo64'],
+    ['Réglages de l\'application client et de la plateforme web', 'Administrateur', `${REGLAGES_APP.flatMap(([, l]) => l.flatMap((r) => r.lignes || [r])).length} réglages · montants, moyens de paiement par plateforme, simulateur web, réception, taxes, service après-vente`, HISTORIQUE_APP[0]?.[0] || '—', 'bo64'],
   ];
   hote.innerHTML = lignes.map(([nom, resp, valeur, quand, id]) => `<tr><td>${nom}</td><td>${resp}</td><td>${valeur}</td><td>${quand}</td>`
     + `<td class="nombre">${accessible(id) ? `<a class="sommaire-lien" href="#${id}">${ecranPar(id).dataset.code} ›</a>` : ecranPar(id).dataset.code}</td></tr>`).join('');
@@ -7223,6 +7521,7 @@ function changementsSeconde() {
     if (caseOp.checked !== actif) liste.push(`${SECONDE_VALIDATION.domaines[i][0]} · ${libelle} : ${caseOp.checked ? 'soumise à seconde validation' : 'sans seconde validation'}`);
   }
   if (etats.valideur && etats.valideur !== SECONDE_VALIDATION.valideur) liste.push(`Valideur : ${VALIDEURS_SECONDE[etats.valideur]}`);
+  liste.push(...changementsB2B()); // B2B
   return liste;
 }
 function rendreSecondeValidation() {
@@ -7788,7 +8087,7 @@ function apresDecision(ecranId, issue) {
       o.j.push(['01/10 · 10:42', 'Alerte close · pays sous surveillance · score de risque relevé conservé', 'A. Kourouma · Conformité', true]);
     }
     if (['faux-positif', 'autoriser'].includes(issue) && o) {
-      o.statut = ['attente', 'En attente de retrait'];
+      o.statut = ['attente', 'En cours'];
       o.blocage = null;
       o.j.push(['01/10 · 10:42', 'Alerte close · l\'opération reprend son cours', 'A. Kourouma · Conformité', true]);
       TRAITES.add(`op:${d.operation}`);
@@ -7814,7 +8113,7 @@ function apresDecision(ecranId, issue) {
     const o = OPERATIONS['SFC-9A04-0008'];
     if (issue === 'soupcon') passerAuxOperations('SFC-9A04-0008', 'Soupçon · origine des fonds');
     if (issue === 'suffisante') {
-      o.statut = ['attente', 'En attente de retrait'];
+      o.statut = ['attente', 'En cours'];
       o.blocage = null;
       o.j.push(['01/10 · 10:42', 'Alerte close · justification suffisante · l\'opération reprend son cours', 'A. Kourouma · Conformité']);
     }
@@ -7852,7 +8151,7 @@ function apresDecision(ecranId, issue) {
     annulationLigne.decision = issue;
     const op = OPERATIONS[annulationLigne.ref];
     const accepte = issue === 'accepter';
-    op.statut = accepte ? ['', 'Annulée'] : ['attente', 'En attente de retrait'];
+    op.statut = accepte ? ['', 'Annulée'] : ['attente', 'En cours'];
     op.clos = accepte;
     op.j.push(['01/10 · 10:42', accepte ? 'Annulation acceptée · montant et frais à rendre sur le moyen qui a payé' : 'Annulation refusée · retrait de nouveau possible', 'M. Sow · Opérations']);
   }
@@ -7929,7 +8228,7 @@ function apresDecision(ecranId, issue) {
       const ref = DOSSIERS_MATCH[cle]?.operation;
       const o = OPERATIONS[ref];
       if (o && ok) {
-        o.statut = ['attente', 'En attente de retrait'];
+        o.statut = ['attente', 'En cours'];
         o.blocage = null;
         o.j.push(['01/10 · 10:42', 'Relation acceptée par la Direction générale · l\'opération reprend son cours', 'Direction générale']);
         TRAITES.add(`op:${ref}`);
@@ -7977,7 +8276,7 @@ const HEURE_SAV = '01/10 · 10:42';
 const CATEGORIES_AIDE = { retrait: 'Assistance au retrait', question: 'Une question', annulation: 'Annulation', autre: 'Autre' };
 const ETATS_AIDE = { nouvelle: ['Nouvelle', 'attente'], prise: ['Prise en charge', ''], 'sans-reponse': ['Rappel sans réponse', 'attention'], close: ['Close', 'valide'] };
 const ENVOIS_EN_LIGNE = {
-  'SFC-9A21-3307': { statut: ['Disponible au retrait', 'attente'], montant: '1 000 000 GNF', frais: '10 000 GNF', benef: 'CAMARA Aïssata · Kankan', paiement: 'Orange Money · 30/09 à 14:32', code: 'Affiché au client dans l\'application' },
+  'SFC-9A21-3307': { statut: ['En cours · disponible au retrait', 'attente'], montant: '1 000 000 GNF', frais: '10 000 GNF', benef: 'CAMARA Aïssata · Kankan', paiement: 'Orange Money · 30/09 à 14:32', code: 'Affiché au client dans l\'application' },
   'SFC-9A18-0412': { statut: ['En vérification', 'attente'], verif: 'Justificatif d\'origine des fonds demandé par la conformité', montant: '1 500 000 GNF', frais: '15 000 GNF', benef: 'DIALLO Kadiatou', paiement: 'Orange Money · 29/09 à 16:05', code: 'Pas encore affiché : l\'envoi est en vérification' },
   'SFC-9A23-0871': { statut: ['Non parti · paiement non confirmé', 'blocage'], montant: '600 000 GNF', frais: '6 000 GNF', benef: 'CONTÉ Mariama · Labé', paiement: 'Orange Money · abandonné au bout de 10 minutes, 01/10 à 10:14', code: 'Aucun : l\'envoi n\'est pas parti' },
 };
@@ -8378,10 +8677,17 @@ const REGLAGES_APP = [
     { id: 'max', libelle: 'Montant maximum par envoi', valeur: '4 000 000 GNF', aide: 'Paramétrable, valeur de démonstration (atelier 8). Le plafond réglementaire s\'applique en plus.' },
     { id: 'abandon', libelle: 'Abandon d\'un paiement non confirmé', valeur: '10 minutes', aide: 'Au-delà, l\'envoi ne part pas et le client peut réessayer' },
   ]],
-  ['Moyens de paiement · dans l\'ordre de l\'écran de paiement', [
-    ...['Orange Money', 'Wave', 'Pay-Card', 'Kulu', 'Soutra Money', 'KS Pay'].map((nom, i) => ({ id: `op-${i}`, libelle: `${i + 1}. ${nom}`, valeur: 'Actif', aide: 'Actif ou Inactif',
+  // Atelier 9 (29/10) : un moyen n'est affiché au client que s'il est réellement disponible ; désactivé, il disparaît (il n'est pas grisé).
+  // Un interrupteur par moyen et par plateforme. Mobile money : dans l'application ; carte bancaire avec 3-D Secure, pour tout client ;
+  // carte et virement instantané en premier sur la plateforme diaspora. Valeurs de départ : ce que montrent les deux prototypes.
+  ['Moyens de paiement · un interrupteur par plateforme', [
+    ...['Orange Money', 'Wave', 'Pay-Card', 'Kulu', 'Soutra Money', 'KS Pay'].map((nom, i) => ({ id: `op-${i}`, libelle: nom, plateformes: { app: 'Actif', web: 'Inactif' },
       q: nom === 'Pay-Card' ? 'Q40 (application client) — Pay-Card : portefeuille de mobile money ou carte prépayée ?' : '' })),
-    { id: 'carte', libelle: 'Carte bancaire', valeur: 'Actif', aide: 'Actif ou Inactif', q: 'Q36 (application client) — Carte bancaire : dans l\'application Guinée aussi, ou seulement sur la plateforme diaspora ? Quel prestataire, et 3-D Secure ?' },
+    { id: 'carte', libelle: 'Carte bancaire · 3-D Secure', plateformes: { app: 'Actif', web: 'Actif' }, q: 'Q36 (application client) — Carte bancaire : quel prestataire de paiement ? (activation tranchée à l\'atelier 9 : carte avec 3-D Secure, pour tout client)' },
+    { id: 'virement', libelle: 'Virement instantané', plateformes: { app: 'Inactif', web: 'Actif' }, q: 'Q46 (plateforme diaspora) — Virement instantané : quel compte de réception, combien de temps attend-on le virement, que faire d\'un virement sans référence ou d\'un montant différent ?' },
+  ]],
+  ['Plateforme web · diaspora', [
+    { id: 'simulateur', libelle: 'Simulateur de frais sur la plateforme web (avant connexion)', valeur: 'Actif', interrupteur: true, aide: 'Actif ou Inactif. Inactif : la page d\'accueil s\'affiche sans simulateur, « Créer un compte » en action principale ; les tarifs ne se voient qu\'une fois connecté (atelier 9, 29/10).' },
   ]],
   ['Modes de réception · toutes destinations', [
     { id: 'especes', libelle: 'Espèces dans le réseau', valeur: 'Ouvert', aide: 'Ouvert, Bientôt disponible ou Fermé' },
@@ -8393,6 +8699,7 @@ const REGLAGES_APP = [
   ]],
   ['Service après-vente', [
     { id: 'horaires', libelle: 'Horaires', valeur: 'Du lundi au vendredi de 8 h à 17 h, le samedi de 8 h à 13 h', aide: 'Affichés dans l\'aide et sous chaque demande d\'aide' },
+    { id: 'alertes-mail', libelle: 'Alerte e-mail aux Opérations à chaque nouvelle transaction', valeur: 'Actif', interrupteur: true, aide: 'Actif ou Inactif. Pour une prise en charge rapide (atelier 9, 29/10). Adresse de destination à fournir par Safico.' },
     ...['Mon proche n\'a pas reçu le code', 'Que faire si le nom ne correspond pas à sa pièce ?', 'Annuler ou se faire rembourser : quelle différence ?'].map((question, i) => ({ id: `faq-${i}`, libelle: `Question fréquente · ${question}`, valeur: 'Publiée', aide: 'Publiée ou Retirée' })),
   ]],
   ['Application', [
@@ -8400,32 +8707,45 @@ const REGLAGES_APP = [
   ]],
 ];
 for (const [, lignes] of REGLAGES_APP) for (const r of lignes) Object.assign(r, { resp: 'Administration', modif: '—' });
+// Un moyen de paiement donne une ligne par plateforme (« op-0@app »), modifiée comme les autres réglages.
+const PLATEFORMES = { app: 'Application', web: 'Web diaspora' };
+for (const [, lignes] of REGLAGES_APP) for (const r of [...lignes]) if (r.plateformes) {
+  r.lignes = Object.entries(r.plateformes).map(([p, valeur]) => ({ id: `${r.id}@${p}`, libelle: `${r.libelle} · ${PLATEFORMES[p]}`, valeur, aide: 'Actif ou Inactif. Inactif : le moyen disparaît de l\'écran de paiement de cette plateforme.', resp: r.resp, modif: '—', interrupteur: true }));
+}
 const HISTORIQUE_APP = [];
 let reglageAppCourant = null;
-const reglageApp = (id) => REGLAGES_APP.flatMap(([, lignes]) => lignes).find((r) => r.id === id);
+const reglageApp = (id) => REGLAGES_APP.flatMap(([, lignes]) => lignes.flatMap((r) => r.lignes || [r])).find((r) => r.id === id);
+const interrupteurHtml = (r) => `<label class="case" title="${r.libelle} · ${r.valeur}"><input type="checkbox" class="interrupteur" data-reglage-app="${r.id}" aria-label="${r.libelle}" ${r.valeur === 'Actif' ? 'checked' : ''}><span>${r.valeur}</span></label>`;
 
 function rendreReglagesApp() {
   const hote = contenu.querySelector('[data-reglages-app]');
   if (!hote) return;
-  hote.innerHTML = REGLAGES_APP.map(([groupe, lignes]) => `<section class="carte"><h2>${groupe}</h2><div class="defilant"><table class="tableau dense">`
+  const etiquette = (r) => r.q ? ` <span class="etiquette trancher" data-decision="q" title="${echapper(r.q)}"></span>` : '';
+  hote.innerHTML = REGLAGES_APP.map(([groupe, lignes]) => lignes[0].lignes
+    // Moyens de paiement (atelier 9, 29/10) : un interrupteur par moyen et par plateforme
+    ? `<section class="carte"><h2>${groupe}</h2><div class="defilant"><table class="tableau dense">`
+      + `<thead><tr><th>Moyen</th>${Object.values(PLATEFORMES).map((p) => `<th>${p}</th>`).join('')}<th>Responsable</th><th>Dernière modification</th></tr></thead><tbody>`
+      + lignes.map((r) => `<tr><td>${r.libelle}${etiquette(r)}</td>${r.lignes.map((l) => `<td>${interrupteurHtml(l)}</td>`).join('')}<td>${r.resp}</td><td class="insecable">${r.lignes.map((l) => l.modif).find((m) => m !== '—') || '—'}</td></tr>`).join('')
+      + '</tbody></table></div><p class="pied">Côté client, un moyen désactivé disparaît de l\'écran de paiement : il n\'est pas grisé (atelier 9, 29/10). Chaque changement demande une justification et le code personnel.</p></section>'
+    : `<section class="carte"><h2>${groupe}</h2><div class="defilant"><table class="tableau dense">`
     + '<thead><tr><th>Réglage</th><th>Valeur</th><th>Responsable</th><th>Dernière modification</th><th></th></tr></thead><tbody>'
-    + lignes.map((r) => `<tr><td>${r.libelle}${r.q ? ` <span class="etiquette trancher" data-decision="q" title="${echapper(r.q)}"></span>` : ''}</td><td>${echapper(r.valeur)}</td><td>${r.resp}</td><td class="insecable">${r.modif}</td>`
-      + `<td class="nombre"><button class="bouton discret petit" type="button" data-reglage-app="${r.id}">Modifier</button></td></tr>`).join('')
+    + lignes.map((r) => `<tr><td>${r.libelle}${etiquette(r)}</td><td>${r.interrupteur ? interrupteurHtml(r) : echapper(r.valeur)}</td><td>${r.resp}</td><td class="insecable">${r.modif}</td>`
+      + `<td class="nombre">${r.interrupteur ? '' : `<button class="bouton discret petit" type="button" data-reglage-app="${r.id}">Modifier</button>`}</td></tr>`).join('')
     + '</tbody></table></div></section>').join('');
   contenu.querySelector('[data-reglages-historique]').innerHTML = HISTORIQUE_APP.length ? journalHtml(HISTORIQUE_APP)
     : '<li><b>—</b><span class="secondaire">Aucune modification</span><em></em></li>';
 }
-function ouvrirReglageApp(id) {
+function ouvrirReglageApp(id, nouvelle) {
   reglageAppCourant = id;
   const r = reglageApp(id);
   const voile = contenu.querySelector('[data-tiroir="reglage-app"]');
   viderTiroir(voile);
   const q = (k) => voile.querySelector(`[data-ra="${k}"]`);
   q('titre').textContent = r.libelle;
-  q('groupe').textContent = REGLAGES_APP.find(([, lignes]) => lignes.includes(r))[0];
+  q('groupe').textContent = REGLAGES_APP.find(([, lignes]) => lignes.some((x) => x === r || x.lignes?.includes(r)))[0];
   q('actuelle').textContent = r.valeur;
   q('aide').textContent = r.aide || '';
-  voile.querySelector('#bo64-valeur').value = r.valeur;
+  voile.querySelector('#bo64-valeur').value = nouvelle || r.valeur;
   ouvrirTiroir('reglage-app');
 }
 
@@ -8435,6 +8755,415 @@ function ouvrirReglageApp(id) {
   ses champs reviennent à leur valeur de départ et une confirmation s'affiche sous l'en-tête.
   AJOUTS garde, le temps de la séance, les lignes ajoutées aux tableaux (BO14, BO29).
 */
+/* ---------- B2B · l'ordre de transfert haute valeur (lot 3, 03/11) ----------
+  spec/BO-entreprises.md, avant l'atelier 10 (05/11) : tout est hypothèse. Données fictives
+  (déduit). Taux de BO12 (USD, XOF) ; l'euro n'y est pas : 10 050 GNF, valeur de démonstration.
+  Le solde d'une entreprise suit le modèle du solde d'un distributeur (BO30, BO41) : débit à
+  l'exécution, crédit à l'alimentation, sans découvert (pas d'avance, Q3). */
+// B2B
+const TAUX_B2B = { USD: 8650, EUR: 10050, XOF: 14.35 };
+const FRAIS_B2B = 0.005; // 0,5 % de la contre-valeur : démonstration (étiquette q)
+const SEUIL_CENTIF = 150000000;
+const B2B_PARAMS = { seuil: 300000, niveaux: 'direction' }; // BO50 : seuil en équivalent USD ; au-delà, conformité puis direction (Q2)
+const MAINTENANT_B2B = '01/10 · 10:42';
+const DOSSIERS_B2B = { verifie: ['valide', 'Vérifié'], maj: ['attention', 'Vérifié · mise à jour demandée'], verification: ['attente', 'En vérification'] };
+const ENTREPRISES = {
+  'kaloum-agro': { nom: 'Kaloum Agro-Import SARL', activite: 'Import alimentaire', rccm: 'GN.TCC.2019.B.04512', nif: '7 0145 2391 K', dossier: 'verifie',
+    reps: [['TOUNKARA Moussa', 'Gérant', ''], ['SIDIBÉ Hawa', 'Directrice financière', '']], solde: 4200000000, plafond: 750000 },
+  fouta: { nom: 'Constructions du Fouta SA', activite: 'Bâtiment et travaux publics', rccm: 'GN.TCC.2016.B.01187', nif: '7 0098 6620 F', dossier: 'maj', echeance: '15/11/2026',
+    reps: [['TALL Alpha Oumar', 'Directeur général', 'PEP · correspondance à examiner · score 78'], ['KOULIBALY Néné', 'Directrice administrative et financière', '']], solde: 12000000000, plafond: 2000000 },
+  'matam-equip': { nom: 'Matam Équipements SARL', activite: 'Distribution de matériel', rccm: 'GN.TCC.2024.B.09830', nif: '7 0311 4407 M', dossier: 'verification',
+    reps: [['KOMARA Lamine', 'Gérant', '']], solde: 0, plafond: 250000 },
+};
+const FOURNISSEURS_B2B = {
+  bandama: { nom: 'Rizerie du Bandama SARL', ent: 'kaloum-agro', pays: 'Côte d\'Ivoire', ville: 'Abidjan', iban: 'CI00 D000 0000 0000 0000 4417 21' },
+  sine: { nom: 'Huilerie du Sine SARL', ent: 'kaloum-agro', pays: 'Sénégal', ville: 'Dakar', iban: 'SN00 D000 0000 0000 0000 2093 58' },
+  lagune: { nom: 'Ciments de la Lagune SA', ent: 'fouta', pays: 'Côte d\'Ivoire', ville: 'Abidjan', iban: 'CI00 D000 0000 0000 0000 7731 04' },
+  thies: { nom: 'Aciers de Thiès SA', ent: 'fouta', pays: 'Sénégal', ville: 'Dakar', iban: 'SN00 D000 0000 0000 0000 6610 92' },
+  atlantique: { nom: 'Engins Atlantique FZE', ent: 'fouta', pays: 'Émirats arabes unis', ville: 'Dubaï', iban: 'AE00 0000 0000 0000 0005 518', horsCorridor: true },
+};
+// Un ordre : trace = étapes de validation faites [qui, quand] ; refus, tauxFixe, transmis, paye, rejet, annul selon l'état.
+const ORDRES_B2B = [
+  { ref: 'OT-2026-0148', date: '01/10 · 10:31', ent: 'kaloum-agro', four: 'bandama', devise: 'XOF', montant: 98000000, statut: 'brouillon', motif: 'Paiement fournisseur',
+    just: ['Facture', 'Facture_RB-2026-0877.pdf', '214 Ko'], trace: {} },
+  { ref: 'OT-2026-0147', date: '01/10 · 09:52', ent: 'fouta', four: 'lagune', devise: 'EUR', montant: 620000, statut: 'conformite', recu: '01/10 · 09:55', motif: 'Paiement fournisseur',
+    just: ['Facture', 'Facture_CL-2026-1142.pdf', '356 Ko'], trace: { signataire: ['KOULIBALY Néné', '01/10 · 09:50'] } },
+  { ref: 'OT-2026-0146', date: '30/09 · 15:20', ent: 'fouta', four: 'thies', devise: 'USD', montant: 1250000, statut: 'direction', recu: '30/09 · 16:10', motif: 'Paiement fournisseur',
+    just: ['Contrat', 'Contrat_AT-2026-031.pdf', '1,2 Mo'], trace: { signataire: ['KOULIBALY Néné', '30/09 · 15:18'], conformite: ['A. Kourouma', '30/09 · 16:10'] } },
+  { ref: 'OT-2026-0145', date: '30/09 · 11:05', ent: 'kaloum-agro', four: 'sine', devise: 'XOF', montant: 200000000, statut: 'signataire', motif: 'Paiement fournisseur',
+    just: ['Bon de commande', 'BC_HS-2026-0412.pdf', '98 Ko'], trace: {} },
+  { ref: 'OT-2026-0144', date: '29/09 · 17:40', ent: 'fouta', four: 'atlantique', devise: 'USD', montant: 1800000, statut: 'financement', motif: 'Paiement fournisseur',
+    just: ['Facture', 'Invoice_EA-2026-0093.pdf', '402 Ko'], tauxFixe: '30/09 à 11:02',
+    trace: { signataire: ['KOULIBALY Néné', '29/09 · 17:35'], conformite: ['A. Kourouma', '30/09 · 10:20'], direction: ['A. Barry', '30/09 · 11:02'] } },
+  { ref: 'OT-2026-0143', date: '29/09 · 10:15', ent: 'kaloum-agro', four: 'bandama', devise: 'USD', montant: 40000, statut: 'refusee', motif: 'Paiement fournisseur',
+    just: ['Facture', 'Facture_RB-2026-0851.pdf', '188 Ko'], trace: {},
+    refus: { niveau: 'conformite', motif: 'La facture jointe ne correspond pas au fournisseur.', qui: 'A. Kourouma', quand: '29/09 · 14:05' } },
+  { ref: 'OT-2026-0142', date: '01/10 · 08:15', ent: 'fouta', four: 'lagune', devise: 'EUR', montant: 210000, statut: 'en-cours', motif: 'Paiement fournisseur',
+    just: ['Facture', 'Facture_CL-2026-1098.pdf', '341 Ko'], tauxFixe: '01/10 à 09:20', transmis: '01/10 · 09:21', trace: { conformite: ['A. Kourouma', '01/10 · 09:20'] } },
+  { ref: 'OT-2026-0141', date: '30/09 · 14:12', ent: 'kaloum-agro', four: 'sine', devise: 'XOF', montant: 120000000, statut: 'validee', motif: 'Paiement fournisseur',
+    just: ['Facture', 'Facture_HS-2026-0388.pdf', '207 Ko'], tauxFixe: '30/09 à 16:40', transmis: '30/09 · 16:41', trace: { conformite: ['A. Kourouma', '30/09 · 16:40'] } },
+  { ref: 'OT-2026-0140', date: '26/09 · 16:48', ent: 'fouta', four: 'thies', devise: 'USD', montant: 380000, statut: 'echouee', motif: 'Paiement fournisseur',
+    just: ['Facture', 'Facture_AT-2026-0277.pdf', '295 Ko'], tauxFixe: '27/09 à 09:10', transmis: '27/09 · 09:11', rejet: ['Compte du bénéficiaire clôturé', '29/09 · 10:05'],
+    trace: { signataire: ['KOULIBALY Néné', '26/09 · 16:40'], conformite: ['A. Kourouma', '26/09 · 17:30'], direction: ['A. Barry', '27/09 · 09:10'] } },
+  { ref: 'OT-2026-0139', date: '24/09 · 10:02', ent: 'kaloum-agro', four: 'bandama', devise: 'USD', montant: 260000, statut: 'payee', motif: 'Paiement fournisseur',
+    just: ['Facture', 'Facture_RB-2026-0790.pdf', '176 Ko'], tauxFixe: '24/09 à 11:30', transmis: '24/09 · 11:31', paye: '25/09 · 15:30', trace: { conformite: ['A. Kourouma', '24/09 · 11:30'] } },
+];
+const STATUTS_B2B = {
+  brouillon: ['', 'Brouillon'], signataire: ['attente', 'À valider · second signataire'], conformite: ['attente', 'À valider · conformité'], direction: ['attente', 'À valider · direction'],
+  refusee: ['blocage', 'Refusée'], financement: ['attention', 'En attente de financement'], 'en-cours': ['attente', 'En cours'], validee: ['attente', 'Validée'],
+  echouee: ['blocage', 'Échouée'], payee: ['valide', 'Payée'], annulee: ['', 'Annulée'],
+};
+const PROCHAINE_B2B = { brouillon: 'À compléter et soumettre', signataire: 'Attend le second signataire de l\'entreprise', conformite: 'Attend la conformité', direction: 'Attend la direction',
+  financement: 'Solde insuffisant', 'en-cours': 'Chez le partenaire', validee: 'Chez le partenaire', echouee: 'Rejet du partenaire à traiter', refusee: '—', payee: '—', annulee: '—' };
+const SUIVI_B2B = { brouillon: 'completer', signataire: 'completer', conformite: 'validation', direction: 'validation', financement: 'financement', echouee: 'rejet' };
+const ETAPES_B2B = ['Compte entreprise', 'Saisie', 'Justificatif', 'Contrôles', 'Validation', 'Financement', 'Versement', 'Suivi'];
+// Étape courante de la frise (1 à 8) ; un ordre refusé ou annulé s'arrête là où il était.
+const ETAPE_B2B = { brouillon: 2, signataire: 5, conformite: 5, direction: 5, refusee: 5, financement: 6, 'en-cours': 7, validee: 7, echouee: 7, annulee: 7, payee: 8 };
+const ORDRE_ETATS_B2B = ['brouillon', 'signataire', 'conformite', 'direction', 'financement', 'refusee', 'en-cours', 'validee', 'echouee', 'payee', 'annulee'];
+const REVUE_B2B = { brouillon: 'Brouillon', signataire: 'Signataire', conformite: 'Conformité', direction: 'Direction', financement: 'Financement', refusee: 'Refusée',
+  'en-cours': 'En cours', validee: 'Validée', echouee: 'Échouée', payee: 'Payée', annulee: 'Annulée' };
+let rangOrdre = 149;
+
+const cvB2B = (o) => Math.round(o.montant * TAUX_B2B[o.devise]);
+const fraisB2B = (o) => Math.round(cvB2B(o) * FRAIS_B2B);
+const totalB2B = (o) => cvB2B(o) + fraisB2B(o);
+const usdB2B = (o) => cvB2B(o) / TAUX_B2B.USD;
+const tauxLu = (devise) => `1 ${devise} = ${String(TAUX_B2B[devise]).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} GNF`;
+const doubleB2B = (o) => usdB2B(o) >= B2B_PARAMS.seuil;
+const directionB2B = (o) => doubleB2B(o) && B2B_PARAMS.niveaux === 'direction';
+const ordreB2B = () => ORDRES_B2B.find((o) => o.ref === SEL.ordre) || ORDRES_B2B.find((o) => o.ref === 'OT-2026-0147') || ORDRES_B2B[0];
+const pastilleB2B = (s) => `<span class="statut ${STATUTS_B2B[s][0]}">${STATUTS_B2B[s][1]}</span>`;
+const niveauB2B = () => (profil.cle === 'direction' ? 'direction' : 'conformite');
+const qB2B = (texte) => `<span class="etiquette trancher" data-decision="q" title="${echapper(texte)}"></span>`;
+const agentB2B = () => { const [nom] = profil.agent.split('|'); const m = nom.split(' '); return `${m[0].charAt(0)}. ${m.slice(1).join(' ')}`; };
+const montantLu = (o) => montantDe(o.montant, o.devise);
+
+// BO65 · la liste et ses compteurs.
+function rendreOrdresB2B() {
+  const hote = contenu.querySelector('[data-ordres-b2b]');
+  if (!hote) return;
+  hote.innerHTML = ORDRES_B2B.map((o) => {
+    const e = ENTREPRISES[o.ent];
+    const f = FOURNISSEURS_B2B[o.four];
+    return `<tr class="ouvrable" tabindex="0" data-ligne data-cible="bo66" data-choisir="ordre:${o.ref}" data-statut="${o.statut}" data-entreprise="${o.ent}" data-devise="${o.devise}" data-suivi="${SUIVI_B2B[o.statut] || 'autre'}">`
+      + `<td>${o.date}<br><span class="micro secondaire">${o.ref}</span></td><td>${e.nom}</td><td>${f.nom}<br><span class="secondaire">${f.pays}</span></td>`
+      + `<td class="nombre">${montantLu(o)}<br><span class="secondaire">${montantDe(cvB2B(o))}</span></td><td>${pastilleB2B(o.statut)}</td><td>${PROCHAINE_B2B[o.statut]}</td></tr>`;
+  }).join('') + '<tr data-aucune hidden><td colspan="6" class="secondaire">Aucun ordre ne correspond aux filtres.</td></tr>';
+  for (const nb of contenu.querySelectorAll('[data-b2b-nb]')) {
+    const cle = nb.dataset.b2bNb;
+    nb.textContent = cle === 'toutes' ? ORDRES_B2B.length : ORDRES_B2B.filter((o) => SUIVI_B2B[o.statut] === cle).length;
+  }
+}
+
+// BO68 · la file du profil courant (conformité ou direction), par priorité puis ancienneté.
+function prioriteB2B(o) {
+  const usd = usdB2B(o);
+  const h = minutesDepuis(o.recu || o.date) / 60;
+  if (usd >= 1000000 || h > 48) return ['critique', 'Critique', 0];
+  if (usd >= 300000 || h > 24) return ['elevee', 'Élevée', 1];
+  return ['moyenne', 'Moyenne', 2];
+}
+function correspondancesB2B(o) {
+  return ENTREPRISES[o.ent].reps.filter(([, , m]) => m).length;
+}
+function rendreFileB2B() {
+  const hote = contenu.querySelector('[data-file-b2b="lignes"]');
+  if (!hote) return;
+  const niveau = niveauB2B();
+  contenu.querySelector('[data-file-b2b="niveau"]').textContent = `Niveau : ${niveau === 'direction' ? 'direction' : 'conformité'}`;
+  const file = ORDRES_B2B.filter((o) => o.statut === niveau)
+    .sort((a, b) => prioriteB2B(a)[2] - prioriteB2B(b)[2] || minutesDepuis(b.recu || b.date) - minutesDepuis(a.recu || a.date));
+  hote.innerHTML = file.length ? file.map((o) => {
+    const [cle, lib] = prioriteB2B(o);
+    const f = FOURNISSEURS_B2B[o.four];
+    const n = correspondancesB2B(o);
+    return `<tr class="ouvrable" tabindex="0" data-cible="bo66" data-choisir="ordre:${o.ref}"><td><span class="priorite ${cle}">${lib}</span></td>`
+      + `<td>${o.recu || o.date}<br><span class="micro secondaire">${o.ref}</span></td><td>${ENTREPRISES[o.ent].nom}</td><td>${f.nom}<br><span class="secondaire">${f.pays}</span></td>`
+      + `<td class="nombre">${montantLu(o)}<br><span class="secondaire">${montantDe(cvB2B(o))}</span></td>`
+      + `<td>${n ? `<span class="statut attention">${n} correspondance PEP</span>` : 'Aucune correspondance'}</td><td>${cvB2B(o) >= SEUIL_CENTIF ? 'Oui' : '—'}</td></tr>`;
+  }).join('') : '<tr><td colspan="7" class="secondaire">Aucun ordre n\'attend votre validation.</td></tr>';
+}
+
+// BO66 · la fiche. s = l'état montré : l'état réel, ou celui choisi dans l'outil de revue.
+function chaineB2B(o, s) {
+  const e = ENTREPRISES[o.ent];
+  const rang = { brouillon: 0, signataire: 1, conformite: 2, direction: 3 }[s] ?? 9;
+  const defaut = { signataire: [e.reps[1]?.[0] || e.reps[0][0], o.date], conformite: ['A. Kourouma', MAINTENANT_B2B], direction: ['A. Barry', MAINTENANT_B2B] };
+  const etapes = [['saisie', 0], ...(doubleB2B(o) ? [['signataire', 1]] : []), ['conformite', 2], ...(directionB2B(o) ? [['direction', 3]] : [])];
+  const libelles = { saisie: 'Saisie', signataire: 'Second signataire · entreprise', conformite: 'Conformité', direction: 'Direction générale' };
+  const refusA = s === 'refusee' ? (o.refus?.niveau || 'conformite') : null;
+  const lignes = etapes.map(([cle, r]) => {
+    if (cle === 'saisie') return [o.date, 'Saisi et soumis', 'D. Sangaré · Chargée de compte'];
+    if (refusA === cle) return [o.refus?.quand || MAINTENANT_B2B, `${libelles[cle]} · <b>refusé</b> · ${echapper(o.refus?.motif || 'Motif saisi à la décision')}`, o.refus?.qui || defaut[cle][0]];
+    const fait = refusA ? r < { signataire: 1, conformite: 2, direction: 3 }[refusA] : r < rang;
+    const [qui, quand] = o.trace[cle] || defaut[cle];
+    if (fait) return [quand, `${libelles[cle]} · validé${cle === 'signataire' ? ' · ordre signé joint ' + qB2B('Quand le chargé de compte saisit l\'ordre, comment le second signataire de l\'entreprise valide-t-il : ordre signé joint, ou validation dans l\'espace web ? (atelier 10, Q1, Q2) Par défaut : le chargé de compte joint l\'ordre signé des deux représentants.') : ''}`, qui];
+    if (refusA) return ['—', `<span class="secondaire">${libelles[cle]} · sans objet</span>`, ''];
+    return [r === rang ? 'En attente' : 'À venir', `<span class="secondaire">${libelles[cle]}</span>`, ''];
+  });
+  if (s === 'brouillon') lignes[0] = ['—', '<span class="secondaire">Saisie · brouillon, pas encore soumis</span>', 'D. Sangaré · Chargée de compte'];
+  return lignes;
+}
+function rendreOrdre() {
+  const hote = contenu.querySelector('[data-ordre-gauche]');
+  if (!hote) return;
+  const o = ordreB2B();
+  SEL.ordre = o.ref;
+  const reel = o.statut;
+  const s = etats['ordre-b2b'] === 'reel' ? reel : etats['ordre-b2b'];
+  const simule = s !== reel;
+  const lecture = enLecture(ecranCourant);
+  const e = ENTREPRISES[o.ent];
+  const f = FOURNISSEURS_B2B[o.four];
+  const cv = cvB2B(o);
+  retitrer(`Ordre ${o.ref} · ${e.nom}`, `${f.nom} · ${f.pays} · ${montantLu(o)}`, `BO66 · Ordre ${o.ref}`);
+
+  // Outil de revue : parcourir les états d'un même ordre (clé ordre-b2b).
+  contenu.querySelector('[data-ordre-revue]').innerHTML = `<div class="revue-etat revue-b2b"><span>Outil de revue · état de l'ordre</span><div class="segmente" data-choix="ordre-b2b" role="group" aria-label="État de l'ordre (outil de revue)">`
+    + ORDRE_ETATS_B2B.map((v) => `<button data-valeur="${v === reel ? 'reel' : v}"${v === s ? ' class="actif"' : ''}>${REVUE_B2B[v]}</button>`).join('') + '</div></div>'
+    + (simule ? `<div class="bandeau neutre"><strong>État « ${STATUTS_B2B[s][1]} » montré pour la revue</strong><span>L'ordre est réellement « ${STATUTS_B2B[reel][1]} ». Les actions sont masquées.</span></div>` : '');
+
+  // Frise des 8 étapes (composant pas-à-pas de BO16).
+  const courante = ETAPE_B2B[s];
+  const arret = ['refusee', 'annulee'].includes(s);
+  contenu.querySelector('[data-ordre-frise]').innerHTML = '<div class="pas-a-pas frise">' + ETAPES_B2B.map((nom, i) => {
+    const n = i + 1;
+    const etat = n < courante || (s === 'payee' && n === 8) ? 'fait' : n === courante ? (arret ? 'arret' : 'actif') : '';
+    return `${i ? '<span class="fleche">→</span>' : ''}<span class="etape ${etat}"><span class="num">${etat === 'fait' ? '✓' : etat === 'arret' ? '✕' : n}</span>${nom}</span>`;
+  }).join('') + '</div>';
+
+  // Colonne de gauche : entreprise, bénéficiaire, montant, motif et justificatif, contrôles.
+  const apresConformite = ['direction', 'financement', 'en-cours', 'validee', 'echouee', 'payee', 'annulee'].includes(s);
+  const controle = (qui, role, resultat) => (resultat
+    ? `<li><span class="statut ${apresConformite ? '' : 'attention'}">${apresConformite ? 'Correspondance examinée · écartée par la conformité' : resultat}</span> ${qui}${role ? ` · ${role}` : ''}</li>`
+    : `<li>✓ ${qui}${role ? ` · ${role}` : ''} · sanctions et PEP : aucune correspondance</li>`);
+  hote.innerHTML = `<section class="carte"><h2>Entreprise</h2>`
+    + `<div class="info"><span>Raison sociale</span><span>${e.nom}</span></div><div class="info"><span>Activité</span><span>${e.activite}</span></div>`
+    + `<div class="info"><span>RCCM · NIF</span><span>${e.rccm} · ${e.nif}</span></div>`
+    + `<div class="info"><span>Dossier</span><span><span class="statut ${DOSSIERS_B2B[e.dossier][0]}">${DOSSIERS_B2B[e.dossier][1]}</span>${e.echeance ? ` <span class="secondaire">avant le ${e.echeance}</span>` : ''}</span></div>`
+    + `<div class="info"><span>Plafond par opération</span><span>${montantDe(e.plafond, 'USD')} <span class="secondaire">· réglé par la conformité</span></span></div>`
+    + `<div class="info"><span>Solde chez SAFICO ${qB2B('Le solde d\'une entreprise est-il tenu en GNF, ou aussi en devises ? (atelier 10, Q3) Par défaut : en GNF, la contre-valeur de chaque ordre au taux fixé.')}</span><span>${montantDe(e.solde)}</span></div>`
+    + `<div class="info"><span>Chargé de compte</span><span>D. Sangaré</span></div>`
+    + '<p class="mention">Le solde fonctionne comme celui d\'un distributeur (relevé, approvisionnements) : débit à l\'exécution de l\'ordre, crédit à l\'alimentation, sans découvert. Pas d\'avance (hypothèse de l\'atelier 10, Q3).</p></section>'
+    + `<section class="carte"><h2>Bénéficiaire</h2><div class="info"><span>Fournisseur</span><span>${f.nom}</span></div>`
+    + `<div class="info"><span>Pays</span><span>${f.pays}${f.horsCorridor ? ' ' + qB2B('Corridors et devises : atelier 12. Par défaut : le fournisseur de Dubaï est payé en USD, par une banque partenaire à Dubaï.') : ''}</span></div>`
+    + `<div class="info"><span>Banque</span><span>Banque du bénéficiaire (${f.ville})</span></div><div class="info"><span>IBAN</span><span>${f.iban}</span></div>`
+    + `<div class="info"><span>Versé par</span><span>Banque partenaire (${f.ville})</span></div></section>`
+    + `<section class="carte"><h2>Montant</h2><div class="info"><span>Montant</span><span class="montant-petit">${montantLu(o)}</span></div>`
+    + `<div class="info"><span>Taux</span><span>${tauxLu(o.devise)}</span></div><div class="info"><span>Contre-valeur</span><span>${montantDe(cv)}</span></div>`
+    + `<div class="info"><span>Frais · 0,5 % ${qB2B('Quels frais pour un transfert B2B : barème, pourcentage, forfait négocié par entreprise ? (atelier 11, relation commerciale) Par défaut : 0,5 % de la contre-valeur, valeur de démonstration.')}</span><span>${montantDe(fraisB2B(o))}</span></div>`
+    + `<div class="info"><span><b>Total débité</b></span><span><b>${montantDe(totalB2B(o))}</b></span></div><p class="pied">Équivalent ${montantDe(Math.round(usdB2B(o)), 'USD')}.</p></section>`
+    + `<section class="carte"><h2>Motif et justificatif</h2><div class="info"><span>Motif</span><span>${echapper(o.motif)}</span></div>`
+    + `<div class="info"><span>Pièce</span><span>${o.just[0]}</span></div>`
+    + `<div class="apercu-pdf"><span class="feuille" aria-hidden="true">PDF</span><span class="nom"><b>${o.just[1]}</b><br><span class="secondaire">${o.just[2]} · déposé le ${o.date}</span></span>`
+    + `<button class="bouton secondaire petit" type="button" data-toast="Justificatif ouvert|${o.just[1]} · aperçu non disponible dans le prototype.">Ouvrir</button></div>`
+    + '<p class="pied">Justificatif obligatoire pour chaque transfert (hypothèse de l\'atelier 10, Q2).</p></section>'
+    + '<section class="carte"><h2>Contrôles</h2><ul class="liste controles">'
+    + controle(e.nom, 'entreprise', '') + e.reps.map(([n, r, m]) => controle(n, r.toLowerCase(), m)).join('') + controle(f.nom, 'bénéficiaire', '') + '</ul>'
+    + (cv >= SEUIL_CENTIF
+      ? `<div class="bandeau attention"><strong>Alerte de déclaration CENTIF ${qB2B('Au taux du jour, 150 000 000 GNF font environ 17 300 USD : presque tous les transferts B2B déclencheraient une alerte de déclaration CENTIF. La règle s\'applique-t-elle telle quelle au B2B, avec un autre seuil, ou une déclaration périodique ? (atelier 10, Q2) Par défaut : la règle du lot 1, telle quelle, sur la contre-valeur de chaque ordre.')}</strong>`
+        // Le lien ne s'affiche qu'aux profils qui ouvrent BO22 (conformité, Opérations, audit) : les autres ne changent pas de profil.
+        + `<span>Contre-valeur de ${montantDe(cv)}, au-delà de 150 000 000 GNF. ${accessible('bo22') ? '<a class="sommaire-lien" href="#bo22">Ouvrir la déclaration ›</a>' : 'La déclaration est traitée par la conformité.'}</span></div>`
+      : '<p class="mention">Sous le seuil de déclaration CENTIF (150 000 000 GNF).</p>')
+    + '</section>';
+
+  // Colonne de droite : décision (au niveau du profil), taux, chaîne de validation, suivi partenaire.
+  const decide = !simule && !lecture && ((profil.cle === 'conformite' && s === 'conformite') || (profil.cle === 'direction' && s === 'direction'));
+  const avantValidation = ['brouillon', 'signataire', 'conformite', 'direction', 'refusee'].includes(s);
+  const transmis = o.transmis || MAINTENANT_B2B;
+  const suivi = {
+    'en-cours': ['attente', 'En cours de transmission au partenaire'], validee: ['attente', 'En traitement chez le partenaire'],
+    echouee: ['blocage', 'Rejetée par le partenaire'], payee: ['valide', 'Payé'], annulee: ['', 'Annulé avant paiement'],
+  }[s];
+  const revuePartenaire = !simule && !lecture && ['en-cours', 'validee'].includes(s);
+  contenu.querySelector('[data-ordre-droite]').innerHTML = (decide
+    ? `<section class="carte" data-decision-carte><h2>Décision · ${s === 'direction' ? 'direction' : 'conformité'}</h2>`
+      + `<p class="sous-titre">${s === 'conformite' && directionB2B(o) ? 'Au-delà du seuil de double validation : la direction valide ensuite.' : 'Dernière validation : le taux est fixé à l\'enregistrement.'}</p>`
+      + '<div class="champ"><label for="bo66-motif">Motif <span class="secondaire">· obligatoire pour refuser</span></label><textarea id="bo66-motif" placeholder="Raison du refus, ou commentaire"></textarea></div>'
+      + '<div class="reauth"></div><p class="pied">Code personnel demandé à chaque décision. Celui qui saisit un ordre ne le valide jamais.</p></section>'
+    : '')
+    + `<section class="carte"><h2>Taux</h2>${avantValidation
+      ? `<div class="info"><span>${tauxLu(o.devise)}</span><span class="secondaire">Taux indicatif, fixé à la validation</span></div>`
+      : `<div class="info"><span>${tauxLu(o.devise)}</span><span>Taux fixé à la validation, le ${o.tauxFixe || MAINTENANT_B2B.replace(' · ', ' à ')}</span></div>`}`
+    + (s === 'financement' ? `<p class="mention">L'ordre garde le taux fixé à la validation. ${qB2B('Un ordre validé qui attend son financement garde-t-il le taux fixé à la validation ? (atelier 10, Q3) Par défaut : il le garde.')}</p>` : '')
+    + '</section>'
+    + `<section class="carte"><h2>Chaîne de validation</h2><ul class="journal">${journalHtml(chaineB2B(o, s))}</ul>`
+    + `<p class="pied">${doubleB2B(o) ? `Au-delà du seuil de double validation (${montantDe(B2B_PARAMS.seuil, 'USD')}) : second signataire, conformité${directionB2B(o) ? ', puis direction' : ''}.` : `Sous le seuil de double validation (${montantDe(B2B_PARAMS.seuil, 'USD')}) : la conformité seule.`} Celui qui saisit ne valide jamais.</p></section>`
+    + (s === 'refusee' ? `<div class="bandeau blocage"><strong>Ordre refusé</strong><span>${echapper(o.refus?.motif || 'Motif saisi à la décision')} Définitif : le chargé de compte saisit un nouvel ordre s'il y a lieu.</span></div>` : '')
+    + (s === 'financement' ? `<div class="bandeau attention"><strong>Solde insuffisant</strong><span>Total à débiter ${montantDe(totalB2B(o))}, solde ${montantDe(e.solde)}. L'ordre part dès que le solde est alimenté, sans avance. ${qB2B('Un ordre en validation réserve-t-il une part du solde de l\'entreprise ? Par défaut : non, le solde n\'est contrôlé qu\'à la validation finale.')}</span></div>` : '')
+    + (suivi
+      ? `<section class="carte"><h2>Suivi partenaire</h2><div class="info"><span>Partenaire</span><span>Banque partenaire (${f.ville})</span></div>`
+        + `<div class="info"><span>Transmis le</span><span>${transmis}</span></div><div class="info"><span>Statut chez le partenaire</span><span><span class="statut ${suivi[0]}">${suivi[1]}</span></span></div>`
+        + (s === 'echouee' ? `<div class="bandeau blocage"><strong>Rejet du partenaire</strong><span>${(o.rejet || ['Compte du bénéficiaire clôturé'])[0]} · le ${(o.rejet || ['', MAINTENANT_B2B])[1]}. L'ordre peut être annulé : le solde est alors recrédité.</span></div>` : '')
+        + (s === 'payee' ? `<div class="info"><span>Payé le</span><span>${o.paye || MAINTENANT_B2B}</span></div><button class="bouton secondaire" type="button" data-toast="Avis d'exécution téléchargé|${o.ref} · PDF · ${e.nom}.">Télécharger l'avis d'exécution</button>` : '')
+        + (s === 'annulee' ? `<div class="info"><span>Annulé</span><span>${o.annul ? `${o.annul.quand} · ${o.annul.qui} · ${echapper(o.annul.motif)}` : MAINTENANT_B2B}</span></div>` : '')
+        + (revuePartenaire ? '<div class="revue-etat revue-b2b"><span>Outil de revue · simuler le retour du partenaire</span><div class="actions">'
+          + (s === 'en-cours' ? '<button class="bouton secondaire petit" type="button" data-ordre-action="validee">Validée</button>' : '')
+          + '<button class="bouton secondaire petit" type="button" data-ordre-action="payee">Payée</button><button class="bouton secondaire petit" type="button" data-ordre-action="echouee">Échouée</button></div></div>' : '')
+        + '</section>'
+      : '');
+
+  // Barre d'actions, selon le profil et l'état (masquée en revue et en lecture).
+  const actions = [];
+  if (!simule && !lecture && profil.cle === 'charge') {
+    if (s === 'brouillon') actions.push('<button class="bouton discret" type="button" data-ordre-action="supprimer">Supprimer le brouillon</button>', '<button class="bouton primaire" type="button" data-ordre-action="soumettre">Soumettre</button>');
+    if (s === 'signataire') actions.push('<button class="bouton primaire" type="button" data-ordre-action="signe">Joindre l\'ordre signé</button>');
+    if (s === 'financement') actions.push(`<button class="bouton secondaire" type="button" data-toast="Entreprise relancée|${e.nom} · demande d'alimentation du solde envoyée.">Relancer l'entreprise</button>`);
+    if (['en-cours', 'echouee'].includes(s)) actions.push('<button class="bouton secondaire" type="button" data-ouvrir-tiroir="annulation-b2b">Annuler l\'ordre</button>');
+  }
+  if (decide) actions.push('<button class="bouton secondaire" type="button" data-ordre-action="refuser" data-exige="#bo66-motif [data-code-perso]" disabled>Refuser</button>',
+    '<button class="bouton primaire" type="button" data-ordre-action="valider" data-exige="[data-code-perso]" disabled>Valider</button>');
+  const barre = contenu.querySelector('[data-ordre-actions]');
+  barre.innerHTML = actions.join('');
+  barre.hidden = !actions.length;
+  for (const encadre of contenu.querySelectorAll('[data-ordre-droite] .reauth')) construireReauth(encadre);
+  const annul = contenu.querySelector('[data-annul-b2b="ref"]');
+  annul.textContent = `${o.ref} · ${e.nom} · ${montantLu(o)}`;
+  contenu.querySelector('[data-annul-b2b="effet"]').textContent = `Le solde de ${e.nom} est recrédité de ${montantDe(totalB2B(o))} (montant et frais).`;
+}
+
+// Une action sur l'ordre courant (BO66).
+function finaliserB2B(o) {
+  o.tauxFixe = MAINTENANT_B2B.replace(' · ', ' à ');
+  const e = ENTREPRISES[o.ent];
+  if (e.solde >= totalB2B(o)) { e.solde -= totalB2B(o); o.statut = 'en-cours'; o.transmis = MAINTENANT_B2B; return 'transmis au partenaire, taux fixé'; }
+  o.statut = 'financement';
+  return 'en attente de financement : solde insuffisant';
+}
+function actionOrdre(action) {
+  const o = ordreB2B();
+  const e = ENTREPRISES[o.ent];
+  let message;
+  if (action === 'supprimer') {
+    ORDRES_B2B.splice(ORDRES_B2B.indexOf(o), 1);
+    location.hash = 'bo65';
+    return;
+  }
+  if (action === 'soumettre') { o.statut = doubleB2B(o) ? 'signataire' : 'conformite'; o.recu = MAINTENANT_B2B; message = ['Ordre soumis', `${o.ref} · ${PROCHAINE_B2B[o.statut].toLowerCase()}.`]; }
+  if (action === 'signe') { o.trace.signataire = [e.reps[1]?.[0] || e.reps[0][0], MAINTENANT_B2B]; o.statut = 'conformite'; o.recu = MAINTENANT_B2B; message = ['Ordre signé joint', `${o.ref} · transmis à la conformité.`]; }
+  if (action === 'valider') {
+    const niveau = o.statut;
+    o.trace[niveau] = [agentB2B(), MAINTENANT_B2B];
+    if (niveau === 'conformite' && directionB2B(o)) { o.statut = 'direction'; o.recu = MAINTENANT_B2B; message = ['Ordre validé par la conformité', `${o.ref} · transmis à la direction · tracé au journal d'audit.`]; }
+    else message = [`Ordre validé${niveau === 'direction' ? ' par la direction' : ''}`, `${o.ref} · ${finaliserB2B(o)} · tracé au journal d'audit.`];
+  }
+  if (action === 'refuser') {
+    o.refus = { niveau: o.statut, motif: lireChamp('#bo66-motif'), qui: agentB2B(), quand: MAINTENANT_B2B };
+    o.statut = 'refusee';
+    message = ['Ordre refusé', `${o.ref} · le chargé de compte est prévenu · tracé au journal d'audit.`];
+  }
+  if (action === 'validee') { o.statut = 'validee'; message = ['Retour du partenaire', `${o.ref} · en traitement chez le partenaire.`]; }
+  if (action === 'payee') { o.statut = 'payee'; o.paye = MAINTENANT_B2B; message = ['Retour du partenaire', `${o.ref} · fournisseur payé · avis d'exécution disponible.`]; }
+  if (action === 'echouee') { o.statut = 'echouee'; o.rejet = ['Compte du bénéficiaire clôturé', MAINTENANT_B2B]; message = ['Retour du partenaire', `${o.ref} · rejeté par le partenaire · compte du bénéficiaire clôturé.`]; }
+  etats['ordre-b2b'] = 'reel';
+  rendreOrdre();
+  menu(ecranCourant);
+  notifier(...message);
+  rafraichir();
+}
+
+// BO67 · le panneau « Nouvel ordre » : contrôles en direct.
+function remplirNouvelOrdre() {
+  const cle = contenu.querySelector('#bo67-entreprise')?.value;
+  if (!cle) return;
+  const e = ENTREPRISES[cle];
+  contenu.querySelector('#bo67-fournisseur').innerHTML = Object.entries(FOURNISSEURS_B2B).filter(([, f]) => f.ent === cle)
+    .map(([k, f]) => `<option value="${k}">${f.nom} · ${f.pays}</option>`).join('');
+  contenu.querySelector('#bo67-signataire').innerHTML = e.reps.map(([n, r]) => `<option>${n} · ${r}</option>`).join('');
+  if (e.reps[1]) contenu.querySelector('#bo67-signataire').selectedIndex = 1;
+}
+function saisieNouvelOrdre() {
+  const cle = contenu.querySelector('#bo67-entreprise').value;
+  const montant = Number((contenu.querySelector('#bo67-montant').value || '').replace(/\D/g, ''));
+  return { ent: cle, devise: etats['devise-b2b'], montant };
+}
+function majNouvelOrdre() {
+  const voile = contenu.querySelector('[data-tiroir="bo67"]');
+  if (!voile) return;
+  const q = (cle) => voile.querySelector(`[data-no="${cle}"]`);
+  const x = saisieNouvelOrdre();
+  const e = ENTREPRISES[x.ent];
+  const bloque = e?.dossier === 'verification';
+  q('suite').hidden = !e || bloque;
+  q('entreprise').innerHTML = !e ? '' : (bloque
+    ? '<div class="bandeau blocage"><strong>Dossier en cours de vérification par la conformité</strong><span>Aucun ordre ne peut être saisi avant la vérification.</span></div>'
+    : (e.dossier === 'maj' ? `<div class="bandeau attention"><strong>Mise à jour du dossier demandée par la conformité ${qB2B('Un dossier dont la mise à jour est demandée bloque-t-il les nouveaux ordres ? (atelier 10, Q4) Par défaut : non, jusqu\'à l\'échéance.')}</strong><span>Les ordres restent possibles jusqu'à l'échéance du ${e.echeance}.</span></div>` : ''))
+    + `<div class="info"><span>Dossier</span><span><span class="statut ${DOSSIERS_B2B[e.dossier][0]}">${DOSSIERS_B2B[e.dossier][1]}</span></span></div>`
+    + `<div class="info"><span>Solde chez SAFICO</span><span>${montantDe(e.solde)}</span></div>`
+    + `<div class="info"><span>Plafond par opération</span><span>${montantDe(e.plafond, 'USD')}</span></div>`
+    + `<div class="info"><span>Seuil de double validation</span><span>${montantDe(B2B_PARAMS.seuil, 'USD')}</span></div>`;
+  if (!e || bloque) return;
+  const f = FOURNISSEURS_B2B[contenu.querySelector('#bo67-fournisseur').value];
+  q('fournisseur').innerHTML = f ? `<div class="info"><span>Banque</span><span>Banque du bénéficiaire (${f.ville})</span></div><div class="info"><span>IBAN</span><span>${f.iban}</span></div>` : '';
+  q('devise').textContent = x.devise;
+  q('motif-autre').hidden = contenu.querySelector('#bo67-motif').value !== 'Autre';
+  const o = { ...x };
+  const cv = x.montant ? cvB2B(o) : 0;
+  const usd = cv / TAUX_B2B.USD;
+  q('calcul').innerHTML = x.montant
+    ? `<div class="info"><span>Taux indicatif</span><span>${tauxLu(x.devise)}</span></div><div class="info"><span>Contre-valeur</span><span>${montantDe(cv)} <span class="secondaire">· ${montantDe(Math.round(usd), 'USD')}</span></span></div>`
+      + `<div class="info"><span>Frais (0,5 %)</span><span>${montantDe(fraisB2B(o))}</span></div><div class="info"><span><b>Total à débiter</b></span><span><b>${montantDe(totalB2B(o))}</b></span></div>`
+      + '<p class="pied">Taux indicatif, fixé à la validation.</p>'
+    : '';
+  q('signataire').hidden = !(usd >= B2B_PARAMS.seuil);
+  const bandeaux = [];
+  if (x.montant && usd > e.plafond) bandeaux.push(`<div class="bandeau blocage"><strong>Plafond de l'entreprise dépassé</strong><span>Plafond par opération : ${montantDe(e.plafond, 'USD')}. Réduisez le montant ou demandez un relèvement à la conformité.</span></div>`);
+  if (x.montant && totalB2B(o) > e.solde) bandeaux.push('<div class="bandeau attention"><strong>Solde insuffisant</strong><span>L\'ordre partira en « En attente de financement » après validation.</span></div>');
+  if (x.montant && usd >= B2B_PARAMS.seuil && B2B_PARAMS.niveaux === 'direction') bandeaux.push('<div class="bandeau information"><strong>Cet ordre sera validé par la conformité puis par la direction</strong><span>Au-delà du seuil de double validation.</span></div>');
+  if (cv >= SEUIL_CENTIF) bandeaux.push('<p class="mention">Alerte de déclaration CENTIF à la soumission (contre-valeur de 150 000 000 GNF ou plus).</p>');
+  q('controles').innerHTML = bandeaux.join('');
+}
+function nouvelOrdre(statut) {
+  const x = saisieNouvelOrdre();
+  const e = ENTREPRISES[x.ent];
+  let four = contenu.querySelector('#bo67-fournisseur').value;
+  if (etats.fournisseur === 'nouveau') {
+    four = `nouveau-${rangOrdre}`;
+    const pays = lireChamp('#bo67-four-pays');
+    FOURNISSEURS_B2B[four] = { nom: lireChamp('#bo67-four-nom'), ent: x.ent, pays, ville: { 'Côte d\'Ivoire': 'Abidjan', Sénégal: 'Dakar' }[pays] || 'Dubaï', iban: lireChamp('#bo67-four-iban'), horsCorridor: pays === 'Émirats arabes unis' };
+  }
+  const motif = lireChamp('#bo67-motif') === 'Autre' ? `Autre · ${lireChamp('#bo67-motif-autre')}` : lireChamp('#bo67-motif');
+  const o = { ref: `OT-2026-0${rangOrdre++}`, date: MAINTENANT_B2B, ent: x.ent, four, devise: x.devise, montant: x.montant, statut, motif,
+    just: [lireChamp('#bo67-type'), lireChamp('#bo67-fichier') || 'Aucun fichier', '182 Ko'], trace: {} };
+  if (statut === 'conformite') {
+    o.recu = MAINTENANT_B2B;
+    if (doubleB2B(o)) o.trace.signataire = [lireChamp('#bo67-signataire').split(' · ')[0], MAINTENANT_B2B];
+  }
+  ORDRES_B2B.unshift(o);
+  SEL.ordre = o.ref;
+  rendreOrdresB2B();
+  menu(ecranCourant);
+  return [statut === 'brouillon' ? 'Brouillon enregistré' : 'Ordre soumis', `${o.ref} · ${e.nom} · ${montantLu(o)} · ${PROCHAINE_B2B[statut].toLowerCase()}.`];
+}
+
+// BO50 · le seuil de double validation B2B et ses niveaux.
+function rendreParamB2B() {
+  const champ = contenu.querySelector('#bo50-seuil-b2b');
+  if (!champ) return;
+  champ.value = String(B2B_PARAMS.seuil);
+  formaterMontant(champ);
+  etats['niveaux-b2b'] = B2B_PARAMS.niveaux;
+  for (const b of contenu.querySelectorAll('[data-choix="niveaux-b2b"] [data-valeur]')) b.classList.toggle('actif', b.dataset.valeur === B2B_PARAMS.niveaux);
+}
+const NIVEAUX_B2B = { conformite: 'conformité seule', direction: 'conformité puis direction' };
+function changementsB2B() {
+  const champ = contenu.querySelector('#bo50-seuil-b2b');
+  if (!champ) return [];
+  const liste = [];
+  const seuil = Number(champ.value.replace(/\D/g, ''));
+  if (seuil && seuil !== B2B_PARAMS.seuil) liste.push(`Transferts entreprises · seuil de double validation : ${montantDe(B2B_PARAMS.seuil, 'USD')} → ${montantDe(seuil, 'USD')}`);
+  if (etats['niveaux-b2b'] && etats['niveaux-b2b'] !== B2B_PARAMS.niveaux) liste.push(`Transferts entreprises · au-delà du seuil : ${NIVEAUX_B2B[B2B_PARAMS.niveaux]} → ${NIVEAUX_B2B[etats['niveaux-b2b']]}`);
+  return liste;
+}
+function appliquerB2B() {
+  const champ = contenu.querySelector('#bo50-seuil-b2b');
+  if (!champ) return;
+  const seuil = Number(champ.value.replace(/\D/g, ''));
+  if (seuil) B2B_PARAMS.seuil = seuil;
+  B2B_PARAMS.niveaux = etats['niveaux-b2b'] || B2B_PARAMS.niveaux;
+}
+// /B2B
+
 const AJOUTS = {};
 function garder(ecranId, selecteur, html) {
   (AJOUTS[ecranId] ||= []).push([selecteur, html]);
@@ -8446,6 +9175,7 @@ function ouvrirTiroir(cle) {
   if (!voile) return;
   voile.hidden = false;
   if (cle === 'bo17') preparerOuverture();
+  if (cle === 'bo67') remplirNouvelOrdre(); // B2B
   if (cle === 'seconde-validation') voile.querySelector('[data-second-changements]').innerHTML = changementsSeconde().map((c) => `<li>${echapper(c)}</li>`).join('');
   rafraichir();
   voile.querySelector('input:not([type=checkbox]), textarea, select')?.focus();
@@ -8528,6 +9258,19 @@ function ouvrirPlage(cle) {
 }
 
 const SOUMISSIONS = {
+  // B2B (03/11) : nouvel ordre (BO67), brouillon, annulation (BO66).
+  'ordre-b2b'() { return nouvelOrdre('conformite'); },
+  'brouillon-b2b'() { return nouvelOrdre('brouillon'); },
+  'annulation-b2b'() {
+    const o = ordreB2B();
+    ENTREPRISES[o.ent].solde += totalB2B(o);
+    o.annul = { motif: lireChamp('#bo66-annul-motif'), qui: agentB2B(), quand: MAINTENANT_B2B };
+    o.statut = 'annulee';
+    etats['ordre-b2b'] = 'reel';
+    rendreOrdre();
+    menu(ecranCourant);
+    return ['Ordre annulé', `${o.ref} · solde de ${ENTREPRISES[o.ent].nom} recrédité de ${montantDe(totalB2B(o))} · tracé au journal d'audit.`];
+  },
   // BO63 (28/10) : régulariser un paiement en ligne.
   regularisation() {
     const [action, id] = regularisationCourante;
@@ -8754,6 +9497,7 @@ const SOUMISSIONS = {
       SECONDE_VALIDATION.domaines[i][1][j][1] = caseOp.checked;
     }
     SECONDE_VALIDATION.valideur = etats.valideur;
+    appliquerB2B(); // B2B
     for (const c of changements) HISTORIQUE_SECONDE.unshift(['01/10/2026 · 10:42', echapper(c), `L. Condé · Administrateur · ${echapper(lireChamp('#bo50-motif'))}`]);
     rendreSecondeValidation();
     return ['Seconde validation modifiée', `${changements.length} modification${changements.length > 1 ? 's' : ''} · historisée${changements.length > 1 ? 's' : ''} au journal d'audit.`];
@@ -8902,7 +9646,9 @@ function afficher(code = location.hash.replace('#', '')) {
     // Un écran « consultable » (BO23, BO12, BO41) s'ouvre aussi depuis la vue des paramètres (BO46).
     const permis = (p) => (entrees(p).includes(parentDe(demande)) || entrees(p).includes(demande.dataset.consultable))
       && (p.espace === demande.dataset.espace || (demande.dataset.profils || '').split(' ').includes(p.cle));
-    if (!permis(profil)) profil = PROFILS.find(permis) || PROFILS.find((p) => entrees(p).includes(parentDe(demande)));
+    // B2B : un écran de l'espace Entreprises ouvert par son ancre s'ouvre chez le chargé de compte, pas chez la Finance (lecture).
+    const siens = demande.dataset.espace === 'entreprises' && PROFILS.find((p) => permis(p) && p.espace === 'entreprises');
+    if (!permis(profil)) profil = siens || PROFILS.find(permis) || PROFILS.find((p) => entrees(p).includes(parentDe(demande)));
   }
   ouvrirProfils(false);
   menu(ecran);
@@ -8991,6 +9737,10 @@ function afficher(code = location.hash.replace('#', '')) {
   rendreRetraits();
   rendreRapprochement();
   soldesJournee();
+  rendreOrdresB2B(); // B2B
+  rendreOrdre();
+  rendreFileB2B();
+  rendreParamB2B();
   lectureSeule(ecran);
   rafraichir();
 
@@ -9018,12 +9768,14 @@ function montrer(cle, valeur) {
   if (cle === 'partenaire') rendreFrais();
   if (cle === 'aide') rendreDemandesAide();
   if (cle === 'paiements') rendrePaiements();
+  if (cle === 'ordre-b2b') rendreOrdre(); // B2B
   rafraichir();
 }
 
 function rafraichir() {
   rendreValidations();
   compterSecondes();
+  majNouvelOrdre(); // B2B
   appliquer();
   filtrer();
   exigences();
@@ -9074,6 +9826,10 @@ function filtrer() {
   (data-etape-exige, BO16).
 */
 const CONDITIONS = {
+  // B2B (BO67) : dossier vérifié, fournisseur choisi ou saisi, plafond de l'entreprise respecté.
+  'b2b-verifie': () => { const c = contenu.querySelector('#bo67-entreprise')?.value; return !!c && ENTREPRISES[c].dossier !== 'verification'; },
+  'b2b-fournisseur': () => (etats.fournisseur === 'nouveau' ? rempli('#bo67-four-nom') && rempli('#bo67-four-iban') : !!contenu.querySelector('#bo67-fournisseur')?.value),
+  'b2b-plafond': () => { const x = saisieNouvelOrdre(); const e = ENTREPRISES[x.ent]; return !!e && cvB2B(x) / TAUX_B2B.USD <= e.plafond; },
   decision: () => !!contenu.querySelector('[data-choix="decision"] .actif'),
   role: () => [...contenu.querySelectorAll('[data-role-choix]')].some((c) => c.checked),
   'sans-cumul': () => etats.cumul !== 'oui',
@@ -9258,6 +10014,15 @@ contenu.addEventListener('click', (e) => {
   if (porteur?.dataset.agenceCle) agenceCourante = porteur.dataset.agenceCle;
   const ecart = e.target.closest('[data-selection-ecart]');
   if (ecart) { SEL.ecart = ecart.dataset.selectionEcart; SEL.tiroir = 'ecart'; return afficher(ecranCourant.id); }
+  // B2B : message de confirmation (avis d'exécution, justificatif, relance), actions sur l'ordre, dépôt simulé.
+  const toast = e.target.closest('[data-toast]');
+  if (toast) { const [titre, texte] = toast.dataset.toast.split('|'); return notifier(titre, texte); }
+  const actionB2B = e.target.closest('[data-ordre-action]');
+  if (actionB2B) return actionB2B.disabled || actionOrdre(actionB2B.dataset.ordreAction);
+  if (e.target.closest('[data-no-deposer]')) {
+    contenu.querySelector('#bo67-fichier').value = `${lireChamp('#bo67-type').replace(/ /g, '_')}_${new Date(MAINTENANT).getUTCFullYear()}-0311.pdf`;
+    return rafraichir();
+  }
   const segment = e.target.closest('[data-choix] [data-valeur]');
   if (segment && !segment.disabled) return choisirSegment(segment);
   const bouton = e.target.closest('[data-enregistrer]');
@@ -9282,7 +10047,11 @@ contenu.addEventListener('click', (e) => {
   const regulariser = e.target.closest('[data-regulariser]');
   if (regulariser) return ouvrirRegularisation(regulariser.dataset.regulariser);
   const reglage = e.target.closest('[data-reglage-app]');
-  if (reglage) return ouvrirReglageApp(reglage.dataset.reglageApp);
+  // Interrupteur (atelier 9, 29/10) : il ne bascule qu'une fois la modification enregistrée, avec justification et code personnel.
+  if (reglage) {
+    if (reglage.matches('input.interrupteur')) { const voulu = reglage.checked ? 'Actif' : 'Inactif'; e.preventDefault(); return ouvrirReglageApp(reglage.dataset.reglageApp, voulu); }
+    return ouvrirReglageApp(reglage.dataset.reglageApp);
+  }
   // Comptes à vérifier (BO58, 28/10).
   const decision = e.target.closest('[data-compte-decider]');
   if (decision) return decision.disabled || deciderCompte();
@@ -9420,6 +10189,7 @@ contenu.addEventListener('change', (e) => {
   }
   if (e.target.matches('[data-pays-niveau]')) effetPays();
   if (e.target.matches('[data-ouvertures]')) remplirOuverture();
+  if (e.target.matches('#bo67-entreprise')) remplirNouvelOrdre(); // B2B
   rafraichir();
 });
 // Un écran ouvert depuis le menu n'a pas de liste d'origine (BO21 : ouvert aussi depuis BO27).

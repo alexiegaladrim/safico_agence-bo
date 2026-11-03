@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Safico — Plateforme web diaspora (prototype lot 2)</title>
+<title>SafiGo — Plateforme web diaspora (prototype lot 2)</title>
 <style>
 /* Plateforme web de la diaspora (lot 2) — démarrée le 28 oct. 2026. Déclinaison ordinateur de
    l'espace client (proto-b2c.html), décidée à l'atelier 7 (15/10) : application mobile pour la
@@ -142,6 +142,7 @@ h2{font:700 18px/24px var(--police)}
 .bouton:active{transform:scale(.98)}
 .bouton.grand{height:var(--h-grand);font-size:16px;padding:0 28px}
 .bouton.plein{width:100%}
+.bouton.petit{height:32px;padding:0 12px;font-size:13px}
 .bouton.primaire{background:var(--action);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 6px 14px -8px rgba(0,92,199,.55)}
 .bouton.primaire:hover{background:var(--action-survol)}
 .bouton.secondaire{background:var(--fond-surface);border-color:var(--trait-net);color:var(--texte-principal)}
@@ -267,6 +268,14 @@ h2{font:700 18px/24px var(--police)}
 .etape-pub .num{width:40px;height:40px;border-radius:50%;background:var(--marque-tete);color:#fff;display:grid;place-items:center;font-weight:700}
 .etape-pub b{font-size:17px}
 .etape-pub span{color:var(--texte-secondaire)}
+/* Porte vers l'espace entreprises (03/11) : lien de l'en-tête public, bandeau de P0, pied de site */
+.lien-entete{font-weight:600;font-size:14px;color:var(--texte-secondaire);text-decoration:none;padding:0 8px}
+.lien-entete:hover{color:var(--texte-principal)}
+.entete.marque .lien-entete{color:#D6E3F5}
+.entete.marque .lien-entete:hover{color:#fff}
+.porte-business{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:20px 24px;border-radius:var(--rayon);background:var(--fond-surface);box-shadow:var(--ombre),var(--bord-carte)}
+.porte-business b{display:block;font-size:17px}
+@media (max-width:760px){.porte-business{flex-direction:column;align-items:flex-start}.entete .lien-entete{display:none}}
 .pied-site{border-top:1px solid var(--trait-leger);background:var(--fond-surface);padding:24px 0}
 .pied-site .cadre{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
 .pied-site a{color:var(--texte-secondaire);font-size:13px;text-decoration:none}
@@ -401,6 +410,7 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
   <symbol id="i-personnes" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3.5 3.5 0 010 7M18 14c1.8.8 3 2.9 3 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-profil" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-aide" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 9.5a2.5 2.5 0 114 2c-1 .6-1.5 1.2-1.5 2.5M12 17h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-alerte" viewBox="0 0 24 24"><path d="M12 3l10 18H2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v5M12 18h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.5h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
   <symbol id="i-ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-horloge" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
@@ -428,7 +438,7 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
 <!-- ═════════════ A. ENTRER DANS LE SERVICE ═════════════ -->
 
 <section class="ecran" id="p0" data-code="P0" data-groupe="A · Entrer dans le service" data-titre="Accueil public et simulateur" data-gabarit="public" data-entete="marque"
-  data-contexte="Déclinaison web de P0. La plateforme web sert la diaspora (atelier 7, 15/10 : application mobile pour la Guinée, plateforme web pour la diaspora ; une application web à installer est écartée). Contrairement à l'application, le simulateur est ouvert sans compte : « ok pour moi » (Issiaga Diallo, question 5 du doc de l'atelier 8, 21/10) ; Babacar Faye devait confirmer sous 72 h après l'atelier 7, sa réponse n'est pas dans nos sources. Le simulateur et l'accroche reprennent ceux de l'application (« Vos proches, plus près. »). Devise d'envoi : euro par défaut, dollar américain selon l'hypothèse de Q21 (GNF, EUR, USD : un taux par devise). Taux et frais de démonstration : 10 500 GNF pour 1 € (chiffre cité à l'atelier 1), 2,50 € de frais (règle de démonstration de l'application). Aucun plafond affiché : celui de 5 000 USD par jour ne vaut que pour les envois initiés depuis la Guinée (atelier 8, 22/10) ; pour un envoi depuis l'étranger, c'est la réglementation du pays d'envoi et le partenaire local (Q41). Pied de page : conditions et confidentialité, le RGPD s'appliquant aux utilisateurs situés dans l'Union européenne (atelier 7)."
+  data-contexte="Nom du service : SafiGo, en un mot, G majuscule (atelier 9, 29/10) ; il peut encore changer : il est écrit une seule fois, dans la constante NOM_SERVICE du JS. SAFICO reste le nom de l'entreprise (réseau d'agences et de distributeurs, pied de page). Logo en attente de validation définitive par Chaikou Barry (atelier 9, 29/10) : Safico s'oriente vers la première proposition de Galadrim, un S bleu stylisé, dont le fichier n'est pas encore dans le dossier ; en attendant, le mot « SafiGo » s'affiche seul. Simulateur : désactivable depuis le back-office (atelier 9, 29/10). Il est conservé avant la création de compte, avec des taux et des frais mis à jour automatiquement ; comme il rend les tarifs visibles aux concurrents, une option du back-office le retire (BO64). Désactivé, le visiteur voit la page d'accueil sans simulateur : l'accroche, « Comment ça marche » et « Créer un compte » en action principale ; les tarifs ne s'affichent qu'une fois connecté (état non dessiné). Paiement (atelier 9) : carte bancaire et virement instantané, proposés en premier sur la plateforme diaspora. Déclinaison web de P0. La plateforme web sert la diaspora (atelier 7, 15/10 : application mobile pour la Guinée, plateforme web pour la diaspora ; une application web à installer est écartée). Contrairement à l'application, le simulateur est ouvert sans compte : « ok pour moi » (Issiaga Diallo, question 5 du doc de l'atelier 8, 21/10) ; Babacar Faye devait confirmer sous 72 h après l'atelier 7, sa réponse n'est pas dans nos sources. Le simulateur et l'accroche reprennent ceux de l'application (« Vos proches, plus près. »). Devise d'envoi : euro par défaut, dollar américain selon l'hypothèse de Q21 (GNF, EUR, USD : un taux par devise). Taux et frais de démonstration : 10 500 GNF pour 1 € (chiffre cité à l'atelier 1), 2,50 € de frais (règle de démonstration de l'application). Aucun plafond affiché : celui de 5 000 USD par jour ne vaut que pour les envois initiés depuis la Guinée (atelier 8, 22/10) ; pour un envoi depuis l'étranger, c'est la réglementation du pays d'envoi et le partenaire local (Q41). Pied de page : conditions et confidentialité, le RGPD s'appliquant aux utilisateurs situés dans l'Union européenne (atelier 7). Porte des entreprises (03/11, avant l'atelier 10) : le lien « Entreprises » de l'en-tête, le bandeau sous le simulateur et le pied de site mènent à SafiGo Business (proto-business.html), espace séparé des entreprises guinéennes qui paient des fournisseurs à l'étranger ; le nom est une proposition de Galadrim (question B6 de ce prototype)."
   data-q="Q21|Q41">
   <div class="une">
     <svg class="une-motif" aria-hidden="true"><use href="#i-symbole-inv"/></svg>
@@ -449,10 +459,11 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
   </div>
   <div class="page">
     <div class="cadre">
+      <div class="porte-business"><div><b>Vous êtes une entreprise ?</b><span class="micro">Payez vos fournisseurs à l'étranger avec SafiGo Business</span></div><a class="bouton secondaire" href="proto-business.html#bp0">Découvrir SafiGo Business</a></div>
       <div class="rubrique">Comment ça marche</div>
       <div class="etapes-pub">
         <div class="etape-pub"><span class="num">1</span><b>Créez votre compte</b><span>Votre numéro de téléphone et une pièce d'identité suffisent. Nous vérifions votre identité avant votre premier envoi.</span></div>
-        <div class="etape-pub"><span class="num">2</span><b>Envoyez</b><span>Payez par carte bancaire. Vous voyez le montant reçu, les frais et le taux avant de payer.</span></div>
+        <div class="etape-pub"><span class="num">2</span><b>Envoyez</b><span>Payez par carte bancaire ou par virement instantané. Vous voyez le montant reçu, les frais et le taux avant de payer.</span></div>
         <div class="etape-pub"><span class="num">3</span><b>Votre proche retire</b><span>Avec le code de retrait que vous lui transmettez et sa pièce d'identité, en agence ou chez un distributeur.</span></div>
       </div>
     </div>
@@ -465,7 +476,7 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
   <div class="centre-page">
     <div class="carte">
       <div class="titre-page moyen">Se connecter</div>
-      <div class="champ"><label for="c1-tel">Numéro de téléphone</label><div class="tel"><select class="indicatif" aria-label="Indicatif"><option selected>+33</option><option>+32</option><option>+1</option><option>+44</option><option>+224</option></select><input id="c1-tel" inputmode="tel" data-persona-tel></div><span class="aide">Le numéro de votre compte Safico. <span class="trancher" title="Q42 · Sur la plateforme diaspora, le client s'identifie-t-il par son numéro de téléphone étranger (comme dans l'application) ou par son adresse e-mail ? Les codes SMS partent-ils vers tous les pays d'envoi ?">Q42</span></span></div>
+      <div class="champ"><label for="c1-tel">Numéro de téléphone</label><div class="tel"><select class="indicatif" aria-label="Indicatif"><option selected>+33</option><option>+32</option><option>+1</option><option>+44</option><option>+224</option></select><input id="c1-tel" inputmode="tel" data-persona-tel></div><span class="aide">Le numéro de votre compte <span data-nom-service>SafiGo</span>. <span class="trancher" title="Q42 · Sur la plateforme diaspora, le client s'identifie-t-il par son numéro de téléphone étranger (comme dans l'application) ou par son adresse e-mail ? Les codes SMS partent-ils vers tous les pays d'envoi ?">Q42</span></span></div>
       <div class="champ"><label for="c1-mdp">Mot de passe</label><div class="mdp"><input id="c1-mdp" type="password" value="motdepasse" autocomplete="current-password"><button type="button" class="oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg width="22" height="22" aria-hidden="true"><use href="#i-oeil"/></svg></button></div></div>
       <a class="lien" style="align-self:flex-start" href="#c1" data-toast="Mot de passe oublié : écrans à décliner depuis l'application (C3 à C5).">Mot de passe oublié</a>
       <a class="bouton primaire grand plein" href="#a1" data-toast="Bienvenue, Mamadou Saliou.">Se connecter</a>
@@ -736,7 +747,7 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
 </section>
 
 <section class="ecran" id="b1" data-code="B1" data-groupe="Envoyer" data-titre="Envoi · 2 Bénéficiaire" data-gabarit="envoi" data-etape="2" data-nav="e1"
-  data-contexte="Déclinaison web de B1 et B3, réunis : sur ordinateur, la liste des bénéficiaires et le formulaire d'un nouveau bénéficiaire tiennent sur la même page. Le nouveau bénéficiaire est repris dans le récapitulatif, ce que l'application ne fait pas encore. Règles reprises de B3 : téléphone obligatoire, champ le plus critique (atelier 1, compte rendu de l'atelier 7) ; nom et prénom(s) sur deux lignes, une inversion peut faire refuser le paiement (29/09) ; « exactement comme sur sa pièce » ; le bénéficiaire est filtré sur les listes de sanctions dès sa création, sans rien afficher au client (15/10). Bénéficiaires et valeurs du formulaire : démonstration (DIALLO Kadiatou et BAH Ousmane, profil du 07/10 ; SOUMAH Mariama, formulaire de l'application)."
+  data-contexte="Déclinaison web de B1 et B3, réunis : sur ordinateur, la liste des bénéficiaires et le formulaire d'un nouveau bénéficiaire tiennent sur la même page. Le nouveau bénéficiaire est repris dans le récapitulatif, ce que l'application ne fait pas encore. Règles reprises de B3 : téléphone obligatoire, champ le plus critique (atelier 1, compte rendu de l'atelier 7) ; nom et prénom(s) sur deux lignes, une inversion peut faire refuser le paiement (29/09) ; « exactement comme sur sa pièce » ; le bénéficiaire est filtré sur les listes de sanctions dès sa création, sans rien afficher au client (15/10). Bénéficiaires et valeurs du formulaire : démonstration (DIALLO Kadiatou et BAH Ousmane, profil du 07/10 ; SOUMAH Mariama, formulaire de l'application). Atelier 9 (29/10) : « Moi-même » en tête de liste, le client étant à la fois expéditeur et bénéficiaire (fréquent pour la diaspora de passage en Guinée), avec son nom, ses prénoms et son téléphone, sans changement de parcours ni de conformité ; double saisie du numéro à l'ajout d'un nouveau bénéficiaire, avec une erreur si les deux diffèrent, mais pas pour un bénéficiaire enregistré ni pour « Moi-même » ; avertissement : l'expéditeur est responsable du numéro saisi. Les retraits en espèces restent soumis à la vérification d'identité du bénéficiaire au point de paiement, et les conditions générales dégageront la responsabilité de Safico sur ce sujet."
   data-q="Q9">
   <div class="page"><div class="cadre">
     <div class="grille principal">
@@ -752,9 +763,11 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
           <div class="champs">
             <div class="champ"><label for="nb-nom">Nom</label><input id="nb-nom" value="SOUMAH" data-nouveau="nom"></div>
             <div class="champ"><label for="nb-prenom">Prénom(s)</label><input id="nb-prenom" value="Mariama" data-nouveau="prenom"></div>
-            <div class="champ"><label for="nb-tel">Son numéro de téléphone</label><div class="tel"><select class="indicatif" aria-label="Indicatif"><option>+224</option><option>+225</option><option>+221</option><option>+231</option></select><input id="nb-tel" inputmode="tel" value="664 21 08 55" data-nouveau="tel"></div><span class="aide">Obligatoire : il recevra un SMS. Vérifiez chaque chiffre.</span></div>
+            <div class="champ"><label for="nb-tel">Son numéro de téléphone</label><div class="tel"><select class="indicatif" aria-label="Indicatif"><option>+224</option><option>+225</option><option>+221</option><option>+231</option></select><input id="nb-tel" inputmode="tel" value="664 21 08 55" data-nouveau="tel"></div><span class="aide">Obligatoire : il recevra un SMS avec le montant et le code de retrait.</span></div>
+            <div class="champ"><label for="nb-tel-2">Confirmez le numéro</label><input id="nb-tel-2" inputmode="tel" data-nouveau-confirme autocomplete="off"><span class="aide">Saisissez-le une seconde fois.</span><span class="erreur-texte" data-tel-erreur hidden>Les deux numéros ne sont pas identiques.</span></div>
             <div class="champ"><label for="nb-ville">Ville</label><input id="nb-ville" value="Kindia" data-nouveau="ville"><span class="aide">Facultatif.</span></div>
           </div>
+          <div class="bandeau attention"><svg aria-hidden="true"><use href="#i-alerte"/></svg><span class="texte">Vérifiez le numéro de votre bénéficiaire : vous êtes responsable du numéro saisi.</span></div>
           <label class="case"><input type="checkbox" checked id="nb-confirme"><span>Je confirme que le nom et le numéro sont exacts.</span></label>
         </div>
         <div class="actions"><a class="bouton texte" href="#e1"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#e4" data-suite-benef>Continuer</a></div>
@@ -765,12 +778,13 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
 </section>
 
 <section class="ecran" id="e4" data-code="E4" data-groupe="Envoyer" data-titre="Envoi · 3 Récapitulatif" data-gabarit="envoi" data-etape="3" data-nav="e1"
-  data-contexte="Déclinaison web de E4 (ancre #e5 dans l'application). Tout ce qui engage, avant le paiement : ce que reçoit le bénéficiaire, le bénéficiaire (nom et prénom(s) séparés), montant, frais, taux, total. Motif du transfert facultatif (atelier 8, 22/10 : origine des fonds supprimée). « Code de retrait · Affiché après le paiement » : Q8 tranchée à l'atelier 8, l'expéditeur voit le code dans son espace, personnel et protégé, comme dans l'application. Annulation et remboursement écrits en clair, rendus sur la carte qui a payé (hypothèse de Q13). Taux garanti 15 minutes (Q16)."
+  data-contexte="Déclinaison web de E4 (ancre #e5 dans l'application). Tout ce qui engage, avant le paiement : ce que reçoit le bénéficiaire, le bénéficiaire (nom et prénom(s) séparés), montant, frais, taux, total. Motif du transfert obligatoire, mais il ne bloque jamais l'envoi (atelier 9, 29/10, qui renverse l'atelier 8) : il sert à la conformité à repérer les transactions qui ne correspondent pas au profil du client ; aucun motif ne provoque de refus ni de message. Liste enrichie, « Autre » ouvre « Précisez le motif ». « Passer au paiement » attend un motif. L'origine des fonds, supprimée à l'atelier 8, n'est pas réintroduite. Avertissement sur le numéro du bénéficiaire (atelier 9), sauf pour « Moi-même ». Depuis « Renvoyer » (Mes envois, détail) : bénéficiaire, motif et mode de réception de l'envoi d'origine, au taux du jour ; le montant se modifie par « Modifier », vers l'étape 1 pré-remplie. « Code de retrait · Affiché après le paiement » : Q8 tranchée à l'atelier 8, l'expéditeur voit le code dans son espace, personnel et protégé, comme dans l'application. Annulation et remboursement écrits en clair, rendus sur la carte qui a payé (hypothèse de Q13). Taux garanti 15 minutes (Q16)."
   data-q="Q16|Q13">
   <div class="page"><div class="cadre">
     <div class="grille principal">
       <div class="colonne">
         <div class="titre-page moyen">Vérifiez votre envoi</div>
+        <div class="bandeau information" data-si-renvoi hidden><svg aria-hidden="true"><use href="#i-info"/></svg><span class="texte"><b>Nouvel envoi à partir de <span data-renvoi-ref></span>.</b> Même bénéficiaire, même motif, au taux du jour. Vous pouvez modifier le montant.</span></div>
         <div class="grille deux">
           <div class="carte serree">
             <div class="label">Votre proche reçoit</div>
@@ -781,12 +795,14 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
           </div>
           <div class="carte serree">
             <div class="carte-tete"><span class="label">Bénéficiaire</span><a href="#b1" class="action-tete">Modifier</a></div>
-            <div class="ligne"><span class="micro">Nom</span><span class="fort" data-benef-nom></span></div>
+            <div class="ligne"><span class="micro">Nom</span><span><span class="fort" data-benef-nom></span> <span class="micro" data-si-soi hidden>(vous-même)</span></span></div>
             <div class="ligne"><span class="micro">Prénom(s)</span><span data-benef-prenom></span></div>
             <div class="ligne"><span class="micro">Téléphone</span><span data-benef-tel></span></div>
           </div>
         </div>
+        <div class="bandeau attention" data-si-pas-soi><svg aria-hidden="true"><use href="#i-alerte"/></svg><span class="texte">Vérifiez le numéro de votre bénéficiaire : vous êtes responsable du numéro saisi.</span></div>
         <div class="carte">
+          <div class="carte-tete"><span class="label">Montant</span><a href="#e1" class="action-tete">Modifier</a></div>
           <div class="ligne"><span>Vous envoyez</span><span class="fort" data-recap-envoi></span></div>
           <div class="ligne"><span>Frais</span><span data-recap-frais></span></div>
           <div class="ligne"><span>Taux</span><span data-recap-taux></span></div>
@@ -794,33 +810,35 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
           <div class="ligne"><span class="fort">Total à payer</span><span class="montant-petit" data-recap-total></span></div>
           <div class="micro">Taux garanti 15 minutes. <span class="trancher" title="Q16 · Le taux change entre la simulation et le paiement">Q16</span></div>
         </div>
-        <div class="champ" style="max-width:420px"><label for="e4-motif">Motif du transfert (facultatif)</label><select id="e4-motif" data-motif><option value="">Choisir…</option><option>Assistance familiale</option><option>Frais médicaux</option><option>Frais scolaires</option><option>Œuvres et dons</option><option>Autre</option></select><span class="aide">Liste du prototype agence, à compléter par la conformité (G1).</span></div>
+        <div class="champs" style="max-width:860px"><div class="champ"><label for="e4-motif">Motif du transfert</label><select id="e4-motif" data-motif data-requis data-liste-motifs><option value="">Choisir…</option></select></div>
+          <div class="champ" data-autre-pour="e4-motif" hidden><label for="e4-motif-autre">Précisez le motif</label><input id="e4-motif-autre" data-motif-autre data-requis autocomplete="off"></div></div>
         <div class="carte plate"><p class="micro"><b>Vous changez d'avis ?</b> Tant que l'argent n'est pas retiré, vous pouvez annuler : nous vous rendons le montant <b>et les frais</b>, sur la carte qui a payé. Non retiré après 30 jours, l'envoi vous est remboursé, sans les frais. <span class="trancher" title="Q13 · Annulation ou remboursement d'un envoi payé en ligne (Mobile Money ou carte) : les fonds reviennent-ils toujours au compte d'origine ? Quelle règle de frais ?">Q13</span></p></div>
-        <div class="actions"><a class="bouton texte" href="#b1"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#e5">Passer au paiement</a></div>
+        <div class="actions"><a class="bouton texte" href="#b1"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#e5" data-attend-requis aria-disabled="true">Passer au paiement</a></div>
       </div>
       <aside class="collant" data-resume></aside>
     </div>
   </div></div>
 </section>
 
-<section class="ecran" id="e5" data-code="E5" data-groupe="Envoyer" data-titre="Paiement · carte bancaire" data-gabarit="envoi" data-etape="4" data-nav="e1"
-  data-contexte="Déclinaison web de E5 et E5g, réunis. La carte bancaire est le seul moyen de paiement de la plateforme diaspora : le mobile money des six opérateurs guinéens vaut pour l'application (atelier 8). « Pertinent pour la diaspora surtout » (commentaire d'Issiaga Diallo, 21/10). La carte est active (décision d'Alexie du 28/10, comme dans l'application), sous Q36, question 1 de l'atelier 9 : sans réponse, le document de travail prévoyait « bientôt disponible » sur la plateforme web, ce qui laisserait la diaspora sans moyen de payer. Saisie minimale reprise de E5g : numéro, expiration, cryptogramme, titulaire ; le bouton reste désactivé tant que les quatre champs ne sont pas remplis. « Payer » ouvre la validation par code PIN, puis la confirmation de la banque (E5h)."
+<section class="ecran" id="e5" data-code="E5" data-groupe="Envoyer" data-titre="Paiement · moyen et carte bancaire" data-gabarit="envoi" data-etape="4" data-nav="e1"
+  data-contexte="Déclinaison web de E5 et E5g, réunis. La carte bancaire est le seul moyen de paiement de la plateforme diaspora : le mobile money des six opérateurs guinéens vaut pour l'application (atelier 8). « Pertinent pour la diaspora surtout » (commentaire d'Issiaga Diallo, 21/10). Atelier 9 (29/10, Q36 tranchée pour l'activation) : la carte bancaire avec 3-D Secure est accessible à tout client ; sur la plateforme diaspora, la carte bancaire et le virement instantané sont proposés en premier, dans cet ordre. Un moyen n'est affiché que s'il est réellement disponible : désactivé, il disparaît, sans être grisé ; c'est piloté depuis le back-office (BO64, par moyen et par plateforme). Le virement instantané mène à ses coordonnées (E5i). Le prestataire de la carte reste à désigner. Saisie minimale reprise de E5g : numéro, expiration, cryptogramme, titulaire ; le bouton reste désactivé tant que les quatre champs ne sont pas remplis. « Payer » ouvre la validation par code PIN, puis la confirmation de la banque (E5h)."
   data-q="Q36">
   <div class="page"><div class="cadre">
     <div class="grille principal">
       <div class="colonne">
-        <div class="titre-page moyen">Paiement par carte bancaire</div>
-        <div class="carte">
-          <div class="carte-tete"><h2>Votre carte</h2><span class="trancher" title="Q36 · Carte bancaire : dans l'application Guinée aussi, ou seulement sur la plateforme diaspora ? Quel prestataire de paiement, et 3-D Secure ?">Q36</span></div>
+        <div class="titre-page moyen">Comment voulez-vous payer ?</div>
+        <div class="choix en-ligne" data-moyens></div>
+        <div class="carte" data-si-moyen="carte">
+          <div class="carte-tete"><h2>Votre carte</h2></div>
           <div class="champs">
             <div class="champ large"><label for="cb-numero">Numéro de la carte</label><input id="cb-numero" inputmode="numeric" data-requis autocomplete="off" placeholder="0000 0000 0000 0000"></div>
             <div class="champ"><label for="cb-expiration">Date d'expiration</label><input id="cb-expiration" inputmode="numeric" placeholder="MM/AA" data-requis autocomplete="off"></div>
             <div class="champ"><label for="cb-cryptogramme">Cryptogramme</label><input id="cb-cryptogramme" inputmode="numeric" data-requis autocomplete="off"><span class="aide">Les 3 chiffres au dos de la carte.</span></div>
             <div class="champ large"><label for="cb-titulaire">Titulaire de la carte</label><input id="cb-titulaire" data-requis autocomplete="off"></div>
           </div>
-          <p class="micro" style="display:flex;gap:8px;align-items:center"><svg width="16" height="16" aria-hidden="true"><use href="#i-cadenas"/></svg>Prestataire de paiement à choisir par Safico. Vos données de carte ne sont pas conservées par le prototype.</p>
+          <p class="micro" style="display:flex;gap:8px;align-items:center"><svg width="16" height="16" aria-hidden="true"><use href="#i-cadenas"/></svg>Paiement sécurisé par votre banque (3-D Secure). Prestataire de paiement à choisir par Safico. <span class="trancher" title="Q36 · Carte bancaire : quel prestataire de paiement ? (activation tranchée à l'atelier 9 : carte avec 3-D Secure pour tout client)">Q36</span></p>
         </div>
-        <div class="actions"><a class="bouton texte" href="#e4"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#e5h" data-pin-vers="#e5h" data-attend-requis aria-disabled="true">Payer <span data-recap-total></span></a></div>
+        <div class="actions"><a class="bouton texte" href="#e4"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#e5h" data-pin-vers="#e5h" data-suite-paiement data-attend-requis aria-disabled="true">Payer <span data-recap-total></span></a></div>
       </div>
       <aside class="collant" data-resume></aside>
     </div>
@@ -828,18 +846,18 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
 </section>
 
 <section class="ecran" id="e5h" data-code="E5h" data-groupe="Envoyer" data-titre="Paiement · confirmation par la banque" data-gabarit="envoi" data-etape="4" data-nav="e1"
-  data-contexte="Écran nouveau, sans équivalent dans l'application. Dans l'Union européenne, un paiement par carte en ligne passe en règle générale par une authentification forte de la banque du porteur (3-D Secure, directive DSP2), et le benchmark cite l'échec 3-D Secure parmi les causes de transactions échouées (Taptap Send). Q36 demande si 3-D Secure s'applique : l'écran dessine l'hypothèse qu'il s'applique, en fenêtre générique « Votre banque », sans reprendre l'apparence d'aucune banque. Le code PIN Safico est demandé avant, comme dans l'application ; cumuler les deux est une question pour Q36. Les liens de revue montrent les deux issues : confirmé (E7), refusé (retour au paiement)."
-  data-q="Q36">
+  data-contexte="Écran nouveau, sans équivalent dans l'application. Dans l'Union européenne, un paiement par carte en ligne passe en règle générale par une authentification forte de la banque du porteur (3-D Secure, directive DSP2), et le benchmark cite l'échec 3-D Secure parmi les causes de transactions échouées (Taptap Send). 3-D Secure est décidé (atelier 9, 29/10 : carte bancaire avec 3-D Secure, accessible à tout client) ; l'écran le montre en fenêtre générique « Votre banque », sans reprendre l'apparence d'aucune banque. Le commerçant affiché reste SAFICO, l'entreprise qui encaisse, en attendant de savoir sous quel nom la carte est débitée. Le code PIN Safico est demandé avant, comme dans l'application ; cumuler les deux est une question pour Q36. Les liens de revue montrent les deux issues : confirmé (E7), refusé (retour au paiement)."
+  data-q="">
   <div class="page"><div class="cadre">
     <div class="grille principal">
       <div class="colonne">
         <div class="titre-page moyen">Confirmez le paiement auprès de votre banque</div>
         <div class="carte">
           <div class="pictos attente"><svg aria-hidden="true"><use href="#i-mobile"/></svg></div>
-          <p class="sous-titre">Votre banque vous demande de confirmer le paiement de <b data-recap-total></b> à Safico, dans son application ou par un code reçu par SMS. <span class="trancher" title="Q36 · Carte bancaire : dans l'application Guinée aussi, ou seulement sur la plateforme diaspora ? Quel prestataire de paiement, et 3-D Secure ?">Q36</span></p>
+          <p class="sous-titre">Votre banque vous demande de confirmer le paiement de <b data-recap-total></b> à SAFICO, dans son application ou par un code reçu par SMS.</p>
           <div class="banque">
             <span class="label">Fenêtre de votre banque</span>
-            <div class="ligne"><span>Commerçant</span><span class="fort">Safico</span></div>
+            <div class="ligne"><span>Commerçant</span><span class="fort">SAFICO</span></div>
             <div class="ligne"><span>Montant</span><span class="fort" data-recap-total></span></div>
             <div class="ligne"><span>Carte</span><span>•••• 4821</span></div>
             <span class="micro">Ouvrez l'application de votre banque pour valider.</span>
@@ -853,11 +871,38 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
   </div></div>
 </section>
 
-<section class="ecran" id="e7" data-code="E7" data-groupe="Envoyer" data-titre="Envoi confirmé · informations de retrait" data-gabarit="connecte" data-nav="e1"
-  data-contexte="Déclinaison web de E7 (ancre #e8 dans l'application). Q8 tranchée à l'atelier 8 (22/10) : le code de retrait est affiché à l'expéditeur, qui le transmet lui-même (WhatsApp par exemple), avec « Copier » et « Partager sur WhatsApp » ; pas de renvoi de SMS. Contrairement au guichet, l'expéditeur connaît le code : son espace est personnel et protégé. Code et référence de démonstration, alphanumériques comme au lot 1 (atelier 6), propres à ce prototype. Le bénéficiaire reçoit quand même un SMS, dont le contenu est l'hypothèse de Q39. Retrait dans toute agence ou chez tout distributeur Safico, sans liste des points (Q27 tranchée le 21/10). Validité de 30 jours (lot 1)."
-  data-q="Q9|Q39">
+<section class="ecran" id="e5i" data-code="E5i" data-groupe="Envoyer" data-titre="Paiement · virement instantané" data-gabarit="envoi" data-etape="4" data-nav="e1"
+  data-contexte="Écran nouveau (atelier 9, 29/10) : sur la plateforme diaspora, la carte bancaire et le virement instantané sont proposés en premier ; le virement instantané n'existait pas dans le prototype. Code E5i, ancre #e5i : premiers libres de la série du paiement (E5 à E5g dans l'application, E5h ici) ; E2 et E3, libres aussi, sont des numéros d'étape de l'application (E3 « Déclarations », fondu dans le récapitulatif le 28/10), qu'il valait mieux ne pas réutiliser. Le client fait le virement depuis sa banque : coordonnées du compte de réception, référence à indiquer, montant exact. Titulaire, IBAN et BIC sont des valeurs de démonstration, fictives : le compte de réception (Safico ou partenaire local du pays d'envoi) n'est pas connu. Le code PIN valide l'envoi avant cet écran, comme pour la carte. Le statut pendant l'attente du virement relève de Q38, point 2 (« Paiement en attente ») : l'écran garde « En attente de paiement ». Délai d'attente, virement d'un montant différent ou sans référence : Q46."
+  data-q="Q38|Q46">
   <div class="page"><div class="cadre">
-    <div class="tete-envoi"><div class="pictos valide"><svg aria-hidden="true"><use href="#i-ok"/></svg></div><div><div class="titre-page">Envoi effectué</div><p class="sous-titre"><span data-benef-prenom></span> <span data-benef-nom></span> peut retirer <b data-recu-montant></b>.</p></div></div>
+    <div class="grille principal">
+      <div class="colonne">
+        <div class="tete-envoi"><div class="titre-page moyen">Faites le virement depuis votre banque</div><span class="statut attente">En attente de paiement</span><span class="trancher" title="Q38 · Point 2 : un statut « Paiement en attente » quand l'expéditeur paie en ligne ?">Q38</span></div>
+        <div class="bandeau information"><svg aria-hidden="true"><use href="#i-info"/></svg><span class="texte"><b>Votre envoi part dès réception du virement.</b> Nous vous prévenons par SMS et par e-mail.</span></div>
+        <div class="carte">
+          <h2>Compte de réception</h2>
+          <div class="ligne"><span>Titulaire</span><span class="fort">SAFICO Guinée – SAU</span></div>
+          <div class="ligne"><span>IBAN</span><span class="fort">FR76 1234 5678 9000 0000 1234 567</span></div>
+          <div class="ligne"><span>BIC</span><span class="fort">DEMOFRPPXXX</span></div>
+          <div class="separateur"></div>
+          <div class="ligne"><span>Référence à indiquer</span><span class="reference" data-ref></span></div>
+          <div class="ligne"><span>Montant exact</span><span class="montant-petit" data-recap-total></span></div>
+          <div class="actions"><button type="button" class="bouton secondaire" data-toast="Coordonnées copiées : IBAN, BIC et référence."><svg aria-hidden="true"><use href="#i-copier"/></svg>Copier les coordonnées</button></div>
+          <p class="micro">Indiquez la référence dans le libellé du virement et choisissez « virement instantané » dans votre banque. <span class="trancher" title="Q46 · Virement instantané : quel compte de réception, combien de temps attend-on le virement, et que se passe-t-il s'il arrive sans la référence ou d'un montant différent ?">Q46</span></p>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#e5"><svg aria-hidden="true"><use href="#i-retour"/></svg>Changer de moyen de paiement</a><a class="bouton primaire grand pousse" href="#s1" data-toast="Nous attendons votre virement : votre envoi part dès sa réception.">J'ai fait le virement</a></div>
+        <div class="actions"><a class="bouton secondaire" href="#e7">Revue : virement reçu</a></div>
+      </div>
+      <aside class="collant" data-resume></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="e7" data-code="E7" data-groupe="Envoyer" data-titre="Envoi confirmé · informations de retrait" data-gabarit="connecte" data-nav="e1"
+  data-contexte="Déclinaison web de E7 (ancre #e8 dans l'application). Q8 tranchée à l'atelier 8 (22/10) : le code de retrait est affiché à l'expéditeur, qui le transmet lui-même (WhatsApp par exemple), avec « Copier » et « Partager sur WhatsApp » ; pas de renvoi de SMS. Contrairement au guichet, l'expéditeur connaît le code : son espace est personnel et protégé. Code et référence de démonstration, alphanumériques comme au lot 1 (atelier 6), propres à ce prototype. Le bénéficiaire reçoit quand même un SMS. Q39 tranchée (atelier 9, 29/10, réponse écrite de Babacar Amallah Faye) : quatre informations, le montant reçu, l'expéditeur, le code de retrait et le numéro du service client, avec « SafiGo » en expéditeur du SMS ; plus de rappel de la pièce ni de mention WhatsApp. Les demandes d'assistance sont traitées par les Opérations ; la disponibilité en espèces d'un point n'est jamais montrée au client. Retrait dans toute agence ou chez tout distributeur Safico, sans liste des points (Q27 tranchée le 21/10). Validité de 30 jours (lot 1)."
+  data-q="Q9">
+  <div class="page"><div class="cadre">
+    <div class="tete-envoi"><div class="pictos valide"><svg aria-hidden="true"><use href="#i-ok"/></svg></div><div><div class="titre-page">Envoi effectué</div><p class="sous-titre"><span data-benef-prenom></span> <span data-benef-nom></span> <span data-si-soi hidden>(vous-même)</span> peut retirer <b data-recu-montant></b>.</p></div></div>
     <div class="grille deux">
       <div class="carte">
         <div class="ligne"><span class="label">Référence de l'envoi</span><span class="reference" data-ref></span></div>
@@ -877,9 +922,9 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
           </div>
         </div>
         <div class="carte plate">
-          <h2>Ce que reçoit votre bénéficiaire <span class="trancher" title="Q39 · Ce que contient le SMS envoyé au bénéficiaire pour l'orienter, qui traite une demande d'assistance et sous quel délai, et ce qui est indiqué au bénéficiaire si le point où il se présente n'a pas les espèces.">Q39</span></h2>
-          <div class="bulle-sms">Safico : <span data-persona-prenom></span> <span data-persona-nom></span> vous envoie <span data-recu-montant></span>. Code de retrait : <span data-code-retrait></span>. Présentez-le avec votre pièce d'identité dans toute agence ou chez tout distributeur Safico. Aide sur WhatsApp : [numéro du service après-vente].</div>
-          <p class="micro">Par SMS au <span data-benef-tel></span>. S'il a un compte Safico, il reçoit aussi une notification dans l'application. <span class="trancher" title="Q9 · Le bénéficiaire a-t-il un espace de suivi, ou seulement des SMS ?">Q9</span></p>
+          <h2>Ce que reçoit votre bénéficiaire</h2>
+          <div class="bulle-sms"><span data-nom-service>SafiGo</span> : <span data-persona-prenom></span> <span data-persona-nom></span> vous envoie <span data-recu-montant></span>. Code de retrait : <span data-code-retrait></span>. Service client : [numéro du service client].</div>
+          <p class="micro">Par SMS au <span data-benef-tel></span>. S'il a un compte <span data-nom-service>SafiGo</span>, il reçoit aussi une notification dans l'application. <span class="trancher" title="Q9 · Le bénéficiaire a-t-il un espace de suivi, ou seulement des SMS ?">Q9</span></p>
         </div>
       </div>
     </div>
@@ -890,10 +935,10 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
 <!-- ═════════════ D. SUIVRE ET GÉRER ═════════════ -->
 
 <section class="ecran" id="s1" data-code="S1" data-groupe="Suivre et gérer" data-titre="Mes envois" data-gabarit="connecte" data-nav="s1"
-  data-contexte="Déclinaison web de S1 : sur ordinateur, la liste devient un tableau (date, bénéficiaire, montants, statut), chaque ligne ouvre le détail. Statuts : hypothèse de Q38, question 2 de l'atelier 9 (En attente de paiement · Disponible au retrait · Retiré, et selon le cas En vérification · Annulé · Remboursé). Les quatre envois sont des valeurs de démonstration, calculées au taux de démonstration ; le premier est celui qu'on vient de faire."
+  data-contexte="Déclinaison web de S1 : sur ordinateur, la liste devient un tableau (date, bénéficiaire, montants, statut), chaque ligne ouvre le détail. Statuts (atelier 9, 29/10, Q38) : la proposition de Babacar Amallah Faye sert de base, avec des statuts distincts par type de transaction ; « Payée » revient. Seul le retrait en espèces est ouvert : En cours (sous-libellé « Disponible au retrait ») · Payée · Annulée · Remboursée. Mobile money et compte bancaire (En cours · Validée · Échouée · Payée) : pour mémoire, dans Q38. Trois points restent à confirmer par écrit (Q38). « Renvoyer » sur chaque ligne (atelier 9) : le récapitulatif de l'envoi d'origine, au taux du jour. Les quatre envois sont des valeurs de démonstration, calculées au taux de démonstration ; le premier est celui qu'on vient de faire."
   data-q="Q38">
   <div class="page"><div class="cadre">
-    <div class="carte-tete"><div class="titre-page">Mes envois</div><span class="trancher" title="Q38 · Statuts de suivi : quelle liste retenir, et quel mot pour le versement au bénéficiaire ?">Q38</span></div>
+    <div class="carte-tete"><div class="titre-page">Mes envois</div><span class="trancher" title="Q38 · Statuts de suivi, à confirmer par écrit : 1. une liste unique pour le guichet et l'application, ou deux listes ; 2. un statut « Paiement en attente » quand l'expéditeur paie en ligne ; 3. après une opération « Échouée », un remboursement automatique ou validé depuis le back-office.">Q38</span></div>
     <div class="carte defile">
       <table class="tableau">
         <thead><tr><th>Date</th><th>Bénéficiaire</th><th>Référence</th><th class="droite">Envoyé</th><th class="droite">Reçu</th><th>Statut</th><th></th></tr></thead>
@@ -904,26 +949,26 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
 </section>
 
 <section class="ecran" id="s2" data-code="S2" data-groupe="Suivre et gérer" data-titre="Détail d'un envoi" data-gabarit="connecte" data-nav="s1"
-  data-contexte="Déclinaison web de S2. Le détail suit l'envoi choisi dans « Mes envois ». Atelier 8 (22/10) : « Demander de l'aide » en action principale, « Demander l'annulation » en lien secondaire, « Corriger le nom du bénéficiaire » tant que l'envoi n'est pas retiré. Le code de retrait s'affiche tant que l'envoi n'est pas retiré. L'annulation est traitée par le back-office Safico (commentaire de Babacar Faye, 21/10) ; rendu sur la carte qui a payé (Q13). Les trois actions mènent à des écrans à décliner depuis l'application (H3, S7, S4) : un message le dit."
+  data-contexte="Déclinaison web de S2. Le détail suit l'envoi choisi dans « Mes envois ». Atelier 8 (22/10) : « Demander de l'aide » en action principale, « Demander l'annulation » en lien secondaire, « Corriger le nom du bénéficiaire » tant que l'envoi n'est pas retiré. Le code de retrait s'affiche tant que l'envoi n'est pas retiré. L'annulation est traitée par le back-office Safico (commentaire de Babacar Faye, 21/10) ; rendu sur la carte qui a payé (Q13). Les trois actions mènent à des écrans à décliner depuis l'application (H3, S7, S4) : un message le dit. Atelier 9 (29/10) : statuts En cours (disponible au retrait), Payée, Annulée ou Remboursée ; « Demander l'annulation » seulement sur un envoi « En cours » ; pour mémoire, mobile money et compte bancaire passent par En cours · Validée · Échouée · Payée, et seuls « En cours » et « Échouée » permettent une annulation. La ligne « Motif » s'affiche toujours (motif obligatoire), avec le texte saisi pour « Autre ». « Renvoyer », à côté de « Demander de l'aide », ouvre le récapitulatif de l'envoi d'origine, au taux du jour."
   data-q="Q13|Q38">
   <div class="page"><div class="cadre" data-s2></div></div>
 </section>
 
 <section class="ecran" id="r1" data-code="R1" data-groupe="Suivre et gérer" data-titre="Reçu" data-gabarit="connecte" data-nav="s1"
-  data-contexte="Déclinaison web de R1 : même contenu que le reçu du guichet (B11), nom et prénom(s) séparés, sans « taux bloqué » (Q26 de l'atelier 5), la ligne « Motif » seulement si un motif a été saisi. Sur ordinateur, le PDF passe en premier, le partage WhatsApp en second. Valeur d'un reçu électronique non signé : Q18. Le reçu est celui de l'envoi qu'on vient de faire."
+  data-contexte="Déclinaison web de R1 : même contenu que le reçu du guichet (B11), nom et prénom(s) séparés, sans « taux bloqué » (Q26 de l'atelier 5), la ligne « Motif » toujours, avec le texte saisi pour « Autre » (atelier 9, 29/10 : motif obligatoire ; « Assistance familiale » si le reçu s'ouvre sans passer par le récapitulatif, valeur de démonstration). Bénéficiaire « (vous-même) » pour un envoi à soi-même. Ligne « Paiement » selon le moyen choisi (carte ou virement instantané). Logo : le mot « SafiGo », en attendant le fichier du S bleu. Sur ordinateur, le PDF passe en premier, le partage WhatsApp en second. Valeur d'un reçu électronique non signé : Q18. Le reçu est celui de l'envoi qu'on vient de faire."
   data-q="Q18">
   <div class="page"><div class="cadre">
     <a class="retour-lien" href="#s2" data-envoi="0"><svg width="18" height="18" aria-hidden="true"><use href="#i-retour"/></svg>Détail de l'envoi</a>
     <div class="grille tiers">
       <div class="recu">
-        <div class="ligne"><span class="logo" style="font-size:20px"><svg style="width:24px;height:24px" aria-hidden="true"><use href="#i-symbole"/></svg>Safico</span><span class="micro">28/10/2026 · 14:32</span></div>
+        <div class="ligne"><span class="logo" style="font-size:20px" data-nom-service>SafiGo</span><span class="micro">28/10/2026 · 14:32</span></div>
         <div class="reference" data-ref></div>
         <div class="separateur"></div>
         <div class="label">Expéditeur</div>
         <div class="ligne"><span>Nom</span><span data-persona-nom></span></div>
         <div class="ligne"><span>Prénom(s)</span><span data-persona-prenom></span></div>
         <div class="label">Bénéficiaire</div>
-        <div class="ligne"><span>Nom</span><span data-benef-nom></span></div>
+        <div class="ligne"><span>Nom</span><span><span data-benef-nom></span> <span class="micro" data-si-soi hidden>(vous-même)</span></span></div>
         <div class="ligne"><span>Prénom(s)</span><span data-benef-prenom></span></div>
         <div class="ligne"><span>Téléphone</span><span data-benef-tel></span></div>
         <div class="separateur"></div>
@@ -933,8 +978,8 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
         <div class="ligne"><span>Total payé</span><span class="fort" data-recap-total></span></div>
         <div class="ligne"><span>Montant à retirer</span><span class="fort" data-recu-montant></span></div>
         <div class="ligne"><span>Mode</span><span>Espèces dans le réseau</span></div>
-        <div class="ligne"><span>Paiement</span><span>Carte bancaire •••• 4821</span></div>
-        <div class="ligne" data-si-motif-saisi><span>Motif</span><span data-motif-lu></span></div>
+        <div class="ligne"><span>Paiement</span><span data-paiement-lu></span></div>
+        <div class="ligne"><span>Motif</span><span data-motif-lu></span></div>
         <div class="separateur"></div>
         <div class="micro">Reçu électronique horodaté. <span class="trancher" title="Q18 · Le reçu électronique fait-il foi sans signature ?">Q18</span></div>
       </div>
@@ -989,7 +1034,7 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
 
 </main>
 
-<footer class="pied-site" id="pied-site"><div class="cadre"><span class="logo" style="font-size:18px"><svg style="width:22px;height:22px" aria-hidden="true"><use href="#i-symbole"/></svg>Safico</span><a href="#p0" data-toast="Conditions d'utilisation : écran à décliner (M4).">Conditions d'utilisation</a><a href="#p0" data-toast="Confidentialité : écran à décliner (M4).">Confidentialité et données personnelles</a><a href="#p0" data-toast="Aide : écran à décliner depuis l'application (H1).">Aide</a><span class="micro" style="margin-left:auto">Prototype · plateforme diaspora · rien n'est connecté</span></div></footer>
+<footer class="pied-site" id="pied-site"><div class="cadre"><span class="logo" style="font-size:18px" data-nom-service>SafiGo</span><a href="#p0" data-toast="Conditions d'utilisation : écran à décliner (M4).">Conditions d'utilisation</a><a href="#p0" data-toast="Confidentialité : écran à décliner (M4).">Confidentialité et données personnelles</a><a href="#p0" data-toast="Aide : écran à décliner depuis l'application (H1).">Aide</a><a href="proto-business.html#bp0">SafiGo Business</a><span class="micro" style="margin-left:auto">Prototype · plateforme diaspora · rien n'est connecté</span></div></footer>
 
 <!-- Fenêtre du code PIN : pavé mélangé à chaque ouverture (commentaire de Babacar Faye, 21/10) -->
 <div class="voile" id="voile-pin" role="dialog" aria-modal="true" aria-labelledby="pin-titre">
@@ -1008,7 +1053,7 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
   <div class="panneau">
     <h3>Utilisateur de démonstration</h3>
     <p><b>Mamadou Saliou DIALLO</b> · Paris 18e · +33</p>
-    <p class="micro" style="margin-top:6px">Plateforme web de la diaspora (atelier 7, 15/10) : envois en euros, payés par carte bancaire, retrait en espèces dans le réseau Safico. Profil repris du prototype du 07/10. Taux, frais, références et codes de démonstration, sans valeur d'engagement.</p>
+    <p class="micro" style="margin-top:6px">Plateforme web de la diaspora (atelier 7, 15/10) : envois en euros, payés par carte bancaire ou virement instantané (atelier 9), retrait en espèces dans le réseau SAFICO. Service : SafiGo (atelier 9, 29/10). Profil repris du prototype du 07/10. Taux, frais, références et codes de démonstration, sans valeur d'engagement.</p>
   </div>
   <div class="panneau">
     <span class="code" id="n-code"></span>
@@ -1023,7 +1068,7 @@ body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-s
     <h3>Écrans</h3>
     <nav class="sommaire" id="sommaire"></nav>
   </div>
-  <p class="micro" style="padding:0 4px">Prototype lot 2 · plateforme diaspora, démarrée le 28 octobre 2026. Première passe : parcours principal. Questions Q1 à Q43 : « Parcours utilisateurs — Espace client B2C · v2 ».</p>
+  <p class="micro" style="padding:0 4px">Prototype lot 2 · plateforme diaspora, démarrée le 28 octobre 2026. Première passe : parcours principal. Questions Q1 à Q46 : « Parcours utilisateurs — Espace client B2C · v2 ».</p>
 </aside>
 <button class="bascule-notes" id="bascule-notes" aria-controls="notes" aria-expanded="false">Notes et écrans</button>
 
@@ -1038,8 +1083,11 @@ const Q={
   Q18:["Le reçu électronique fait-il foi sans signature ?","Oui, horodaté avec la référence ; signature électronique hors lot."],
   Q21:["Devises d'envoi proposées","GNF, EUR et USD ; un taux par devise, fixé chaque jour par la finance. Sur la plateforme diaspora : EUR par défaut, USD au choix."],
   Q23:["Règles du mot de passe (longueur, caractères)","Aucune règle dessinée : deux saisies identiques, case « Afficher »."],
-  Q36:["Carte bancaire : dans l'application Guinée aussi, ou seulement sur la plateforme diaspora ? Quel prestataire de paiement, et 3-D Secure ?","Carte active dans l'application dès le lot 2, à côté du mobile money ; prestataire à désigner. Plateforme diaspora (28/10) : la carte est son seul moyen de paiement, active ; 3-D Secure dessiné (E5h), après le code PIN Safico."],
-  Q38:["Statuts de suivi : liste du lot 1 ou liste d'Issiaga Diallo ? Que veut dire « Payé » ? (question 2 de l'atelier 9)","En attente de paiement · Disponible au retrait · Retiré, et selon le cas En vérification · Annulé · Remboursé. Le mot « Payé » disparaît des statuts."],
+  // Q36 tranchée pour l'activation (atelier 9, 29/10) : carte avec 3-D Secure pour tout client ; carte et virement instantané en premier sur la plateforme diaspora. Reste le prestataire.
+  Q36:["Carte bancaire : quel prestataire de paiement ? (activation tranchée à l'atelier 9, 29/10 : carte avec 3-D Secure, accessible à tout client)","Prestataire à désigner par Safico."],
+  // Q38 : atelier 9 (29/10), proposition de Babacar Amallah Faye (28/10), statuts distincts par type de transaction ; trois points à confirmer par écrit.
+  Q38:["Statuts de suivi, à confirmer par écrit (Babacar Amallah Faye, Issiaga Diallo) : 1. une liste unique pour le guichet et l'application, ou deux listes ; 2. un statut « Paiement en attente » quand l'expéditeur paie en ligne ; 3. après une opération « Échouée », un remboursement automatique ou validé depuis le back-office.","Atelier 9 (29/10). Espèces : En cours (disponible au retrait) · Remboursée · Annulée · Payée. Mobile money : En cours (en cours de traitement) · Validée (en traitement chez le partenaire) · Échouée (rejetée par le partenaire, avec la raison) · Payée. Compte bancaire : En cours (en cours de transmission au partenaire) · Validée · Échouée · Payée. Seuls « En cours » et « Échouée » permettent une annulation. En attendant le point 2, « En attente de paiement » pendant le virement (E5i). « En vérification », absent de la liste, est gardé."],
+  // Q39 tranchée à l'atelier 9 (29/10) : SMS avec le montant reçu, l'expéditeur, le code de retrait et le numéro du service client. Gardée pour mémoire.
   Q39:["Ce que contient le SMS envoyé au bénéficiaire pour l'orienter, qui traite une demande d'assistance et sous quel délai, et ce qui est indiqué au bénéficiaire si le point où il se présente n'a pas les espèces. (question 3 de l'atelier 9)","Un SMS avec le montant, le code, le rappel de la pièce d'identité et le numéro WhatsApp du service après-vente ; des demandes d'assistance traitées par les Opérations depuis le back-office, aux horaires du service après-vente ; en cas de manque d'espèces, le bénéficiaire est invité à contacter l'assistance, qui l'oriente vers un autre point."],
   Q5:["Selfie ou contrôle de présence ?","Un selfie, comparé à la pièce par la conformité."],
   Q7:["Que faire pendant l'attente de vérification ?","Simuler, enregistrer des bénéficiaires, préparer un envoi ; payer après vérification."],
@@ -1050,8 +1098,18 @@ const Q={
   Q42:["Sur la plateforme diaspora, le client s'identifie-t-il par son numéro de téléphone étranger (comme dans l'application) ou par son adresse e-mail ? Les codes SMS partent-ils vers tous les pays d'envoi ?","Téléphone et mot de passe, comme dans l'application ; numéro étranger accepté."],
   Q44:["Revenus nets mensuels d'un client de la diaspora : tranches en francs guinéens (paramétrées au siège) ou tranches propres en euros et en dollars ?","Les 6 tranches du lot 1, en francs guinéens, avec l'équivalent en euros au taux du jour."],
   Q45:["Depuis quels pays la plateforme diaspora est-elle ouverte (un partenaire local par pays) ?","Liste de démonstration : France, Belgique, États-Unis, Royaume-Uni, Canada (les indicatifs de la connexion)."],
-  Q43:["Un même client peut-il utiliser l'application (Guinée) et la plateforme web (diaspora) avec un seul compte ?","Non dessiné : un compte diaspora, sur la plateforme web seulement."]
+  Q43:["Un même client peut-il utiliser l'application (Guinée) et la plateforme web (diaspora) avec un seul compte ?","Non dessiné : un compte diaspora, sur la plateforme web seulement."],
+  // Ajoutée le 03/11 avec le virement instantané (atelier 9, 29/10)
+  Q46:["Virement instantané (plateforme diaspora) : sur quel compte le client vire-t-il (Safico ou partenaire local du pays d'envoi), combien de temps attend-on le virement avant d'abandonner l'envoi, et que fait-on d'un virement arrivé sans la référence ou d'un montant différent ?","Coordonnées de démonstration (IBAN fictif) ; l'envoi part dès réception du virement ; ni délai d'attente ni écart de montant dessinés."]
 };
+// Nom du service (atelier 9, 29/10) : SafiGo, un mot, G majuscule. Il peut changer : le remplacer ici suffit
+// (tout [data-nom-service], l'en-tête et le titre de la page). SAFICO reste le nom de l'entreprise.
+const NOM_SERVICE="SafiGo";
+// Motifs du transfert (atelier 9, 29/10) : obligatoires, jamais bloquants ; « Autre » ouvre un texte libre.
+const MOTIFS=["Assistance familiale","Frais médicaux","Frais scolaires","Construction et loyer","Frais de voyage et transports","Investissement","Dette ou prêt personnel","Œuvres et dons","Autre"];
+// Moyens de paiement de la plateforme diaspora (atelier 9, 29/10) : carte bancaire puis virement instantané, en premier.
+// Un moyen n'est affiché que s'il est réellement disponible (piloté depuis le back-office, BO64) : désactivé, il disparaît.
+const MOYENS=[["carte","i-carte","Carte bancaire","Visa ou Mastercard, confirmée par votre banque (3-D Secure).",true],["virement","i-envoyer","Virement instantané","Depuis votre banque, avec la référence de l'envoi.",true]];
 
 // Utilisateur de démonstration : profil « Diaspora · Paris » du prototype du 07/10 (retiré de l'application le 15/10).
 const UTILISATEUR={prenom:"Mamadou Saliou",nom:"DIALLO",tel:"6 12 45 78 90",telLu:"+33 6 •• •• •• 90",ville:"Paris 18e",
@@ -1066,8 +1124,10 @@ const DRAPEAU={FR:"linear-gradient(90deg,#002395 33%,#fff 33% 66%,#ED2939 66%)",
 // Envoi de la démonstration : référence et code inventés, propres à ce prototype.
 const REF="SFC-9B04-5126", CODE_RETRAIT="7RM3Q8";
 // Envois passés de démonstration [date, bénéficiaire (index), référence, montant EUR, statut]
-const PASSES=[["14/10/2026",1,"SFC-9A63-0412",150,"retire"],["21/09/2026",0,"SFC-8F90-2275",200,"retire"],["02/09/2026",0,"SFC-8F51-6630",100,"annule"]];
-const STATUTS={dispo:["dispo","Disponible au retrait"],retire:["valide","Retiré"],annule:["attente","Annulé"]};
+// Motifs : valeurs de démonstration (obligatoires depuis l'atelier 9).
+const PASSES=[["14/10/2026",1,"SFC-9A63-0412",150,"retire","Assistance familiale"],["21/09/2026",0,"SFC-8F90-2275",200,"retire","Frais scolaires"],["02/09/2026",0,"SFC-8F51-6630",100,"annule","Frais médicaux"]];
+// Statuts de l'atelier 9 (29/10, Q38), ligne « Espèces » : En cours (disponible au retrait) · Payée · Annulée · Remboursée
+const STATUTS={dispo:["dispo","En cours"],retire:["valide","Payée"],annule:["attente","Annulée"]};
 const ETAPES=["Montant","Bénéficiaire","Récapitulatif","Paiement"];
 // Inscription (28/10) : les étapes de l'application (téléphone, sécurité, pièce, informations), le selfie à part sur ordinateur
 const ETAPES_INSCRIPTION=["Téléphone","Sécurité","Pièce d'identité","Informations","Selfie"];
@@ -1080,7 +1140,7 @@ const CATEGORIES=["Agriculteur","Artisan, commerçant, chef d'entreprise","Fonct
 const TRANCHES=[[0,3],[3,8],[8,15],[15,30],[30,50],[50,null]]; // en millions de GNF
 const SAV_HORAIRES="Du lundi au vendredi de 8 h à 17 h, le samedi de 8 h à 13 h";
 
-const etat={pays:0,piece:0,methode:"telephone",captures:{},selfie:false,pinChoisi:false,categorie:"Employé",revenus:2,dev:0,dest:0,envoi:200,benef:0,nouveau:{nom:"SOUMAH",prenom:"Mariama",tel:"+224 664 21 08 55"},motif:"",envoiSel:0};
+const etat={moyen:"carte",motifAutre:"",renvoi:"",pays:0,piece:0,methode:"telephone",captures:{},selfie:false,pinChoisi:false,categorie:"Employé",revenus:2,dev:0,dest:0,envoi:200,benef:0,nouveau:{nom:"SOUMAH",prenom:"Mariama",tel:"+224 664 21 08 55"},motif:"",envoiSel:0};
 
 const nb=s=>s.replace(/ /g," ");
 const fmt=(n,d)=>{if(n==null||isNaN(n))return "—";const dec=d==="EUR"||d==="USD"?2:0;const s=nb(n.toLocaleString("fr-FR",{minimumFractionDigits:dec,maximumFractionDigits:dec}));return s+" "+(d==="EUR"?"€":d==="USD"?"$":d)};
@@ -1088,7 +1148,11 @@ const nombre=(n,d)=>fmt(n,d).replace(/ \S+$/,"");
 function calc(){const e=ENVOIS_DEV[etat.dev][0],d=DEST[etat.dest],t=TAUX[e][d[2]],f=FRAIS(etat.envoi);
   return{t,f,devE:e,drapE:ENVOIS_DEV[etat.dev][1],devR:d[2],pays:d[1],code:d[0],recu:t==null?null:Math.floor(etat.envoi*t),total:etat.envoi+f}}
 const tauxTxt=c=>c.t==null?"Taux à charger":"1 "+(c.devE==="EUR"?"€":"$")+" = "+fmt(c.t,c.devR);
-const benef=()=>etat.benef==="nouveau"?[etat.nouveau.nom,etat.nouveau.prenom,etat.nouveau.tel]:UTILISATEUR.benefs[etat.benef];
+// « Moi-même » (atelier 9, 29/10) : le client est aussi le bénéficiaire
+const soiMeme=()=>[UTILISATEUR.nom,UTILISATEUR.prenom,UTILISATEUR.telLu,UTILISATEUR.ville];
+const benef=()=>etat.benef==="nouveau"?[etat.nouveau.nom,etat.nouveau.prenom,etat.nouveau.tel]:etat.benef==="soi"?soiMeme():UTILISATEUR.benefs[etat.benef];
+const motifLu=()=>etat.motif==="Autre"?(etat.motifAutre.trim()||"Autre"):etat.motif;
+const moyensDispo=()=>MOYENS.filter(m=>m[4]);
 
 // Simulateur : écrit une fois par hôte [data-simu], puis mis à jour sans réécrire les champs (le curseur reste en place).
 function construireSimu(){
@@ -1129,14 +1193,17 @@ document.addEventListener("input",e=>{
     majSimu(e.target); remplir(); return;
   }
   if(e.target.matches("[data-nouveau]")){etat.nouveau[e.target.dataset.nouveau]=e.target.dataset.nouveau==="tel"?"+224 "+e.target.value:e.target.value;remplir();}
+  if(e.target.matches("[data-nouveau-confirme]"))remplir();
+  if(e.target.matches("[data-motif-autre]")){etat.motifAutre=e.target.value;fixer("[data-motif-lu]",motifLu()||"Assistance familiale");}
   if(e.target.matches("[data-requis]"))verifRequis();
 });
 document.addEventListener("change",e=>{
   const k=e.target.dataset.in;
   if(k==="dev"){etat.dev=+e.target.value;majSimu();remplir();}
   if(k==="dest"){etat.dest=+e.target.value;majSimu();remplir();}
-  if(e.target.name==="benef"){etat.benef=e.target.value==="nouveau"?"nouveau":+e.target.value;remplir();}
+  if(e.target.name==="benef"){etat.benef=e.target.value==="nouveau"||e.target.value==="soi"?e.target.value:+e.target.value;remplir();}
   if(e.target.matches("[data-motif]")){etat.motif=e.target.value;remplir();}
+  if(e.target.name==="moyen"){etat.moyen=e.target.value;remplir();}
   if(e.target.id==="nb-confirme")remplir();
 });
 document.addEventListener("focusout",e=>{if(e.target.dataset&&(e.target.dataset.in==="envoi"||e.target.dataset.in==="recu"))majSimu();});
@@ -1159,12 +1226,28 @@ function remplir(){
   fixer("[data-benef-nom]",b[0]); fixer("[data-benef-prenom]",b[1]); fixer("[data-benef-tel]",b[2]); fixer("[data-benef-nom-complet]",b[0]+" "+b[1]);
   fixer("[data-recap-envoi]",fmt(etat.envoi,c.devE)); fixer("[data-recap-frais]",fmt(c.f,c.devE)); fixer("[data-recap-taux]",tauxTxt(c));
   fixer("[data-recap-total]",fmt(c.total,c.devE)); fixer("[data-recu-montant]",fmt(c.recu,c.devR));
-  fixer("[data-ref]",REF); fixer("[data-code-retrait]",CODE_RETRAIT); fixer("[data-motif-lu]",etat.motif);
+  fixer("[data-ref]",REF); fixer("[data-code-retrait]",CODE_RETRAIT); fixer("[data-motif-lu]",motifLu()||"Assistance familiale");
   fixer("[data-nb-benef]",p.benefs.length+" enregistrés");
-  document.querySelectorAll("[data-si-motif-saisi]").forEach(el=>el.hidden=!etat.motif);
+  fixer("[data-nom-service]",NOM_SERVICE);
   document.querySelectorAll("[data-si-nouveau]").forEach(el=>el.hidden=etat.benef!=="nouveau");
-  // Bénéficiaire obligatoire et complet pour continuer (téléphone critique, nom et prénom(s) séparés)
-  const nv=etat.nouveau, okB=etat.benef!=="nouveau"||(nv.nom.trim()&&nv.prenom.trim()&&nv.tel.replace(/\D/g,"").length>6&&document.getElementById("nb-confirme").checked);
+  document.querySelectorAll("[data-si-soi]").forEach(el=>el.hidden=etat.benef!=="soi"); document.querySelectorAll("[data-si-pas-soi]").forEach(el=>el.hidden=etat.benef==="soi");
+  fixer("[data-renvoi-ref]",etat.renvoi); document.querySelectorAll("[data-si-renvoi]").forEach(el=>el.hidden=!etat.renvoi);
+  // Motif obligatoire (atelier 9, 29/10) : liste, « Autre » à préciser
+  document.querySelectorAll("select[data-liste-motifs]").forEach(s=>{if(s.options.length<2)s.innerHTML='<option value="">Choisir…</option>'+MOTIFS.map(m=>`<option>${m}</option>`).join("")});
+  document.querySelectorAll("[data-motif]").forEach(el=>el.value=etat.motif);
+  document.querySelectorAll("[data-motif-autre]").forEach(el=>{if(el.value!==etat.motifAutre)el.value=etat.motifAutre});
+  document.querySelectorAll("[data-autre-pour]").forEach(c=>{const s=document.getElementById(c.dataset.autrePour);c.hidden=!s||s.value!=="Autre"});
+  // Paiement : carte bancaire, puis virement instantané (atelier 9) ; seuls les moyens disponibles s'affichent
+  const md=moyensDispo(); if(!md.find(m=>m[0]===etat.moyen)&&md.length)etat.moyen=md[0][0];
+  document.querySelectorAll("[data-moyens]").forEach(el=>{if(el.dataset.fait===etat.moyen)return;el.dataset.fait=etat.moyen;el.innerHTML=md.map(m=>`<label><input type="radio" name="moyen" value="${m[0]}" ${m[0]===etat.moyen?"checked":""}><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#${m[1]}"/></svg><div class="milieu"><b>${m[2]}</b><span class="micro">${m[3]}</span></div></label>`).join("")});
+  document.querySelectorAll("[data-si-moyen]").forEach(el=>el.hidden=el.dataset.siMoyen!==etat.moyen);
+  document.querySelectorAll("[data-suite-paiement]").forEach(b=>{const v=etat.moyen==="virement";b.setAttribute("href",v?"#e5i":"#e5h");b.dataset.pinVers=v?"#e5i":"#e5h";b.innerHTML=v?"Continuer":`Payer <span data-recap-total>${fmt(c.total,c.devE)}</span>`});
+  fixer("[data-paiement-lu]",etat.moyen==="virement"?"Virement instantané":"Carte bancaire •••• 4821");
+  // Bénéficiaire obligatoire et complet pour continuer (téléphone critique, nom et prénom(s) séparés).
+  // Nouveau bénéficiaire : double saisie du numéro (atelier 9, 29/10), erreur si les deux diffèrent.
+  const nv=etat.nouveau, chiffres=v=>(v||"").replace(/\D/g,""), conf=document.querySelector("[data-nouveau-confirme]"), telA=chiffres(document.getElementById("nb-tel")?.value), telB=chiffres(conf?.value);
+  const diffTel=!!telB&&telA!==telB; document.querySelectorAll("[data-tel-erreur]").forEach(el=>el.hidden=!diffTel);
+  const okB=etat.benef!=="nouveau"||(nv.nom.trim()&&nv.prenom.trim()&&nv.tel.replace(/\D/g,"").length>6&&telA===telB&&document.getElementById("nb-confirme").checked);
   document.querySelectorAll("[data-suite-benef]").forEach(x=>x.setAttribute("aria-disabled",okB?"false":"true"));
   // Résumé de l'envoi (colonne de droite des étapes)
   const etape=+(document.querySelector(".ecran.visible")?.dataset.etape||0);
@@ -1175,17 +1258,18 @@ function remplir(){
     <div class="separateur"></div>
     <div class="ligne"><span class="fort">Total à payer</span><span class="montant-petit">${fmt(c.total,c.devE)}</span></div>
     <div class="carte accent" style="padding:14px;gap:4px"><span class="label">Votre proche reçoit</span><span class="montant-petit">${fmt(c.recu,c.devR)}</span><span class="micro">En espèces · ${c.pays}</span></div>
-    ${etape>=2?`<div class="separateur"></div><span class="label">Bénéficiaire</span><div><div class="fort">${b[0]}</div><div>${b[1]}</div><div class="micro">${b[2]}</div></div>`:""}
+    ${etape>=2?`<div class="separateur"></div><span class="label">Bénéficiaire</span><div><div class="fort">${b[0]}${etat.benef==="soi"?' <span class="micro">(vous-même)</span>':""}</div><div>${b[1]}</div><div class="micro">${b[2]}</div></div>`:""}
   </div>`;
   document.querySelectorAll("[data-resume]").forEach(el=>el.innerHTML=resume);
   // Bénéficiaires : choix (B1) et accueil (A1)
   const choix=document.querySelector("[data-benef-choix]");
-  if(choix&&!choix.dataset.fait){choix.dataset.fait=1;choix.innerHTML=p.benefs.map((x,i)=>`<label><input type="radio" name="benef" value="${i}" ${etat.benef===i?"checked":""}><span class="avatar">${x[1][0]}${x[0][0]}</span><div class="milieu"><b>${x[1]} ${x[0]}</b><span class="micro">${x[2]} · ${x[3]}</span></div></label>`).join("")+`<label><input type="radio" name="benef" value="nouveau" ${etat.benef==="nouveau"?"checked":""}><span class="avatar"><svg width="18" height="18" aria-hidden="true"><use href="#i-plus"/></svg></span><div class="milieu"><b>Nouveau bénéficiaire</b><span class="micro">Ajouté à vos bénéficiaires après l'envoi.</span></div></label>`}
+  if(choix&&!choix.dataset.fait){choix.dataset.fait=1;choix.innerHTML=`<label><input type="radio" name="benef" value="soi" ${etat.benef==="soi"?"checked":""}><span class="avatar">${p.prenom[0]}${p.nom[0]}</span><div class="milieu"><b>Moi-même</b><span class="micro">${p.nom} ${p.prenom} · ${p.telLu}</span></div></label>`+p.benefs.map((x,i)=>`<label><input type="radio" name="benef" value="${i}" ${etat.benef===i?"checked":""}><span class="avatar">${x[1][0]}${x[0][0]}</span><div class="milieu"><b>${x[1]} ${x[0]}</b><span class="micro">${x[2]} · ${x[3]}</span></div></label>`).join("")+`<label><input type="radio" name="benef" value="nouveau" ${etat.benef==="nouveau"?"checked":""}><span class="avatar"><svg width="18" height="18" aria-hidden="true"><use href="#i-plus"/></svg></span><div class="milieu"><b>Nouveau bénéficiaire</b><span class="micro">Ajouté à vos bénéficiaires après l'envoi.</span></div></label>`}
   fixer_html("[data-benef-accueil]",p.benefs.map((x,i)=>`<a href="#e1" data-benef-rapide="${i}"><span class="avatar">${x[1][0]}${x[0][0]}</span><div class="milieu"><b>${x[1]} ${x[0]}</b><span class="micro">${x[2]} · ${x[3]}</span></div><span class="action-tete">Envoyer</span></a>`).join(""));
   // Envois : le premier est celui de la démonstration (montant et bénéficiaire courants)
   const lignes=envois();
   fixer_html("[data-derniers]",lignes.slice(0,3).map((x,i)=>`<a href="#s2" data-envoi="${i}"><span class="avatar">${x.b[1][0]}${x.b[0][0]}</span><div class="milieu"><b>${x.b[1]} ${x.b[0]}</b><span class="micro">${x.date} · ${x.envoye}</span></div><span class="statut ${STATUTS[x.statut][0]}">${STATUTS[x.statut][1]}</span></a>`).join(""));
-  fixer_html("[data-envois]",lignes.map((x,i)=>`<tr data-cible="#s2" data-envoi="${i}" tabindex="0"><td>${x.date}</td><td><b>${x.b[0]}</b> ${x.b[1]}</td><td class="micro">${x.ref}</td><td class="droite">${x.envoye}</td><td class="droite fort">${x.recu}</td><td><span class="statut ${STATUTS[x.statut][0]}">${STATUTS[x.statut][1]}</span></td><td><svg class="chevron" width="18" height="18" aria-hidden="true"><use href="#i-chevron"/></svg></td></tr>`).join(""));
+  // « Renvoyer » sur chaque ligne (atelier 9, 29/10) : récapitulatif de l'envoi d'origine, au taux du jour
+  fixer_html("[data-envois]",lignes.map((x,i)=>`<tr data-cible="#s2" data-envoi="${i}" tabindex="0"><td>${x.date}</td><td><b>${x.b[0]}</b> ${x.b[1]}</td><td class="micro">${x.ref}</td><td class="droite">${x.envoye}</td><td class="droite fort">${x.recu}</td><td><span class="statut ${STATUTS[x.statut][0]}">${STATUTS[x.statut][1]}</span>${x.statut==="dispo"?'<div class="micro">Disponible au retrait</div>':""}</td><td class="droite"><a class="bouton secondaire petit" href="#e4" data-renvoyer="${i}">Renvoyer</a></td></tr>`).join(""));
   rendreS2(); remplirInscription();
 }
 function remplirInscription(){
@@ -1217,26 +1301,35 @@ function remplirInscription(){
 const fixer_html=(sel,h)=>document.querySelectorAll(sel).forEach(el=>el.innerHTML=h);
 function envois(){
   const c=calc();
-  return [{date:"28/10/2026 · 14:32",b:benef(),ref:REF,envoye:fmt(etat.envoi,c.devE),recu:fmt(c.recu,c.devR),statut:"dispo",total:fmt(c.total,c.devE)},
-    ...PASSES.map(x=>({date:x[0],b:UTILISATEUR.benefs[x[1]],ref:x[2],envoye:fmt(x[3],"EUR"),recu:fmt(x[3]*TAUX.EUR.GNF,"GNF"),statut:x[4],total:fmt(x[3]+2.5,"EUR")}))];
+  return [{date:"28/10/2026 · 14:32",b:benef(),bi:etat.benef,ref:REF,montant:etat.envoi,envoye:fmt(etat.envoi,c.devE),recu:fmt(c.recu,c.devR),statut:"dispo",total:fmt(c.total,c.devE),motif:motifLu()||"Assistance familiale"},
+    ...PASSES.map(x=>({date:x[0],b:UTILISATEUR.benefs[x[1]],bi:x[1],ref:x[2],montant:x[3],envoye:fmt(x[3],"EUR"),recu:fmt(x[3]*TAUX.EUR.GNF,"GNF"),statut:x[4],total:fmt(x[3]+2.5,"EUR"),motif:x[5]}))];
+}
+// « Renvoyer » (atelier 9, 29/10) : bénéficiaire, motif et mode de réception de l'envoi d'origine, au taux du jour ;
+// le montant d'origine est repris et se modifie par « Modifier » (étape 1, pré-remplie).
+function renvoyer(i){
+  const x=envois()[i];if(!x)return;
+  etat.benef=x.bi; etat.motif=MOTIFS.includes(x.motif)?x.motif:"Autre"; etat.motifAutre=MOTIFS.includes(x.motif)?"":x.motif;
+  etat.envoi=x.montant; etat.dev=0; etat.dest=0; etat.renvoi=x.ref;
+  const r=document.querySelector(`[name=benef][value="${etat.benef}"]`);if(r)r.checked=true;
+  majSimu();
 }
 function rendreS2(){
   const hote=document.querySelector("[data-s2]"); if(!hote)return;
   const x=envois()[etat.envoiSel], dispo=x.statut==="dispo";
   const pas=x.statut==="annule"
-    ?`<div class="pas fait"><span class="point"></span><div><b>Paiement reçu</b><span class="micro">${x.date} · ${x.total}</span></div></div><div class="pas fait"><span class="point"></span><div><b>Annulé</b><span class="micro">Montant et frais rendus sur la carte qui a payé.</span></div></div>`
-    :`<div class="pas fait"><span class="point"></span><div><b>Paiement reçu</b><span class="micro">${x.date} · ${x.total} · carte •••• 4821</span></div></div><div class="pas fait"><span class="point"></span><div><b>Disponible au retrait</b><span class="micro">Dans toute agence ou chez tout distributeur Safico</span></div></div><div class="pas ${dispo?"encours":"fait"}"><span class="point"></span><div><b>Retiré</b><span class="micro">${dispo?"En attente du bénéficiaire, jusqu'au 27/11/2026":"Par le bénéficiaire, avec sa pièce d'identité"}</span></div></div>`;
+    ?`<div class="pas fait"><span class="point"></span><div><b>Paiement reçu</b><span class="micro">${x.date} · ${x.total}</span></div></div><div class="pas fait"><span class="point"></span><div><b>Annulée</b><span class="micro">Montant et frais rendus sur la carte qui a payé.</span></div></div>`
+    :`<div class="pas fait"><span class="point"></span><div><b>Paiement reçu</b><span class="micro">${x.date} · ${x.total} · carte •••• 4821</span></div></div><div class="pas ${dispo?"encours":"fait"}"><span class="point"></span><div><b>En cours</b><span class="micro">Disponible au retrait, dans toute agence ou chez tout distributeur Safico</span></div></div><div class="pas ${dispo?"":"fait"}"><span class="point"></span><div><b>Payée</b><span class="micro">${dispo?"En attente du bénéficiaire, jusqu'au 27/11/2026":"Par le bénéficiaire, avec sa pièce d'identité"}</span></div></div>`;
   hote.innerHTML=`<a class="retour-lien" href="#s1"><svg width="18" height="18" aria-hidden="true"><use href="#i-retour"/></svg>Mes envois</a>
-    <div class="tete-envoi"><div class="titre-page moyen">${x.ref}</div><span class="statut ${STATUTS[x.statut][0]}">${STATUTS[x.statut][1]}</span><span class="trancher" title="Q38 · Statuts de suivi : quelle liste retenir, et quel mot pour le versement au bénéficiaire ?">Q38</span></div>
+    <div class="tete-envoi"><div class="titre-page moyen">${x.ref}</div><span class="statut ${STATUTS[x.statut][0]}">${STATUTS[x.statut][1]}</span>${dispo?'<span class="micro">Disponible au retrait</span>':""}<span class="trancher" title="Q38 · Statuts de suivi, à confirmer par écrit : liste unique ou deux listes ; « Paiement en attente » ; remboursement après « Échouée ».">Q38</span></div>
     <div class="grille tiers">
       <div class="colonne">
         <div class="carte"><div class="grille deux" style="gap:16px">
           <div><span class="label">Votre proche reçoit</span><div class="montant">${x.recu}</div><span class="micro">En espèces dans le réseau</span></div>
-          <div><span class="label">Bénéficiaire</span><div class="fort">${x.b[0]}</div><div>${x.b[1]}</div><div class="micro">${x.b[2]}</div></div>
+          <div><span class="label">Bénéficiaire</span><div class="fort">${x.b[0]}${x.bi==="soi"?' <span class="micro">(vous-même)</span>':""}</div><div>${x.b[1]}</div><div class="micro">${x.b[2]}</div></div>
         </div>
         <div class="separateur"></div>
         <div class="ligne"><span>Vous avez envoyé</span><span>${x.envoye}</span></div><div class="ligne"><span>Total payé</span><span class="fort">${x.total}</span></div>
-        ${etat.envoiSel===0&&etat.motif?`<div class="ligne"><span>Motif</span><span>${etat.motif}</span></div>`:""}</div>
+        <div class="ligne"><span>Motif</span><span>${x.motif}</span></div></div>
         ${dispo?`<div class="carte"><div class="label">Code de retrait</div><div class="code-retrait">${CODE_RETRAIT}</div><div class="actions"><button type="button" class="bouton secondaire" data-toast="Code de retrait copié."><svg aria-hidden="true"><use href="#i-copier"/></svg>Copier</button><button type="button" class="bouton secondaire" data-toast="WhatsApp Web s'ouvre avec le code de retrait et la référence de l'envoi."><svg aria-hidden="true"><use href="#i-whatsapp"/></svg>Partager sur WhatsApp</button></div></div>`:""}
         <div class="carte"><h2>Suivi</h2><div class="chrono">${pas}</div></div>
       </div>
@@ -1244,6 +1337,7 @@ function rendreS2(){
         <div class="carte">
           <h2>Un problème ?</h2>
           <a class="bouton primaire plein" href="#s2" data-toast="Demande d'aide : écran à décliner depuis l'application (H3), envoi ${x.ref} pré-rempli."><svg aria-hidden="true"><use href="#i-aide"/></svg>Demander de l'aide</a>
+          <a class="bouton secondaire plein" href="#e4" data-renvoyer="${etat.envoiSel}"><svg aria-hidden="true"><use href="#i-envoyer"/></svg>Renvoyer</a>
           ${dispo?`<a class="bouton secondaire plein" href="#s2" data-toast="Correction du nom : écran à décliner depuis l'application (S7).">Corriger le nom du bénéficiaire</a>
           <a class="lien" style="align-self:center;font-size:14px" href="#s2" data-toast="Demande d'annulation : écran à décliner depuis l'application (S4).">Demander l'annulation</a>
           <p class="micro">Tant que l'argent n'est pas retiré. L'annulation rend le montant et les frais, sur la carte qui a payé. <span class="trancher" title="Q13 · Annulation ou remboursement d'un envoi payé en ligne : les fonds reviennent-ils toujours au compte d'origine ? Quelle règle de frais ?">Q13</span></p>`:""}
@@ -1284,8 +1378,9 @@ document.addEventListener("keydown",e=>{const g=e.target.closest&&e.target.close
 function entete(s){
   const g=s.dataset.gabarit, h=document.getElementById("entete"), cadre=document.getElementById("entete-cadre");
   h.classList.toggle("marque",s.dataset.entete==="marque");
-  const logo=`<a class="logo" href="${g==="public"||g==="etapes"?"#p0":"#a1"}"><svg aria-hidden="true"><use href="#${s.dataset.entete==="marque"?"i-symbole-inv":"i-symbole"}"/></svg>Safico</a>`;
-  if(g==="public"){cadre.innerHTML=logo+`<span class="entete-droite">${s.id==="c1"?"":`<a class="bouton ${s.dataset.entete==="marque"?"clair":"secondaire"}" href="#c1">Se connecter</a>`}<a class="bouton ${s.dataset.entete==="marque"?"inverse":"primaire"}" href="#p1">Créer mon compte</a></span>`;}
+  // Logo : le mot SafiGo seul, en attendant le fichier du S bleu (atelier 9, 29/10)
+  const logo=`<a class="logo" href="${g==="public"||g==="etapes"?"#p0":"#a1"}">${NOM_SERVICE}</a>`;
+  if(g==="public"){cadre.innerHTML=logo+`<span class="entete-droite"><a class="lien-entete" href="proto-business.html#bp0">Entreprises</a>${s.id==="c1"?"":`<a class="bouton ${s.dataset.entete==="marque"?"clair":"secondaire"}" href="#c1">Se connecter</a>`}<a class="bouton ${s.dataset.entete==="marque"?"inverse":"primaire"}" href="#p1">Créer mon compte</a></span>`;}
   else if(g==="envoi"||g==="etapes"){const n=+s.dataset.etape,insc=s.dataset.etapes==="inscription";cadre.innerHTML=logo+`<ol class="pas-a-pas">${(insc?ETAPES_INSCRIPTION:ETAPES).map((t,i)=>`<li class="${i+1<n?"fait":i+1===n?"actif":""}"><span class="rond">${i+1<n?"✓":i+1}</span><span class="texte-pas">${t}</span></li>`).join("")}</ol><a class="quitter" href="${insc?"#p0":"#a1"}"><svg width="18" height="18" aria-hidden="true"><use href="#i-fermer"/></svg>Quitter</a>`;}
   else{const p=UTILISATEUR,nav=s.dataset.nav;cadre.innerHTML=logo+`<nav class="nav">${[["a1","Accueil"],["e1","Envoyer"],["s1","Mes envois"],["m1","Mon compte"]].map(x=>`<a href="#${x[0]}" class="${x[0]===nav?"actif":""}">${x[1]}</a>`).join("")}</nav><span class="entete-droite"><a class="icone-btn" href="#${s.id}" aria-label="Aide" data-toast="Aide : écran à décliner depuis l'application (H1)."><svg width="22" height="22"><use href="#i-aide"/></svg></a><a class="icone-btn" href="#${s.id}" aria-label="Notifications, 1 non lue" data-toast="Notifications : écran à décliner depuis l'application (N1)."><svg width="22" height="22"><use href="#i-cloche"/></svg><span class="badge"></span></a><a class="agent" href="#m1"><span class="avatar">${p.prenom[0]+p.nom[0]}</span><b>${p.prenom}</b></a></span>`;}
 }
@@ -1308,7 +1403,8 @@ function afficher(){
   document.getElementById("n-q-bloc").hidden=!qs.length;
   document.getElementById("n-q").innerHTML=qs.map(q=>`<li><b>${q}</b> · ${Q[q][0]}<br><span class="micro" style="color:inherit">Dessiné : ${Q[q][1]}</span></li>`).join("");
   document.querySelectorAll("#sommaire a").forEach(a=>a.classList.toggle("actif",a.dataset.lien===s.id));
-  document.title=s.dataset.titre+" — Safico diaspora (prototype)";
+  document.title=s.dataset.titre+" — "+NOM_SERVICE+" diaspora (prototype)";
+  if(s.id==="a1"||s.id==="b1")etat.renvoi="";
   fermerPin(); remplir(); verifRequis(); window.scrollTo(0,0);
   const premiere=s.querySelector("[data-otp] input"); if(premiere)setTimeout(()=>premiere.focus(),50);
 }
@@ -1320,6 +1416,7 @@ function toast(t){const el=document.getElementById("toast");el.textContent=t;el.
 document.addEventListener("click",e=>{
   const a=e.target.closest("a,button,tr[data-cible]"); if(!a)return;
   if(a.getAttribute("aria-disabled")==="true"){e.preventDefault();return}
+  if(a.dataset.renvoyer!=null){e.stopPropagation();renvoyer(+a.dataset.renvoyer);if(location.hash==="#e4")afficher();return}
   if(a.dataset.envoi!=null)etat.envoiSel=+a.dataset.envoi;
   if(a.dataset.benefRapide!=null){etat.benef=+a.dataset.benefRapide;const r=document.querySelector(`[name=benef][value="${etat.benef}"]`);if(r)r.checked=true}
   if(a.matches(".oeil")){const i=a.parentElement.querySelector("input"),v=i.type==="password";i.type=v?"text":"password";a.setAttribute("aria-pressed",v)}
