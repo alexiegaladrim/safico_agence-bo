@@ -5,9 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SAFICO — Prototypes</title>
 <!--
-  Porte d'entrée du déploiement Vercel : renvoie vers les quatre prototypes.
+  Porte d'entrée du déploiement Vercel : renvoie vers les cinq prototypes.
   index.html reste le prototype agence (voir CLAUDE.md) ; vercel.json redirige « / » ici.
-  proto-b2c.html et proto-diaspora.html sont les sources (depuis le 22/10, voir CLAUDE-b2c.md et CLAUDE-diaspora.md).
+  proto-b2c.html et proto-diaspora.html sont les sources (depuis le 22/10, voir CLAUDE-b2c.md et CLAUDE-diaspora.md) ;
+  proto-business.html, l'espace des entreprises (03/11, voir CLAUDE-business.md).
   .vercelignore ne publie que les prototypes, polices/ et logos/.
   Jetons et marque recopiés d'index.html.
 -->
@@ -86,6 +87,12 @@ h1{font:700 26px/32px var(--police);margin:0 0 6px}
       <span class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M8 20.5h8"/><path d="M12 16.5v4"/></svg></span>
       <h2>Plateforme web diaspora</h2>
       <p>L'espace client sur ordinateur, pour les Guinéens de l'étranger : simulateur ouvert, inscription, envoi par carte.</p>
+      <span class="ouvrir">Ouvrir →</span>
+    </a>
+    <a class="tuile" href="proto-business.html">
+      <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 21V5h11v16"/><path d="M15 9h5v12"/><path d="M3 21h18"/><path d="M8 8h3M8 12h3M8 16h3"/></svg></span>
+      <h2>SafiGo Business</h2>
+      <p>L'espace web des entreprises : payer un fournisseur à l'étranger, valider à deux signataires, suivre ses ordres et ses relevés.</p>
       <span class="ouvrir">Ouvrir →</span>
     </a>
   </div>

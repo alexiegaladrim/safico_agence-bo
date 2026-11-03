@@ -1,0 +1,1517 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SafiGo Business — Espace des entreprises (prototype lot 3)</title>
+<style>
+/* Espace web des entreprises clientes (B2B, lot 3) — démarré le 3 nov. 2026, avant l'atelier 10.
+   Style, gabarit et composants recopiés de proto-diaspora.html (charte Safico, piste Connexion
+   Afrique), sans lien de code entre les deux. Voir CLAUDE-business.md. */
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-400-normal.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-500-normal.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-600-normal.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('polices/plus-jakarta-sans-latin-700-normal.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Montserrat Alternates';src:url('polices/montserrat-alternates-latin-600-normal.woff2') format('woff2');font-weight:600;font-display:swap}
+:root{
+  --fond-page:#F0F4F7; --fond-surface:#FFFFFF; --fond-sourd:#F8FAFC; --fond-marque:#0B3D91;
+  --fond-accent:#F0FDFA; --fond-action:#F1F8FF;
+  --trait-leger:#E1E7EC; --trait-net:#828E99;
+  --texte-principal:#151F2B; --texte-secondaire:#556270; --texte-desactive:#9AA6B2; --texte-inverse:#FFFFFF; --texte-lien:#005CC7;
+  --action:#005CC7; --action-survol:#014BAE; --accent-trait:#C3E0FE;
+  --marque:#0B3D91; --marque-vif:#2E9AFE; --marque-turquoise:#14B8A6; --marque-tete:#07766E;
+  --information:#0B3D91; --information-fond:#F1F8FF;
+  --attention:#935B00; --attention-fond:#FFF5DE;
+  --blocage:#B42318; --blocage-fond:#FDECEB;
+  --valide:#27762F; --valide-fond:#E4F6E4;
+  --en-attente:#3D4A59; --en-attente-fond:#F0F4F7;
+  --trancher:#5B4B8A; --trancher-fond:#EFECF8;
+  --ombre:0 1px 2px rgba(11,61,145,.06),0 1px 3px rgba(21,31,43,.06);
+  --ombre-haute:0 6px 16px rgba(11,61,145,.10),0 2px 4px rgba(21,31,43,.06);
+  --ombre-diffuse:0 18px 36px -18px rgba(11,61,145,.22),0 2px 6px -2px rgba(21,31,43,.06);
+  --bord-carte:inset 0 0 0 1px rgba(11,61,145,.05);
+  --rayon:16px; --rayon-petit:10px; --rayon-capsule:999px;
+  --h-standard:44px; --h-grand:52px;
+  --largeur:1200px; --entete:72px;
+  --ressort:cubic-bezier(.16,1,.3,1);
+  --police:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --police-marque:'Montserrat Alternates',var(--police);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{font:400 15px/22px var(--police);color:var(--texte-principal);background:var(--fond-page);font-variant-numeric:tabular-nums;min-height:100vh;display:flex;flex-direction:column}
+button,input,select{font:inherit;color:inherit}
+a{color:var(--texte-lien)}
+
+/* ——— En-tête du site (gabarit, écrit une fois, rempli par afficher()) ——— */
+.entete{position:sticky;top:0;z-index:10;height:var(--entete);background:var(--fond-surface);border-bottom:1px solid var(--trait-leger)}
+.entete.marque{background:var(--fond-marque);border-bottom-color:transparent}
+.entete .cadre{height:100%;display:flex;align-items:center;gap:32px}
+.cadre{width:100%;max-width:var(--largeur);margin:0 auto;padding:0 32px}
+.logo{display:flex;align-items:center;gap:10px;font:600 24px/1 var(--police-marque);color:var(--marque);text-decoration:none;flex:none}
+.logo svg{width:30px;height:30px}
+.entete.marque .logo{color:#fff}
+.nav{display:flex;gap:4px;flex:1}
+.nav a{height:40px;display:flex;align-items:center;padding:0 14px;border-radius:var(--rayon-capsule);font-weight:600;font-size:14px;color:var(--texte-secondaire);text-decoration:none;transition:background-color .2s,color .2s}
+.nav a:hover{background:var(--fond-sourd);color:var(--texte-principal)}
+.nav a.actif{background:var(--fond-action);color:var(--action)}
+.entete-droite{display:flex;align-items:center;gap:8px;margin-left:auto}
+.icone-btn{width:40px;height:40px;border:0;border-radius:var(--rayon-capsule);background:none;display:grid;place-items:center;cursor:pointer;color:var(--texte-secondaire);text-decoration:none;position:relative}
+.icone-btn:hover{background:var(--fond-sourd);color:var(--texte-principal)}
+.icone-btn .badge{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--marque-turquoise);box-shadow:0 0 0 2px var(--fond-surface)}
+.agent{display:flex;align-items:center;gap:10px;padding:4px 12px 4px 4px;border-radius:var(--rayon-capsule);text-decoration:none;color:inherit}
+.agent:hover{background:var(--fond-sourd)}
+.agent b{font-weight:600;font-size:14px}
+.avatar{width:36px;height:36px;flex:none;border-radius:var(--rayon-capsule);background:var(--fond-action);color:var(--marque);display:grid;place-items:center;font-weight:700;font-size:13px}
+.avatar.grand{width:56px;height:56px;font-size:18px}
+.quitter{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;color:var(--texte-secondaire);text-decoration:none}
+.quitter:hover{color:var(--texte-principal)}
+
+/* Pas-à-pas de l'envoi (gabarit) */
+.pas-a-pas{display:flex;align-items:center;gap:8px;flex:1;justify-content:center;list-style:none}
+.pas-a-pas li{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--texte-desactive)}
+.pas-a-pas li+li::before{content:"";width:32px;height:2px;border-radius:1px;background:var(--trait-leger);margin-right:4px}
+.pas-a-pas .rond{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--trait-leger);font-size:12px;background:var(--fond-surface)}
+.pas-a-pas li.fait{color:var(--texte-secondaire)}
+.pas-a-pas li.fait .rond{background:var(--valide);border-color:var(--valide);color:#fff}
+.pas-a-pas li.fait+li::before{background:var(--valide)}
+.pas-a-pas li.actif{color:var(--marque)}
+.pas-a-pas li.actif .rond{border-color:var(--action);color:var(--action);box-shadow:0 0 0 4px var(--fond-action)}
+
+/* ——— Écran ——— */
+main{flex:1}
+.ecran{display:none}
+.ecran.visible{display:block;animation:monte .45s var(--ressort) backwards}
+@keyframes monte{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.page{padding:40px 0 64px}
+.page .cadre{display:flex;flex-direction:column;gap:24px}
+.titre-page{font:700 30px/36px var(--police);letter-spacing:-.02em;color:var(--marque)}
+.titre-page.moyen{font-size:24px;line-height:30px}
+.sous-titre{color:var(--texte-secondaire);font-size:16px;line-height:24px}
+.label{font:500 13px/18px var(--police);color:var(--texte-secondaire)}
+.micro{font:400 13px/18px var(--police);color:var(--texte-secondaire)}
+.montant{font:700 32px/38px var(--police);letter-spacing:-.02em}
+.montant-petit{font:700 20px/26px var(--police);letter-spacing:-.01em}
+.fort{font-weight:600}
+h2{font:700 18px/24px var(--police)}
+.rubrique{font:600 12px/16px var(--police);text-transform:uppercase;letter-spacing:.05em;color:var(--texte-secondaire)}
+
+/* Grilles */
+.grille{display:grid;gap:24px;align-items:start}
+.grille.deux{grid-template-columns:1fr 1fr}
+.grille.principal{grid-template-columns:minmax(0,1fr) 380px}
+.grille.tiers{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.colonne{display:flex;flex-direction:column;gap:24px;min-width:0}
+.collant{position:sticky;top:calc(var(--entete) + 24px)}
+
+/* Conteneurs */
+.carte{background:var(--fond-surface);border-radius:var(--rayon);box-shadow:var(--ombre),var(--bord-carte);padding:24px;display:flex;flex-direction:column;gap:16px}
+.carte.plate{box-shadow:none;border:1px solid var(--trait-leger)}
+.carte.accent{background:var(--fond-accent);box-shadow:none;border:1px solid #CCF2EC}
+.carte.serree{gap:10px}
+.carte-tete{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ligne{display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.ligne>:last-child{text-align:right}
+.separateur{height:1px;background:var(--trait-leger)}
+.liste{display:flex;flex-direction:column}
+.liste>*{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid var(--trait-leger);text-decoration:none;color:inherit}
+.liste>*:first-child{border-top:0;padding-top:0}
+.liste>*:last-child{padding-bottom:0}
+.liste>a{transition:background-color .2s;border-radius:6px}
+.liste>a:hover{background:var(--fond-sourd)}
+.liste .milieu{flex:1;min-width:0}
+.liste .milieu b{display:block;font-weight:600}
+.liste .valeur{color:var(--texte-secondaire);font-size:14px}
+.chevron{color:var(--texte-secondaire);flex:none}
+
+/* Tableau (Mes envois) */
+.tableau{width:100%;border-collapse:collapse;font-size:14px}
+.tableau th{text-align:left;font:600 12px/16px var(--police);text-transform:uppercase;letter-spacing:.05em;color:var(--texte-secondaire);padding:0 12px 12px;border-bottom:1px solid var(--trait-leger)}
+.tableau td{padding:14px 12px;border-bottom:1px solid var(--trait-leger);vertical-align:middle}
+.tableau tr:last-child td{border-bottom:0}
+.tableau .droite{text-align:right}
+.tableau tbody tr[data-cible]{cursor:pointer;transition:background-color .2s}
+.tableau tbody tr[data-cible]:hover{background:var(--fond-sourd)}
+.tableau tbody tr[data-cible]:focus-visible{outline:2px solid var(--action);outline-offset:-2px}
+.tableau b{font-weight:600}
+
+/* Actions */
+.bouton{height:var(--h-standard);border-radius:var(--rayon-capsule);border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 15px/20px var(--police);text-decoration:none;cursor:pointer;padding:0 22px;white-space:nowrap;transition:transform .18s var(--ressort),background-color .2s,border-color .2s,box-shadow .2s}
+.bouton:active{transform:scale(.98)}
+.bouton.grand{height:var(--h-grand);font-size:16px;padding:0 28px}
+.bouton.plein{width:100%}
+.bouton.petit{height:32px;padding:0 12px;font-size:13px}
+.bouton.primaire{background:var(--action);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 6px 14px -8px rgba(0,92,199,.55)}
+.bouton.primaire:hover{background:var(--action-survol)}
+.bouton.secondaire{background:var(--fond-surface);border-color:var(--trait-net);color:var(--texte-principal)}
+.bouton.secondaire:hover{background:var(--fond-action)}
+.bouton.inverse{background:#fff;color:var(--marque)}
+.bouton.inverse:hover{background:var(--fond-action)}
+.bouton.clair{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.4);color:#fff}
+.bouton.clair:hover{background:rgba(255,255,255,.2)}
+.bouton.texte{background:none;color:var(--texte-lien);padding:0 8px}
+.bouton.danger{background:var(--fond-surface);border-color:var(--blocage);color:var(--blocage)}
+.bouton[aria-disabled="true"],.bouton:disabled{background:var(--fond-sourd);color:var(--texte-desactive);border-color:var(--trait-leger);box-shadow:none;pointer-events:none}
+.bouton svg{width:18px;height:18px;flex:none}
+.actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.actions .pousse{margin-left:auto}
+.lien{color:var(--texte-lien);font-weight:600;text-decoration:underline;cursor:pointer;background:none;border:0}
+.action-tete{display:inline-flex;align-items:center;gap:4px;min-height:34px;padding:0 12px;border-radius:var(--rayon-capsule);background:var(--fond-action);color:var(--action);font:600 13px/16px var(--police);text-decoration:none;white-space:nowrap;border:0;cursor:pointer}
+.action-tete:hover{background:var(--accent-trait)}
+.action-tete svg{width:16px;height:16px}
+
+/* Saisie */
+.champ{display:flex;flex-direction:column;gap:8px}
+.champ>label{font:500 14px/18px var(--police);color:var(--texte-secondaire)}
+.champ input,.champ select{height:var(--h-grand);border:1px solid var(--trait-net);border-radius:var(--rayon-petit);background:var(--fond-surface);padding:0 14px;width:100%;font-size:16px}
+.champ input:focus,.champ select:focus{outline:0;border-color:var(--action);box-shadow:0 0 0 3px var(--fond-action)}
+.champ .aide{font-size:13px;line-height:18px;color:var(--texte-secondaire)}
+.champs{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.champs .large{grid-column:1/-1}
+.tel{display:flex;gap:8px}
+.tel .indicatif{flex:none;width:104px}
+.mdp{position:relative}
+.mdp input{padding-right:52px}
+.mdp .oeil{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;border-radius:var(--rayon-capsule);background:none;color:var(--texte-secondaire);display:grid;place-items:center;cursor:pointer}
+.mdp .oeil[aria-pressed="true"]{color:var(--action)}
+.case{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.case input{width:18px;height:18px;accent-color:var(--action);margin-top:2px;flex:none}
+.choix{display:flex;flex-direction:column;gap:10px}
+.choix.en-ligne{flex-direction:row}
+.choix.en-ligne>label{flex:1}
+.choix label{display:flex;align-items:center;gap:14px;min-height:var(--h-grand);padding:12px 16px;border:1px solid var(--trait-leger);border-radius:var(--rayon-petit);background:var(--fond-surface);cursor:pointer;transition:border-color .2s,background-color .2s}
+.choix label:hover{border-color:var(--trait-net)}
+.choix label:has(input:checked){border-color:var(--action);background:var(--fond-action);box-shadow:inset 0 0 0 1px var(--action)}
+.choix label.indispo{opacity:.55;cursor:not-allowed}
+.choix input{accent-color:var(--action);width:18px;height:18px;flex:none}
+.choix .milieu{flex:1;min-width:0}
+.choix .milieu b{display:block;font-weight:600}
+.choix .milieu .statut{margin-top:6px}
+
+/* Simulateur (déclinaison large de celui de l'application) */
+.simu{display:flex;flex-direction:column;border:1px solid var(--trait-leger);border-radius:var(--rayon);overflow:hidden;background:var(--fond-surface)}
+.simu .bloc{padding:14px 18px;display:flex;align-items:center;gap:14px;transition:box-shadow .2s}
+.simu .bloc:focus-within{box-shadow:inset 0 0 0 2px var(--action)}
+.simu .bloc .milieu{flex:1;min-width:0}
+.simu input{border:0;outline:0;width:100%;font:700 30px/36px var(--police);letter-spacing:-.02em;padding:0;background:none}
+.simu input:disabled{color:var(--texte-desactive)}
+.simu .devise{position:relative;flex:none;height:40px;padding:0 14px;border-radius:var(--rayon-capsule);background:var(--fond-sourd);border:1px solid var(--trait-leger);display:flex;align-items:center;gap:8px;font-weight:600;cursor:pointer}
+.simu .devise:hover{border-color:var(--trait-net)}
+.simu .devise select{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.simu .taux{background:var(--fond-accent);padding:10px 18px;font-size:14px;line-height:20px;display:flex;justify-content:space-between;gap:12px;border-block:1px solid #CCF2EC}
+.simu-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px}
+.drapeau{display:inline-block;width:22px;height:15px;border-radius:2px;flex:none;box-shadow:0 0 0 1px rgba(0,0,0,.06)}
+.ico-bas{width:16px;height:16px;flex:none;opacity:.7}
+
+/* Signaler */
+.bandeau{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:var(--rayon-petit);font-size:14px;line-height:20px}
+.bandeau svg{flex:none;width:20px;height:20px}
+.bandeau b{font-weight:600}
+.bandeau .texte{color:var(--texte-principal)}
+.bandeau.information{background:var(--information-fond);color:var(--information)}
+.bandeau.attention{background:var(--attention-fond);color:var(--attention)}
+.bandeau.valide{background:var(--valide-fond);color:var(--valide)}
+.bandeau.neutre{background:var(--fond-surface);border:1px solid var(--trait-leger);color:var(--texte-secondaire)}
+.statut{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--rayon-capsule);font:500 12px/18px var(--police);white-space:nowrap}
+.statut::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.statut.attente{background:var(--en-attente-fond);color:var(--en-attente)}
+.statut.dispo{background:var(--information-fond);color:var(--information)}
+.statut.valide{background:var(--valide-fond);color:var(--valide)}
+.statut.neutre{background:var(--fond-sourd);color:var(--texte-secondaire);border:1px solid var(--trait-leger)}
+.statut.neutre::before{display:none}
+.trancher{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:var(--rayon-capsule);background:var(--trancher-fond);color:var(--trancher);font:600 11px/14px var(--police);cursor:help;vertical-align:middle;white-space:nowrap}
+.trancher::before{content:"à trancher · "}
+.etiquette{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:var(--rayon-capsule);border:1px solid var(--trait-net);color:var(--texte-secondaire);font:600 11px/14px var(--police);cursor:help;vertical-align:middle;white-space:nowrap}
+
+/* Pictogramme de tête (confirmations) */
+.pictos{width:64px;height:64px;border-radius:20px;display:grid;place-items:center}
+.pictos svg{width:32px;height:32px}
+.pictos.valide{background:var(--valide-fond);color:var(--valide)}
+.pictos.attente{background:var(--fond-action);color:var(--action)}
+
+/* Code de retrait, référence, SMS */
+.reference{font:700 20px/26px var(--police);letter-spacing:.02em}
+.code-retrait{font:700 40px/48px var(--police);letter-spacing:.14em;text-align:center;padding:14px 0;border-radius:var(--rayon-petit);background:var(--fond-sourd);border:1px dashed var(--trait-net)}
+.bulle-sms{max-width:520px;padding:12px 14px;border-radius:14px 14px 14px 4px;background:var(--fond-sourd);border:1px solid var(--trait-leger);font-size:14px;line-height:20px}
+
+/* Chronologie (détail d'un envoi) */
+.chrono{display:flex;flex-direction:column}
+.chrono .pas{display:flex;gap:14px;position:relative;padding-bottom:18px}
+.chrono .pas:last-child{padding-bottom:0}
+.chrono .pas::before{content:"";position:absolute;left:9px;top:22px;bottom:2px;width:2px;background:var(--trait-leger)}
+.chrono .pas:last-child::before{display:none}
+.chrono .point{width:20px;height:20px;flex:none;border-radius:50%;border:2px solid var(--trait-net);background:var(--fond-surface)}
+.chrono .pas.fait .point{background:var(--valide);border-color:var(--valide)}
+.chrono .pas.fait::before{background:var(--valide)}
+.chrono .pas.encours .point{border-color:var(--action);box-shadow:0 0 0 4px var(--fond-action)}
+.chrono b{display:block;font-weight:600}
+
+/* Reçu */
+.recu{max-width:560px;background:var(--fond-surface);border-radius:var(--rayon);box-shadow:var(--ombre-diffuse),var(--bord-carte);padding:32px;display:flex;flex-direction:column;gap:12px}
+.recu .ligne{font-size:14px}
+.recu .ligne>:first-child{color:var(--texte-secondaire)}
+
+/* P0 : page d'accueil publique */
+.une{background:linear-gradient(160deg,#0B3D91 0,#0A4FB3 50%,#0E6E8C 100%);color:#fff;position:relative;overflow:hidden}
+.une .cadre{display:grid;grid-template-columns:minmax(0,1fr) 460px;gap:56px;align-items:center;padding-block:64px 72px;position:relative}
+.une-motif{position:absolute;right:-60px;top:-80px;width:520px;height:520px;opacity:.08;pointer-events:none}
+.une h1{font:700 52px/58px var(--police);letter-spacing:-.03em}
+.une .chapeau{font-size:19px;line-height:28px;color:#D6E3F5;max-width:520px;margin-top:16px}
+.atouts{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.atouts span{height:32px;display:inline-flex;align-items:center;gap:6px;padding:0 12px;border-radius:var(--rayon-capsule);background:rgba(255,255,255,.14);font:600 13px/16px var(--police)}
+.atouts svg{width:14px;height:14px;color:#7FE3D5}
+.une .carte{color:var(--texte-principal);box-shadow:0 30px 60px -20px rgba(0,0,0,.35)}
+.etapes-pub{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.etape-pub{display:flex;flex-direction:column;gap:10px}
+.etape-pub .num{width:40px;height:40px;border-radius:50%;background:var(--marque-tete);color:#fff;display:grid;place-items:center;font-weight:700}
+.etape-pub b{font-size:17px}
+.etape-pub span{color:var(--texte-secondaire)}
+.pied-site{border-top:1px solid var(--trait-leger);background:var(--fond-surface);padding:24px 0}
+.pied-site .cadre{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.pied-site a{color:var(--texte-secondaire);font-size:13px;text-decoration:none}
+.pied-site a:hover{color:var(--texte-principal)}
+
+/* Connexion : carte centrée */
+.centre-page{min-height:calc(100vh - var(--entete) - 80px);display:grid;place-items:center;padding:48px 16px}
+.centre-page .carte{width:100%;max-width:440px;padding:32px}
+
+/* Détail : en-tête d'envoi */
+.tete-envoi{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.retour-lien{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:14px;color:var(--texte-secondaire);text-decoration:none;align-self:flex-start}
+.retour-lien:hover{color:var(--texte-principal)}
+
+/* Fenêtre modale : code PIN et banque (3-D Secure) */
+.voile{position:fixed;inset:0;background:rgba(21,31,43,.45);backdrop-filter:blur(2px);z-index:30;display:grid;place-items:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .25s var(--ressort)}
+.voile.ouvert{opacity:1;pointer-events:auto}
+.fenetre{width:100%;max-width:420px;background:var(--fond-surface);border-radius:20px;box-shadow:var(--ombre-diffuse);padding:28px;display:flex;flex-direction:column;gap:16px;transform:translateY(12px) scale(.98);transition:transform .3s var(--ressort)}
+.voile.ouvert .fenetre{transform:none}
+.fenetre .tete{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.points-pin{display:flex;gap:12px;justify-content:center;padding:8px 0}
+.points-pin i{width:14px;height:14px;border-radius:50%;border:2px solid var(--trait-net);transition:background-color .15s,border-color .15s}
+.points-pin i.plein{background:var(--marque);border-color:var(--marque)}
+.points-pin.erreur{animation:secoue .4s var(--ressort)}
+.points-pin.erreur i{border-color:var(--blocage)}
+@keyframes secoue{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.pave{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pave button{height:52px;border:1px solid var(--trait-leger);border-radius:var(--rayon-petit);background:var(--fond-sourd);font:600 20px/1 var(--police);cursor:pointer;transition:background-color .15s,transform .08s}
+.pave button:hover{background:var(--fond-action)}
+.pave button:active{transform:scale(.95)}
+.pave button.fonction{background:none;border-color:transparent;font-size:15px;color:var(--texte-secondaire)}
+.banque{border:1px solid var(--trait-leger);border-radius:var(--rayon-petit);padding:18px;display:flex;flex-direction:column;gap:10px;background:var(--fond-sourd)}
+
+/* Inscription (28/10) : code SMS en 6 cases, photos de la pièce, QR code, selfie à la caméra */
+.code-otp{display:flex;gap:10px}
+.code-otp input{width:52px;height:60px;text-align:center;font:700 24px/1 var(--police);border:1px solid var(--trait-net);border-radius:var(--rayon-petit);background:var(--fond-surface)}
+.code-otp input:focus{outline:0;border-color:var(--action);box-shadow:0 0 0 3px var(--fond-action)}
+.code-otp.valide input{border-color:var(--valide);color:var(--valide)}
+.captures{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.capture{min-height:150px;border:2px dashed var(--trait-net);border-radius:var(--rayon);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;color:var(--texte-secondaire);background:var(--fond-sourd);padding:16px;cursor:pointer;font:inherit;transition:border-color .2s,background-color .2s}
+.capture:hover{border-color:var(--action);background:var(--fond-action)}
+.capture svg{width:28px;height:28px}
+.capture b{color:var(--texte-principal);font-weight:600}
+.capture.faite{border-style:solid;border-color:var(--valide);background:var(--valide-fond);color:var(--valide)}
+.capture.faite b{color:var(--valide)}
+.qr-bloc{display:flex;gap:24px;align-items:center}
+.qr{width:148px;height:148px;flex:none;border-radius:12px;border:8px solid #fff;box-shadow:0 0 0 1px var(--trait-leger);background:
+  conic-gradient(from 90deg at 18% 18%,#151F2B 25%,transparent 0) 0 0/50% 50%,
+  repeating-conic-gradient(#151F2B 0 25%,#fff 0 50%) 0 0/18px 18px}
+.webcam{position:relative;aspect-ratio:4/3;max-width:520px;width:100%;border-radius:var(--rayon);background:#111;display:grid;place-items:center;overflow:hidden}
+.webcam .ovale{width:42%;aspect-ratio:3/4;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;transition:border-color .2s}
+.webcam .ovale svg{width:50%;height:50%;opacity:.3;color:#fff}
+.webcam.faite .ovale{border-color:#3DDC84}
+.webcam .consigne{position:absolute;left:0;right:0;bottom:16px;text-align:center;color:#fff;font-weight:600;font-size:14px}
+.webcam.flash::after{content:"";position:absolute;inset:0;background:#fff;animation:flash .35s ease-out forwards}
+@keyframes flash{from{opacity:.85}to{opacity:0}}
+.etat-code{display:flex;align-items:center;gap:10px}
+.etat-code .statut{margin-left:auto}
+.erreur-texte{color:var(--blocage);font-size:13px}
+.tuiles{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.tuile{background:var(--fond-surface);border-radius:var(--rayon);box-shadow:var(--ombre),var(--bord-carte);padding:20px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;font-weight:600;transition:transform .18s var(--ressort),box-shadow .2s}
+.tuile:hover{box-shadow:var(--ombre-haute)}
+.tuile svg{width:24px;height:24px;color:var(--action)}
+.pictos.attention{background:var(--attention-fond);color:var(--attention)}
+@media (max-width:760px){.captures,.tuiles{grid-template-columns:1fr}.qr-bloc{flex-direction:column;align-items:flex-start}.code-otp{gap:6px}.code-otp input{width:44px;height:52px}}
+
+/* Panneau de notes (outil de revue) */
+.bascule-notes{position:fixed;right:20px;bottom:20px;z-index:40;height:40px;padding:0 16px;display:flex;align-items:center;gap:8px;border:0;border-radius:var(--rayon-capsule);background:var(--trancher);color:#fff;font-weight:600;font-size:13px;box-shadow:var(--ombre-haute);cursor:pointer}
+.notes{position:fixed;top:0;right:0;bottom:0;width:380px;z-index:35;background:var(--fond-page);border-left:1px solid var(--trait-leger);box-shadow:var(--ombre-diffuse);padding:16px 16px 76px;overflow:auto;display:flex;flex-direction:column;gap:12px;transform:translateX(105%);transition:transform .3s var(--ressort)}
+.notes.ouvert{transform:none}
+body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-site{margin-right:380px}
+.panneau{background:var(--fond-surface);border-radius:var(--rayon);box-shadow:var(--ombre);padding:16px 18px;font-size:14px;line-height:20px}
+.panneau h3{font:700 12px/16px var(--police);text-transform:uppercase;letter-spacing:.05em;color:var(--texte-secondaire);margin-bottom:8px}
+.panneau .code{font:600 12px/16px var(--police);color:var(--texte-secondaire)}
+.panneau .titre{font:700 18px/24px var(--police);margin:2px 0 6px}
+.panneau p+p{margin-top:6px}
+.q-liste{display:flex;flex-direction:column;gap:6px;list-style:none}
+.q-liste li{padding:8px 10px;border-radius:var(--rayon-petit);background:var(--trancher-fond);color:var(--trancher)}
+.q-liste b{font-weight:700}
+.sommaire{font-size:13px;line-height:20px}
+.sommaire a{display:flex;gap:8px;text-decoration:none;color:var(--texte-principal);padding:2px 0}
+.sommaire a b{width:34px;flex:none;color:var(--texte-secondaire);font-weight:600}
+.sommaire a.actif{color:var(--action);font-weight:600}
+.sommaire .groupe{font-weight:700;color:var(--texte-secondaire);margin:8px 0 2px;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+
+.toast{position:fixed;left:50%;bottom:32px;transform:translateX(-50%);max-width:520px;background:var(--texte-principal);color:#fff;padding:12px 18px;border-radius:var(--rayon-petit);font-size:14px;box-shadow:var(--ombre-haute);z-index:50}
+.toast:not([hidden]){animation:monte .3s var(--ressort) backwards}
+
+/* Points de rupture : le poste de référence est un ordinateur (1440 px) ; sous 1000 px les colonnes s'empilent */
+@media (max-width:1400px){body.notes-ouvertes main,body.notes-ouvertes .entete,body.notes-ouvertes .pied-site{margin-right:0}}
+@media (max-width:1000px){
+  .grille.deux,.grille.principal,.grille.tiers,.une .cadre{grid-template-columns:1fr}
+  .collant{position:static}
+  .une h1{font-size:40px;line-height:46px}
+  .etapes-pub{grid-template-columns:1fr}
+  .pas-a-pas .texte-pas{display:none}
+}
+@media (max-width:760px){
+  .cadre{padding:0 16px}
+  .entete .cadre{gap:12px}
+  .nav{overflow-x:auto;scrollbar-width:none}
+  .nav a{padding:0 10px}
+  .agent b{display:none}
+  .champs{grid-template-columns:1fr}
+  .notes{width:100%}
+  .tableau{min-width:640px}
+  .defile{overflow-x:auto}
+  .page{padding:24px 0 48px}
+  .carte{padding:18px}
+  .choix.en-ligne{flex-direction:column}
+  .pas-a-pas{gap:4px}
+  .pas-a-pas li+li::before{width:10px;margin-right:0}
+  .quitter span,.quitter{font-size:0;gap:0}
+  .entete-droite .bouton{height:36px;padding:0 12px;font-size:13px}
+  .une h1{font-size:34px;line-height:40px}
+  .une .cadre{padding-block:40px 48px;gap:32px}
+  .une .carte .carte-tete{flex-wrap:wrap}
+}
+@media (max-width:420px){.entete-droite .bouton.secondaire,.entete-droite .bouton.clair{display:none}.entete .logo{font-size:0;gap:0}.pas-a-pas .rond{width:24px;height:24px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ——— Ajouts de SafiGo Business (03/11) ——— */
+.statut.attention{background:var(--attention-fond);color:var(--attention)}
+.statut.blocage{background:var(--blocage-fond);color:var(--blocage)}
+.bandeau.blocage{background:var(--blocage-fond);color:var(--blocage)}
+.logo small{font:600 13px/1 var(--police);letter-spacing:.02em;padding:4px 8px;border-radius:var(--rayon-capsule);background:var(--fond-action);color:var(--action)}
+.entete.marque .logo small{background:rgba(255,255,255,.16);color:#fff}
+.lien-entete{font-weight:600;font-size:14px;color:var(--texte-secondaire);text-decoration:none;padding:0 8px}
+.lien-entete:hover{color:var(--texte-principal)}
+.entete.marque .lien-entete{color:#D6E3F5}
+.agent .qui{display:flex;flex-direction:column;line-height:16px}
+.agent .qui span{font-size:12px;color:var(--texte-secondaire)}
+.nav a,.agent .qui b,.tableau .net{white-space:nowrap}
+.nav .compte{margin-left:6px;min-width:20px;height:20px;padding:0 6px;border-radius:var(--rayon-capsule);background:var(--action);color:#fff;font-size:11px;display:inline-grid;place-items:center}
+.tuiles.trois{grid-template-columns:repeat(3,1fr)}
+.chiffre{font:700 30px/36px var(--police);letter-spacing:-.02em}
+.chrono .pas.bloque .point{background:var(--blocage);border-color:var(--blocage)}
+.chrono .pas.alerte .point{background:var(--attention-fond);border-color:var(--attention)}
+.chrono .pas.sansobjet{color:var(--texte-secondaire)}
+.chrono .pas.sansobjet .point{border-style:dashed}
+.chrono .pas.sansobjet::before{background:var(--valide)}
+.filtres{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.filtres .champ{min-width:180px;flex:1}
+.filtres .champ input,.filtres .champ select{height:var(--h-standard);font-size:14px}
+.onglets{display:flex;gap:4px;flex-wrap:wrap}
+.onglets a{height:36px;display:flex;align-items:center;padding:0 14px;border-radius:var(--rayon-capsule);font-weight:600;font-size:14px;color:var(--texte-secondaire);text-decoration:none;border:1px solid var(--trait-leger);background:var(--fond-surface)}
+.onglets a.actif{background:var(--fond-action);color:var(--action);border-color:var(--accent-trait)}
+.champ textarea{min-height:88px;border:1px solid var(--trait-net);border-radius:var(--rayon-petit);background:var(--fond-surface);padding:12px 14px;width:100%;font:inherit;resize:vertical}
+.champ textarea:focus{outline:0;border-color:var(--action);box-shadow:0 0 0 3px var(--fond-action)}
+.revue{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;border:1px dashed var(--trancher);border-radius:var(--rayon-petit);background:var(--trancher-fond);color:var(--trancher);font-size:13px}
+.revue .bouton{height:30px;padding:0 12px;font-size:13px}
+.vignette-pdf{display:flex;gap:14px;align-items:center;padding:12px;border:1px solid var(--trait-leger);border-radius:var(--rayon-petit);background:var(--fond-sourd)}
+.vignette-pdf .doc{width:40px;height:52px;flex:none;border-radius:4px;background:#fff;border:1px solid var(--trait-net);display:grid;place-items:center;font:700 10px/1 var(--police);color:var(--blocage)}
+.vignette-pdf .milieu{flex:1;min-width:0}
+.ordre-carte{border:1px solid var(--trait-leger);border-radius:var(--rayon);padding:20px;display:flex;flex-direction:column;gap:12px;background:var(--fond-surface)}
+.corridors{display:flex;flex-direction:column}
+.corridors>div{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--trait-leger)}
+.corridors>div:first-child{border-top:0;padding-top:0}
+.corridors .milieu{flex:1}
+.user-choix{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.user-choix button{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--trait-leger);border-radius:var(--rayon-petit);background:var(--fond-surface);cursor:pointer;text-align:left}
+.user-choix button[aria-pressed="true"]{border-color:var(--action);background:var(--fond-action);box-shadow:inset 0 0 0 1px var(--action)}
+.user-choix .avatar{width:30px;height:30px;font-size:12px}
+/* Panneau latéral (ajout d'un fournisseur, invitation d'un utilisateur) */
+.tiroir-voile{position:fixed;inset:0;background:rgba(21,31,43,.35);z-index:30;opacity:0;pointer-events:none;transition:opacity .25s var(--ressort)}
+.tiroir-voile.ouvert{opacity:1;pointer-events:auto}
+.tiroir{position:fixed;top:0;right:0;bottom:0;width:460px;max-width:100%;z-index:31;background:var(--fond-surface);box-shadow:var(--ombre-diffuse);display:flex;flex-direction:column;transform:translateX(105%);transition:transform .3s var(--ressort)}
+.tiroir.ouvert{transform:none}
+.tiroir>.tete{padding:20px 24px;border-bottom:1px solid var(--trait-leger);display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.tiroir>.corps{padding:24px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:16px}
+.tiroir>.pied{padding:16px 24px;border-top:1px solid var(--trait-leger);display:flex;gap:12px;justify-content:flex-end}
+@media (max-width:1000px){.tuiles.trois{grid-template-columns:1fr}}
+.defile{overflow-x:auto}
+@media (max-width:1100px){.agent .qui{display:none}}
+@media (max-width:1000px){.nav{overflow-x:auto;scrollbar-width:none;min-width:0}.nav a{padding:0 10px}}
+@media (max-width:760px){.agent .qui{display:none}.entete .lien-entete{display:none}.filtres .champ{min-width:100%}.entete .logo small{display:none}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-cadenas" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 017 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-oeil" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-retour" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-envoyer" viewBox="0 0 24 24"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-personnes" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 4.5a3.5 3.5 0 010 7M18 14c1.8.8 3 2.9 3 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-alerte" viewBox="0 0 24 24"><path d="M12 3l10 18H2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v5M12 18h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.5h.01" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-horloge" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-agence" viewBox="0 0 24 24"><path d="M3 10l9-6 9 6M5 10v9h14v-9M9 19v-5h6v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-recu" viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 8h6M9 12h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-tel" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a1 1 0 01-1 1A16 16 0 014 5a1 1 0 011-1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-fermer" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="i-cloche" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1112 0v5l2 2H4zM10 21h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+  <symbol id="i-copier" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V5a1 1 0 00-1-1H5a1 1 0 00-1 1v10a1 1 0 001 1h3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="i-sortie" viewBox="0 0 24 24"><path d="M14 4h5v16h-5M10 8l-4 4 4 4M6 12h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-depot" viewBox="0 0 24 24"><path d="M12 15V4M7 9l5-5 5 5M4 15v4a1 1 0 001 1h14a1 1 0 001-1v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-entreprise" viewBox="0 0 24 24"><path d="M4 21V5a1 1 0 011-1h9a1 1 0 011 1v16M15 9h4a1 1 0 011 1v11M3 21h18M8 8h3M8 12h3M8 16h3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+</svg>
+
+<!-- En-tête : rempli par entete() selon data-gabarit de l'écran (public, connecte, ordre) -->
+<header class="entete" id="entete"><div class="cadre" id="entete-cadre"></div></header>
+
+<main id="ecrans">
+
+<!-- ═════════════ PUBLIC ═════════════ -->
+
+<section class="ecran" id="bp0" data-code="BP0" data-groupe="Public" data-titre="Accueil SafiGo Business" data-gabarit="public" data-entete="marque"
+  data-contexte="Porte des entreprises du site public de SafiGo : on y arrive depuis le lien « Entreprises » de l'en-tête de proto-diaspora.html, le bandeau sous son simulateur et son pied de site. SafiGo Business est un espace séparé (déduit) : connexion propre, utilisateurs et rôles de l'entreprise, aucune donnée commune avec un compte particulier ; même charte et même gabarit ordinateur que la diaspora. Les clients B2B sont des entreprises guinéennes qui paient des fournisseurs à l'étranger (document de l'atelier 10, section 2 : « typiquement pour régler une facture de fournisseur à l'étranger ») : devise de référence GNF, ordre passé en devise. Rien de la diaspora n'est repris : ni euro par défaut, ni carte bancaire, ni simulateur public. Corridors de démonstration : ceux des ordres du back-office (Côte d'Ivoire, Sénégal, Émirats arabes unis) ; corridors et devises relèvent de l'atelier 12. Le nom « SafiGo Business » est une proposition de Galadrim, écrit une seule fois (constante NOM_BUSINESS du JS)."
+  data-q="B6|B8">
+  <div class="une">
+    <div class="cadre">
+      <div>
+        <h1>Payez vos fournisseurs<br>à l'étranger.</h1>
+        <p class="chapeau">L'espace des entreprises de <span data-nom-service>SafiGo</span> : vos ordres de transfert, leur validation, leur suivi et vos relevés, au même endroit. <span class="trancher" title="B6 · Nom de l'espace entreprises : SafiGo Business, ou autre ?">B6</span></p>
+        <div class="atouts"><span><svg aria-hidden="true"><use href="#i-ok"/></svg>Virement sur le compte bancaire du fournisseur</span><span><svg aria-hidden="true"><use href="#i-ok"/></svg>Double validation dans votre entreprise</span><span><svg aria-hidden="true"><use href="#i-ok"/></svg>Avis d'exécution pour chaque ordre</span></div>
+        <div class="actions" style="margin-top:32px"><a class="bouton inverse grand" href="#bp1">Demander l'ouverture d'un compte</a><a class="bouton clair grand" href="#bc1">Se connecter</a></div>
+      </div>
+      <div class="carte">
+        <div class="carte-tete"><h2>Corridors de démonstration</h2><span class="trancher" title="B8 · Corridors et devises du B2B">B8</span></div>
+        <div class="corridors" data-corridors></div>
+        <p class="micro">Taux du jour, fixé à la validation de votre ordre. Frais selon votre contrat.</p>
+      </div>
+    </div>
+  </div>
+  <div class="page">
+    <div class="cadre">
+      <div class="rubrique">Ce que fait votre espace</div>
+      <div class="etapes-pub">
+        <div class="etape-pub"><span class="num">1</span><b>Payer un fournisseur à l'étranger</b><span>Saisissez l'ordre, joignez la facture. Un second signataire de votre entreprise le valide, puis SAFICO.</span></div>
+        <div class="etape-pub"><span class="num">2</span><b>Suivre vos ordres</b><span>Le statut de chaque ordre, étape par étape, et l'avis d'exécution une fois le fournisseur payé.</span></div>
+        <div class="etape-pub"><span class="num">3</span><b>Tenir vos comptes</b><span>Votre solde chez SAFICO, vos mouvements, et un relevé mensuel en PDF et en Excel.</span></div>
+      </div>
+      <p class="micro">Vous êtes un particulier ? <a href="proto-diaspora.html#p0">Envoyer de l'argent à vos proches avec <span data-nom-service>SafiGo</span></a></p>
+    </div>
+  </div>
+</section>
+
+<section class="ecran" id="bp1" data-code="BP1" data-groupe="Public" data-titre="Demander l'ouverture d'un compte" data-gabarit="public"
+  data-contexte="L'ouverture n'est pas en libre-service (déduit) : la conformité vérifie le dossier avant la première opération (hypothèse atelier 10, Q4), et le chargé de compte SAFICO le constitue avec l'entreprise (section 2 : « un suivi par un chargé de compte SAFICO »). Le formulaire est donc court : de quoi qualifier la demande et rappeler. Les documents (RCCM, NIF, statuts, pièces des dirigeants, bénéficiaires effectifs) se déposent ensuite, dans le dossier de l'entreprise (BD1). Volumes et pays : listes de démonstration (déduit). Après l'envoi, la confirmation remplace le formulaire sur le même écran."
+  data-q="B4|B8">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne" data-si-demande="non">
+        <div><div class="titre-page moyen">Demander l'ouverture d'un compte</div><p class="sous-titre">Quelques informations pour préparer votre dossier. Votre chargé de compte vous rappelle.</p></div>
+        <div class="carte" data-garde>
+          <h2>Votre entreprise</h2>
+          <div class="champs">
+            <div class="champ large"><label for="bp1-rs">Raison sociale</label><input id="bp1-rs" data-requis></div>
+            <div class="champ"><label for="bp1-rccm">RCCM</label><input id="bp1-rccm" placeholder="GN.TCC.AAAA.B.00000" data-requis></div>
+            <div class="champ"><label for="bp1-nif">NIF</label><input id="bp1-nif" data-requis></div>
+            <div class="champ large"><label for="bp1-secteur">Secteur d'activité</label><select id="bp1-secteur" data-requis><option value="">Choisir</option><option>Import et négoce</option><option>Bâtiment et travaux publics</option><option>Industrie</option><option>Mines</option><option>Distribution</option><option>Services</option><option>Autre</option></select><span class="aide">Liste de démonstration (déduit).</span></div>
+          </div>
+          <h2>Votre contact</h2>
+          <div class="champs">
+            <div class="champ"><label for="bp1-nom">Nom et prénom(s)</label><input id="bp1-nom" data-requis></div>
+            <div class="champ"><label for="bp1-fonction">Fonction</label><input id="bp1-fonction" data-requis></div>
+            <div class="champ"><label for="bp1-tel">Téléphone</label><div class="tel"><select class="indicatif" aria-label="Indicatif"><option>+224</option></select><input id="bp1-tel" inputmode="tel" data-requis></div></div>
+            <div class="champ"><label for="bp1-email">E-mail professionnel</label><input id="bp1-email" type="email" data-requis></div>
+          </div>
+          <h2>Vos besoins</h2>
+          <div class="champs">
+            <div class="champ"><label for="bp1-volume">Volume mensuel estimé</label><select id="bp1-volume" data-requis><option value="">Choisir</option><option>Moins de 100 000 USD</option><option>100 000 à 500 000 USD</option><option>500 000 à 2 000 000 USD</option><option>Plus de 2 000 000 USD</option></select></div>
+            <div class="champ"><label for="bp1-pays">Pays de vos fournisseurs</label><select id="bp1-pays" data-requis data-liste-pays><option value="">Choisir</option></select><span class="aide">Corridors : atelier 12. <span class="trancher" title="B8 · Corridors et devises du B2B">B8</span></span></div>
+          </div>
+          <p class="micro">Vos documents (RCCM, NIF, statuts, pièces des dirigeants, bénéficiaires effectifs) se déposent ensuite, avec votre chargé de compte. <span class="trancher" title="B4 · Ouverture d'un compte entreprise : documents, vérification, utilisateurs">B4</span></p>
+          <div class="actions"><a class="bouton texte" href="#bp0"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><button type="button" class="bouton primaire grand pousse" data-attend data-action="demande">Envoyer la demande</button></div>
+        </div>
+      </div>
+      <div class="colonne" data-si-demande="oui" hidden>
+        <div class="pictos valide"><svg aria-hidden="true"><use href="#i-ok"/></svg></div>
+        <div class="titre-page moyen">Demande envoyée</div>
+        <p class="sous-titre">Votre chargé de compte vous contacte sous 48 h pour constituer votre dossier.</p>
+        <div class="carte plate"><div class="liste">
+          <div><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-personnes"/></svg><div class="milieu"><b>Votre dossier</b><span class="micro">RCCM, NIF, statuts, pièces des dirigeants, bénéficiaires effectifs.</span></div></div>
+          <div><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-cadenas"/></svg><div class="milieu"><b>La vérification par SAFICO</b><span class="micro">Avant votre premier ordre.</span></div></div>
+          <div><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-envoyer"/></svg><div class="milieu"><b>Vos accès</b><span class="micro">Chaque utilisateur de votre entreprise reçoit une invitation par e-mail.</span></div></div>
+        </div></div>
+        <div class="actions"><a class="bouton secondaire" href="#bp0">Retour à l'accueil</a></div>
+      </div>
+      <aside class="collant carte accent">
+        <h2>Pourquoi un dossier ?</h2>
+        <p class="micro">La réglementation demande à SAFICO de connaître chaque entreprise cliente, ses dirigeants et les personnes qui la détiennent, avant toute opération.</p>
+        <p class="micro">Les données servent à cette vérification et ne sont pas partagées.</p>
+      </aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="bc1" data-code="BC1" data-groupe="Accès" data-titre="Connexion" data-gabarit="public"
+  data-contexte="Connexion propre à l'espace entreprises (déduit) : e-mail professionnel et mot de passe, puis un code de vérification à 6 chiffres envoyé par SMS (double facteur : les sommes en jeu le justifient). Pas de compte créé ici : l'entreprise invite ses utilisateurs (BU1), après la vérification de son dossier. Migration : les clients B2B existants de SAFICO ne créent rien ; ils reçoivent une invitation par e-mail une fois leur dossier repris, sujet de l'atelier 11 (12/11). Prototype : tout code à 6 chiffres est accepté."
+  data-q="B4">
+  <div class="centre-page">
+    <div class="carte" data-si-code="non">
+      <div class="titre-page moyen">Se connecter</div>
+      <p class="micro" style="margin-top:-8px">Espace <span data-nom-business>SafiGo Business</span></p>
+      <div data-garde style="display:flex;flex-direction:column;gap:16px">
+        <div class="champ"><label for="bc1-email">E-mail professionnel</label><input id="bc1-email" type="email" data-user-email-champ data-requis></div>
+        <div class="champ"><label for="bc1-mdp">Mot de passe</label><div class="mdp"><input id="bc1-mdp" type="password" value="motdepasse" autocomplete="current-password" data-requis><button type="button" class="oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg width="22" height="22" aria-hidden="true"><use href="#i-oeil"/></svg></button></div></div>
+        <button type="button" class="lien" style="align-self:flex-start" data-toast="Mot de passe oublié : écran à décliner.">Mot de passe oublié</button>
+        <button type="button" class="bouton primaire grand plein" data-attend data-action="code-connexion">Continuer</button>
+      </div>
+      <div class="separateur"></div>
+      <p class="micro">Déjà client B2B de SAFICO ? Vous recevrez une invitation par e-mail. <span class="trancher" title="B4 · Ouverture d'un compte entreprise : documents, vérification, utilisateurs">B4</span></p>
+      <p class="micro">Pas encore de compte ? <a href="#bp1">Demander l'ouverture d'un compte</a></p>
+    </div>
+    <div class="carte" data-si-code="oui" hidden>
+      <div class="titre-page moyen">Code de vérification</div>
+      <p class="sous-titre">Envoyé par SMS au <b data-user-tel-lu></b>.</p>
+      <div class="code-otp" data-otp data-vers="#ba1" role="group" aria-label="Code de vérification"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 1"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 2"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 3"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 4"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 5"><input inputmode="numeric" maxlength="1" aria-label="Chiffre 6"></div>
+      <p class="micro">Pas reçu ? <span class="fort">Renvoyer dans 0:42</span> · <button type="button" class="lien" data-action="retour-connexion">Modifier l'e-mail</button></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════ TABLEAU DE BORD ═════════════ -->
+
+<section class="ecran" id="ba1" data-code="BA1" data-groupe="Tableau de bord" data-titre="Tableau de bord" data-gabarit="connecte" data-nav="ba1"
+  data-contexte="Tableau de bord de l'entreprise, première page après la connexion. Valeurs de l'entreprise reprises du back-office (ENTREPRISES, dossier « Vérifié ») : Kaloum Agro-Import SARL, solde chez SAFICO, plafond par opération, seuil de double validation (BO50), chargée de compte D. Sangaré ; ses ordres sont ceux de ORDRES_B2B, mêmes références et mêmes montants. Le compteur « À valider » ne se montre qu'à un utilisateur au rôle « Valider » ; celui qui saisit voit à la place « Nouvel ordre ». Le solde est tenu en GNF, sans avance possible (hypothèse atelier 10, Q3). Si seul le chargé de compte saisit (question B1), les écrans BE1 à BE5 disparaissent et l'espace se limite à la validation, au suivi et aux relevés. Téléphone et e-mail de la chargée de compte : valeurs de démonstration (déduit)."
+  data-q="B1|B2|B3|B11">
+  <div class="page"><div class="cadre">
+    <div class="carte-tete"><div><div class="titre-page">Bonjour <span data-user-prenom></span></div><p class="sous-titre"><span data-ent-nom></span> · <span data-maintenant></span></p></div><a class="bouton primaire grand" href="#be1" data-role-saisir><svg aria-hidden="true"><use href="#i-plus"/></svg>Nouvel ordre</a></div>
+    <div class="tuiles trois">
+      <div class="carte">
+        <div class="carte-tete"><span class="label">Solde chez SAFICO</span><span class="trancher" title="B11 · Solde tenu en GNF, ou aussi en devises ?">B11</span></div>
+        <div class="chiffre" data-ent-solde></div>
+        <div class="actions"><a class="bouton secondaire petit" href="#br2">Alimenter</a><a class="bouton texte petit" href="#br1">Relevés</a></div>
+      </div>
+      <a class="carte tuile" href="#bv1" data-si-role="valider"><span class="label">À valider</span><span class="chiffre" data-nb-a-valider></span><span class="micro" style="font-weight:400">Ordres saisis par un autre utilisateur, qui attendent votre signature.</span></a>
+      <a class="carte tuile" href="#be1" data-si-role="saisir"><span class="label">Nouvel ordre</span><span class="micro" style="font-weight:400">Payer un fournisseur : 4 étapes, puis la validation par un second signataire au-delà de <span data-seuil></span>.</span><span class="action-tete" style="align-self:flex-start">Commencer<svg aria-hidden="true"><use href="#i-chevron"/></svg></span></a>
+      <a class="carte tuile" href="#bs1"><span class="label">Ordres en cours</span><span class="chiffre" data-nb-en-cours></span><span class="micro" style="font-weight:400">Soumis et pas encore payés.</span></a>
+    </div>
+    <div class="grille tiers">
+      <div class="carte">
+        <div class="carte-tete"><h2>Derniers ordres</h2><a href="#bs1" class="action-tete">Tout voir<svg aria-hidden="true"><use href="#i-chevron"/></svg></a></div>
+        <div class="liste" data-derniers-ordres></div>
+      </div>
+      <div class="colonne">
+        <div class="carte serree">
+          <h2>Vos limites</h2>
+          <div class="ligne"><span class="micro">Plafond par opération</span><b data-ent-plafond></b></div>
+          <div class="ligne"><span class="micro">Double validation au-delà de</span><b data-seuil></b></div>
+          <p class="micro">Réglés par la conformité de SAFICO. <span class="trancher" title="B2 · Seuils et validations">B2</span></p>
+        </div>
+        <div class="carte serree">
+          <h2>Votre chargée de compte</h2>
+          <div style="display:flex;gap:12px;align-items:center"><span class="avatar" data-charge-initiales></span><div><b data-charge-nom></b><div class="micro" data-charge-fonction></div></div></div>
+          <div class="ligne"><span class="micro">Téléphone</span><span data-charge-tel></span></div>
+          <div class="ligne"><span class="micro">E-mail</span><span data-charge-email></span></div>
+          <p class="micro">Saisie par la chargée de compte, ou par vous dans cet espace. <span class="trancher" title="B1 · Qui saisit un transfert B2B ?">B1</span></p>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<!-- ═════════════ NOUVEL ORDRE ═════════════ -->
+
+<section class="ecran" id="be1" data-code="BE1" data-groupe="Nouvel ordre" data-titre="Nouvel ordre · 1 Fournisseur" data-gabarit="ordre" data-etape="1" data-nav="bs1"
+  data-contexte="Étape 2 du parcours de l'atelier 10 (saisie), côté entreprise : « un utilisateur habilité de l'entreprise peut aussi la saisir lui-même depuis son espace web » (section 2). Fournisseurs enregistrés de l'entreprise, repris du back-office (FOURNISSEURS_B2B), ou nouveau fournisseur : raison sociale, pays, banque, IBAN ou numéro de compte, SWIFT. Un nouveau fournisseur rejoint la liste « En cours de vérification par SAFICO » (déduit) ; il est contrôlé sur les listes de sanctions à la soumission, sans rien afficher à l'entreprise. Pays : les corridors des ordres de démonstration (atelier 12 pour la liste). Réservé au rôle « Saisir »."
+  data-q="B1|B8">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div><div class="titre-page moyen">Quel fournisseur payez-vous ? <span class="trancher" title="B1 · Qui saisit un transfert B2B ?">B1</span></div></div>
+        <div class="carte">
+          <h2>Vos fournisseurs</h2>
+          <div class="choix" data-fournisseurs-choix></div>
+        </div>
+        <div class="carte" data-si-four-nouveau hidden>
+          <div class="carte-tete"><h2>Nouveau fournisseur</h2><span class="trancher" title="B8 · Corridors et devises du B2B">B8</span></div>
+          <div class="champs">
+            <div class="champ large"><label for="nf-nom">Raison sociale</label><input id="nf-nom" data-nf="nom"></div>
+            <div class="champ"><label for="nf-pays">Pays</label><select id="nf-pays" data-nf="pays" data-liste-pays><option value="">Choisir</option></select></div>
+            <div class="champ"><label for="nf-banque">Banque</label><input id="nf-banque" data-nf="banque"></div>
+            <div class="champ"><label for="nf-compte">IBAN ou numéro de compte</label><input id="nf-compte" data-nf="compte"></div>
+            <div class="champ"><label for="nf-swift">SWIFT</label><input id="nf-swift" data-nf="swift"></div>
+          </div>
+          <p class="micro">SAFICO vérifie chaque nouveau fournisseur. Votre ordre peut être soumis pendant cette vérification.</p>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#ba1">Annuler</a><button type="button" class="bouton primaire grand pousse" data-attend="be1" data-action="be1-suite">Continuer</button></div>
+      </div>
+      <aside class="collant" data-resume-ordre></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="be2" data-code="BE2" data-groupe="Nouvel ordre" data-titre="Nouvel ordre · 2 Montant et motif" data-gabarit="ordre" data-etape="2" data-nav="bs1"
+  data-contexte="Montant en devise (USD, EUR, XOF), contre-valeur en GNF au taux indicatif, « fixé à la validation » (hypothèse atelier 10, Q3 : le taux du jour, fixé à la validation de l'ordre). Taux de BO12 : 1 USD = 8 650 GNF, 1 XOF = 14,35 GNF ; l'euro (10 050 GNF) est une valeur de démonstration du back-office. Frais : 0,5 % de la contre-valeur, valeur de démonstration du back-office (relation commerciale : atelier 11). Total débité et solde après l'ordre, sur le solde chez SAFICO tenu en GNF. Motif : « Paiement fournisseur » en tête (déduit), puis la liste de l'atelier 9 ; « Autre » ouvre un champ libre. Référence de la facture : valeur à saisir, reprise sur le récapitulatif et l'avis d'exécution (déduit). Les contrôles du plafond et du solde sont faits au récapitulatif."
+  data-q="B3|B7|B2">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div class="titre-page moyen">Montant et motif</div>
+        <div class="bandeau information" data-si-duplique hidden><svg aria-hidden="true"><use href="#i-copier"/></svg><span class="texte">Ordre dupliqué de <b data-duplique-ref></b> : vérifiez le montant et joignez le justificatif de ce nouveau paiement.</span></div>
+        <div class="carte">
+          <h2>Montant à payer au fournisseur</h2>
+          <div class="choix en-ligne" data-devises></div>
+          <div class="champ"><label for="be2-montant">Montant</label><input id="be2-montant" inputmode="numeric" autocomplete="off" data-montant-ordre placeholder="0"></div>
+          <div class="separateur"></div>
+          <div class="ligne"><span class="micro">Taux indicatif · fixé à la validation <span class="trancher" title="B3 · Financement et paiement du fournisseur">B3</span></span><span data-calc-taux></span></div>
+          <div class="ligne"><span class="micro">Contre-valeur</span><span data-calc-cv></span></div>
+          <div class="ligne"><span class="micro">Frais (0,5 %) <span class="trancher" title="B7 · Frais d'un transfert B2B">B7</span></span><span data-calc-frais></span></div>
+          <div class="ligne"><span class="fort">Total débité de votre solde</span><span class="fort" data-calc-total></span></div>
+          <div class="ligne"><span class="micro">Solde après l'ordre</span><span data-calc-apres></span></div>
+        </div>
+        <div class="carte">
+          <h2>Motif et facture</h2>
+          <div class="champs">
+            <div class="champ"><label for="be2-motif">Motif du transfert</label><select id="be2-motif" data-liste-motifs></select></div>
+            <div class="champ"><label for="be2-facture">Référence de la facture</label><input id="be2-facture" data-facture-champ placeholder="N° de facture, de contrat ou de bon de commande"></div>
+            <div class="champ large" data-si-motif-autre hidden><label for="be2-autre">Précisez le motif</label><input id="be2-autre" data-motif-autre></div>
+          </div>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#be1"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#be3" data-attend="be2">Continuer</a></div>
+      </div>
+      <aside class="collant" data-resume-ordre></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="be3" data-code="BE3" data-groupe="Nouvel ordre" data-titre="Nouvel ordre · 3 Justificatif" data-gabarit="ordre" data-etape="3" data-nav="bs1"
+  data-contexte="Justificatif obligatoire pour chaque transfert (hypothèse atelier 10, Q2) : facture, contrat ou bon de commande. Écart à signaler, déjà noté dans le back-office : la section 2 du document de l'atelier 10 ne l'exige qu'« au-delà d'un seuil » ; on dessine le défaut de la question 2. Dépôt simulé : « Déposer un fichier » remplit un nom de fichier de démonstration, comme au back-office (BO67). PDF, JPG ou PNG, 10 Mo au plus : valeurs de démonstration (déduit)."
+  data-q="B2">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div class="titre-page moyen">Justificatif <span class="trancher" title="B2 · Seuils et validations">B2</span></div>
+        <div class="carte">
+          <h2>Type de document</h2>
+          <div class="choix en-ligne" data-types-just></div>
+        </div>
+        <div class="carte">
+          <h2>Document</h2>
+          <button type="button" class="capture" data-action="deposer" data-si-just="non"><svg aria-hidden="true"><use href="#i-depot"/></svg><b>Déposer un fichier</b><span>PDF, JPG ou PNG · 10 Mo au plus</span></button>
+          <div class="vignette-pdf" data-si-just="oui" hidden><span class="doc">PDF</span><div class="milieu"><b data-just-fichier></b><div class="micro" data-just-taille></div></div><button type="button" class="bouton texte petit" data-action="retirer-just">Retirer</button></div>
+          <p class="micro">Obligatoire pour chaque ordre. SAFICO vérifie qu'il correspond au fournisseur et au montant.</p>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#be2"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><a class="bouton primaire grand pousse" href="#be4" data-attend="be3">Continuer</a></div>
+      </div>
+      <aside class="collant" data-resume-ordre></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="be4" data-code="BE4" data-groupe="Nouvel ordre" data-titre="Nouvel ordre · 4 Récapitulatif" data-gabarit="ordre" data-etape="4" data-nav="bs1"
+  data-contexte="Tout ce qui engage l'entreprise, avant « Soumettre ». Trois bandeaux selon le cas, contrôlés en direct comme au back-office (BO67) : au-delà du seuil de double validation (300 000 USD, BO50), « Cet ordre doit être validé par un second signataire de votre entreprise, puis par SAFICO » (hypothèse atelier 10, Q2) ; total au-delà du solde, « L'ordre partira dès que votre solde le couvre » (pas d'avance, Q3 ; l'ordre passe « En attente de financement » après la validation par SAFICO) ; contre-valeur au-delà du plafond par opération de l'entreprise, blocage et « Soumettre » désactivé. Pas de code PIN à la soumission : saisir n'est pas valider (déduit, comme au back-office). L'alerte CENTIF et le screening ne sont jamais montrés à l'entreprise."
+  data-q="B2|B3">
+  <div class="page"><div class="cadre">
+    <div class="grille principal">
+      <div class="colonne">
+        <div class="titre-page moyen">Vérifiez l'ordre</div>
+        <div data-bandeaux-ordre style="display:flex;flex-direction:column;gap:12px"></div>
+        <div class="carte serree">
+          <div class="carte-tete"><h2>Fournisseur</h2><a class="action-tete" href="#be1">Modifier</a></div>
+          <div data-recap-fournisseur></div>
+        </div>
+        <div class="carte serree">
+          <div class="carte-tete"><h2>Montant</h2><a class="action-tete" href="#be2">Modifier</a></div>
+          <div data-recap-montant></div>
+        </div>
+        <div class="carte serree">
+          <div class="carte-tete"><h2>Motif et justificatif</h2><a class="action-tete" href="#be3">Modifier</a></div>
+          <div data-recap-motif></div>
+        </div>
+        <div class="actions"><a class="bouton texte" href="#be3"><svg aria-hidden="true"><use href="#i-retour"/></svg>Retour</a><button type="button" class="bouton primaire grand pousse" data-attend="be4" data-action="soumettre">Soumettre</button></div>
+      </div>
+      <aside class="collant" data-resume-ordre></aside>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="be5" data-code="BE5" data-groupe="Nouvel ordre" data-titre="Ordre soumis" data-gabarit="connecte" data-nav="bs1"
+  data-contexte="L'ordre est soumis : référence (suite de celles du back-office, OT-2026-0149 pour le premier), statut et prochaine étape, avec les mots du back-office (statuts de spec/BO-entreprises.md). Au-delà du seuil, il attend le second signataire de l'entreprise ; en dessous, il part directement à SAFICO, affiché « En cours de vérification par SAFICO » sans dire quel service vérifie (conformité, direction). Ouvert par son ancre sans ordre soumis, l'écran montre le dernier ordre de démonstration."
+  data-q="B5">
+  <div class="page"><div class="cadre" style="max-width:820px" data-be5></div></div>
+</section>
+
+<!-- ═════════════ TRANSFERTS ═════════════ -->
+
+<section class="ecran" id="bv1" data-code="BV1" data-groupe="Transferts" data-titre="À valider" data-gabarit="connecte" data-nav="bs1"
+  data-contexte="Validation par le second signataire de l'entreprise (hypothèse atelier 10, Q2 : « côté entreprise, par un second signataire »). Les ordres au statut « À valider · second signataire », saisis par un autre utilisateur ou par la chargée de compte. Valider : code PIN au pavé mélangé (même fenêtre que la diaspora) ; l'ordre passe à SAFICO. Refuser : motif obligatoire ; l'ordre est « Refusée », définitivement (déduit, comme au back-office). Celui qui a saisi ne valide jamais (maker-checker) : sa vue le dit, sans bouton ; un utilisateur au rôle « Saisir » ne valide aucun ordre. OT-2026-0145, saisi par la chargée de compte, attend au back-office « l'ordre signé joint » : ici, le second signataire le valide dans l'espace web ; c'est l'alternative de la question B12. Bascule d'utilisateur : panneau de notes."
+  data-q="B2|B4|B12">
+  <div class="page"><div class="cadre">
+    <div class="carte-tete"><div class="titre-page">Transferts</div></div>
+    <nav class="onglets"><a href="#bs1">Tous les ordres</a><a href="#bv1" class="actif">À valider · <span data-nb-a-valider></span></a></nav>
+    <div class="bandeau information" data-si-role="saisir"><svg aria-hidden="true"><use href="#i-info"/></svg><span class="texte">Votre rôle : <b>Saisir</b>. Les ordres sont validés par un utilisateur au rôle « Valider ». <span class="trancher" title="B4 · Utilisateurs et rôles">B4</span></span></div>
+    <div class="colonne" data-a-valider></div>
+  </div></div>
+</section>
+
+<section class="ecran" id="bs1" data-code="BS1" data-groupe="Transferts" data-titre="Transferts" data-gabarit="connecte" data-nav="bs1"
+  data-contexte="Tous les ordres de l'entreprise, ceux saisis dans l'espace et ceux saisis par la chargée de compte : date, référence, fournisseur et pays, montant en devise (et contre-valeur), statut, prochaine étape. Statuts du back-office (spec/BO-entreprises.md, atelier 9 pour ceux d'après la transmission), avec une seule différence : « À valider · conformité » et « À valider · direction » deviennent « À valider · SAFICO », prochaine étape « En cours de vérification par SAFICO » ; l'entreprise ne voit ni motif de la conformité ni résultat de screening. Le brouillon OT-2026-0148, préparé par la chargée de compte, est montré tel quel (déduit). Filtres et recherche ; export Excel et PDF (message, aucun fichier produit). Chaque ligne ouvre le détail."
+  data-q="B5">
+  <div class="page"><div class="cadre">
+    <div class="carte-tete"><div class="titre-page">Transferts</div><a class="bouton primaire" href="#be1" data-role-saisir><svg aria-hidden="true"><use href="#i-plus"/></svg>Nouvel ordre</a></div>
+    <nav class="onglets"><a href="#bs1" class="actif">Tous les ordres</a><a href="#bv1">À valider · <span data-nb-a-valider></span></a></nav>
+    <div class="carte">
+      <div class="filtres">
+        <div class="champ"><label for="bs1-statut">Statut</label><select id="bs1-statut" data-filtre="statut"></select></div>
+        <div class="champ"><label for="bs1-four">Fournisseur</label><select id="bs1-four" data-filtre="four"></select></div>
+        <div class="champ"><label for="bs1-q">Recherche</label><input id="bs1-q" data-filtre="q" placeholder="Référence ou fournisseur"></div>
+        <div class="actions"><button type="button" class="bouton secondaire" data-toast="Export Excel de la liste filtrée (aucun fichier dans le prototype).">Excel</button><button type="button" class="bouton secondaire" data-toast="Export PDF de la liste filtrée (aucun fichier dans le prototype).">PDF</button><span class="trancher" title="B5 · Suivi et justificatifs">B5</span></div>
+      </div>
+      <div class="defile">
+        <table class="tableau">
+          <thead><tr><th>Date</th><th>Référence</th><th>Fournisseur et pays</th><th class="droite">Montant</th><th>Statut</th><th>Prochaine étape</th></tr></thead>
+          <tbody data-ordres></tbody>
+        </table>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="bs2" data-code="BS2" data-groupe="Transferts" data-titre="Détail d'un ordre" data-gabarit="connecte" data-nav="bs1"
+  data-contexte="Le détail suit l'ordre choisi ; ouvert par son ancre, il montre OT-2026-0139 (Payée). Frise des étapes vue de l'entreprise (déduit, sur les 8 étapes du back-office) : saisi, validé par l'entreprise, validé par SAFICO, débité, transmis, payé ; « Validé par l'entreprise » est « non requis » sous le seuil de double validation. Chaîne de validation : qui a fait quoi, sans le nom des agents de SAFICO. Taux indicatif, puis « fixé à la validation » (Q3). Avis d'exécution en PDF une fois payé (Q5, message). Raison du rejet par la banque partenaire si l'ordre échoue ; un refus de SAFICO ne dit pas son motif (règle du prompt : aucun motif de la conformité), la chargée de compte l'explique (question B10). « Dupliquer l'ordre », sur le modèle de « Renvoyer » de l'atelier 9 (déduit) : reprend fournisseur, montant et motif, demande un nouveau justificatif. Outil de revue : simuler la suite côté SAFICO et banque partenaire, comme au back-office, pour finir le parcours en séance."
+  data-q="B5|B3|B10">
+  <div class="page"><div class="cadre" data-bs2></div></div>
+</section>
+
+<!-- ═════════════ FOURNISSEURS ═════════════ -->
+
+<section class="ecran" id="bf1" data-code="BF1" data-groupe="Fournisseurs" data-titre="Fournisseurs" data-gabarit="connecte" data-nav="bf1"
+  data-contexte="Les fournisseurs de l'entreprise, repris du back-office (Rizerie du Bandama, Huilerie du Sine), avec leur statut de vérification par SAFICO (déduit : « Vérifié par SAFICO » ou « En cours de vérification par SAFICO », rien de plus). Ajout dans un panneau latéral, mêmes champs que BE1 ; un fournisseur ajouté ici ou dans un ordre rejoint la liste. Banque « Banque du bénéficiaire (ville) » et IBAN fictifs, comme au back-office ; le SWIFT des fournisseurs existants n'est pas dans les données du back-office : « À charger »."
+  data-q="B1|B8">
+  <div class="page"><div class="cadre">
+    <div class="carte-tete"><div class="titre-page">Fournisseurs</div><button type="button" class="bouton primaire" data-ouvrir-tiroir="tiroir-fournisseur" data-role-saisir><svg aria-hidden="true"><use href="#i-plus"/></svg>Ajouter un fournisseur</button></div>
+    <div class="carte defile">
+      <table class="tableau">
+        <thead><tr><th>Fournisseur</th><th>Pays</th><th>Banque</th><th>IBAN ou compte</th><th>SWIFT</th><th>Vérification</th><th class="droite">Ordres</th></tr></thead>
+        <tbody data-fournisseurs></tbody>
+      </table>
+    </div>
+  </div></div>
+</section>
+
+<!-- ═════════════ SOLDE ET RELEVÉS ═════════════ -->
+
+<section class="ecran" id="br1" data-code="BR1" data-groupe="Solde et relevés" data-titre="Solde et relevés" data-gabarit="connecte" data-nav="br1"
+  data-contexte="Solde de l'entreprise chez SAFICO, tenu en GNF (déduit ; question du back-office reprise en B11), sur le modèle du solde d'un distributeur (BO30, BO41) : débit à l'exécution, crédit à l'alimentation, sans découvert (hypothèse atelier 10, Q3). Mouvements de démonstration (déduit) : deux alimentations par virement, et les débits de OT-2026-0139 et OT-2026-0141 (principal et frais sur deux lignes), au taux fixé à leur validation ; le solde de départ est calculé pour finir au solde du back-office. Relevés mensuels exportables en PDF et en Excel (hypothèse atelier 10, Q5 : « sur le modèle du relevé de compte déjà prévu pour les distributeurs ») ; octobre est en cours."
+  data-q="B3|B5|B11">
+  <div class="page"><div class="cadre">
+    <div class="carte-tete"><div class="titre-page">Solde et relevés</div><a class="bouton primaire" href="#br2">Alimenter le solde</a></div>
+    <div class="grille tiers">
+      <div class="carte">
+        <div class="carte-tete"><h2>Mouvements</h2><span class="micro" data-periode-mvts></span></div>
+        <div class="defile">
+          <table class="tableau">
+            <thead><tr><th>Date</th><th>Libellé</th><th class="droite">Débit</th><th class="droite">Crédit</th><th class="droite">Solde</th></tr></thead>
+            <tbody data-mouvements></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="colonne">
+        <div class="carte serree">
+          <span class="label">Solde chez SAFICO</span>
+          <div class="chiffre" data-ent-solde></div>
+          <p class="micro">En francs guinéens, sans découvert. <span class="trancher" title="B11 · Solde tenu en GNF, ou aussi en devises ?">B11</span></p>
+        </div>
+        <div class="carte">
+          <div class="carte-tete"><h2>Relevés mensuels</h2><span class="trancher" title="B5 · Suivi et justificatifs">B5</span></div>
+          <div class="liste" data-releves></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="br2" data-code="BR2" data-groupe="Solde et relevés" data-titre="Alimenter le solde" data-gabarit="connecte" data-nav="br1"
+  data-contexte="Alimentation du solde, par virement bancaire ou par dépôt en agence (document de l'atelier 10, section 2, étape 6). Coordonnées bancaires de SAFICO fictives ; la référence à indiquer est un identifiant de l'entreprise, déduit du RCCM. Dépôt en agence : pièces à présenter (déduit) — pièce d'identité du déposant et mandat de l'entreprise s'il n'en est pas le représentant. « Votre solde est crédité dès réception ». Montants minimums, délais, frais d'alimentation : non connus. Pas d'avance (Q3)."
+  data-q="B3|B11">
+  <div class="page"><div class="cadre">
+    <a class="retour-lien" href="#br1"><svg width="18" height="18" aria-hidden="true"><use href="#i-retour"/></svg>Solde et relevés</a>
+    <div class="titre-page moyen">Alimenter le solde <span class="trancher" title="B3 · Financement et paiement du fournisseur">B3</span></div>
+    <div class="grille principal">
+      <div class="colonne">
+        <div class="carte">
+          <h2>Comment alimentez-vous votre solde ?</h2>
+          <div class="choix en-ligne">
+            <label><input type="radio" name="alim" value="virement" checked><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-envoyer"/></svg><div class="milieu"><b>Par virement bancaire</b><span class="micro">Depuis le compte de votre entreprise.</span></div></label>
+            <label><input type="radio" name="alim" value="agence"><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-agence"/></svg><div class="milieu"><b>Par dépôt en agence</b><span class="micro">Dans une agence SAFICO.</span></div></label>
+          </div>
+        </div>
+        <div class="carte serree" data-si-alim="virement">
+          <h2>Coordonnées bancaires de SAFICO</h2>
+          <div data-coordonnees-safico></div>
+          <div class="bandeau attention"><svg aria-hidden="true"><use href="#i-alerte"/></svg><span class="texte">Indiquez la référence <b data-ref-alimentation></b> dans le libellé du virement : c'est elle qui crédite votre solde.</span></div>
+          <button type="button" class="bouton secondaire" style="align-self:flex-start" data-toast="Coordonnées copiées."><svg aria-hidden="true"><use href="#i-copier"/></svg>Copier les coordonnées</button>
+        </div>
+        <div class="carte serree" data-si-alim="agence" hidden>
+          <h2>À présenter en agence</h2>
+          <div class="liste">
+            <div><div class="milieu"><b>La pièce d'identité du déposant</b></div></div>
+            <div><div class="milieu"><b>Le mandat de l'entreprise</b><span class="micro">Si le déposant n'est pas l'un de ses représentants.</span></div></div>
+            <div><div class="milieu"><b>La référence de l'entreprise</b><span class="micro" data-ref-alimentation></span></div></div>
+          </div>
+        </div>
+        <div class="bandeau valide"><svg aria-hidden="true"><use href="#i-ok"/></svg><span class="texte">Votre solde est crédité dès réception.</span></div>
+      </div>
+      <aside class="collant carte serree">
+        <span class="label">Solde actuel</span>
+        <div class="chiffre" data-ent-solde></div>
+        <p class="micro">Un ordre ne part que si votre solde couvre le montant et les frais.</p>
+      </aside>
+    </div>
+  </div></div>
+</section>
+
+<!-- ═════════════ ENTREPRISE ═════════════ -->
+
+<section class="ecran" id="bu1" data-code="BU1" data-groupe="Entreprise" data-titre="Entreprise · Utilisateurs" data-gabarit="connecte" data-nav="bu1"
+  data-contexte="Plusieurs utilisateurs par entreprise, avec trois rôles : saisir, valider, consulter (hypothèse atelier 10, Q4). Deux utilisateurs de démonstration, les deux représentants de Kaloum Agro-Import au back-office : SIDIBÉ Hawa, directrice financière (« Saisir »), et TOUNKARA Moussa, gérant (« Valider »). Le prompt demandait un responsable financier et un directeur général ; on garde les fonctions du back-office pour que les deux prototypes racontent la même histoire. Invitation dans un panneau latéral, par e-mail. Qui peut inviter n'est écrit nulle part : question B9, dessinée pour un utilisateur au rôle « Valider » (déduit). Un utilisateur au rôle « Saisir » voit la liste sans le bouton."
+  data-q="B4|B9">
+  <div class="page"><div class="cadre">
+    <div class="carte-tete"><div class="titre-page">Entreprise</div><button type="button" class="bouton primaire" data-ouvrir-tiroir="tiroir-invitation" data-si-role="valider"><svg aria-hidden="true"><use href="#i-plus"/></svg>Inviter un utilisateur</button></div>
+    <nav class="onglets"><a href="#bu1" class="actif">Utilisateurs</a><a href="#bd1">Dossier</a></nav>
+    <div class="grille tiers">
+      <div class="carte defile">
+        <table class="tableau">
+          <thead><tr><th>Utilisateur</th><th>Fonction</th><th>E-mail</th><th>Rôle</th><th>Statut</th></tr></thead>
+          <tbody data-utilisateurs></tbody>
+        </table>
+      </div>
+      <div class="colonne">
+        <div class="carte serree">
+          <div class="carte-tete"><h2>Les rôles</h2><span class="trancher" title="B4 · Utilisateurs et rôles">B4</span></div>
+          <div class="liste">
+            <div><div class="milieu"><b>Saisir</b><span class="micro">Prépare et soumet les ordres, ajoute des fournisseurs.</span></div></div>
+            <div><div class="milieu"><b>Valider</b><span class="micro">Valide ou refuse, comme second signataire, les ordres saisis par un autre.</span></div></div>
+            <div><div class="milieu"><b>Consulter</b><span class="micro">Voit les ordres, le solde et les relevés.</span></div></div>
+          </div>
+          <p class="micro">Celui qui saisit un ordre ne le valide jamais.</p>
+        </div>
+        <div class="carte serree"><p class="micro">Qui peut inviter un utilisateur ? <span class="trancher" title="B9 · Qui peut inviter un utilisateur de l'entreprise ?">B9</span></p></div>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+<section class="ecran" id="bd1" data-code="BD1" data-groupe="Entreprise" data-titre="Entreprise · Dossier" data-gabarit="connecte" data-nav="bu1"
+  data-contexte="Le dossier de l'entreprise : identité (back-office : raison sociale, RCCM, NIF, activité), statut « Vérifié », documents demandés par la question 4 de l'atelier 10 (RCCM, NIF, statuts, pièces des dirigeants, bénéficiaires effectifs). Une mise à jour demandée par la conformité, avec « Déposer » : la pièce d'identité de SIDIBÉ Hawa, qui arrive à échéance (déduit). Écart à signaler : au back-office, le dossier de Kaloum Agro-Import est « Vérifié », sans mise à jour demandée (c'est Constructions du Fouta qui en a une) ; la demande porte ici sur une pièce, pas sur le dossier, qui reste « Vérifié ». Dates de vérification : démonstration. La fréquence des mises à jour n'est pas connue (Q4)."
+  data-q="B4">
+  <div class="page"><div class="cadre">
+    <div class="carte-tete"><div class="titre-page">Entreprise</div></div>
+    <nav class="onglets"><a href="#bu1">Utilisateurs</a><a href="#bd1" class="actif">Dossier</a></nav>
+    <div class="grille tiers">
+      <div class="colonne">
+        <div class="bandeau attention" data-si-maj="attente"><svg aria-hidden="true"><use href="#i-alerte"/></svg><span class="texte"><b>Mise à jour demandée par SAFICO</b> · <span data-maj-libelle></span>, avant le <span data-maj-echeance></span>.</span></div>
+        <div class="carte">
+          <div class="carte-tete"><h2>Documents</h2><span class="trancher" title="B4 · Ouverture d'un compte entreprise : documents, vérification, utilisateurs">B4</span></div>
+          <div class="liste" data-documents></div>
+        </div>
+      </div>
+      <div class="carte serree">
+        <div class="carte-tete"><h2>Identité</h2><span class="statut valide" data-ent-dossier></span></div>
+        <div class="ligne"><span class="micro">Raison sociale</span><span data-ent-nom></span></div>
+        <div class="ligne"><span class="micro">Activité</span><span data-ent-activite></span></div>
+        <div class="ligne"><span class="micro">RCCM</span><span data-ent-rccm></span></div>
+        <div class="ligne"><span class="micro">NIF</span><span data-ent-nif></span></div>
+        <div class="ligne"><span class="micro">Plafond par opération</span><span data-ent-plafond></span></div>
+        <p class="micro">Pour modifier ces informations, contactez votre chargée de compte.</p>
+      </div>
+    </div>
+  </div></div>
+</section>
+
+</main>
+
+<footer class="pied-site" id="pied-site"><div class="cadre"><span class="logo" style="font-size:18px" data-nom-business>SafiGo Business</span><a href="proto-diaspora.html#p0">Particuliers</a><button type="button" class="lien" style="font-size:13px;text-decoration:none;color:var(--texte-secondaire);font-weight:400" data-toast="Conditions d'utilisation : écran à décliner.">Conditions d'utilisation</button><button type="button" class="lien" style="font-size:13px;text-decoration:none;color:var(--texte-secondaire);font-weight:400" data-toast="Confidentialité : écran à décliner.">Confidentialité</button><span class="micro" style="margin-left:auto">Prototype · espace entreprises · rien n'est connecté</span></div></footer>
+
+<!-- Panneaux latéraux -->
+<div class="tiroir-voile" id="tiroir-voile" data-fermer-tiroir></div>
+<aside class="tiroir" id="tiroir-fournisseur" aria-label="Ajouter un fournisseur" data-garde>
+  <div class="tete"><div><h2>Ajouter un fournisseur</h2><p class="micro">SAFICO le vérifie avant le premier paiement.</p></div><button type="button" class="icone-btn" data-fermer-tiroir aria-label="Fermer"><svg width="20" height="20"><use href="#i-fermer"/></svg></button></div>
+  <div class="corps">
+    <div class="champ"><label for="tf-nom">Raison sociale</label><input id="tf-nom" data-requis data-tf="nom"></div>
+    <div class="champ"><label for="tf-pays">Pays</label><select id="tf-pays" data-requis data-tf="pays" data-liste-pays><option value="">Choisir</option></select><span class="aide">Corridors : atelier 12. <span class="trancher" title="B8 · Corridors et devises du B2B">B8</span></span></div>
+    <div class="champ"><label for="tf-banque">Banque</label><input id="tf-banque" data-requis data-tf="banque"></div>
+    <div class="champ"><label for="tf-compte">IBAN ou numéro de compte</label><input id="tf-compte" data-requis data-tf="compte"></div>
+    <div class="champ"><label for="tf-swift">SWIFT</label><input id="tf-swift" data-requis data-tf="swift"></div>
+  </div>
+  <div class="pied"><button type="button" class="bouton texte" data-fermer-tiroir>Annuler</button><button type="button" class="bouton primaire" data-attend data-action="ajouter-fournisseur">Ajouter</button></div>
+</aside>
+<aside class="tiroir" id="tiroir-invitation" aria-label="Inviter un utilisateur" data-garde>
+  <div class="tete"><div><h2>Inviter un utilisateur</h2><p class="micro">Il reçoit une invitation par e-mail pour créer son accès.</p></div><button type="button" class="icone-btn" data-fermer-tiroir aria-label="Fermer"><svg width="20" height="20"><use href="#i-fermer"/></svg></button></div>
+  <div class="corps">
+    <div class="champs">
+      <div class="champ"><label for="ti-nom">Nom</label><input id="ti-nom" data-requis data-ti="nom"></div>
+      <div class="champ"><label for="ti-prenom">Prénom(s)</label><input id="ti-prenom" data-requis data-ti="prenom"></div>
+    </div>
+    <div class="champ"><label for="ti-fonction">Fonction</label><input id="ti-fonction" data-requis data-ti="fonction"></div>
+    <div class="champ"><label for="ti-email">E-mail professionnel</label><input id="ti-email" type="email" data-requis data-ti="email"></div>
+    <div class="champ"><label>Rôle</label>
+      <div class="choix">
+        <label><input type="radio" name="ti-role" value="Saisir"><div class="milieu"><b>Saisir</b><span class="micro">Prépare et soumet les ordres.</span></div></label>
+        <label><input type="radio" name="ti-role" value="Valider"><div class="milieu"><b>Valider</b><span class="micro">Second signataire.</span></div></label>
+        <label><input type="radio" name="ti-role" value="Consulter" checked><div class="milieu"><b>Consulter</b><span class="micro">Lecture seule.</span></div></label>
+      </div>
+    </div>
+    <p class="micro">SAFICO vérifie l'identité de chaque utilisateur avant son premier accès. <span class="trancher" title="B9 · Qui peut inviter un utilisateur de l'entreprise ?">B9</span></p>
+  </div>
+  <div class="pied"><button type="button" class="bouton texte" data-fermer-tiroir>Annuler</button><button type="button" class="bouton primaire" data-attend data-action="inviter">Envoyer l'invitation</button></div>
+</aside>
+
+<!-- Fenêtre du code PIN : pavé mélangé à chaque ouverture, au clic seulement (repris de la diaspora) -->
+<div class="voile" id="voile-pin" role="dialog" aria-modal="true" aria-labelledby="pin-titre">
+  <div class="fenetre">
+    <div class="tete"><div><h2 id="pin-titre">Confirmez avec votre code PIN</h2><p class="micro" style="margin-top:4px" id="pin-note"></p></div><button type="button" class="icone-btn" data-pin-fermer aria-label="Fermer"><svg width="20" height="20"><use href="#i-fermer"/></svg></button></div>
+    <div class="points-pin" id="points-pin"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="pave" id="pave"></div>
+    <button type="button" class="lien" style="align-self:center;font-size:13px" data-pin-fermer data-toast="Code PIN oublié : écran à décliner.">Code PIN oublié</button>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<!-- ═════════════ Panneau de notes (outil de revue) ═════════════ -->
+<aside class="notes" id="notes" aria-label="Notes et écrans">
+  <div class="panneau">
+    <h3>Utilisateur de démonstration</h3>
+    <p><b data-ent-nom></b></p>
+    <p class="micro" style="margin-top:4px">Outil de revue : un utilisateur réel n'a qu'un accès. Les deux sont les représentants de l'entreprise au back-office.</p>
+    <div class="user-choix" data-user-choix></div>
+    <p class="micro" style="margin-top:10px">Clients B2B existants : ils recevront une invitation par e-mail une fois leur dossier repris (migration : atelier 11, 12/11).</p>
+  </div>
+  <div class="panneau">
+    <span class="code" id="n-code"></span>
+    <div class="titre" id="n-titre"></div>
+    <p id="n-contexte"></p>
+  </div>
+  <div class="panneau" id="n-q-bloc">
+    <h3>À trancher sur cet écran</h3>
+    <ul class="q-liste" id="n-q"></ul>
+  </div>
+  <div class="panneau">
+    <h3>Écrans</h3>
+    <nav class="sommaire" id="sommaire"></nav>
+  </div>
+  <p class="micro" style="padding:0 4px">Prototype lot 3 · espace des entreprises, démarré le 3 novembre 2026, avant l'atelier 10 (5/11). Questions B1 à B5 : document de travail de l'atelier 10, au mot près ; B6 à B12 : ce prototype.</p>
+</aside>
+<button class="bascule-notes" id="bascule-notes" aria-controls="notes" aria-expanded="false">Notes et écrans</button>
+
+<script>
+// Questions, [question, ce qui est dessiné]. B1 à B5 : questions 1 à 5 du document de travail de l'atelier 10
+// (« Atelier 10 — B2B : le transfert haute valeur (jeu. 5 nov.) · Document de travail »), au mot près, avec leur
+// ligne « Sans réponse, nous dessinons ». B6 à B12 : ajoutées avec ce prototype (03/11).
+const Q={
+  B1:["Sur la plateforme, qui doit pouvoir saisir un transfert B2B : le chargé de compte SAFICO, l'entreprise elle-même depuis un espace web, l'agence, ou plusieurs d'entre eux ? Quelles étapes la demande doit-elle suivre jusqu'au paiement du fournisseur, et avec quel délai cible ? (atelier 10, question 1)","Saisie par le chargé de compte, avec un espace web pour l'entreprise. Si seul le chargé de compte saisit, BE1 à BE5 disparaissent et l'espace se limite à la validation, au suivi et aux relevés."],
+  B2:["Deux règles sont déjà actées pour les particuliers : le plafond de l'équivalent de 5 000 USD par client et par jour bloque tout envoi qui le dépasserait, et tout transfert de 150 millions GNF ou plus déclenche une alerte de déclaration à la CENTIF (la cellule nationale chargée de la lutte contre le blanchiment). Pour des transferts d'entreprise, aux montants potentiellement bien plus élevés, comment ces règles s'appliquent-elles : plafond propre au B2B, plafond fixé entreprise par entreprise, ou autre cadre ? À partir de quel montant un transfert est-il « haute valeur », qui valide au-delà et dans quel ordre (second signataire de l'entreprise, conformité, direction), et quels justificatifs sont exigés (facture, contrat, bon de commande) ? (atelier 10, question 2)","Un plafond propre à chaque entreprise, réglable par la conformité ; un justificatif obligatoire pour chaque transfert ; une double validation (conformité puis direction) au-delà d'un seuil réglable depuis le back-office."],
+  B3:["Sur la plateforme, une entreprise dispose-t-elle d'un solde chez SAFICO, sur lequel ses transferts sont débités ? Si oui, comment doit-il être alimenté (virement, dépôt en espèces en agence), et un transfert peut-il partir sans solde suffisant, par exemple avec une avance ? Côté paiement, le fournisseur doit-il toujours être payé sur un compte bancaire, par quel partenaire dans le pays de destination, et quel taux de change s'applique : celui du jour, ou un taux négocié par client ? (atelier 10, question 3)","Un transfert débité sur le solde de l'entreprise, sans avance possible ; un paiement par virement via un partenaire dans le pays de destination ; le taux du jour, fixé à la validation de l'ordre."],
+  B4:["Quels documents la plateforme doit-elle exiger d'une entreprise pour l'enregistrer (par exemple RCCM, NIF, statuts, pièces d'identité des dirigeants, liste des bénéficiaires effectifs, c'est-à-dire des personnes qui détiennent ou contrôlent l'entreprise) ? Qui doit les vérifier, et à quelle fréquence faut-il les mettre à jour ? Une entreprise peut-elle avoir plusieurs utilisateurs, avec des droits différents ? (atelier 10, question 4)","Vérification du dossier par la conformité avant la première opération, et plusieurs utilisateurs par entreprise avec trois rôles (saisir, valider, consulter)."],
+  B5:["Que doit recevoir l'entreprise après un transfert : un reçu, un avis d'exécution (document qui atteste que le transfert a été effectué), un relevé périodique de toutes ses opérations ? Sous quel format (PDF, Excel) et par quel canal (e-mail, espace web) ? Les statuts proposés par Babacar Amallah Faye pour les transferts vers un compte bancaire (en cours, validée, échouée, payée) conviennent-ils aussi au B2B ? (atelier 10, question 5)","Un avis d'exécution en PDF téléchargeable pour chaque transfert, un relevé mensuel exportable en PDF et en Excel, sur le modèle du relevé de compte déjà prévu pour les distributeurs, et ces mêmes statuts."],
+  B6:["Nom de l'espace entreprises : SafiGo Business, ou autre ?","SafiGo Business (proposition de Galadrim), écrit une seule fois dans la constante NOM_BUSINESS."],
+  // Ajoutées le 03/11 avec ce prototype ; B7, B8, B11 et B12 reprennent des questions du back-office (spec/BO-entreprises.md).
+  B7:["Quels frais pour un transfert B2B : barème, pourcentage, forfait négocié par entreprise ? (atelier 11, relation commerciale)","0,5 % de la contre-valeur, valeur de démonstration du back-office."],
+  B8:["Corridors et devises du B2B : vers quels pays et dans quelles devises une entreprise peut-elle payer un fournisseur ? (atelier 12)","Les corridors des ordres de démonstration : Côte d'Ivoire et Sénégal (USD, EUR, XOF), Émirats arabes unis (USD)."],
+  B9:["Qui peut inviter un utilisateur de l'entreprise : un utilisateur au rôle « Valider », un administrateur désigné par l'entreprise, ou le chargé de compte SAFICO ?","Un utilisateur au rôle « Valider » ; l'invité est vérifié par SAFICO avant son premier accès (déduit)."],
+  B10:["Un ordre refusé par SAFICO : que dit-on à l'entreprise, et par quel canal ?","Statut « Refusée », sans motif affiché ; la chargée de compte en explique la raison (déduit : l'entreprise ne voit jamais un motif de la conformité)."],
+  B11:["Le solde d'une entreprise est-il tenu en GNF, ou aussi en devises ? (atelier 10, Q3)","En GNF ; l'ordre est passé en devise et débité en contre-valeur."],
+  B12:["Quand le chargé de compte saisit l'ordre, comment le second signataire de l'entreprise valide-t-il : ordre signé joint, ou validation dans l'espace web ? (atelier 10, Q1, Q2)","Back-office : le chargé de compte joint l'ordre signé des deux représentants. Espace web : le second signataire valide en ligne, avec son code PIN."],
+};
+// Noms (atelier 9 pour SafiGo ; proposition de Galadrim pour l'espace entreprises, question B6).
+// Les remplacer ici suffit : tout [data-nom-service], [data-nom-business], l'en-tête et le titre de la page.
+const NOM_SERVICE="SafiGo";
+const NOM_BUSINESS="SafiGo Business";
+
+// ——— Données : reprises du back-office (proto-backoffice.html, // B2B ; spec/BO-entreprises.md) ———
+// Le back-office vit le 01/10/2026 à 10:42 ; l'espace entreprises aussi, quelques minutes plus tard.
+const MAINTENANT={jour:"01/10/2026",court:"01/10",heure:"10:45"};
+const TAUX={USD:8650,EUR:10050,XOF:14.35}; // BO12 (USD, XOF) ; EUR : valeur de démonstration du back-office
+const FRAIS=0.005; // 0,5 % de la contre-valeur, démonstration (B7)
+const SEUIL_DOUBLE=300000; // BO50, en équivalent USD
+const ENTREPRISE={nom:"Kaloum Agro-Import SARL",activite:"Import alimentaire",rccm:"GN.TCC.2019.B.04512",nif:"7 0145 2391 K",dossier:"Vérifié",solde:4200000000,plafond:750000,refAlim:"ENT-04512"};
+const CHARGE={nom:"Djénabou Sangaré",court:"D. Sangaré",fonction:"Chargée de compte entreprises · Siège",tel:"+224 622 41 08 37",email:"d.sangare@safico.gn"}; // téléphone, e-mail : démonstration
+// Les deux représentants de l'entreprise au back-office, devenus utilisateurs de l'espace (rôles : hypothèse Q4)
+const UTILISATEURS={
+  saisir:{prenom:"Hawa",nom:"SIDIBÉ",fonction:"Directrice financière",role:"Saisir",email:"h.sidibe@kaloum-agro.gn",telLu:"+224 6•• •• •• 14"},
+  valider:{prenom:"Moussa",nom:"TOUNKARA",fonction:"Gérant",role:"Valider",email:"m.tounkara@kaloum-agro.gn",telLu:"+224 6•• •• •• 52"},
+};
+const INVITES=[]; // ajoutés par BU1
+const PAYS=[["Côte d'Ivoire","Abidjan","CI",["USD","EUR","XOF"]],["Sénégal","Dakar","SN",["USD","EUR","XOF"]],["Émirats arabes unis","Dubaï","AE",["USD"]]];
+const DRAPEAU={CI:"linear-gradient(90deg,#F77F00 33%,#fff 33% 66%,#009E60 66%)",SN:"linear-gradient(90deg,#00853F 33%,#FDEF42 33% 66%,#E31B23 66%)",AE:"linear-gradient(90deg,#FF0000 26%,transparent 26%),linear-gradient(#00732F 33%,#fff 33% 66%,#000 66%)"};
+const FOURNISSEURS=[
+  {cle:"bandama",nom:"Rizerie du Bandama SARL",pays:"Côte d'Ivoire",ville:"Abidjan",banque:"Banque du bénéficiaire (Abidjan)",compte:"CI00 D000 0000 0000 0000 4417 21",swift:"À charger",verif:"verifie"},
+  {cle:"sine",nom:"Huilerie du Sine SARL",pays:"Sénégal",ville:"Dakar",banque:"Banque du bénéficiaire (Dakar)",compte:"SN00 D000 0000 0000 0000 2093 58",swift:"À charger",verif:"verifie"},
+];
+const VERIF={verifie:["valide","Vérifié par SAFICO"],verification:["attente","En cours de vérification par SAFICO"]};
+// Les ordres de Kaloum Agro-Import dans ORDRES_B2B, mêmes références et montants. Statuts du back-office ;
+// « À valider · conformité » et « · direction » sont vus « À valider · SAFICO » par l'entreprise.
+// saisi : [qui, quand] (charge = la chargée de compte) ; signe : second signataire ; safico : validé par SAFICO le.
+const ORDRES=[
+  {ref:"OT-2026-0148",date:"01/10 · 10:31",four:"bandama",devise:"XOF",montant:98000000,statut:"brouillon",motif:"Paiement fournisseur",facture:"RB-2026-0877",just:["Facture","Facture_RB-2026-0877.pdf","214 Ko"],saisi:["charge","01/10 · 10:31"]},
+  {ref:"OT-2026-0145",date:"30/09 · 11:05",four:"sine",devise:"XOF",montant:200000000,statut:"signataire",motif:"Paiement fournisseur",facture:"HS-2026-0412",just:["Bon de commande","BC_HS-2026-0412.pdf","98 Ko"],saisi:["charge","30/09 · 11:05"]},
+  {ref:"OT-2026-0143",date:"29/09 · 10:15",four:"bandama",devise:"USD",montant:40000,statut:"refusee",motif:"Paiement fournisseur",facture:"RB-2026-0851",just:["Facture","Facture_RB-2026-0851.pdf","188 Ko"],saisi:["charge","29/09 · 10:15"],refus:{par:"safico",quand:"29/09 · 14:05"}},
+  {ref:"OT-2026-0141",date:"30/09 · 14:12",four:"sine",devise:"XOF",montant:120000000,statut:"validee",motif:"Paiement fournisseur",facture:"HS-2026-0388",just:["Facture","Facture_HS-2026-0388.pdf","207 Ko"],saisi:["charge","30/09 · 14:12"],safico:"30/09 · 16:40",tauxFixe:"30/09 à 16:40",transmis:"30/09 · 16:41"},
+  {ref:"OT-2026-0139",date:"24/09 · 10:02",four:"bandama",devise:"USD",montant:260000,statut:"payee",motif:"Paiement fournisseur",facture:"RB-2026-0790",just:["Facture","Facture_RB-2026-0790.pdf","176 Ko"],saisi:["charge","24/09 · 10:02"],safico:"24/09 · 11:30",tauxFixe:"24/09 à 11:30",transmis:"24/09 · 11:31",paye:"25/09 · 15:30"},
+];
+// [pastille, statut, prochaine étape]
+const STATUTS={
+  brouillon:["neutre","Brouillon","À compléter et soumettre"],
+  signataire:["attente","À valider · second signataire","Attend le second signataire de l'entreprise"],
+  safico:["attente","À valider · SAFICO","En cours de vérification par SAFICO"],
+  financement:["attention","En attente de financement","Solde insuffisant"],
+  refusee:["blocage","Refusée","—"],
+  "en-cours":["attente","En cours","Chez le partenaire"],
+  validee:["attente","Validée","Chez le partenaire"],
+  echouee:["blocage","Échouée","Votre chargée de compte vous contacte"],
+  payee:["valide","Payée","—"],
+  annulee:["neutre","Annulée","—"],
+};
+const FINIS=["brouillon","refusee","payee","annulee"];
+// Motifs : « Paiement fournisseur » en tête (déduit), puis la liste de l'atelier 9 (MOTIFS de proto-b2c.html)
+const MOTIFS=["Paiement fournisseur","Assistance familiale","Frais médicaux","Frais scolaires","Construction et loyer","Frais de voyage et transports","Investissement","Dette ou prêt personnel","Œuvres et dons","Autre"];
+const TYPES_JUST=[["Facture","Facture"],["Contrat","Contrat"],["Bon de commande","BC"]];
+const ETAPES=["Fournisseur","Montant et motif","Justificatif","Récapitulatif"];
+const ETAPES_SUIVI=["Saisi","Validé par l'entreprise","Validé par SAFICO","Débité","Transmis","Payé"];
+// Mouvements du solde (démonstration, déduit) : [date, libellé, montant signé] ; le solde de départ est calculé.
+const MOUVEMENTS=[
+  ["22/09 · 09:14","Alimentation par virement · ENT-04512",2500000000],
+  ["24/09 · 11:30","Débit · OT-2026-0139 · 260 000 USD",-2249000000],
+  ["24/09 · 11:30","Frais · OT-2026-0139",-11245000],
+  ["28/09 · 15:02","Alimentation par virement · ENT-04512",3000000000],
+  ["30/09 · 16:40","Débit · OT-2026-0141 · 120 000 000 XOF",-1722000000],
+  ["30/09 · 16:40","Frais · OT-2026-0141",-8610000],
+];
+const RELEVES=["Septembre 2026","Août 2026","Juillet 2026"];
+const DOCUMENTS=[
+  ["RCCM","GN.TCC.2019.B.04512","Vérifié le 12/03/2026"],
+  ["NIF","7 0145 2391 K","Vérifié le 12/03/2026"],
+  ["Statuts","Statuts à jour, 2024","Vérifié le 12/03/2026"],
+  ["Pièce d'identité · TOUNKARA Moussa, gérant","Passeport · expire le 08/06/2029","Vérifié le 12/03/2026"],
+  ["Pièce d'identité · SIDIBÉ Hawa, directrice financière","Carte d'identité · expire le 20/11/2026","maj"],
+  ["Bénéficiaires effectifs","Déclaration · 2 personnes","Vérifié le 12/03/2026"],
+];
+const MAJ={libelle:"Pièce d'identité de SIDIBÉ Hawa",echeance:"20/11/2026"};
+
+const etat={user:"saisir",ordreSel:"OT-2026-0139",rang:149,codeConnexion:false,demande:false,refus:"",motifRefus:"",maj:"attente",alim:"virement",
+  filtres:{statut:"",four:"",q:""},
+  nouvel:{four:"",nf:{nom:"",pays:"",banque:"",compte:"",swift:""},devise:"USD",montant:0,motif:"Paiement fournisseur",motifAutre:"",facture:"",justType:"Facture",justFichier:"",justTaille:"",duplique:""}};
+
+// ——— Calculs et formats ———
+const nb=s=>s.replace(/ /g," ");
+const grouper=n=>nb(Math.round(n).toLocaleString("fr-FR"));
+const fmt=(n,d)=>n==null||isNaN(n)?"—":grouper(n)+" "+d;
+const tauxTxt=d=>"1 "+d+" = "+nb(TAUX[d].toLocaleString("fr-FR",{maximumFractionDigits:2}))+" GNF";
+const user=()=>UTILISATEURS[etat.user];
+const nomUser=u=>u.nom+" "+u.prenom;
+const four=cle=>FOURNISSEURS.find(f=>f.cle===cle);
+const ordre=ref=>ORDRES.find(o=>o.ref===ref)||ORDRES.find(o=>o.ref==="OT-2026-0139");
+const cv=o=>Math.round(o.montant*TAUX[o.devise]);
+const frais=o=>Math.round(cv(o)*FRAIS);
+const total=o=>cv(o)+frais(o);
+const usd=o=>cv(o)/TAUX.USD;
+const double=o=>usd(o)>=SEUIL_DOUBLE;
+const pastille=s=>`<span class="statut ${STATUTS[s][0]}">${STATUTS[s][1]}</span>`;
+const qui=k=>k==="charge"?CHARGE.court+" · votre chargée de compte SAFICO":nomUser(UTILISATEURS[k])+" · "+UTILISATEURS[k].fonction;
+const aValider=()=>ORDRES.filter(o=>o.statut==="signataire");
+const quand=()=>MAINTENANT.court+" · "+MAINTENANT.heure;
+const drapeau=code=>`<span class="drapeau" style="background:${DRAPEAU[code]}"></span>`;
+const paysCode=p=>(PAYS.find(x=>x[0]===p)||[])[2];
+const q=c=>`<span class="trancher" title="${c} · ${Q[c][0].replace(/"/g,"&quot;")}">${c}</span>`;
+const nouvelOrdre=()=>{const n=etat.nouvel;return {four:n.four,devise:n.devise,montant:n.montant}};
+
+// ——— Remplissage (jamais de texte en dur pour une donnée) ———
+const fixer=(sel,txt)=>document.querySelectorAll(sel).forEach(el=>el.textContent=txt);
+const html=(sel,h)=>document.querySelectorAll(sel).forEach(el=>el.innerHTML=h);
+const montrer=(sel,v)=>document.querySelectorAll(sel).forEach(el=>el.hidden=!v);
+function remplir(){
+  const u=user(),e=ENTREPRISE;
+  fixer("[data-nom-service]",NOM_SERVICE); fixer("[data-nom-business]",NOM_BUSINESS);
+  fixer("[data-user-prenom]",u.prenom); fixer("[data-user-tel-lu]",u.telLu);
+  document.querySelectorAll("[data-user-email-champ]").forEach(i=>{if(!i.value)i.value=u.email});
+  fixer("[data-ent-nom]",e.nom); fixer("[data-ent-activite]",e.activite); fixer("[data-ent-rccm]",e.rccm); fixer("[data-ent-nif]",e.nif); fixer("[data-ent-dossier]",e.dossier);
+  fixer("[data-ent-solde]",fmt(e.solde,"GNF")); fixer("[data-ent-plafond]",fmt(e.plafond,"USD")); fixer("[data-seuil]",fmt(SEUIL_DOUBLE,"USD"));
+  fixer("[data-maintenant]",MAINTENANT.jour+" · "+MAINTENANT.heure);
+  fixer("[data-charge-nom]",CHARGE.nom); fixer("[data-charge-fonction]",CHARGE.fonction); fixer("[data-charge-tel]",CHARGE.tel); fixer("[data-charge-email]",CHARGE.email);
+  fixer("[data-charge-initiales]",CHARGE.nom.split(" ").map(m=>m[0]).join(""));
+  fixer("[data-nb-a-valider]",aValider().length); fixer("[data-nb-en-cours]",ORDRES.filter(o=>!FINIS.includes(o.statut)).length);
+  fixer("[data-ref-alimentation]",e.refAlim);
+  montrer("[data-si-role]",true); document.querySelectorAll("[data-si-role]").forEach(el=>el.hidden=el.dataset.siRole!==etat.user);
+  document.querySelectorAll("[data-role-saisir]").forEach(el=>{el.hidden=etat.user!=="saisir"});
+  montrer('[data-si-demande="non"]',!etat.demande); montrer('[data-si-demande="oui"]',etat.demande);
+  montrer('[data-si-code="non"]',!etat.codeConnexion); montrer('[data-si-code="oui"]',etat.codeConnexion);
+  montrer('[data-si-alim="virement"]',etat.alim==="virement"); montrer('[data-si-alim="agence"]',etat.alim==="agence");
+  montrer('[data-si-maj="attente"]',etat.maj==="attente");
+  // Listes de choix
+  document.querySelectorAll("[data-liste-pays]").forEach(s=>{if(s.options.length<2)s.insertAdjacentHTML("beforeend",PAYS.map(p=>`<option>${p[0]}</option>`).join(""))});
+  html("[data-user-choix]",Object.entries(UTILISATEURS).map(([k,x])=>`<button type="button" data-user="${k}" aria-pressed="${k===etat.user}"><span class="avatar">${x.prenom[0]+x.nom[0]}</span><span><b>${nomUser(x)}</b><br><span class="micro">${x.fonction} · rôle « ${x.role} »</span></span></button>`).join(""));
+  const s=document.querySelector(".ecran.visible"); if(s&&R[s.id])R[s.id]();
+  if(s&&s.dataset.gabarit==="ordre")rendreResume();
+  verifRequis();
+}
+
+// Rendus propres à chaque écran
+const R={
+  bp0(){html("[data-corridors]",PAYS.map(p=>`<div>${drapeau(p[2])}<div class="milieu"><b>${p[0]}</b><div class="micro">Paiement à ${p[1]}, sur le compte bancaire du fournisseur</div></div><span class="micro">${p[3].join(" · ")}</span></div>`).join(""))},
+  ba1(){
+    html("[data-derniers-ordres]",ORDRES.slice(0,5).map(o=>{const f=four(o.four);return `<a href="#bs2" data-ordre="${o.ref}"><div class="milieu"><b>${f.nom}</b><span class="micro">${o.ref} · ${o.date} · ${f.pays}</span></div><span style="text-align:right"><b>${fmt(o.montant,o.devise)}</b><br>${pastille(o.statut)}</span><svg class="chevron" width="20" height="20" aria-hidden="true"><use href="#i-chevron"/></svg></a>`}).join(""));
+  },
+  be1(){
+    const n=etat.nouvel;
+    html("[data-fournisseurs-choix]",FOURNISSEURS.map(f=>`<label><input type="radio" name="four" value="${f.cle}" ${n.four===f.cle?"checked":""}>${drapeau(paysCode(f.pays))}<div class="milieu"><b>${f.nom}</b><span class="micro">${f.pays} · ${f.banque} · ${f.compte}</span><br><span class="statut ${VERIF[f.verif][0]}">${VERIF[f.verif][1]}</span></div></label>`).join("")+`<label><input type="radio" name="four" value="nouveau" ${n.four==="nouveau"?"checked":""}><svg width="22" height="22" style="color:var(--action)" aria-hidden="true"><use href="#i-plus"/></svg><div class="milieu"><b>Nouveau fournisseur</b><span class="micro">Raison sociale, pays, banque, compte, SWIFT.</span></div></label>`);
+    document.querySelectorAll("[data-nf]").forEach(i=>i.value=n.nf[i.dataset.nf]);
+    montrer("[data-si-four-nouveau]",n.four==="nouveau");
+  },
+  be2(){
+    const n=etat.nouvel,f=four(n.four),devs=f?PAYS.find(p=>p[0]===f.pays)[3]:["USD","EUR","XOF"];
+    if(!devs.includes(n.devise))n.devise=devs[0];
+    html("[data-devises]",["USD","EUR","XOF"].map(d=>`<label class="${devs.includes(d)?"":"indispo"}"><input type="radio" name="devise" value="${d}" ${n.devise===d?"checked":""} ${devs.includes(d)?"":"disabled"}><div class="milieu"><b>${d}</b><span class="micro">${tauxTxt(d)}</span></div></label>`).join(""));
+    const m=document.querySelector("[data-montant-ordre]"); if(document.activeElement!==m)m.value=n.montant?grouper(n.montant):"";
+    const sel=document.querySelector("[data-liste-motifs]"); if(!sel.options.length)sel.innerHTML=MOTIFS.map(x=>`<option>${x}</option>`).join(""); sel.value=n.motif;
+    document.querySelector("[data-motif-autre]").value=n.motifAutre; document.querySelector("[data-facture-champ]").value=n.facture;
+    montrer("[data-si-motif-autre]",n.motif==="Autre");
+    montrer("[data-si-duplique]",!!n.duplique); fixer("[data-duplique-ref]",n.duplique);
+    majCalc();
+  },
+  be3(){
+    const n=etat.nouvel;
+    html("[data-types-just]",TYPES_JUST.map(t=>`<label><input type="radio" name="just" value="${t[0]}" ${n.justType===t[0]?"checked":""}><div class="milieu"><b>${t[0]}</b></div></label>`).join(""));
+    montrer('[data-si-just="non"]',!n.justFichier); montrer('[data-si-just="oui"]',!!n.justFichier);
+    fixer("[data-just-fichier]",n.justFichier); fixer("[data-just-taille]",n.justTaille+" · déposé à "+MAINTENANT.heure);
+  },
+  be4(){
+    const n=etat.nouvel,f=four(n.four),o=nouvelOrdre(),apres=ENTREPRISE.solde-total(o);
+    const b=[];
+    if(usd(o)>ENTREPRISE.plafond)b.push(`<div class="bandeau blocage"><svg aria-hidden="true"><use href="#i-alerte"/></svg><span class="texte"><b>Plafond par opération dépassé</b><br>Votre plafond : ${fmt(ENTREPRISE.plafond,"USD")} (${fmt(Math.round(usd(o)),"USD")} pour cet ordre). Réduisez le montant ou demandez un relèvement à votre chargée de compte. ${q("B2")}</span></div>`);
+    if(double(o))b.push(`<div class="bandeau information"><svg aria-hidden="true"><use href="#i-personnes"/></svg><span class="texte">Cet ordre doit être validé par un second signataire de votre entreprise, puis par SAFICO. ${q("B2")}</span></div>`);
+    if(apres<0)b.push(`<div class="bandeau attention"><svg aria-hidden="true"><use href="#i-alerte"/></svg><span class="texte"><b>Solde insuffisant</b><br>L'ordre partira dès que votre solde le couvre. Il manque ${fmt(-apres,"GNF")}. <a href="#br2">Alimenter le solde</a> ${q("B3")}</span></div>`);
+    html("[data-bandeaux-ordre]",b.join(""));
+    html("[data-recap-fournisseur]",f?lignes([["Raison sociale",f.nom],["Pays",f.pays],["Banque",f.banque],["IBAN ou compte",f.compte],["SWIFT",f.swift],["Vérification",`<span class="statut ${VERIF[f.verif][0]}">${VERIF[f.verif][1]}</span>`]]):"");
+    html("[data-recap-montant]",lignesMontant(o,null));
+    html("[data-recap-motif]",lignes([["Motif",motifLu()],["Référence de la facture",n.facture],["Justificatif",n.justType+" · "+n.justFichier]]));
+  },
+  be5(){
+    const o=ordre(etat.ordreSel),f=four(o.four),s=STATUTS[o.statut];
+    const suite=o.statut==="signataire"?`${s[2]} : <b>${nomUser(UTILISATEURS.valider)}</b>, ${UTILISATEURS.valider.fonction.toLowerCase()}. Il le valide depuis son espace, avec son code PIN.`:s[2]+".";
+    const insuff=total(o)>ENTREPRISE.solde;
+    html("[data-be5]",`<div class="tete-envoi"><div class="pictos valide"><svg aria-hidden="true"><use href="#i-ok"/></svg></div><div><div class="titre-page moyen">Ordre soumis</div><p class="sous-titre">${fmt(o.montant,o.devise)} à ${f.nom} · ${f.pays}</p></div></div>
+      <div class="carte serree">${lignes([["Référence",`<span class="reference">${o.ref}</span>`],["Statut",pastille(o.statut)],["Soumis le",o.date+" par "+qui(o.saisi[0])]])}<div class="separateur"></div><div><span class="label">Prochaine étape</span><p style="margin-top:4px">${suite}</p></div>
+      ${insuff?`<div class="bandeau attention"><svg aria-hidden="true"><use href="#i-alerte"/></svg><span class="texte">Votre solde ne couvre pas encore cet ordre : il partira dès que votre solde le couvre. <a href="#br2">Alimenter le solde</a></span></div>`:""}</div>
+      <div class="actions"><a class="bouton primaire grand" href="#bs2" data-ordre="${o.ref}">Suivre l'ordre</a><a class="bouton texte" href="#ba1">Retour au tableau de bord</a></div>`);
+  },
+  bv1(){
+    const l=aValider();
+    html("[data-a-valider]",l.length?l.map(o=>{const f=four(o.four),moi=o.saisi[0]===etat.user,refus=etat.refus===o.ref;
+      const decision=etat.user!=="valider"?(moi?`<div class="bandeau neutre"><svg aria-hidden="true"><use href="#i-info"/></svg><span class="texte">Vous avez saisi cet ordre : il doit être validé par un autre signataire de votre entreprise. Celui qui saisit ne valide jamais.</span></div>`:`<div class="bandeau neutre"><svg aria-hidden="true"><use href="#i-info"/></svg><span class="texte">Validation réservée au rôle « Valider ».</span></div>`)
+        :moi?`<div class="bandeau neutre"><svg aria-hidden="true"><use href="#i-info"/></svg><span class="texte">Vous avez saisi cet ordre : il doit être validé par un autre signataire. Celui qui saisit ne valide jamais.</span></div>`
+        :refus?`<div class="champ" data-garde><label for="motif-refus">Motif du refus</label><textarea id="motif-refus" data-motif-refus data-requis placeholder="Ce motif est visible dans le détail de l'ordre.">${etat.motifRefus}</textarea><div class="actions"><button type="button" class="bouton texte" data-action="refus-annuler">Annuler</button><button type="button" class="bouton danger pousse" data-attend data-action="refus-confirmer" data-ref="${o.ref}">Confirmer le refus</button></div></div>`
+        :`<div class="actions"><a class="bouton texte" href="#bs2" data-ordre="${o.ref}">Voir le détail</a><button type="button" class="bouton secondaire pousse" data-action="refuser" data-ref="${o.ref}">Refuser</button><button type="button" class="bouton primaire" data-action="valider" data-ref="${o.ref}">Valider avec mon code PIN</button></div>`;
+      return `<div class="ordre-carte"><div class="carte-tete"><div><span class="reference">${o.ref}</span><div class="micro">Saisi le ${o.saisi[1]} par ${qui(o.saisi[0])}${o.saisi[0]==="charge"?" "+q("B12"):""}</div></div>${pastille(o.statut)}</div>
+        <div class="grille deux"><div>${lignes([["Fournisseur",f.nom],["Pays",f.pays],["Banque",f.banque],["Motif",o.motif]])}</div><div>${lignesMontant(o,null)}</div></div>
+        <div class="vignette-pdf"><span class="doc">PDF</span><div class="milieu"><b>${o.just[2]?o.just[1]:""}</b><div class="micro">${o.just[0]} · ${o.just[2]}</div></div><button type="button" class="bouton texte petit" data-toast="Aperçu du justificatif (aucune visionneuse dans le prototype).">Ouvrir</button></div>${decision}</div>`}).join("")
+      :`<div class="carte"><p class="micro">Aucun ordre n'attend votre validation.</p></div>`);
+  },
+  bs1(){
+    const fs=document.querySelector('[data-filtre="statut"]'),ff=document.querySelector('[data-filtre="four"]');
+    fs.innerHTML=`<option value="">Tous</option>`+Object.keys(STATUTS).map(k=>`<option value="${k}">${STATUTS[k][1]}</option>`).join(""); fs.value=etat.filtres.statut;
+    ff.innerHTML=`<option value="">Tous</option>`+FOURNISSEURS.map(f=>`<option value="${f.cle}">${f.nom}</option>`).join(""); ff.value=etat.filtres.four;
+    rendreBS1();
+  },
+  bs2(){rendreBS2()},
+  bf1(){
+    html("[data-fournisseurs]",FOURNISSEURS.map(f=>`<tr><td><b>${f.nom}</b></td><td>${drapeau(paysCode(f.pays))} ${f.pays}</td><td>${f.banque}</td><td>${f.compte}</td><td>${f.swift}</td><td><span class="statut ${VERIF[f.verif][0]}">${VERIF[f.verif][1]}</span></td><td class="droite">${ORDRES.filter(o=>o.four===f.cle).length}</td></tr>`).join(""));
+  },
+  br1(){
+    let solde=ENTREPRISE.solde-MOUVEMENTS.reduce((a,m)=>a+m[2],0);
+    const debut=solde;
+    const lignesM=MOUVEMENTS.map(m=>{solde+=m[2];return `<tr><td>${m[0]}</td><td>${m[1]}</td><td class="droite">${m[2]<0?grouper(-m[2]):""}</td><td class="droite">${m[2]>0?grouper(m[2]):""}</td><td class="droite"><b>${grouper(solde)}</b></td></tr>`});
+    html("[data-mouvements]",lignesM.reverse().join("")+`<tr><td>${MOUVEMENTS[0][0].split(" ")[0]}</td><td class="micro">Solde de départ</td><td></td><td></td><td class="droite">${grouper(debut)}</td></tr>`);
+    fixer("[data-periode-mvts]","Septembre et octobre 2026 · en GNF");
+    html("[data-releves]",`<div><div class="milieu"><b>Octobre 2026</b><span class="micro">En cours · disponible le 01/11</span></div></div>`+RELEVES.map(r=>`<div><div class="milieu"><b>${r}</b></div><button type="button" class="bouton secondaire petit" data-toast="Relevé de ${r} téléchargé · PDF">PDF</button><button type="button" class="bouton secondaire petit" data-toast="Relevé de ${r} téléchargé · Excel">Excel</button></div>`).join(""));
+  },
+  br2(){
+    document.querySelectorAll('[name="alim"]').forEach(r=>r.checked=r.value===etat.alim);
+    html("[data-coordonnees-safico]",lignes([["Titulaire","SAFICO SA"],["Banque","Banque de SAFICO (Conakry)"],["Numéro de compte","GN00 0000 0000 0000 0000 0001 77"],["SWIFT","À charger"],["Référence à indiquer",`<b>${ENTREPRISE.refAlim}</b>`]]));
+  },
+  bu1(){
+    html("[data-utilisateurs]",Object.values(UTILISATEURS).map(u=>`<tr><td><b>${nomUser(u)}</b></td><td>${u.fonction}</td><td>${u.email}</td><td>${u.role}</td><td><span class="statut valide">Actif</span></td></tr>`).join("")+INVITES.map(u=>`<tr><td><b>${u.nom} ${u.prenom}</b></td><td>${u.fonction}</td><td>${u.email}</td><td>${u.role}</td><td><span class="statut attente">Invitation envoyée</span></td></tr>`).join(""));
+  },
+  bd1(){
+    fixer("[data-maj-libelle]",MAJ.libelle); fixer("[data-maj-echeance]",MAJ.echeance);
+    html("[data-documents]",DOCUMENTS.map(d=>{const maj=d[2]==="maj";
+      const droite=!maj?`<span class="statut valide">Vérifié</span>`:etat.maj==="attente"?`<span class="statut attention">Mise à jour demandée</span><button type="button" class="bouton primaire petit" data-action="deposer-maj"><svg aria-hidden="true"><use href="#i-depot"/></svg>Déposer</button>`:`<span class="statut attente">En cours de vérification par SAFICO</span>`;
+      return `<div><div class="milieu"><b>${d[0]}</b><span class="micro">${d[1]}${maj?"":" · "+d[2]}</span></div>${droite}</div>`}).join(""));
+  },
+};
+const lignes=t=>t.map(l=>`<div class="ligne"><span class="micro">${l[0]}</span><span>${l[1]}</span></div>`).join("");
+function lignesMontant(o,taux){
+  return lignes([["Montant",`<b>${fmt(o.montant,o.devise)}</b>`],[taux||"Taux indicatif · fixé à la validation",tauxTxt(o.devise)],["Contre-valeur",fmt(cv(o),"GNF")],["Frais (0,5 %)",fmt(frais(o),"GNF")],["Total débité",`<b>${fmt(total(o),"GNF")}</b>`]]);
+}
+const motifLu=()=>etat.nouvel.motif==="Autre"?(etat.nouvel.motifAutre.trim()||"Autre"):etat.nouvel.motif;
+
+// Résumé de l'ordre en cours (colonne de droite du parcours)
+function rendreResume(){
+  const n=etat.nouvel,f=four(n.four),o=nouvelOrdre(),apres=ENTREPRISE.solde-total(o);
+  html("[data-resume-ordre]",`<div class="carte serree"><h2>Votre ordre</h2>
+    <div class="ligne"><span class="micro">Fournisseur</span><span>${f?f.nom:n.four==="nouveau"&&n.nf.nom?n.nf.nom:"—"}</span></div>
+    <div class="ligne"><span class="micro">Pays</span><span>${f?f.pays:n.nf.pays||"—"}</span></div>
+    <div class="separateur"></div>
+    <div class="ligne"><span class="micro">Montant</span><b>${n.montant?fmt(n.montant,n.devise):"—"}</b></div>
+    <div class="ligne"><span class="micro">Total débité</span><span>${n.montant?fmt(total(o),"GNF"):"—"}</span></div>
+    <div class="ligne"><span class="micro">Solde actuel</span><span>${fmt(ENTREPRISE.solde,"GNF")}</span></div>
+    <div class="ligne"><span class="micro">Solde après l'ordre</span><span style="${apres<0?"color:var(--attention)":""}">${n.montant?(apres<0?"Insuffisant":fmt(apres,"GNF")):"—"}</span></div>
+    <div class="separateur"></div><p class="micro">Saisi par ${nomUser(user())}.${!n.montant?"":double(o)?" Au-delà de "+fmt(SEUIL_DOUBLE,"USD")+" : un second signataire valide.":" Sous "+fmt(SEUIL_DOUBLE,"USD")+" : pas de second signataire."}</p></div>`);
+}
+function majCalc(){
+  const n=etat.nouvel,o=nouvelOrdre(),apres=ENTREPRISE.solde-total(o),vide=!n.montant;
+  fixer("[data-calc-taux]",tauxTxt(n.devise)); fixer("[data-calc-cv]",vide?"—":fmt(cv(o),"GNF")); fixer("[data-calc-frais]",vide?"—":fmt(frais(o),"GNF"));
+  fixer("[data-calc-total]",vide?"—":fmt(total(o),"GNF")); fixer("[data-calc-apres]",vide?"—":apres<0?"Insuffisant ("+fmt(apres,"GNF")+")":fmt(apres,"GNF"));
+  rendreResume(); verifRequis();
+}
+
+// BS1 : tableau filtré
+function rendreBS1(){
+  const f=etat.filtres,qq=f.q.trim().toLowerCase();
+  const l=ORDRES.filter(o=>(!f.statut||o.statut===f.statut)&&(!f.four||o.four===f.four)&&(!qq||(o.ref+" "+four(o.four).nom).toLowerCase().includes(qq)));
+  html("[data-ordres]",l.length?l.map(o=>{const fo=four(o.four);return `<tr data-cible="#bs2" data-ordre="${o.ref}" tabindex="0"><td class="net">${o.date}</td><td class="net"><b>${o.ref}</b></td><td>${fo.nom}<br><span class="micro">${fo.pays}</span></td><td class="droite net"><b>${fmt(o.montant,o.devise)}</b><br><span class="micro">${fmt(cv(o),"GNF")}</span></td><td>${pastille(o.statut)}</td><td>${STATUTS[o.statut][2]}</td></tr>`}).join(""):`<tr><td colspan="6" class="micro">Aucun ordre ne correspond.</td></tr>`);
+}
+
+// BS2 : détail d'un ordre
+function etapeCourante(o){
+  if(o.statut==="refusee")return o.refus.par==="entreprise"?1:2;
+  return {brouillon:0,signataire:1,safico:2,financement:3,"en-cours":4,validee:5,echouee:5,payee:6,annulee:4}[o.statut];
+}
+function rendreBS2(){
+  const o=ordre(etat.ordreSel),f=four(o.four),p=etapeCourante(o),dbl=double(o),s=STATUTS[o.statut];
+  const det=[
+    o.statut==="brouillon"?"Brouillon préparé par "+qui(o.saisi[0])+" · "+o.saisi[1]:"Par "+qui(o.saisi[0])+" · "+o.saisi[1],
+    !dbl?"Non requis : sous le seuil de double validation ("+fmt(SEUIL_DOUBLE,"USD")+")":o.signe?"Par "+qui(o.signe[0])+" · "+o.signe[1]:o.refus&&o.refus.par==="entreprise"?"Refusé par "+qui(o.refus.qui)+" · "+o.refus.quand+" · « "+o.refus.motif+" »":"En attente de "+nomUser(UTILISATEURS.valider)+", "+UTILISATEURS.valider.fonction.toLowerCase(),
+    o.safico?"Par SAFICO · "+o.safico:o.refus&&o.refus.par==="safico"?"Refusé par SAFICO · "+o.refus.quand+". Votre chargée de compte vous en explique la raison.":p===2?"En cours de vérification par SAFICO":"",
+    p>3?fmt(total(o),"GNF")+" débités de votre solde · "+o.safico:p===3?"Solde insuffisant : l'ordre part dès que votre solde le couvre.":"",
+    o.transmis?"À la banque partenaire ("+f.ville+") · "+o.transmis:p===4?"En cours de transmission à la banque partenaire ("+f.ville+")":"",
+    o.paye?"Payé le "+o.paye:o.statut==="echouee"?"Rejeté par la banque partenaire · "+o.rejet[1]+" : "+o.rejet[0]:p===5?"Chez la banque partenaire":"",
+  ];
+  const bloque=o.statut==="refusee"||o.statut==="echouee";
+  const frise=ETAPES_SUIVI.map((t,i)=>{let c=i<p?"fait":i===p?(bloque?"bloque":o.statut==="financement"?"alerte":"encours"):"";if(i===1&&!dbl&&p>=1)c="sansobjet";return `<div class="pas ${c}"><span class="point"></span><div><b>${t}</b><span class="micro">${det[i]||"—"}</span></div></div>`}).join("");
+  const chaine=[["Saisi par",qui(o.saisi[0]),o.saisi[1]],["Second signataire",dbl?(o.signe?qui(o.signe[0]):o.refus&&o.refus.par==="entreprise"?qui(o.refus.qui)+" · a refusé":nomUser(UTILISATEURS.valider)+" · en attente"):"Non requis",dbl&&o.signe?o.signe[1]:""],["SAFICO",o.safico?"Validé":o.refus&&o.refus.par==="safico"?"Refusé":p===2?"En cours de vérification":"—",o.safico||(o.refus&&o.refus.par==="safico"?o.refus.quand:"")]];
+  const taux=o.tauxFixe?"Taux fixé à la validation, le "+o.tauxFixe:null;
+  const actions=[];
+  if(o.statut==="signataire"&&etat.user==="valider"&&o.saisi[0]!=="valider")actions.push(`<a class="bouton primaire" href="#bv1">Valider ou refuser</a>`);
+  if(o.statut==="payee")actions.push(`<button type="button" class="bouton primaire" data-toast="Avis d'exécution ${o.ref} téléchargé · PDF"><svg aria-hidden="true"><use href="#i-recu"/></svg>Télécharger l'avis d'exécution</button>`);
+  if(o.statut!=="brouillon"&&etat.user==="saisir")actions.push(`<button type="button" class="bouton secondaire" data-action="dupliquer" data-ref="${o.ref}"><svg aria-hidden="true"><use href="#i-copier"/></svg>Dupliquer l'ordre</button>`);
+  if(o.statut==="brouillon")actions.push(`<span class="micro">Brouillon de votre chargée de compte : elle le complète et le soumet.</span>`);
+  // Outil de revue : la suite côté SAFICO et banque partenaire (comme « Simuler le retour du partenaire » au back-office)
+  const revue=o.statut==="safico"?`<button type="button" class="bouton secondaire" data-revue="safico">SAFICO valide</button><button type="button" class="bouton secondaire" data-revue="refus">SAFICO refuse</button>`
+    :o.statut==="financement"?`<button type="button" class="bouton secondaire" data-revue="alimente">Solde alimenté</button>`
+    :["en-cours","validee"].includes(o.statut)?(o.statut==="en-cours"?`<button type="button" class="bouton secondaire" data-revue="validee">Validée</button>`:"")+`<button type="button" class="bouton secondaire" data-revue="payee">Payée</button><button type="button" class="bouton secondaire" data-revue="echouee">Échouée</button>`:"";
+  html("[data-bs2]",`<a class="retour-lien" href="#bs1"><svg width="18" height="18" aria-hidden="true"><use href="#i-retour"/></svg>Transferts</a>
+    <div class="carte-tete"><div><div class="titre-page moyen">${o.ref}</div><p class="sous-titre">${f.nom} · ${f.pays} · ${fmt(o.montant,o.devise)}</p></div>${pastille(o.statut)}</div>
+    ${o.statut==="echouee"?`<div class="bandeau blocage"><svg aria-hidden="true"><use href="#i-alerte"/></svg><span class="texte"><b>Rejeté par la banque partenaire</b> · ${o.rejet[0]}. Votre chargée de compte vous contacte.</span></div>`:""}
+    ${o.statut==="financement"?`<div class="bandeau attention"><svg aria-hidden="true"><use href="#i-alerte"/></svg><span class="texte"><b>En attente de financement</b> · il manque ${fmt(total(o)-ENTREPRISE.solde,"GNF")}. L'ordre part dès que votre solde le couvre, au taux fixé le ${o.tauxFixe}. <a href="#br2">Alimenter le solde</a> ${q("B3")}</span></div>`:""}
+    ${revue?`<div class="revue">Outil de revue · simuler la suite ${revue}</div>`:""}
+    <div class="grille tiers">
+      <div class="colonne">
+        <div class="carte"><div class="carte-tete"><h2>Étapes</h2><span class="micro">Prochaine étape : ${s[2]}</span></div><div class="chrono">${frise}</div></div>
+        <div class="carte serree"><h2>Chaîne de validation</h2>${chaine.map(c=>`<div class="ligne"><span class="micro">${c[0]}</span><span>${c[1]}${c[2]?`<br><span class="micro">${c[2]}</span>`:""}</span></div>`).join("")}<p class="micro">Celui qui saisit un ordre ne le valide jamais.</p></div>
+        <div class="carte serree"><h2>Fournisseur</h2>${lignes([["Raison sociale",f.nom],["Pays",f.pays],["Banque",f.banque],["IBAN ou compte",f.compte],["Versé par","Banque partenaire ("+f.ville+")"]])}</div>
+      </div>
+      <div class="colonne">
+        <div class="carte serree"><div class="carte-tete"><h2>Montant</h2>${q("B3")}</div>${lignesMontant(o,taux)}</div>
+        <div class="carte serree"><div class="carte-tete"><h2>Motif et justificatif</h2>${q("B5")}</div>${lignes([["Motif",o.motif],["Référence de la facture",o.facture]])}
+          <div class="vignette-pdf"><span class="doc">PDF</span><div class="milieu"><b>${o.just[1]}</b><div class="micro">${o.just[0]} · ${o.just[2]}</div></div><button type="button" class="bouton texte petit" data-toast="Aperçu du justificatif (aucune visionneuse dans le prototype).">Ouvrir</button></div></div>
+        ${o.statut==="refusee"&&o.refus.par==="safico"?`<div class="carte serree"><h2>Ordre refusé</h2><p class="micro">SAFICO a refusé cet ordre le ${o.refus.quand}. Votre chargée de compte vous en explique la raison : ${CHARGE.tel}. ${q("B10")}</p></div>`:""}
+        <div class="actions">${actions.join("")}</div>
+      </div>
+    </div>`);
+}
+
+function verifRequis(){
+  const s=document.querySelector(".ecran.visible"),n=etat.nouvel;
+  const GARDES={
+    be1:()=>n.four&&(n.four!=="nouveau"||["nom","pays","banque","compte","swift"].every(k=>n.nf[k].trim())),
+    be2:()=>n.montant>0&&n.facture.trim()&&(n.motif!=="Autre"||n.motifAutre.trim()),
+    be3:()=>!!n.justFichier,
+    be4:()=>n.montant>0&&!!n.justFichier&&usd(nouvelOrdre())<=ENTREPRISE.plafond,
+  };
+  document.querySelectorAll("[data-attend]").forEach(b=>{
+    const g=b.closest("[data-garde]"),champs=g?[...g.querySelectorAll("[data-requis]")].every(i=>i.closest("[hidden]")||i.value.trim()):true;
+    const ok=champs&&(GARDES[b.dataset.attend]?GARDES[b.dataset.attend]():true);
+    b.setAttribute("aria-disabled",ok?"false":"true");
+  });
+}
+
+// ——— Actions ———
+function soumettre(){
+  const n=etat.nouvel,o={ref:"OT-2026-0"+etat.rang++,date:quand(),four:n.four,devise:n.devise,montant:n.montant,motif:motifLu(),facture:n.facture,just:[n.justType,n.justFichier,n.justTaille],saisi:[etat.user,quand()]};
+  o.statut=double(o)?"signataire":"safico";
+  ORDRES.unshift(o); etat.ordreSel=o.ref;
+  etat.nouvel={four:"",nf:{nom:"",pays:"",banque:"",compte:"",swift:""},devise:"USD",montant:0,motif:"Paiement fournisseur",motifAutre:"",facture:"",justType:"Facture",justFichier:"",justTaille:"",duplique:""};
+  location.hash="#be5";
+}
+function ajouterFournisseur(d){
+  const p=PAYS.find(x=>x[0]===d.pays)||PAYS[0],cle="f"+(FOURNISSEURS.length+1);
+  FOURNISSEURS.push({cle,nom:d.nom.trim(),pays:p[0],ville:p[1],banque:d.banque.trim(),compte:d.compte.trim(),swift:d.swift.trim(),verif:"verification"});
+  return cle;
+}
+// Outil de revue : la suite côté SAFICO et banque partenaire
+function revue(k){
+  const o=ordre(etat.ordreSel);
+  if(k==="safico"){o.safico=quand();o.tauxFixe=MAINTENANT.court+" à "+MAINTENANT.heure;if(total(o)>ENTREPRISE.solde){o.statut="financement"}else{debiter(o);o.statut="en-cours"}}
+  if(k==="alimente"){const credit=Math.ceil((total(o)-ENTREPRISE.solde)/1e8)*1e8;ENTREPRISE.solde+=credit;MOUVEMENTS.push([quand(),"Alimentation par virement · "+ENTREPRISE.refAlim,credit]);debiter(o);o.statut="en-cours"}
+  if(k==="refus"){o.statut="refusee";o.refus={par:"safico",quand:quand()}}
+  if(k==="validee"){o.transmis=o.transmis||quand();o.statut="validee"}
+  if(k==="payee"){o.transmis=o.transmis||quand();o.paye=quand();o.statut="payee"}
+  if(k==="echouee"){o.transmis=o.transmis||quand();o.rejet=["Compte du bénéficiaire clôturé",quand()];o.statut="echouee"}
+  remplir();
+}
+function debiter(o){ENTREPRISE.solde-=total(o);MOUVEMENTS.push([quand(),"Débit · "+o.ref+" · "+fmt(o.montant,o.devise),-cv(o)],[quand(),"Frais · "+o.ref,-frais(o)])}
+
+// ——— Gabarit ———
+function entete(s){
+  const g=s.dataset.gabarit,h=document.getElementById("entete"),cadre=document.getElementById("entete-cadre");
+  h.classList.toggle("marque",s.dataset.entete==="marque");
+  const [m1,m2]=[NOM_BUSINESS.split(" ")[0],NOM_BUSINESS.split(" ").slice(1).join(" ")];
+  const logo=`<a class="logo" href="${g==="public"?"#bp0":"#ba1"}">${m1}${m2?` <small>${m2}</small>`:""}</a>`;
+  if(g==="public"){const marque=s.dataset.entete==="marque";cadre.innerHTML=logo+`<span class="entete-droite"><a class="lien-entete" href="proto-diaspora.html#p0">Particuliers</a>${s.id==="bc1"?"":`<a class="bouton ${marque?"clair":"secondaire"}" href="#bc1">Se connecter</a>`}${s.id==="bp1"?"":`<a class="bouton ${marque?"inverse":"primaire"}" href="#bp1">Demander l'ouverture d'un compte</a>`}</span>`}
+  else if(g==="ordre"){const n=+s.dataset.etape;cadre.innerHTML=logo+`<ol class="pas-a-pas">${ETAPES.map((t,i)=>`<li class="${i+1<n?"fait":i+1===n?"actif":""}"><span class="rond">${i+1<n?"✓":i+1}</span><span class="texte-pas">${t}</span></li>`).join("")}</ol><a class="quitter" href="#ba1"><svg width="18" height="18" aria-hidden="true"><use href="#i-fermer"/></svg>Quitter</a>`}
+  else{const u=user(),nav=s.dataset.nav,nbv=etat.user==="valider"?aValider().length:0;
+    cadre.innerHTML=logo+`<nav class="nav">${[["ba1","Tableau de bord"],["bs1","Transferts"],["bf1","Fournisseurs"],["br1","Solde et relevés"],["bu1","Entreprise"]].map(x=>`<a href="#${x[0]}" class="${x[0]===nav?"actif":""}">${x[1]}${x[0]==="bs1"&&nbv?`<span class="compte">${nbv}</span>`:""}</a>`).join("")}</nav><span class="entete-droite"><button type="button" class="icone-btn" aria-label="Notifications" data-toast="Notifications : à décliner plus tard."><svg width="22" height="22"><use href="#i-cloche"/></svg>${nbv?`<span class="badge"></span>`:""}</button><a class="agent" href="#bu1"><span class="avatar">${u.prenom[0]+u.nom[0]}</span><span class="qui"><b>${u.prenom} ${u.nom}</b><span>${u.fonction} · ${u.role}</span></span></a><a class="icone-btn" href="#bp0" aria-label="Se déconnecter" title="Se déconnecter" data-action="deconnexion"><svg width="20" height="20"><use href="#i-sortie"/></svg></a></span>`}
+}
+
+const sections=[...document.querySelectorAll(".ecran")];
+let som="",grp="";
+sections.forEach(s=>{if(s.dataset.groupe!==grp){grp=s.dataset.groupe;som+=`<div class="groupe">${grp}</div>`}som+=`<a href="#${s.id}" data-lien="${s.id}"><b>${s.dataset.code}</b>${s.dataset.titre}</a>`});
+document.getElementById("sommaire").innerHTML=som;
+
+function afficher(){
+  const id=location.hash.slice(1),el=document.getElementById(id),s=el&&el.classList.contains("ecran")?el:document.getElementById("bp0");
+  sections.forEach(x=>x.classList.toggle("visible",x===s));
+  if(s.id==="be5"&&!ORDRES.some(o=>o.ref===etat.ordreSel))etat.ordreSel=ORDRES[0].ref;
+  if(s.id==="bc1")etat.codeConnexion=false;
+  if(s.id!=="bv1"){etat.refus="";etat.motifRefus=""}
+  entete(s);
+  document.getElementById("pied-site").hidden=s.dataset.gabarit==="ordre";
+  document.getElementById("n-code").textContent=s.dataset.code+" · "+NOM_BUSINESS;
+  document.getElementById("n-titre").textContent=s.dataset.titre;
+  document.getElementById("n-contexte").textContent=s.dataset.contexte;
+  const qs=(s.dataset.q||"").split("|").filter(Boolean);
+  document.getElementById("n-q-bloc").hidden=!qs.length;
+  document.getElementById("n-q").innerHTML=qs.map(c=>`<li><b>${c}</b> · ${Q[c][0]}<br><span class="micro" style="color:inherit">Dessiné : ${Q[c][1]}</span></li>`).join("");
+  document.querySelectorAll("#sommaire a").forEach(a=>a.classList.toggle("actif",a.dataset.lien===s.id));
+  document.title=s.dataset.titre+" — "+NOM_BUSINESS+" (prototype)";
+  fermerPin(); fermerTiroir(); remplir(); window.scrollTo(0,0);
+  const premiere=s.querySelector("[data-otp] input"); if(premiere&&!premiere.closest("[hidden]"))setTimeout(()=>premiere.focus(),50);
+}
+window.addEventListener("hashchange",afficher);
+
+let minuteurToast;
+function toast(t){const el=document.getElementById("toast");el.textContent=t;el.hidden=false;clearTimeout(minuteurToast);minuteurToast=setTimeout(()=>el.hidden=true,3200)}
+function ouvrirTiroir(id){fermerTiroir();document.getElementById(id).classList.add("ouvert");document.getElementById("tiroir-voile").classList.add("ouvert");verifRequis();const i=document.querySelector("#"+id+" input");if(i)setTimeout(()=>i.focus(),100)}
+function fermerTiroir(){document.querySelectorAll(".tiroir.ouvert,.tiroir-voile.ouvert").forEach(t=>t.classList.remove("ouvert"))}
+
+document.addEventListener("click",e=>{
+  const a=e.target.closest("a,button,tr[data-cible],[data-fermer-tiroir]"); if(!a)return;
+  if(a.getAttribute("aria-disabled")==="true"){e.preventDefault();return}
+  if(a.dataset.ordre)etat.ordreSel=a.dataset.ordre;
+  if(a.dataset.user){etat.user=a.dataset.user;afficher();toast("Vue de "+nomUser(user())+" · "+user().role);return}
+  if(a.matches(".oeil")){const i=a.parentElement.querySelector("input"),v=i.type==="password";i.type=v?"text":"password";a.setAttribute("aria-pressed",v)}
+  if(a.dataset.ouvrirTiroir){ouvrirTiroir(a.dataset.ouvrirTiroir);return}
+  if(a.matches("[data-fermer-tiroir]")){fermerTiroir();return}
+  if(a.matches("[data-pin-fermer]"))fermerPin();
+  if(a.matches("[data-pin-touche]")){touchePin(a.dataset.pinTouche);return}
+  if(a.dataset.revue){revue(a.dataset.revue);return}
+  const act=a.dataset.action;
+  if(act==="demande"){etat.demande=true;remplir();window.scrollTo(0,0)}
+  if(act==="code-connexion"){etat.codeConnexion=true;remplir();setTimeout(()=>document.querySelector("#bc1 [data-otp] input").focus(),50)}
+  if(act==="retour-connexion"){etat.codeConnexion=false;remplir()}
+  if(act==="deconnexion"){toast("Vous êtes déconnecté.")}
+  if(act==="be1-suite"){const n=etat.nouvel;if(n.four==="nouveau"){n.four=ajouterFournisseur(n.nf);n.nf={nom:"",pays:"",banque:"",compte:"",swift:""};toast("Fournisseur ajouté : SAFICO le vérifie.")}location.hash="#be2"}
+  if(act==="deposer"){const n=etat.nouvel,t=TYPES_JUST.find(x=>x[0]===n.justType);n.justFichier=t[1]+"_"+(n.facture.trim()||"document").replace(/\s+/g,"-")+".pdf";n.justTaille="228 Ko";remplir()}
+  if(act==="retirer-just"){etat.nouvel.justFichier="";remplir()}
+  if(act==="soumettre"){soumettre()}
+  if(act==="refuser"){etat.refus=a.dataset.ref;etat.motifRefus="";remplir();const t=document.querySelector("[data-motif-refus]");if(t)t.focus()}
+  if(act==="refus-annuler"){etat.refus="";remplir()}
+  if(act==="refus-confirmer"){const o=ordre(a.dataset.ref);o.statut="refusee";o.refus={par:"entreprise",qui:etat.user,quand:quand(),motif:etat.motifRefus.trim()};etat.ordreSel=o.ref;etat.refus="";toast("Ordre "+o.ref+" refusé.");location.hash="#bs2"}
+  if(act==="valider"){const o=ordre(a.dataset.ref);ouvrirPin(()=>{o.signe=[etat.user,quand()];o.statut="safico";etat.ordreSel=o.ref;toast("Ordre "+o.ref+" validé : il part à SAFICO.");location.hash="#bs2"},`Validation de l'ordre <b>${o.ref}</b> · ${fmt(o.montant,o.devise)} à ${four(o.four).nom}.`)}
+  if(act==="dupliquer"){const o=ordre(a.dataset.ref);etat.nouvel={four:o.four,nf:{nom:"",pays:"",banque:"",compte:"",swift:""},devise:o.devise,montant:o.montant,motif:o.motif,motifAutre:"",facture:"",justType:o.just[0],justFichier:"",justTaille:"",duplique:o.ref};location.hash="#be2";toast("Ordre "+o.ref+" dupliqué : joignez la facture de ce nouveau paiement.")}
+  if(act==="ajouter-fournisseur"){const d={};document.querySelectorAll("[data-tf]").forEach(i=>{d[i.dataset.tf]=i.value;i.value=""});ajouterFournisseur(d);fermerTiroir();toast("Fournisseur ajouté : SAFICO le vérifie.");remplir()}
+  if(act==="inviter"){const d={};document.querySelectorAll("[data-ti]").forEach(i=>{d[i.dataset.ti]=i.value.trim();i.value=""});d.nom=d.nom.toUpperCase();d.role=document.querySelector('[name="ti-role"]:checked').value;INVITES.push(d);fermerTiroir();toast("Invitation envoyée à "+d.email+".");remplir()}
+  if(act==="deposer-maj"){etat.maj="envoye";toast("Pièce déposée : SAFICO la vérifie.");remplir()}
+  if(a.matches("tr[data-cible]")){if(location.hash!==a.dataset.cible)location.hash=a.dataset.cible;else afficher()}
+  if(a.dataset.toast)toast(a.dataset.toast);
+  if(a.getAttribute("href")===location.hash&&a.dataset.ordre)afficher();
+});
+document.addEventListener("change",e=>{
+  const t=e.target,n=etat.nouvel;
+  if(t.name==="four"){n.four=t.value;montrer("[data-si-four-nouveau]",n.four==="nouveau");rendreResume();verifRequis()}
+  if(t.name==="devise"){n.devise=t.value;majCalc()}
+  if(t.name==="just"){n.justType=t.value}
+  if(t.name==="alim"){etat.alim=t.value;remplir()}
+  if(t.matches("[data-liste-motifs]")){n.motif=t.value;montrer("[data-si-motif-autre]",n.motif==="Autre");rendreResume();verifRequis()}
+  if(t.dataset.filtre){etat.filtres[t.dataset.filtre]=t.value;rendreBS1()}
+  if(t.dataset.nf){n.nf[t.dataset.nf]=t.value;rendreResume()}
+  verifRequis();
+});
+document.addEventListener("input",e=>{
+  const t=e.target,n=etat.nouvel;
+  if(t.matches("[data-montant-ordre]")){const ch=t.value.replace(/\D/g,"").slice(0,13);n.montant=+ch||0;t.value=ch?grouper(+ch):"";majCalc();return}
+  if(t.matches("[data-facture-champ]")){n.facture=t.value;verifRequis();return}
+  if(t.matches("[data-motif-autre]")){n.motifAutre=t.value;verifRequis();return}
+  if(t.dataset.nf){n.nf[t.dataset.nf]=t.value;rendreResume();verifRequis();return}
+  if(t.dataset.filtre==="q"){etat.filtres.q=t.value;rendreBS1();return}
+  if(t.matches("[data-motif-refus]")){etat.motifRefus=t.value;verifRequis();return}
+  const g=t.closest("[data-otp]");if(g){const cases=[...g.querySelectorAll("input")],i=cases.indexOf(t),v=t.value.replace(/\D/g,"");t.value="";otp(cases,i,v);return}
+  verifRequis();
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&e.target.matches("tr[data-cible]"))e.target.click();
+  if(e.key==="Escape"){fermerPin();fermerTiroir()}
+  const g=e.target.closest&&e.target.closest("[data-otp]");if(g&&e.key==="Backspace"&&!e.target.value){const cases=[...g.querySelectorAll("input")],i=cases.indexOf(e.target);if(i>0){cases[i-1].value="";cases[i-1].focus()}}
+});
+document.addEventListener("paste",e=>{const g=e.target.closest("[data-otp]");if(!g)return;e.preventDefault();const cases=[...g.querySelectorAll("input")];otp(cases,cases.indexOf(e.target),e.clipboardData.getData("text"))});
+// Code de vérification en 6 cases (repris de la diaspora) : case suivante à la frappe, code collé réparti
+function otp(cases,depuis,texte){
+  const ch=texte.replace(/\D/g,"").split("");let k=depuis;ch.forEach(c=>{if(k<6)cases[k++].value=c});
+  cases[Math.min(k,5)].focus();
+  const g=cases[0].parentElement;
+  if(cases.every(i=>i.value)){g.classList.add("valide");setTimeout(()=>{g.classList.remove("valide");cases.forEach(i=>i.value="");toast("Bienvenue, "+user().prenom+".");location.hash=g.dataset.vers},450)}
+}
+
+// Code PIN : pavé mélangé à chaque ouverture, au clic seulement (repris de la diaspora). Tout code à 6 chiffres est accepté.
+let pin="",pinApres=null;
+function melanger(){
+  const ch=[..."0123456789"].sort(()=>Math.random()-.5);
+  document.getElementById("pave").innerHTML=ch.slice(0,9).map(d=>`<button type="button" data-pin-touche="${d}">${d}</button>`).join("")+`<span></span><button type="button" data-pin-touche="${ch[9]}">${ch[9]}</button><button type="button" class="fonction" data-pin-touche="x" aria-label="Effacer">Effacer</button>`;
+}
+function ouvrirPin(apres,note){pin="";pinApres=apres;document.getElementById("pin-note").innerHTML=note+" Cliquez sur vos 6 chiffres : ils changent de place à chaque fois.";melanger();majPin();document.getElementById("voile-pin").classList.add("ouvert")}
+function fermerPin(){document.getElementById("voile-pin").classList.remove("ouvert")}
+function majPin(){document.querySelectorAll("#points-pin i").forEach((i,k)=>i.classList.toggle("plein",k<pin.length))}
+function touchePin(t){
+  if(t==="x")pin=pin.slice(0,-1);else if(pin.length<6)pin+=t;
+  majPin();
+  if(pin.length===6)setTimeout(()=>{fermerPin();if(pinApres)pinApres()},250);
+}
+
+// Panneau de notes : ouvert d'office sur un écran large
+const notes=document.getElementById("notes"),bascule=document.getElementById("bascule-notes");
+function basculer(ouvert){notes.classList.toggle("ouvert",ouvert);document.body.classList.toggle("notes-ouvertes",ouvert);bascule.setAttribute("aria-expanded",ouvert);bascule.textContent=ouvert?"Fermer les notes":"Notes et écrans"}
+bascule.addEventListener("click",()=>basculer(!notes.classList.contains("ouvert")));
+basculer(window.innerWidth>=1760);
+
+afficher();
+</script>
+</body>
+</html>
